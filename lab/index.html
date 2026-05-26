@@ -3,21 +3,1653 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Роман Исаев - практическое внедрение ИИ</title>
+    <title>Роман Исаев - lab version</title>
     <meta
       name="description"
-      content="Практическое внедрение ИИ для основателей и команд: консультации, наставничество, обучение команд и AI-агрегатор."
+      content="Экспериментальная визуальная версия сайта Романа Исаева: практическое внедрение ИИ для предпринимателей и команд."
     />
+    <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/svg+xml" href="/favicon-ai.svg?v=3" />
-    <link rel="preconnect" href="https://getfile.dokpub.com">
-    <link rel="dns-prefetch" href="https://getfile.dokpub.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="./assets/index-CXSEjFmy.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-8d9vl6tT.css">
+    <link rel="preconnect" href="https://getfile.dokpub.com" />
+    <link rel="dns-prefetch" href="https://getfile.dokpub.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #101111;
+        --ink-soft: rgba(16, 17, 17, 0.68);
+        --paper: #ede8dc;
+        --paper-2: #f8f3ea;
+        --glass: rgba(255, 255, 255, 0.54);
+        --glass-strong: rgba(255, 255, 255, 0.76);
+        --dark-glass: rgba(17, 18, 18, 0.72);
+        --line: rgba(16, 17, 17, 0.13);
+        --white-line: rgba(255, 255, 255, 0.48);
+        --accent: #ff6a2a;
+        --lime: #d8ff7c;
+        --blue: #bfeaff;
+        --radius-xl: 54px;
+        --radius-lg: 36px;
+        --radius-md: 24px;
+        --max: 1180px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background:
+          radial-gradient(circle at 16% 4%, rgba(191, 234, 255, 0.48), transparent 34rem),
+          radial-gradient(circle at 84% 14%, rgba(255, 106, 42, 0.2), transparent 29rem),
+          linear-gradient(180deg, #e9e2d6 0%, #f7f1e8 42%, #e3dbcf 100%);
+        color: var(--ink);
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        letter-spacing: 0;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -3;
+        background:
+          linear-gradient(rgba(237, 232, 220, 0.64), rgba(237, 232, 220, 0.84)),
+          url("/gallery-08-stage-full.jpg") center 18% / cover no-repeat;
+        filter: saturate(0.45) contrast(0.92);
+        transform: scale(1.05);
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+        opacity: 0.28;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.48) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.34) 1px, transparent 1px);
+        background-size: 64px 64px;
+        mask-image: radial-gradient(circle at 50% 0%, #000, transparent 72%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .page-shell {
+        width: min(100% - 32px, 1380px);
+        margin: 0 auto;
+      }
+
+      .topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 34px 0 22px;
+        font: 700 14px/1 Space Grotesk, sans-serif;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 58px;
+        height: 58px;
+        border: 1px solid rgba(255, 255, 255, 0.76);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.7);
+        box-shadow: 0 18px 48px rgba(38, 35, 29, 0.14);
+        backdrop-filter: blur(18px);
+      }
+
+      .brand-mark {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 1px;
+        transform: skewX(-14deg) rotate(-5deg);
+        font-family: Arial Black, Impact, system-ui, sans-serif;
+        font-weight: 900;
+        line-height: 0.85;
+      }
+
+      .brand-mark span:first-child {
+        color: #121212;
+        font-size: 16px;
+      }
+
+      .brand-mark span:last-child {
+        color: #e21d1d;
+        font-size: 14px;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(14px, 3vw, 38px);
+        min-height: 54px;
+        padding: 0 24px;
+        border: 1px solid var(--white-line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.34);
+        box-shadow: 0 22px 55px rgba(20, 20, 20, 0.09);
+        backdrop-filter: blur(22px);
+      }
+
+      .nav a {
+        color: rgba(16, 17, 17, 0.68);
+        font-size: 12px;
+        font-weight: 800;
+        transition: color 0.25s ease, transform 0.25s ease;
+      }
+
+      .nav a:hover {
+        color: var(--ink);
+        transform: translateY(-1px);
+      }
+
+      .nav-cta,
+      .pill-button,
+      .ghost-button {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 52px;
+        padding: 0 24px;
+        overflow: hidden;
+        border-radius: 999px;
+        font-weight: 900;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+      }
+
+      .nav-cta,
+      .pill-button {
+        color: #121212;
+        background: linear-gradient(135deg, #e7ff8c, #bff4ff 52%, #ffffff);
+        box-shadow: 0 18px 44px rgba(113, 139, 93, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.88);
+      }
+
+      .nav-cta::before,
+      .pill-button::before {
+        content: "";
+        position: absolute;
+        inset: -80% auto -80% -42%;
+        width: 36%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.88), transparent);
+        transform: rotate(18deg);
+        animation: shine 4.2s ease-in-out infinite;
+      }
+
+      .ghost-button {
+        border: 1px solid rgba(16, 17, 17, 0.14);
+        color: rgba(16, 17, 17, 0.8);
+        background: rgba(255, 255, 255, 0.42);
+        backdrop-filter: blur(16px);
+      }
+
+      @keyframes shine {
+        0%,
+        42% {
+          transform: translateX(0) rotate(18deg);
+        }
+        72%,
+        100% {
+          transform: translateX(520%) rotate(18deg);
+        }
+      }
+
+      .hero {
+        position: relative;
+        min-height: calc(100svh - 114px);
+        padding: clamp(18px, 3vw, 34px);
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: clamp(34px, 5vw, 76px);
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.14)),
+          linear-gradient(145deg, rgba(191, 234, 255, 0.45), rgba(255, 255, 255, 0.44) 40%, rgba(255, 106, 42, 0.08));
+        box-shadow: 0 52px 120px rgba(29, 28, 25, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(20px);
+      }
+
+      .hero::before {
+        content: "ИИ41";
+        position: absolute;
+        right: 3vw;
+        bottom: -2.5vw;
+        z-index: 0;
+        color: rgba(255, 255, 255, 0.5);
+        font: 900 clamp(7rem, 18vw, 17rem) / 0.8 Space Grotesk, sans-serif;
+        letter-spacing: -0.09em;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+      }
+
+      .hero-grid {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(360px, 1.08fr);
+        gap: clamp(22px, 4vw, 56px);
+        min-height: calc(100svh - 184px);
+      }
+
+      .hero-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 34px;
+        max-width: 670px;
+      }
+
+      .kicker {
+        display: inline-flex;
+        width: max-content;
+        max-width: 100%;
+        gap: 8px;
+        padding: 8px 10px;
+        border: 1px solid rgba(16, 17, 17, 0.1);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.42);
+        color: rgba(16, 17, 17, 0.64);
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        backdrop-filter: blur(16px);
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 700px;
+        margin-top: 24px;
+        color: rgba(16, 17, 17, 0.92);
+        font: 900 clamp(2.6rem, 6.1vw, 6.6rem) / 0.88 Space Grotesk, sans-serif;
+        letter-spacing: -0.055em;
+      }
+
+      .hero-lead {
+        max-width: 610px;
+        margin-top: 22px;
+        color: rgba(16, 17, 17, 0.68);
+        font-size: clamp(1rem, 1.4vw, 1.22rem);
+        line-height: 1.55;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .micro-statement {
+        position: relative;
+        width: min(100%, 520px);
+        padding: 18px 22px;
+        overflow: hidden;
+        border: 1px solid rgba(16, 17, 17, 0.11);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.46);
+        box-shadow: 0 20px 54px rgba(31, 31, 29, 0.1);
+        backdrop-filter: blur(18px);
+      }
+
+      .micro-statement::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 36%;
+        opacity: 0.72;
+        background: repeating-linear-gradient(
+          90deg,
+          rgba(255, 106, 42, 0.72) 0 3px,
+          transparent 3px 10px,
+          rgba(191, 234, 255, 0.86) 10px 13px,
+          transparent 13px 20px
+        );
+        mask-image: linear-gradient(90deg, #000, transparent);
+        animation: scan 3.8s ease-in-out infinite;
+      }
+
+      .micro-statement span {
+        position: relative;
+        z-index: 1;
+        color: rgba(16, 17, 17, 0.82);
+        font-size: clamp(1rem, 1.8vw, 1.36rem);
+        font-weight: 900;
+      }
+
+      @keyframes scan {
+        0%,
+        100% {
+          transform: translateX(-10%);
+        }
+        50% {
+          transform: translateX(230%);
+        }
+      }
+
+      .hero-visual {
+        position: relative;
+        display: flex;
+        align-items: stretch;
+        min-height: 620px;
+      }
+
+      .portrait-card {
+        position: relative;
+        width: 100%;
+        min-height: 100%;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: clamp(36px, 5vw, 66px);
+        background: rgba(9, 10, 10, 0.9);
+        box-shadow: 0 44px 100px rgba(19, 18, 17, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.24);
+      }
+
+      .portrait-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(90deg, rgba(0, 0, 0, 0.42), transparent 34%),
+          linear-gradient(0deg, rgba(0, 0, 0, 0.36), transparent 46%);
+      }
+
+      .portrait-card img {
+        width: 100%;
+        height: 100%;
+        min-height: 620px;
+        object-fit: cover;
+        object-position: center 36%;
+        filter: saturate(0.98) contrast(1.02);
+      }
+
+      .signature {
+        position: absolute;
+        top: 20%;
+        right: 8%;
+        z-index: 3;
+        color: rgba(255, 255, 255, 0.78);
+        font: 500 clamp(1.5rem, 3vw, 3rem) / 1.02 "Comic Sans MS", "Segoe Print", cursive;
+        transform: rotate(-5deg);
+      }
+
+      .trust-stack {
+        position: absolute;
+        right: clamp(16px, 3vw, 36px);
+        bottom: clamp(16px, 3vw, 36px);
+        z-index: 4;
+        display: grid;
+        gap: 10px;
+        width: min(280px, 68%);
+      }
+
+      .trust-card,
+      .floating-card,
+      .glass-card {
+        border: 1px solid rgba(255, 255, 255, 0.44);
+        background: rgba(255, 255, 255, 0.28);
+        box-shadow: 0 24px 70px rgba(16, 17, 17, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.56);
+        backdrop-filter: blur(22px);
+      }
+
+      .trust-card {
+        padding: 16px 18px;
+        border-radius: 24px;
+        color: #fff;
+        background: rgba(18, 20, 20, 0.5);
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+      }
+
+      .trust-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 30px 80px rgba(255, 106, 42, 0.25);
+      }
+
+      .trust-card strong {
+        display: block;
+        font: 900 28px/1 Space Grotesk, sans-serif;
+        color: #f8fbff;
+      }
+
+      .trust-card span {
+        display: block;
+        margin-top: 6px;
+        color: rgba(255, 255, 255, 0.74);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+
+      .hero-note {
+        position: absolute;
+        left: clamp(18px, 3vw, 38px);
+        bottom: clamp(18px, 3vw, 38px);
+        z-index: 5;
+        max-width: 420px;
+        padding: 18px 22px;
+        border-radius: 30px;
+        color: #fff;
+        background: rgba(18, 20, 20, 0.64);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(18px);
+      }
+
+      .hero-note p {
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 15px;
+        line-height: 1.45;
+      }
+
+      .section {
+        width: min(100% - 32px, var(--max));
+        margin: clamp(76px, 9vw, 130px) auto 0;
+      }
+
+      .section-wide {
+        width: min(100% - 32px, 1380px);
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(0, 0.76fr) minmax(280px, 0.24fr);
+        gap: 28px;
+        align-items: end;
+        margin-bottom: 28px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        margin-bottom: 12px;
+        color: rgba(16, 17, 17, 0.48);
+        font: 900 12px/1 Space Grotesk, sans-serif;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        color: rgba(16, 17, 17, 0.9);
+        font: 900 clamp(2rem, 4.5vw, 4.8rem) / 0.94 Space Grotesk, sans-serif;
+        letter-spacing: -0.055em;
+      }
+
+      .section-head p:not(.eyebrow) {
+        color: var(--ink-soft);
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      .panel {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.68);
+        border-radius: var(--radius-xl);
+        background: rgba(255, 255, 255, 0.44);
+        box-shadow: 0 34px 90px rgba(29, 28, 25, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.84);
+        backdrop-filter: blur(22px);
+      }
+
+      .panel::before {
+        content: "";
+        position: absolute;
+        inset: -40% auto -40% -20%;
+        width: 22%;
+        opacity: 0.35;
+        background: linear-gradient(90deg, transparent, #fff, transparent);
+        transform: rotate(18deg);
+        animation: panelShine 8s ease-in-out infinite;
+      }
+
+      @keyframes panelShine {
+        0%,
+        50% {
+          transform: translateX(0) rotate(18deg);
+        }
+        82%,
+        100% {
+          transform: translateX(640%) rotate(18deg);
+        }
+      }
+
+      .problem-strip {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        padding: 16px;
+      }
+
+      .mini-card {
+        position: relative;
+        min-height: 260px;
+        overflow: hidden;
+        border-radius: 38px;
+        background: #111;
+      }
+
+      .mini-card img,
+      .case-card img,
+      .format-card img,
+      .gallery-card img,
+      .step-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .mini-card img,
+      .case-card > img,
+      .gallery-card > img {
+        position: absolute;
+        inset: 0;
+      }
+
+      .mini-card::after,
+      .case-card::after,
+      .gallery-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), transparent 62%);
+      }
+
+      .mini-card p {
+        position: absolute;
+        right: 18px;
+        bottom: 18px;
+        left: 18px;
+        z-index: 1;
+        color: #fff;
+        font-size: 17px;
+        font-weight: 900;
+        line-height: 1.15;
+      }
+
+      .case-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .case-card {
+        position: relative;
+        min-height: 420px;
+        overflow: hidden;
+        border-radius: 42px;
+        background: #111;
+        box-shadow: 0 24px 70px rgba(20, 20, 20, 0.13);
+        transform-style: preserve-3d;
+      }
+
+      .case-card:nth-child(2),
+      .case-card:nth-child(5) {
+        transform: translateY(28px);
+      }
+
+      .case-copy {
+        position: absolute;
+        inset: auto 18px 18px;
+        z-index: 2;
+        padding: 20px;
+        border-radius: 28px;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.17);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        backdrop-filter: blur(18px);
+      }
+
+      .case-copy span {
+        color: var(--blue);
+        font: 900 22px/1 Space Grotesk, sans-serif;
+      }
+
+      .case-copy h3 {
+        margin-top: 14px;
+        font: 900 25px/1 Space Grotesk, sans-serif;
+        text-transform: uppercase;
+      }
+
+      .case-copy p {
+        margin-top: 10px;
+        color: rgba(255, 255, 255, 0.74);
+        line-height: 1.45;
+      }
+
+      .formats {
+        display: grid;
+        grid-template-columns: 1.12fr 0.88fr;
+        gap: 18px;
+      }
+
+      .format-card {
+        position: relative;
+        min-height: 500px;
+        overflow: hidden;
+        padding: 26px;
+        border-radius: 48px;
+        color: #fff;
+        background: #111;
+      }
+
+      .format-card.small {
+        min-height: 241px;
+      }
+
+      .format-card img {
+        position: absolute;
+        inset: 0;
+        opacity: 0.9;
+      }
+
+      .format-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(0deg, rgba(0, 0, 0, 0.74), rgba(0, 0, 0, 0.12) 62%),
+          linear-gradient(90deg, rgba(0, 0, 0, 0.46), transparent);
+      }
+
+      .format-copy {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        min-height: inherit;
+      }
+
+      .format-copy small {
+        color: var(--blue);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .format-copy h3 {
+        margin-top: 12px;
+        font: 900 clamp(1.65rem, 3vw, 3.4rem) / 0.98 Space Grotesk, sans-serif;
+        letter-spacing: -0.04em;
+      }
+
+      .format-copy p,
+      .format-copy li {
+        color: rgba(255, 255, 255, 0.76);
+        line-height: 1.5;
+      }
+
+      .format-copy p {
+        margin-top: 14px;
+        max-width: 620px;
+      }
+
+      .format-copy ul {
+        display: grid;
+        gap: 8px;
+        margin: 18px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .format-copy li::before {
+        content: "↗";
+        margin-right: 8px;
+        color: var(--lime);
+      }
+
+      .format-stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .lazar-panel {
+        display: grid;
+        grid-template-columns: 0.92fr 1.08fr;
+        gap: 28px;
+        align-items: center;
+        padding: clamp(20px, 4vw, 54px);
+      }
+
+      .lazar-copy p {
+        margin-top: 18px;
+        max-width: 610px;
+        color: var(--ink-soft);
+        font-size: 18px;
+        line-height: 1.6;
+      }
+
+      .phone-stage {
+        position: relative;
+        min-height: 660px;
+        border-radius: 56px;
+        background:
+          radial-gradient(circle at 68% 36%, rgba(191, 234, 255, 0.8), transparent 18rem),
+          radial-gradient(circle at 40% 70%, rgba(255, 106, 42, 0.22), transparent 15rem),
+          rgba(255, 255, 255, 0.4);
+      }
+
+      .phone-stage::before {
+        content: "";
+        position: absolute;
+        inset: 8% 8% 14% 16%;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.34);
+        filter: blur(4px);
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.48), 0 44px 100px rgba(38, 35, 29, 0.2);
+      }
+
+      .phone {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: min(330px, 58vw);
+        overflow: hidden;
+        border: 10px solid rgba(20, 20, 20, 0.88);
+        border-radius: 42px;
+        box-shadow: 0 34px 90px rgba(16, 17, 17, 0.26);
+        transform: translate(-50%, -50%) rotate(-3deg);
+      }
+
+      .phone img {
+        width: 100%;
+      }
+
+      .orb {
+        position: absolute;
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: 50%;
+        background: radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.2) 55%, rgba(93, 105, 108, 0.18));
+        box-shadow: inset -12px -16px 28px rgba(79, 91, 96, 0.16), 0 22px 48px rgba(37, 38, 35, 0.12);
+        backdrop-filter: blur(18px);
+        animation: float 7s ease-in-out infinite;
+      }
+
+      .orb.one {
+        width: 94px;
+        height: 94px;
+        top: 14%;
+        left: 18%;
+      }
+
+      .orb.two {
+        width: 56px;
+        height: 56px;
+        right: 20%;
+        top: 24%;
+        animation-delay: -2s;
+      }
+
+      .orb.three {
+        width: 120px;
+        height: 120px;
+        right: 12%;
+        bottom: 18%;
+        animation-delay: -4s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-18px);
+        }
+      }
+
+      .media-grid,
+      .article-grid,
+      .process-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .media-card,
+      .article-card,
+      .step-card {
+        overflow: hidden;
+        border-radius: 34px;
+        background: rgba(255, 255, 255, 0.48);
+        border: 1px solid rgba(255, 255, 255, 0.58);
+        box-shadow: 0 24px 70px rgba(20, 20, 20, 0.1);
+        backdrop-filter: blur(20px);
+      }
+
+      .media-card img {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+      }
+
+      .media-card div,
+      .article-card div {
+        padding: 20px;
+      }
+
+      .media-card small,
+      .article-card small {
+        color: rgba(16, 17, 17, 0.46);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .media-card h3,
+      .article-card h3 {
+        margin-top: 8px;
+        font-size: 22px;
+        line-height: 1.08;
+      }
+
+      .article-card {
+        min-height: 230px;
+        display: flex;
+        align-items: stretch;
+      }
+
+      .article-logo {
+        display: grid;
+        place-items: center;
+        width: 34%;
+        min-width: 120px;
+        background:
+          radial-gradient(circle at center, rgba(255, 255, 255, 0.96), rgba(191, 234, 255, 0.34)),
+          rgba(255, 255, 255, 0.5);
+      }
+
+      .article-logo img {
+        width: 64px;
+        height: 64px;
+      }
+
+      .cert-layout {
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+        gap: 18px;
+        align-items: stretch;
+      }
+
+      .cert-stage {
+        display: grid;
+        place-items: center;
+        min-height: 620px;
+        padding: 24px;
+      }
+
+      .cert-stage img {
+        max-height: 560px;
+        width: auto;
+        border-radius: 24px;
+        box-shadow: 0 30px 80px rgba(20, 20, 20, 0.22);
+      }
+
+      .cert-copy {
+        padding: clamp(24px, 4vw, 54px);
+      }
+
+      .cert-copy h3 {
+        margin-top: 14px;
+        font: 900 clamp(2.1rem, 4vw, 4.5rem) / 0.92 Space Grotesk, sans-serif;
+        letter-spacing: -0.05em;
+      }
+
+      .cert-copy p {
+        margin-top: 18px;
+        color: var(--ink-soft);
+        font-size: 18px;
+        line-height: 1.6;
+      }
+
+      .cert-thumbs {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .cert-thumbs button {
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid rgba(16, 17, 17, 0.12);
+        border-radius: 18px;
+        background: transparent;
+        cursor: pointer;
+        opacity: 0.62;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+
+      .cert-thumbs button:hover,
+      .cert-thumbs button.active {
+        opacity: 1;
+        transform: translateY(-2px);
+      }
+
+      .cert-thumbs img {
+        width: 100%;
+        aspect-ratio: 1 / 1.25;
+        object-fit: cover;
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 14px;
+      }
+
+      .gallery-card {
+        position: relative;
+        min-height: 360px;
+        overflow: hidden;
+        border-radius: 34px;
+        background: #111;
+      }
+
+      .gallery-card:nth-child(1),
+      .gallery-card:nth-child(6),
+      .gallery-card:nth-child(12) {
+        grid-column: span 5;
+      }
+
+      .gallery-card:nth-child(2),
+      .gallery-card:nth-child(7),
+      .gallery-card:nth-child(13) {
+        grid-column: span 4;
+      }
+
+      .gallery-card:nth-child(3),
+      .gallery-card:nth-child(4),
+      .gallery-card:nth-child(5),
+      .gallery-card:nth-child(8),
+      .gallery-card:nth-child(9),
+      .gallery-card:nth-child(10),
+      .gallery-card:nth-child(11),
+      .gallery-card:nth-child(14),
+      .gallery-card:nth-child(15),
+      .gallery-card:nth-child(16),
+      .gallery-card:nth-child(17) {
+        grid-column: span 3;
+      }
+
+      .gallery-card div {
+        position: absolute;
+        inset: auto 14px 14px;
+        z-index: 1;
+        padding: 16px;
+        border-radius: 24px;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(16px);
+      }
+
+      .gallery-card h3 {
+        font-size: 18px;
+        line-height: 1.1;
+      }
+
+      .gallery-card p {
+        margin-top: 8px;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+
+      .process-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .step-card {
+        min-height: 340px;
+      }
+
+      .step-card img {
+        height: 190px;
+      }
+
+      .step-card div {
+        padding: 20px;
+      }
+
+      .step-card span {
+        color: var(--accent);
+        font: 900 34px/1 Space Grotesk, sans-serif;
+      }
+
+      .step-card p {
+        margin-top: 14px;
+        color: var(--ink-soft);
+        line-height: 1.45;
+      }
+
+      .final-panel {
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.55fr);
+        gap: 18px;
+        padding: 18px;
+      }
+
+      .final-copy {
+        padding: clamp(24px, 4vw, 54px);
+      }
+
+      .final-copy p {
+        margin-top: 18px;
+        color: var(--ink-soft);
+        font-size: 18px;
+        line-height: 1.6;
+      }
+
+      .final-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .final-photo {
+        overflow: hidden;
+        border-radius: 42px;
+        background: #111;
+      }
+
+      .final-photo img {
+        width: 100%;
+        height: 100%;
+        min-height: 520px;
+        object-fit: cover;
+        object-position: center 34%;
+      }
+
+      .social-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .social-strip a {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        border-radius: 999px;
+        padding: 0 16px;
+        background: rgba(255, 255, 255, 0.52);
+        border: 1px solid rgba(16, 17, 17, 0.1);
+        font-weight: 900;
+      }
+
+      .footer {
+        width: min(100% - 32px, 1180px);
+        margin: 60px auto 34px;
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        color: rgba(16, 17, 17, 0.54);
+        font-size: 13px;
+      }
+
+      [data-reveal] {
+        opacity: 0;
+        transform: translateY(34px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+      }
+
+      [data-reveal].visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .tilt {
+        transition: transform 0.3s ease;
+      }
+
+      @media (max-width: 1080px) {
+        .topline {
+          flex-wrap: wrap;
+        }
+
+        .nav {
+          order: 3;
+          width: 100%;
+          overflow-x: auto;
+          justify-content: flex-start;
+        }
+
+        .hero-grid,
+        .formats,
+        .lazar-panel,
+        .cert-layout,
+        .final-panel {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          min-height: auto;
+        }
+
+        .hero-grid {
+          min-height: auto;
+        }
+
+        .portrait-card img,
+        .hero-visual {
+          min-height: 540px;
+        }
+
+        .problem-strip,
+        .case-grid,
+        .media-grid,
+        .article-grid,
+        .process-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .case-card:nth-child(2),
+        .case-card:nth-child(5) {
+          transform: none;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .page-shell,
+        .section,
+        .section-wide {
+          width: min(100% - 20px, 1180px);
+        }
+
+        .topline {
+          padding-top: 16px;
+        }
+
+        .brand span:last-child {
+          display: none;
+        }
+
+        .nav-cta {
+          min-height: 46px;
+          padding: 0 16px;
+          font-size: 13px;
+        }
+
+        .nav {
+          min-height: 48px;
+          padding: 0 16px;
+        }
+
+        .hero {
+          padding: 12px;
+          border-radius: 34px;
+        }
+
+        .hero::before {
+          right: -8px;
+          bottom: 44%;
+          font-size: 6rem;
+        }
+
+        .hero-copy {
+          gap: 24px;
+        }
+
+        .kicker {
+          flex-direction: column;
+          width: 100%;
+          align-items: flex-start;
+          border-radius: 22px;
+        }
+
+        h1 {
+          font-size: clamp(2.4rem, 13vw, 4.4rem);
+        }
+
+        .hero-lead {
+          font-size: 15px;
+        }
+
+        .micro-statement {
+          border-radius: 24px;
+        }
+
+        .portrait-card img,
+        .hero-visual {
+          min-height: 500px;
+        }
+
+        .trust-stack {
+          position: relative;
+          right: auto;
+          bottom: auto;
+          width: 100%;
+          margin-top: -126px;
+          padding: 0 14px 14px;
+        }
+
+        .hero-note {
+          position: relative;
+          left: auto;
+          bottom: auto;
+          margin-top: 12px;
+        }
+
+        .problem-strip,
+        .case-grid,
+        .media-grid,
+        .article-grid,
+        .process-grid,
+        .cert-thumbs {
+          grid-template-columns: 1fr;
+        }
+
+        .section-head {
+          grid-template-columns: 1fr;
+        }
+
+        .case-card,
+        .format-card,
+        .mini-card {
+          min-height: 360px;
+          border-radius: 32px;
+        }
+
+        .phone-stage {
+          min-height: 540px;
+        }
+
+        .cert-stage {
+          min-height: auto;
+        }
+
+        .cert-thumbs {
+          grid-template-columns: repeat(4, 1fr);
+        }
+
+        .gallery-card,
+        .gallery-card:nth-child(n) {
+          grid-column: span 12;
+          min-height: 390px;
+        }
+
+        .footer {
+          flex-direction: column;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div class="page-shell">
+      <header class="topline">
+        <a class="brand" href="#top" aria-label="На главную">
+          <span class="brand-badge">
+            <span class="brand-mark"><span>ИИ</span><span>41</span></span>
+          </span>
+          <span>Roman Isaev</span>
+        </a>
+        <nav class="nav" aria-label="Навигация">
+          <a href="#offers">Форматы</a>
+          <a href="#proof">Кейсы</a>
+          <a href="#credentials">Выступления</a>
+          <a href="#aggregator">ЛАЗАРЬ</a>
+          <a href="#contacts">Контакты</a>
+        </nav>
+        <a class="nav-cta" href="https://t.me/r1isaev" target="_blank" rel="noreferrer">Обсудить задачу</a>
+      </header>
+
+      <main id="top">
+        <section class="hero">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <div>
+                <p class="kicker"><span>ИИ для бизнеса</span><span>без хаоса и лишних подписок</span></p>
+                <h1>Внедряю ИИ в процессы, которые каждый день съедают время и деньги</h1>
+                <p class="hero-lead">
+                  Обучаю предпринимателей и команды использовать нейросети в контенте, продажах и операционке:
+                  от разовых задач до рабочих регламентов, ботов и AI-стека под ваш бизнес.
+                </p>
+                <div class="hero-actions">
+                  <a class="pill-button" href="https://t.me/r1isaev" target="_blank" rel="noreferrer">Разобрать мою задачу</a>
+                  <a class="ghost-button" href="#offers">Посмотреть форматы</a>
+                </div>
+              </div>
+              <div class="micro-statement">
+                <span>Не набор промптов. А рабочая система под ваши задачи.</span>
+              </div>
+            </div>
+
+            <div class="hero-visual">
+              <div class="portrait-card tilt">
+                <img
+                  src="https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/i/N2AgYgh795IKNg"
+                  alt="Роман Исаев"
+                  loading="eager"
+                  referrerpolicy="no-referrer"
+                />
+                <div class="signature">Роман<br />Исаев</div>
+                <div class="trust-stack">
+                  <article class="trust-card"><strong>30+</strong><span>выступлений об ИИ для бизнеса</span></article>
+                  <article class="trust-card"><strong>5000+</strong><span>учеников и участников обучений</span></article>
+                  <article class="trust-card"><strong>Co-founder</strong><span>AI-агрегатора «ЛАЗАРЬ»</span></article>
+                </div>
+                <div class="hero-note">
+                  <p>Приходите с задачей. Уходите с AI-процессом, который команда реально использует.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <section class="section section-wide" data-reveal>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Проблема</p>
+          <h2>ИИ уже есть, а практического внедрения практически ни у кого нет.</h2>
+        </div>
+        <p>Переходим от случайных экспериментов к рабочим сценариям: инструменты, деньги, команда, повторяемые процессы.</p>
+      </div>
+      <div class="panel problem-strip">
+        <article class="mini-card"><img src="/prompt-library.jpg" alt="" /><p>Какие инструменты реально использовать?</p></article>
+        <article class="mini-card"><img src="/stage-talk.jpg" alt="" /><p>Где AI экономит время или приносит деньги?</p></article>
+        <article class="mini-card"><img src="/auditorium.jpg" alt="" /><p>Как обучить команду без абстрактных лекций?</p></article>
+        <article class="mini-card"><img src="/generative-content-workflow.jpg" alt="" /><p>Как перейти от случайных экспериментов к повторяемым процессам?</p></article>
+      </div>
+    </section>
+
+    <section class="section section-wide" data-reveal>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Что делаем</p>
+          <h2>От конкретной задачи до рабочего AI-процесса</h2>
+        </div>
+        <p>Шесть направлений, где нейросети становятся не игрушкой, а частью ежедневной работы.</p>
+      </div>
+      <div class="case-grid">
+        <article class="case-card tilt"><img src="/ai-sales-agent.jpg" alt="" /><div class="case-copy"><span>01</span><h3>Бизнес-процессы</h3><p>Находим задачи, где AI снижает ручную работу и ускоряет решения.</p></div></article>
+        <article class="case-card tilt"><img src="/ai-assistant-expert.jpg" alt="" /><div class="case-copy"><span>02</span><h3>AI-помощники</h3><p>Проектируем помощников для планирования, контента, исследований и документов.</p></div></article>
+        <article class="case-card tilt"><img src="/gallery-17-content-stage.jpg" alt="" /><div class="case-copy"><span>03</span><h3>Генеративный контент</h3><p>Изображения, видео, презентации, визуальные концепции, Reels и карусели.</p></div></article>
+        <article class="case-card tilt"><img src="/gallery-13-audience-room.jpg" alt="" /><div class="case-copy"><span>04</span><h3>Обучение команд</h3><p>Обучение по отделам и реальным рабочим задачам, а не по общим трендам.</p></div></article>
+        <article class="case-card tilt"><img src="/roman-editorial-suit.jpg" alt="" /><div class="case-copy"><span>05</span><h3>Техническая база</h3><p>Подбираем связку инструментов, доступов и правил, чтобы AI-процесс можно было повторять без хаоса.</p></div></article>
+        <article class="case-card tilt"><img src="/generative-content-workflow.jpg" alt="" /><div class="case-copy"><span>06</span><h3>Маркетплейсы</h3><p>Готовим AI-процессы для карточек товара, изображений и описаний.</p></div></article>
+      </div>
+    </section>
+
+    <section class="section section-wide" id="offers" data-reveal>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Форматы</p>
+          <h2>Выберите формат под текущую задачу</h2>
+        </div>
+        <p>Можно начать с одной задачи, месяца внедрения или обучения команды.</p>
+      </div>
+      <div class="formats">
+        <article class="format-card">
+          <img src="/stage-phone-proof.jpg" alt="" />
+          <div class="format-copy">
+            <small>Быстрый старт</small>
+            <h3>Разовая AI-консультация</h3>
+            <p>
+              Не курс по нейросетям "в целом". Вы приходите с задачей: контент, презентации, изображения,
+              видео, помощник, обучение команды или бизнес-процесс. Мы выбираем инструменты, собираем процесс,
+              тестируем промпты и фиксируем следующий шаг.
+            </p>
+            <ul>
+              <li>понимаете, какие нейросети использовать именно вам;</li>
+              <li>получаете промпты, сценарий работы и следующий шаг;</li>
+              <li>экономите недели самостоятельных проб и ошибок;</li>
+              <li>после встречи можете повторять процесс сами.</li>
+            </ul>
+          </div>
+        </article>
+        <div class="format-stack">
+          <article class="format-card small">
+            <img src="/gallery-08-stage-full.jpg" alt="" />
+            <div class="format-copy">
+              <small>Внедрение</small>
+              <h3>Месячное наставничество</h3>
+              <p>Структурная работа по внедрению AI в задачи предпринимателя: 4 глубокие встречи, цели на неделю и поддержка между встречами.</p>
+            </div>
+          </article>
+          <article class="format-card small">
+            <img src="/event-hall.jpg" alt="" />
+            <div class="format-copy">
+              <small>Команды</small>
+              <h3>Обучение команды</h3>
+              <p>Обучаю команды применять ИИ в ежедневной работе, а не просто "знать про ChatGPT".</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-wide" id="aggregator" data-reveal>
+      <div class="panel lazar-panel">
+        <div class="lazar-copy">
+          <p class="eyebrow">AI-продукт Лазарь</p>
+          <h2>Инструмент для визуального контента в одном месте</h2>
+          <p>
+            Лазарь помогает не просто генерировать картинки, а встраивать визуал в воронки продаж:
+            под бренд, задачу, формат площадки и следующий шаг клиента. Контент должен выглядеть
+            не как случайный AI-шум, а как часть системы, которая усиливает доверие и помогает продавать.
+          </p>
+          <div class="hero-actions">
+            <a class="pill-button" href="https://t.me/lazar_ai_bot" target="_blank" rel="noreferrer">Попробовать Лазарь</a>
+          </div>
+        </div>
+        <div class="phone-stage">
+          <span class="orb one"></span>
+          <span class="orb two"></span>
+          <span class="orb three"></span>
+          <div class="phone"><img src="/lazar-bot.jpg" alt="Интерфейс Telegram-бота Лазарь" /></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-wide" id="proof" data-reveal>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Доверие</p>
+          <h2>Отзывы, медиа и публичная экспертиза</h2>
+        </div>
+        <p>Отзывы клиентов, публикации и эфиры собраны в компактный proof-блок.</p>
+      </div>
+      <div class="media-grid">
+        <a class="media-card" href="https://youtu.be/cVdL_r988l0" target="_blank" rel="noreferrer"><img src="https://img.youtube.com/vi/cVdL_r988l0/maxresdefault.jpg" alt="" /><div><small>Отзыв клиента</small><h3>Александр Свитеньков</h3><p>Загородная недвижимость Урала</p></div></a>
+        <a class="media-card" href="https://youtu.be/UrL9pZcnVfQ" target="_blank" rel="noreferrer"><img src="https://img.youtube.com/vi/UrL9pZcnVfQ/maxresdefault.jpg" alt="" /><div><small>Отзыв клиента</small><h3>Сергей Климин</h3><p>CNC66</p></div></a>
+        <a class="media-card" href="https://youtu.be/kG-OHTIJphs" target="_blank" rel="noreferrer"><img src="https://img.youtube.com/vi/kG-OHTIJphs/maxresdefault.jpg" alt="" /><div><small>Отзыв участников</small><h3>Выездное обучение</h3><p>Командный формат</p></div></a>
+      </div>
+      <div class="article-grid" style="margin-top:16px">
+        <a class="article-card" href="https://argumenti.ru/science/2025/12/978921" target="_blank" rel="noreferrer"><span class="article-logo"><img src="https://www.google.com/s2/favicons?domain=argumenti.ru&sz=128" alt="" /></span><div><small>Федеральный медиаресурс / Аргументы недели</small><h3>5 способов внедрить ИИ в малый бизнес без IT-отдела</h3></div></a>
+        <a class="article-card" href="https://people-vlast-rf.ru/interv/nejroseti-ne-zamenyayut-lyudej.-они-ускоряют-тех.-кто-умеет-думать" target="_blank" rel="noreferrer"><span class="article-logo"><img src="https://www.google.com/s2/favicons?domain=people-vlast-rf.ru&sz=128" alt="" /></span><div><small>Онлайн-журнал / Люди власти</small><h3>Нейросети не заменяют людей. Они ускоряют тех, кто умеет думать</h3></div></a>
+        <a class="article-card" href="https://argumenti.ru/society/2026/02/985926" target="_blank" rel="noreferrer"><span class="article-logo"><img src="https://www.google.com/s2/favicons?domain=argumenti.ru&sz=128" alt="" /></span><div><small>Федеральный медиаресурс / Аргументы недели</small><h3>Почему важно учить команды, а не просто платить за подписки</h3></div></a>
+      </div>
+    </section>
+
+    <section class="section section-wide" id="credentials" data-reveal>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Регалии</p>
+          <h2>Грамоты, благодарности и публичное признание</h2>
+        </div>
+        <p>Документы вынесены в кинематографичную витрину: крупный просмотр и быстрые миниатюры.</p>
+      </div>
+      <div class="panel cert-layout">
+        <div class="cert-stage"><img id="certImage" src="/certificates/01-diplom.jpg" alt="ТОП молодых предпринимателей" /></div>
+        <div class="cert-copy">
+          <p class="eyebrow" id="certBadge">Победитель</p>
+          <h3 id="certTitle">ТОП молодых предпринимателей</h3>
+          <p id="certMeta">Свердловская область, 2025</p>
+          <p id="certText">Победитель престиж-премии «ТОП молодых предпринимателей Свердловской области».</p>
+          <div class="cert-thumbs" id="certThumbs"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-wide" data-reveal>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Роман в работе</p>
+          <h2>Фото с выступлений, медиа и проектов, где AI становится практикой</h2>
+        </div>
+        <p>Живая галерея с мероприятий, выступлений и рабочих встреч.</p>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </section>
+
+    <section class="section section-wide" data-reveal>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Процесс</p>
+          <h2>Как проходит работа</h2>
+        </div>
+        <p>Минимум хаоса: задача, быстрый фокус, сборка процесса и проверка на практике.</p>
+      </div>
+      <div class="process-grid">
+        <article class="step-card"><img src="/business-process.jpg" alt="" /><div><span>1</span><p>Вы описываете задачу или бизнес-контекст.</p></div></article>
+        <article class="step-card"><img src="/ai-assistant-expert.jpg" alt="" /><div><span>2</span><p>Определяем, где AI может дать результат быстрее всего.</p></div></article>
+        <article class="step-card"><img src="/roman-stage-profile.jpg" alt="" /><div><span>3</span><p>Выбираем инструменты и собираем рабочий процесс.</p></div></article>
+        <article class="step-card"><img src="/workshop-host.jpg" alt="" /><div><span>4</span><p>Тестируем на реальных примерах и фиксируем следующий шаг.</p></div></article>
+      </div>
+    </section>
+
+    <section class="section section-wide" id="contacts" data-reveal>
+      <div class="panel final-panel">
+        <div class="final-copy">
+          <p class="eyebrow">Следующий шаг</p>
+          <h2>Напишите задачу. Я предложу подходящий формат.</h2>
+          <p>
+            Разовая консультация, месячное наставничество, обучение команды или AI-продукт Лазарь.
+            Начнем с того, что реально нужно в вашей ситуации.
+          </p>
+          <div class="final-actions">
+            <a class="pill-button" href="https://t.me/r1isaev" target="_blank" rel="noreferrer">Написать в Telegram</a>
+            <a class="ghost-button" href="https://t.me/lazar_ai_bot" target="_blank" rel="noreferrer">Тестировать Лазарь</a>
+          </div>
+          <div class="social-strip">
+            <a href="https://t.me/r1isaev" target="_blank" rel="noreferrer">Telegram</a>
+            <a href="https://youtube.com/@romanisaev.vc1?si=dF8opM_gPWU-D5b4" target="_blank" rel="noreferrer">YouTube</a>
+          </div>
+        </div>
+        <div class="final-photo"><img src="/expert-close-live.jpg" alt="" /></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>© 2026 Роман Исаев / ИИ41</span>
+      <span><a href="/privacy.html">Политика конфиденциальности</a> · <a href="/personal-data.html">Обработка персональных данных</a></span>
+    </footer>
+
+    <script>
+      const certificates = [
+        ["/certificates/01-diplom.jpg", "Победитель", "ТОП молодых предпринимателей", "Свердловская область, 2025", "Победитель престиж-премии «ТОП молодых предпринимателей Свердловской области»."],
+        ["/certificates/02-sverdlovskoe.jpg", "Благодарность", "Союз женщин России", "I форум «Семья - колыбель нации», 2026", "За активное участие, профессионализм и вклад в создание атмосферы поддержки, доверия и взаимопомощи."],
+        ["/certificates/03-blagodarstvennoe.jpg", "Спикер", "Форум «Творчество, которое объединяет»", "Верхотурье, 2026", "За экспертную поддержку и выступление на семинаре о творчестве как инструменте культурной идентичности."],
+        ["/certificates/04.jpg", "Высокий вклад", "Нейрошторм 2.0", "Конференция об искусственном интеллекте, 2025", "За участие в конференции и высокий профессиональный вклад в программу."],
+        ["/certificates/16-neurostorm-2026.jpg", "Благодарственное письмо", "Нейрошторм 3.0", "27-29 апреля 2026", "За энергию, личный опыт и практические фишки в выступлении."]
+      ];
+
+      const gallery = [
+        ["/gallery-01-neural-stage.jpg", "AI на живых примерах", "Я показываю нейросети на понятных задачах, чтобы вы сразу видели, где AI экономит время и деньги."],
+        ["/gallery-02-family-ai-talk.jpg", "AI в личной жизни", "Я учу использовать AI не только в бизнесе: планировать, учиться, разбирать быт и быстрее принимать решения."],
+        ["/gallery-03-family-workflow.jpg", "Сценарии вместо хаоса", "Я собираю для вас не список сервисов, а понятные сценарии: где нажать, что написать и какой результат получить."],
+        ["/gallery-04-buildural-stage.jpg", "AI для отраслей", "Я перевожу AI на язык вашей отрасли, чтобы нейросети работали с реальными процессами, а не с общими трендами."],
+        ["/gallery-05-team-group.jpg", "Команда быстрее растет", "Я показываю, как командное обучение AI может снять часы рутины и дать компании экономию в миллионы за год."],
+        ["/gallery-06-people-podcast.jpg", "AI как публичная экспертиза", "Я помогаю превращать знания об AI в контент, который усиливает доверие, экспертность и входящие обращения."],
+        ["/gallery-07-workshop-table.jpg", "Разбор ваших задач", "Я начинаю с ваших процессов: нахожу повторяющиеся действия и собираю AI-помощников под конкретную работу."],
+        ["/gallery-08-stage-full.jpg", "AI вместо лишней рутины", "Я показываю, как делегировать нейросетям черновики, аналитику, идеи и подготовку материалов без потери качества."],
+        ["/gallery-09-podium-focus.jpg", "Фокус на деньгах", "Я помогаю выбрать те AI-сценарии, которые дают бизнесу результат: быстрее продавать, считать, писать и упаковывать."],
+        ["/gallery-10-networking.jpg", "AI для предпринимателей", "Я говорю с предпринимателями на языке задач: лиды, команда, контент, документы, продажи и управленческая скорость."],
+        ["/gallery-11-portrait-room.jpg", "Спокойное внедрение", "Я помогаю разобраться без перегруза: что внедрять сейчас, что отложить и какие инструменты не тратить время."],
+        ["/gallery-12-podcast-wide.jpg", "Опыт практиков", "Я разбираю AI через реальные истории бизнеса, чтобы вы видели не магию, а рабочие модели применения."],
+        ["/gallery-13-audience-room.jpg", "Обучение команды", "Я обучаю команды так, чтобы сотрудники быстрее учились, меньше зависели от подрядчиков и увереннее работали с AI."],
+        ["/gallery-14-people-cover.jpg", "Контент, который продает", "Я показываю, как AI помогает быстрее создавать контент, который поддерживает бренд, доверие и продажи."],
+        ["/gallery-15-speaker-front.jpg", "Сложное простым языком", "Я объясняю AI так, чтобы после встречи вы не вдохновились на день, а начали применять инструменты сразу."],
+        ["/gallery-16-speaker-close.jpg", "Ответы под вашу ситуацию", "Я разбираю вопросы в моменте: какие промпты писать, какие сервисы брать и как встроить AI в вашу задачу."],
+        ["/gallery-17-content-stage.jpg", "AI-визуал для продаж", "Я учу делать визуал не ради красивой картинки, а ради бренда, воронки, карточек товара и роста конверсии."]
+      ];
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add("visible");
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+
+      document.querySelectorAll("[data-reveal]").forEach((element) => revealObserver.observe(element));
+
+      document.querySelectorAll(".tilt").forEach((card) => {
+        card.addEventListener("mousemove", (event) => {
+          const rect = card.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+          card.style.transform = `perspective(900px) rotateX(${y * -4}deg) rotateY(${x * 5}deg) translateY(-2px)`;
+        });
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "";
+        });
+      });
+
+      const certThumbs = document.getElementById("certThumbs");
+      certificates.forEach((item, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = index === 0 ? "active" : "";
+        button.innerHTML = `<img src="${item[0]}" alt="" loading="lazy">`;
+        button.addEventListener("click", () => {
+          document.getElementById("certImage").src = item[0];
+          document.getElementById("certBadge").textContent = item[1];
+          document.getElementById("certTitle").textContent = item[2];
+          document.getElementById("certMeta").textContent = item[3];
+          document.getElementById("certText").textContent = item[4];
+          certThumbs.querySelectorAll("button").forEach((thumb) => thumb.classList.remove("active"));
+          button.classList.add("active");
+        });
+        certThumbs.appendChild(button);
+      });
+
+      const galleryGrid = document.getElementById("galleryGrid");
+      gallery.forEach((item) => {
+        const card = document.createElement("article");
+        card.className = "gallery-card";
+        card.innerHTML = `<img src="${item[0]}" alt="${item[1]}" loading="lazy"><div><h3>${item[1]}</h3><p>${item[2]}</p></div>`;
+        galleryGrid.appendChild(card);
+      });
+    </script>
   </body>
 </html>
