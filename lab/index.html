@@ -15,15 +15,15 @@
     <style>
       :root {
         color-scheme: dark;
-        --bg: #040707;
-        --panel: #0b1010;
-        --panel-2: #121817;
-        --ink: #f3f7ef;
-        --muted: rgba(243, 247, 239, 0.68);
-        --dim: rgba(243, 247, 239, 0.45);
-        --line: rgba(243, 247, 239, 0.12);
-        --lime: #c9ff3f;
-        --green: #35f2b0;
+        --bg: #030606;
+        --panel: #070c0c;
+        --panel-2: #101615;
+        --ink: #f6faf2;
+        --muted: rgba(246, 250, 242, 0.72);
+        --dim: rgba(246, 250, 242, 0.48);
+        --line: rgba(246, 250, 242, 0.11);
+        --lime: #d7ff35;
+        --green: #00f0a8;
         --cyan: #6be6ff;
         --blue: #7fa8ff;
         --gold: #d7b972;
@@ -39,9 +39,9 @@
         color: var(--ink);
         font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         background:
-          radial-gradient(circle at 50% -10%, rgba(201, 255, 63, 0.18), transparent 26rem),
-          radial-gradient(circle at 88% 12%, rgba(53, 242, 176, 0.1), transparent 24rem),
-          linear-gradient(180deg, #030606 0%, #08100f 34%, #040707 100%);
+          radial-gradient(circle at 52% -8%, rgba(215, 255, 53, 0.12), transparent 28rem),
+          radial-gradient(circle at 88% 12%, rgba(0, 240, 168, 0.08), transparent 25rem),
+          linear-gradient(180deg, #020505 0%, #07100f 34%, #030606 100%);
         overflow-x: hidden;
       }
 
@@ -141,16 +141,43 @@
         border-radius: 999px;
         color: #07100b;
         background: var(--lime);
-        box-shadow: 0 0 44px rgba(201, 255, 63, 0.16);
+        box-shadow: 0 0 36px rgba(215, 255, 53, 0.14);
         font-weight: 900;
         text-align: center;
         white-space: nowrap;
+        overflow: hidden;
+        position: relative;
+        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+        inset: -40% auto -40% -70%;
+        width: 46%;
+        transform: rotate(18deg);
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+        opacity: 0.34;
+        animation: shine 4.8s ease-in-out infinite;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 54px rgba(215, 255, 53, 0.2);
       }
 
       .btn.secondary {
         color: var(--ink);
         background: rgba(243, 247, 239, 0.06);
         box-shadow: none;
+      }
+
+      .btn.secondary::after { opacity: 0.14; }
+
+      @keyframes shine {
+        0%, 62% { left: -70%; }
+        78%, 100% { left: 130%; }
       }
 
       .hero {
@@ -192,16 +219,16 @@
 
       h1 {
         max-width: 720px;
-        font-size: clamp(3rem, 6vw, 5.8rem);
-        line-height: 0.92;
-        letter-spacing: -0.075em;
+        font-size: clamp(2.8rem, 5.4vw, 5.15rem);
+        line-height: 0.94;
+        letter-spacing: -0.065em;
       }
 
       h2 {
         max-width: 840px;
-        font-size: clamp(2rem, 4vw, 3.85rem);
-        line-height: 0.98;
-        letter-spacing: -0.06em;
+        font-size: clamp(1.85rem, 3.4vw, 3.25rem);
+        line-height: 1.02;
+        letter-spacing: -0.052em;
       }
 
       h3 {
@@ -241,7 +268,7 @@
 
       .founder-card {
         position: absolute;
-        inset: 6% 6% 0 22%;
+        inset: 4% 5% 0 24%;
         overflow: hidden;
         border: 1px solid rgba(243, 247, 239, 0.12);
         border-radius: 42px;
@@ -253,8 +280,8 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        object-position: 48% center;
-        filter: saturate(0.86) contrast(1.08);
+        object-position: 54% center;
+        filter: saturate(0.9) contrast(1.08) brightness(0.96);
       }
 
       .founder-card::after {
@@ -262,8 +289,8 @@
         position: absolute;
         inset: 0;
         background:
-          linear-gradient(90deg, rgba(4, 7, 7, 0.72), transparent 48%),
-          linear-gradient(0deg, rgba(4, 7, 7, 0.65), transparent 50%);
+          linear-gradient(90deg, rgba(3, 6, 6, 0.62), transparent 46%),
+          linear-gradient(0deg, rgba(3, 6, 6, 0.58), transparent 52%);
       }
 
       .health-card {
@@ -271,9 +298,16 @@
         z-index: 2;
         border: 1px solid rgba(243, 247, 239, 0.13);
         border-radius: 26px;
-        background: rgba(10, 16, 16, 0.78);
+        background: rgba(7, 12, 12, 0.8);
         box-shadow: 0 28px 80px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255,255,255,0.05);
         backdrop-filter: blur(18px);
+        transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+      }
+
+      .health-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(215, 255, 53, 0.28);
+        box-shadow: 0 34px 92px rgba(0, 0, 0, 0.42), 0 0 34px rgba(215,255,53,0.07);
       }
 
       .score-card {
@@ -291,7 +325,7 @@
         background:
           radial-gradient(circle at center, #0a1110 0 52%, transparent 53%),
           conic-gradient(var(--lime) 0 71%, rgba(243,247,239,0.1) 71% 100%);
-        box-shadow: 0 0 38px rgba(201,255,63,0.22);
+        box-shadow: 0 0 38px rgba(215,255,53,0.2);
       }
 
       .score-card strong {
@@ -326,6 +360,16 @@
         align-items: center;
         padding-bottom: 12px;
         border-bottom: 1px solid rgba(243,247,239,0.08);
+      }
+
+      .metric-row::after {
+        content: "";
+        grid-column: 1 / -1;
+        height: 4px;
+        border-radius: 999px;
+        background:
+          linear-gradient(90deg, var(--lime) var(--level, 70%), rgba(246,250,242,0.09) var(--level, 70%));
+        box-shadow: 0 0 18px rgba(215,255,53,0.12);
       }
 
       .metric-row:last-child { border-bottom: 0; padding-bottom: 0; }
@@ -411,11 +455,24 @@
         border: 1px solid var(--line);
         border-radius: 30px;
         background:
-          linear-gradient(145deg, rgba(243,247,239,0.065), rgba(243,247,239,0.025)),
-          rgba(10, 16, 16, 0.82);
+          radial-gradient(circle at 16% 0%, rgba(215,255,53,0.035), transparent 16rem),
+          linear-gradient(145deg, rgba(246,250,242,0.058), rgba(246,250,242,0.02)),
+          rgba(7, 12, 12, 0.88);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+        transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(215,255,53,0.18);
+        box-shadow: 0 24px 70px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.05);
       }
 
       .card h3 { margin-bottom: 12px; }
+      .card h2 {
+        font-size: clamp(1.65rem, 3vw, 2.8rem);
+        line-height: 1.04;
+      }
       .card p, .card li {
         color: var(--muted);
         line-height: 1.55;
@@ -442,12 +499,49 @@
       }
 
       .lime-card {
-        color: #07100b;
-        background: linear-gradient(135deg, var(--lime), #7bffcc);
+        color: var(--ink);
+        border-color: rgba(215, 255, 53, 0.28);
+        background:
+          radial-gradient(circle at 84% 0%, rgba(215,255,53,0.18), transparent 12rem),
+          linear-gradient(145deg, rgba(215,255,53,0.12), rgba(0,240,168,0.035)),
+          rgba(7, 12, 12, 0.92);
+        box-shadow: 0 24px 80px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.06);
       }
 
+      .lime-card h3,
+      .lime-card strong { color: var(--lime); }
+
       .lime-card p,
-      .lime-card li { color: rgba(7, 16, 11, 0.72); }
+      .lime-card li { color: var(--muted); }
+
+      .stat-strip {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .stat-pill {
+        padding: 16px;
+        border: 1px solid rgba(246,250,242,0.1);
+        border-radius: 22px;
+        background: rgba(246,250,242,0.045);
+      }
+
+      .stat-pill strong {
+        display: block;
+        color: var(--lime);
+        font-size: clamp(1.45rem, 2.5vw, 2.25rem);
+        letter-spacing: -0.05em;
+      }
+
+      .stat-pill span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+      }
 
       .device-panel {
         display: grid;
@@ -625,20 +719,55 @@
         border: 1px solid var(--line);
         border-radius: 20px;
         background: rgba(243,247,239,0.04);
+        overflow: hidden;
+        transition: border-color 0.2s ease, background 0.2s ease;
       }
 
       details + details { margin-top: 10px; }
+      details[open] {
+        border-color: rgba(215,255,53,0.22);
+        background: rgba(215,255,53,0.045);
+      }
       summary {
         cursor: pointer;
         padding: 20px;
         font-weight: 900;
         list-style: none;
+        display: grid;
+        grid-template-columns: 1fr 34px;
+        gap: 16px;
+        align-items: center;
+      }
+      summary::after {
+        content: "↘";
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border: 1px solid rgba(246,250,242,0.12);
+        border-radius: 50%;
+        color: var(--lime);
+        background: rgba(246,250,242,0.045);
+        transition: transform 0.22s ease, border-color 0.22s ease;
+      }
+      details[open] summary::after {
+        transform: rotate(45deg);
+        border-color: rgba(215,255,53,0.28);
       }
       summary::-webkit-details-marker { display: none; }
       details p {
         padding: 0 20px 20px;
         color: var(--muted);
         line-height: 1.55;
+      }
+
+      .card > details {
+        border-color: rgba(246,250,242,0.1);
+        background: rgba(0,0,0,0.16);
+      }
+
+      .card > details ul {
+        padding: 0 20px 20px;
       }
 
       .form-panel {
@@ -718,6 +847,17 @@
         transform: translateY(calc(var(--scroll, 0) * var(--speed, 0.04px)));
       }
 
+      .reveal {
+        opacity: 0;
+        transform: translateY(22px);
+        transition: opacity 0.55s ease, transform 0.55s ease;
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
       .mobile-cta {
         display: none;
         position: fixed;
@@ -761,7 +901,7 @@
         .device-panel,
         .form-panel { grid-template-columns: 1fr; }
         .hero-visual { min-height: 620px; }
-        .founder-card { inset: 3% 0 0 26%; }
+        .founder-card { inset: 3% 0 0 24%; }
         .grid.cols-4,
         .grid.cols-3,
         .pricing { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -783,15 +923,16 @@
           white-space: normal;
         }
         .actions .btn { width: 100%; }
-        h1 { font-size: clamp(2.5rem, 13vw, 4.15rem); }
-        h2 { font-size: clamp(2rem, 9vw, 3rem); }
+        h1 { font-size: clamp(2.25rem, 11vw, 3.65rem); }
+        h2 { font-size: clamp(1.75rem, 8vw, 2.6rem); }
         .grid.cols-4,
         .grid.cols-3,
         .grid.cols-2,
         .pricing,
         .choice-grid { grid-template-columns: 1fr; }
         .hero-visual { min-height: 720px; }
-        .founder-card { inset: 16% 0 0 10%; border-radius: 32px; }
+        .founder-card { inset: 15% 0 0 18%; border-radius: 32px; }
+        .founder-card img { object-position: 60% center; }
         .score-card {
           top: 0;
           left: 0;
@@ -800,9 +941,10 @@
         .score-ring { width: 86px; height: 86px; }
         .score-card strong { font-size: 36px; }
         .mini-metrics {
-          top: 0;
-          right: 0;
-          width: 190px;
+          top: 144px;
+          left: 0;
+          right: auto;
+          width: min(220px, 62%);
           padding: 14px;
         }
         .road-card {
@@ -815,8 +957,25 @@
         .step { grid-template-columns: 1fr; }
         .data-viz { min-height: 330px; }
         .table-row { min-width: 720px; }
+        .stat-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .footer-grid { grid-template-columns: 1fr; }
         .mobile-cta { display: block; }
+      }
+
+      @media (max-width: 420px) {
+        .stat-strip { grid-template-columns: 1fr; }
+        .score-card { width: 205px; padding: 16px; }
+        .mini-metrics { top: 132px; width: 205px; }
+        .road-card { padding: 14px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.001ms !important;
+        }
       }
     </style>
   </head>
@@ -869,10 +1028,10 @@
               <span>Heart Longevity readiness. Клиентский интерфейс, не диагностический инструмент.</span>
             </article>
             <div class="health-card mini-metrics parallax" style="--speed:0.045px">
-              <div class="metric-row"><span>BP control</span><small>24h</small></div>
-              <div class="metric-row"><span>Lipids target</span><small>3m</small></div>
-              <div class="metric-row"><span>Glucose trend</span><small>6m</small></div>
-              <div class="metric-row"><span>Stress load</span><small>live</small></div>
+              <div class="metric-row" style="--level:76%"><span>BP control</span><small>24h</small></div>
+              <div class="metric-row" style="--level:62%"><span>Lipids target</span><small>3m</small></div>
+              <div class="metric-row" style="--level:68%"><span>Glucose trend</span><small>6m</small></div>
+              <div class="metric-row" style="--level:54%"><span>Stress load</span><small>live</small></div>
             </div>
             <article class="health-card road-card parallax" style="--speed:-0.02px">
               <h3>Medical roadmap</h3>
@@ -907,6 +1066,12 @@
               <article class="card"><span class="icon">03</span><div><h3>Фрагментарная медицина</h3><p>Есть специалисты по отдельным органам, но нет врача, который держит картину целиком.</p></div></article>
               <article class="card"><span class="icon">04</span><div><h3>Псевдолонживити</h3><p>Капельницы, БАДы, гаджеты и “секретные протоколы” часто продаются громче, чем объясняются.</p></div></article>
             </div>
+          </div>
+          <div class="stat-strip">
+            <div class="stat-pill"><strong>24h</strong><span>контроль давления и самочувствия в динамике</span></div>
+            <div class="stat-pill"><strong>3/6/12</strong><span>контрольные точки годового medical roadmap</span></div>
+            <div class="stat-pill"><strong>32%</strong><span>глобальных смертей связаны с ССЗ по данным WHO за 2022 год</span></div>
+            <div class="stat-pill"><strong>1 центр</strong><span>единая медицинская картина вместо разрозненных назначений</span></div>
           </div>
           <div class="quote">Не больше медицины. А больше ясности в медицине.</div>
         </div>
@@ -1104,7 +1269,10 @@
             <article class="card price lime-card"><h3>Premium</h3><strong>250 000–300 000 ₽</strong><p>Сопровождение: от 100 000 ₽/мес. Для пациента с несколькими рисками и потребностью в более плотной медицинской навигации.</p><ul><li>2 плановые точки в месяц;</li><li>плотный контроль динамики;</li><li>координация специалистов;</li><li>приоритетная коммуникация;</li><li>medical summary.</li></ul></article>
             <article class="card price"><h3>VIP / Executive</h3><strong>от 1 200 000 ₽/год</strong><p>Для собственников бизнеса, публичных людей, семей и пациентов с высокой ценностью времени.</p><ul><li>годовое сопровождение;</li><li>расширенный medical roadmap;</li><li>консьерж-маршрутизация;</li><li>стратегические сессии;</li><li>семейный формат как опция.</li></ul></article>
           </div>
-          <div class="disclaimer">Что не входит в стоимость: анализы, инструментальные обследования, госпитализация, очные приёмы других специалистов, процедуры, лекарственные препараты, операции, экстренная медицинская помощь, услуги клиник-партнёров.</div>
+          <details class="disclaimer">
+            <summary>Что не входит в стоимость</summary>
+            <p>Анализы, инструментальные обследования, госпитализация, очные приёмы других специалистов, процедуры, лекарственные препараты, операции, экстренная медицинская помощь и услуги клиник-партнёров оплачиваются отдельно.</p>
+          </details>
         </div>
       </section>
 
@@ -1114,7 +1282,12 @@
           <h2>Пациент платит не за созвон. Он платит за систему ответственности.</h2>
           <div class="grid cols-2" style="margin-top:24px">
             <article class="card"><h3>Почему это стоит дорого</h3><p>Первый месяц — стратегический старт: сбор данных, диагностика, интерпретация, карта рисков, годовой маршрут и финальная встреча с понятным планом.</p></article>
-            <article class="card"><h3>Кому не подходит</h3><ul><li>у вас острое состояние и нужна экстренная помощь;</li><li>вы ищете “волшебное омоложение”;</li><li>вы хотите гарантий, что “ничего никогда не случится”;</li><li>вы не готовы выполнять рекомендации;</li><li>вы хотите безлимитного врача 24/7.</li></ul></article>
+            <article class="card">
+              <details>
+                <summary>Кому программа не подходит</summary>
+                <ul><li>у вас острое состояние и нужна экстренная помощь;</li><li>вы ищете “волшебное омоложение”;</li><li>вы хотите гарантий, что “ничего никогда не случится”;</li><li>вы не готовы выполнять рекомендации;</li><li>вы хотите безлимитного врача 24/7.</li></ul>
+              </details>
+            </article>
           </div>
           <div class="quote">Главная ценность — не количество анализов. Главная ценность — правильные решения на основе полной картины.</div>
         </div>
@@ -1211,6 +1384,22 @@
       window.addEventListener("scroll", updateParallax, { passive: true });
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         parallaxItems.forEach((item) => item.classList.remove("parallax"));
+      }
+
+      const revealItems = document.querySelectorAll(".section, .card, .device-panel, .stat-pill, .quote");
+      revealItems.forEach((item) => item.classList.add("reveal"));
+      if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.08 });
+        revealItems.forEach((item) => observer.observe(item));
+      } else {
+        revealItems.forEach((item) => item.classList.add("visible"));
       }
     </script>
   </body>
