@@ -11,24 +11,24 @@
     <meta name="robots" content="noindex, nofollow" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
       :root {
         color-scheme: dark;
-        --bg: #071016;
-        --bg-2: #0d1a22;
-        --panel: rgba(15, 27, 35, 0.78);
-        --panel-2: rgba(245, 239, 226, 0.06);
-        --milk: #f4eee2;
-        --muted: rgba(244, 238, 226, 0.68);
-        --dim: rgba(244, 238, 226, 0.48);
-        --line: rgba(244, 238, 226, 0.12);
-        --gold: #c8a96a;
-        --gold-2: #efdba2;
-        --blue: #9dd7ea;
-        --danger: #e8a98a;
+        --bg: #040707;
+        --panel: #0b1010;
+        --panel-2: #121817;
+        --ink: #f3f7ef;
+        --muted: rgba(243, 247, 239, 0.68);
+        --dim: rgba(243, 247, 239, 0.45);
+        --line: rgba(243, 247, 239, 0.12);
+        --lime: #c9ff3f;
+        --green: #35f2b0;
+        --cyan: #6be6ff;
+        --blue: #7fa8ff;
+        --gold: #d7b972;
+        --danger: #ff8f70;
         --max: 1180px;
-        --radius: 28px;
       }
 
       * { box-sizing: border-box; }
@@ -36,12 +36,12 @@
       body {
         margin: 0;
         min-width: 320px;
-        color: var(--milk);
+        color: var(--ink);
         font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         background:
-          radial-gradient(circle at 76% 0%, rgba(200, 169, 106, 0.18), transparent 28rem),
-          radial-gradient(circle at 8% 20%, rgba(157, 215, 234, 0.14), transparent 26rem),
-          linear-gradient(180deg, #061017 0%, #0d1a22 42%, #081116 100%);
+          radial-gradient(circle at 50% -10%, rgba(201, 255, 63, 0.18), transparent 26rem),
+          radial-gradient(circle at 88% 12%, rgba(53, 242, 176, 0.1), transparent 24rem),
+          linear-gradient(180deg, #030606 0%, #08100f 34%, #040707 100%);
         overflow-x: hidden;
       }
 
@@ -50,29 +50,33 @@
         position: fixed;
         inset: 0;
         z-index: -2;
+        pointer-events: none;
         opacity: 0.28;
-        background-image:
-          linear-gradient(rgba(244, 238, 226, 0.055) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(244, 238, 226, 0.04) 1px, transparent 1px);
-        background-size: 72px 72px;
-        mask-image: radial-gradient(circle at 50% 10%, #000, transparent 74%);
+        background:
+          linear-gradient(rgba(243, 247, 239, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(243, 247, 239, 0.03) 1px, transparent 1px);
+        background-size: 58px 58px;
+        mask-image: radial-gradient(circle at 50% 10%, #000, transparent 75%);
       }
 
       body::after {
         content: "";
         position: fixed;
-        inset: 0;
+        inset: auto -12vw -22vw auto;
         z-index: -1;
+        width: 54vw;
+        height: 54vw;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(201, 255, 63, 0.1), transparent 66%);
+        filter: blur(12px);
         pointer-events: none;
-        background: linear-gradient(120deg, transparent 0 38%, rgba(200, 169, 106, 0.08) 50%, transparent 64%);
       }
 
       a { color: inherit; text-decoration: none; }
-      p, h1, h2, h3 { margin: 0; }
-      h1, h2, h3, p, a, li, label {
-        overflow-wrap: anywhere;
-      }
       button, input, textarea, select { font: inherit; }
+      img { display: block; max-width: 100%; }
+      p, h1, h2, h3 { margin: 0; }
+      h1, h2, h3, p, a, li, label { overflow-wrap: anywhere; }
 
       .wrap {
         width: min(100% - 32px, var(--max));
@@ -82,10 +86,10 @@
       .site-header {
         position: sticky;
         top: 0;
-        z-index: 50;
-        border-bottom: 1px solid rgba(244, 238, 226, 0.08);
-        background: rgba(7, 16, 22, 0.82);
-        backdrop-filter: blur(20px);
+        z-index: 40;
+        border-bottom: 1px solid rgba(243, 247, 239, 0.08);
+        background: rgba(4, 7, 7, 0.78);
+        backdrop-filter: blur(18px);
       }
 
       .header-inner {
@@ -93,24 +97,23 @@
         grid-template-columns: auto 1fr auto;
         gap: 22px;
         align-items: center;
-        min-height: 76px;
+        min-height: 72px;
       }
 
       .brand {
         display: grid;
         gap: 2px;
-        font-family: Manrope, Inter, sans-serif;
       }
 
       .brand strong {
-        font-size: 18px;
-        letter-spacing: -0.03em;
+        font-size: 17px;
+        letter-spacing: -0.035em;
       }
 
       .brand span {
-        color: var(--gold-2);
-        font-size: 11px;
-        font-weight: 800;
+        color: var(--lime);
+        font-size: 10px;
+        font-weight: 900;
         letter-spacing: 0.16em;
         text-transform: uppercase;
       }
@@ -121,87 +124,100 @@
         gap: 18px;
         color: var(--muted);
         font-size: 13px;
-        font-weight: 700;
+        font-weight: 800;
       }
 
       .nav a { transition: color 0.2s ease; }
-      .nav a:hover { color: var(--milk); }
+      .nav a:hover { color: var(--ink); }
 
       .btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         min-height: 46px;
-        padding: 0 20px;
-        border: 1px solid rgba(239, 219, 162, 0.34);
-        border-radius: 999px;
-        color: #071016;
-        background: linear-gradient(135deg, var(--gold-2), var(--gold));
-        box-shadow: 0 16px 42px rgba(200, 169, 106, 0.2);
-        font-weight: 900;
         max-width: 100%;
+        padding: 0 20px;
+        border: 1px solid rgba(201, 255, 63, 0.28);
+        border-radius: 999px;
+        color: #07100b;
+        background: var(--lime);
+        box-shadow: 0 0 44px rgba(201, 255, 63, 0.16);
+        font-weight: 900;
         text-align: center;
         white-space: nowrap;
       }
 
       .btn.secondary {
-        color: var(--milk);
-        background: rgba(244, 238, 226, 0.05);
+        color: var(--ink);
+        background: rgba(243, 247, 239, 0.06);
         box-shadow: none;
       }
 
       .hero {
-        padding: clamp(42px, 7vw, 88px) 0 54px;
+        position: relative;
+        padding: clamp(42px, 6vw, 86px) 0 clamp(34px, 5vw, 64px);
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "CARDIO LONGEVITY";
+        position: absolute;
+        left: 50%;
+        top: 20px;
+        z-index: -1;
+        transform: translateX(-50%);
+        color: rgba(243, 247, 239, 0.045);
+        font-size: clamp(3.4rem, 11vw, 9.6rem);
+        font-weight: 900;
+        letter-spacing: -0.08em;
+        white-space: nowrap;
       }
 
       .hero-grid {
         display: grid;
-        grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
-        gap: clamp(32px, 5vw, 68px);
+        grid-template-columns: minmax(0, 0.92fr) minmax(380px, 1.08fr);
+        gap: clamp(28px, 5vw, 64px);
         align-items: center;
       }
 
       .eyebrow {
         display: inline-flex;
-        margin-bottom: 16px;
-        color: var(--gold-2);
-        font-size: 12px;
+        margin-bottom: 14px;
+        color: var(--lime);
+        font-size: 11px;
         font-weight: 900;
-        letter-spacing: 0.16em;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
-      }
-
-      h1, h2, h3 {
-        font-family: Manrope, Inter, sans-serif;
-        letter-spacing: -0.045em;
       }
 
       h1 {
         max-width: 720px;
-        font-size: clamp(3rem, 7vw, 6.8rem);
-        line-height: 0.9;
+        font-size: clamp(3rem, 6vw, 5.8rem);
+        line-height: 0.92;
+        letter-spacing: -0.075em;
       }
 
       h2 {
-        max-width: 920px;
-        font-size: clamp(2rem, 4.6vw, 4.8rem);
-        line-height: 0.96;
+        max-width: 840px;
+        font-size: clamp(2rem, 4vw, 3.85rem);
+        line-height: 0.98;
+        letter-spacing: -0.06em;
       }
 
       h3 {
-        font-size: clamp(1.25rem, 2vw, 1.8rem);
-        line-height: 1.06;
+        font-size: clamp(1.15rem, 1.7vw, 1.55rem);
+        line-height: 1.08;
+        letter-spacing: -0.035em;
       }
 
       .lead {
-        max-width: 740px;
-        margin-top: 24px;
+        max-width: 700px;
+        margin-top: 22px;
         color: var(--muted);
-        font-size: clamp(1.04rem, 1.5vw, 1.24rem);
+        font-size: clamp(1rem, 1.32vw, 1.16rem);
         line-height: 1.62;
       }
 
-      .hero-actions,
       .actions {
         display: flex;
         flex-wrap: wrap;
@@ -210,150 +226,146 @@
       }
 
       .microcopy {
-        max-width: 640px;
+        max-width: 620px;
         margin-top: 14px;
         color: var(--dim);
         font-size: 13px;
         line-height: 1.45;
       }
 
-      .bullet-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-        margin-top: 28px;
-      }
-
-      .bullet {
-        min-height: 74px;
-        padding: 16px;
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        background: rgba(244, 238, 226, 0.045);
-        color: rgba(244, 238, 226, 0.86);
-        font-weight: 700;
-      }
-
-      .visual-card {
+      .hero-visual {
         position: relative;
-        min-height: 640px;
+        min-height: 680px;
+        isolation: isolate;
+      }
+
+      .founder-card {
+        position: absolute;
+        inset: 6% 6% 0 22%;
         overflow: hidden;
-        border: 1px solid rgba(239, 219, 162, 0.16);
-        border-radius: 36px;
-        background:
-          radial-gradient(circle at 64% 18%, rgba(157, 215, 234, 0.22), transparent 18rem),
-          linear-gradient(145deg, rgba(244, 238, 226, 0.08), rgba(244, 238, 226, 0.025)),
-          #0b171d;
-        box-shadow: 0 34px 110px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(243, 247, 239, 0.12);
+        border-radius: 42px;
+        background: linear-gradient(180deg, rgba(243,247,239,0.08), rgba(243,247,239,0.02));
+        box-shadow: 0 40px 130px rgba(0, 0, 0, 0.48);
       }
 
-      .doctor-silhouette {
-        position: absolute;
-        right: 6%;
-        bottom: 0;
-        width: 44%;
-        height: 76%;
-        border-radius: 38% 38% 0 0;
-        background:
-          radial-gradient(circle at 50% 16%, rgba(244, 238, 226, 0.82) 0 10%, transparent 10.5%),
-          linear-gradient(180deg, rgba(244, 238, 226, 0.24), rgba(244, 238, 226, 0.04));
-        filter: drop-shadow(0 26px 70px rgba(0, 0, 0, 0.34));
-      }
-
-      .doctor-silhouette::before {
-        content: "Dr. Isaeva";
-        position: absolute;
-        top: 32%;
-        left: 50%;
-        transform: translateX(-50%);
-        color: rgba(244, 238, 226, 0.62);
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        white-space: nowrap;
-      }
-
-      .metric-panel {
-        position: absolute;
-        left: 28px;
-        top: 28px;
-        width: min(76%, 430px);
-        padding: 22px;
-        border: 1px solid rgba(244, 238, 226, 0.12);
-        border-radius: 26px;
-        background: rgba(7, 16, 22, 0.72);
-        backdrop-filter: blur(18px);
-      }
-
-      .metric-panel h3 {
-        margin-bottom: 18px;
-        color: var(--milk);
-      }
-
-      .risk-row {
-        display: grid;
-        grid-template-columns: 92px 1fr auto;
-        gap: 12px;
-        align-items: center;
-        padding: 12px 0;
-        border-top: 1px solid rgba(244, 238, 226, 0.08);
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .bar {
-        height: 7px;
-        overflow: hidden;
-        border-radius: 999px;
-        background: rgba(244, 238, 226, 0.1);
-      }
-
-      .bar span {
-        display: block;
+      .founder-card img {
+        width: 100%;
         height: 100%;
-        border-radius: inherit;
-        background: linear-gradient(90deg, var(--gold), var(--blue));
+        object-fit: cover;
+        object-position: 48% center;
+        filter: saturate(0.86) contrast(1.08);
       }
 
-      .roadmap-mini {
+      .founder-card::after {
+        content: "";
         position: absolute;
-        left: 28px;
-        right: 28px;
-        bottom: 28px;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(4, 7, 7, 0.72), transparent 48%),
+          linear-gradient(0deg, rgba(4, 7, 7, 0.65), transparent 50%);
       }
 
-      .roadmap-mini article {
-        min-height: 118px;
-        padding: 16px;
-        border: 1px solid rgba(239, 219, 162, 0.14);
-        border-radius: 20px;
-        background: rgba(244, 238, 226, 0.06);
+      .health-card {
+        position: absolute;
+        z-index: 2;
+        border: 1px solid rgba(243, 247, 239, 0.13);
+        border-radius: 26px;
+        background: rgba(10, 16, 16, 0.78);
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255,255,255,0.05);
         backdrop-filter: blur(18px);
       }
 
-      .roadmap-mini strong {
-        display: block;
-        color: var(--gold-2);
-        font-size: 22px;
-        margin-bottom: 8px;
+      .score-card {
+        left: 0;
+        top: 9%;
+        width: min(280px, 58%);
+        padding: 22px;
       }
 
-      .roadmap-mini span {
+      .score-ring {
+        width: 118px;
+        height: 118px;
+        margin-bottom: 16px;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at center, #0a1110 0 52%, transparent 53%),
+          conic-gradient(var(--lime) 0 71%, rgba(243,247,239,0.1) 71% 100%);
+        box-shadow: 0 0 38px rgba(201,255,63,0.22);
+      }
+
+      .score-card strong {
+        display: block;
+        color: var(--lime);
+        font-size: 46px;
+        line-height: 0.9;
+        letter-spacing: -0.06em;
+      }
+
+      .score-card span,
+      .mini-metrics span,
+      .road-card span {
         color: var(--muted);
         font-size: 13px;
         line-height: 1.35;
       }
 
+      .mini-metrics {
+        right: 0;
+        top: 3%;
+        width: min(260px, 50%);
+        padding: 18px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .metric-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: center;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(243,247,239,0.08);
+      }
+
+      .metric-row:last-child { border-bottom: 0; padding-bottom: 0; }
+      .metric-row b { color: var(--ink); }
+      .metric-row small { color: var(--lime); font-weight: 900; }
+
+      .road-card {
+        left: 5%;
+        right: 4%;
+        bottom: 4%;
+        padding: 18px;
+      }
+
+      .road-line {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .road-line div {
+        min-height: 90px;
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(243,247,239,0.06);
+      }
+
+      .road-line b {
+        display: block;
+        color: var(--lime);
+        margin-bottom: 6px;
+      }
+
       .section {
-        padding: clamp(64px, 9vw, 118px) 0 0;
+        padding: clamp(68px, 9vw, 124px) 0 0;
       }
 
       .section-head {
         display: grid;
-        grid-template-columns: minmax(0, 0.78fr) minmax(260px, 0.22fr);
+        grid-template-columns: minmax(0, 0.72fr) minmax(280px, 0.28fr);
         gap: 28px;
         align-items: end;
         margin-bottom: 28px;
@@ -364,19 +376,23 @@
         line-height: 1.58;
       }
 
-      .copy-block {
+      .copy {
         max-width: 900px;
         color: var(--muted);
-        font-size: 18px;
-        line-height: 1.72;
+        font-size: 17px;
+        line-height: 1.68;
       }
 
-      .copy-block p + p { margin-top: 18px; }
+      .copy p + p { margin-top: 18px; }
 
       .grid {
         display: grid;
         gap: 14px;
       }
+
+      .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
       .header-inner > *,
       .hero-grid > *,
@@ -387,17 +403,16 @@
         min-width: 0;
       }
 
-      .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-
       .card {
+        position: relative;
+        overflow: hidden;
         min-height: 100%;
         padding: clamp(20px, 2.4vw, 30px);
         border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: var(--panel);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        border-radius: 30px;
+        background:
+          linear-gradient(145deg, rgba(243,247,239,0.065), rgba(243,247,239,0.025)),
+          rgba(10, 16, 16, 0.82);
       }
 
       .card h3 { margin-bottom: 12px; }
@@ -406,7 +421,8 @@
         line-height: 1.55;
       }
 
-      .card ul, .checklist {
+      .card ul,
+      .checklist {
         display: grid;
         gap: 10px;
         margin: 16px 0 0;
@@ -422,24 +438,114 @@
         height: 8px;
         margin-right: 10px;
         border-radius: 50%;
-        background: var(--gold);
+        background: var(--lime);
       }
 
-      .accent-card {
-        border-color: rgba(239, 219, 162, 0.28);
-        background: linear-gradient(135deg, rgba(200, 169, 106, 0.12), rgba(244, 238, 226, 0.045));
+      .lime-card {
+        color: #07100b;
+        background: linear-gradient(135deg, var(--lime), #7bffcc);
+      }
+
+      .lime-card p,
+      .lime-card li { color: rgba(7, 16, 11, 0.72); }
+
+      .device-panel {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 18px;
+        align-items: stretch;
+        padding: 18px;
+        border: 1px solid rgba(243,247,239,0.12);
+        border-radius: 38px;
+        background: rgba(10,16,16,0.78);
+      }
+
+      .data-viz {
+        position: relative;
+        min-height: 430px;
+        overflow: hidden;
+        border-radius: 28px;
+        background:
+          radial-gradient(circle at 68% 30%, rgba(201,255,63,0.18), transparent 14rem),
+          linear-gradient(145deg, rgba(243,247,239,0.08), rgba(243,247,239,0.02));
+      }
+
+      .data-viz::before {
+        content: "";
+        position: absolute;
+        inset: 11% 13%;
+        border-radius: 50%;
+        border: 1px solid rgba(201,255,63,0.28);
+        box-shadow:
+          0 0 0 34px rgba(201,255,63,0.025),
+          0 0 0 76px rgba(107,230,255,0.025),
+          0 0 68px rgba(201,255,63,0.12);
+        animation: breathe 5s ease-in-out infinite;
+      }
+
+      .data-viz::after {
+        content: "RISK MAP";
+        position: absolute;
+        left: 28px;
+        bottom: 26px;
+        color: rgba(243,247,239,0.14);
+        font-size: clamp(3rem, 8vw, 7rem);
+        font-weight: 900;
+        letter-spacing: -0.08em;
+      }
+
+      @keyframes breathe {
+        0%, 100% { transform: scale(0.96); opacity: 0.8; }
+        50% { transform: scale(1.04); opacity: 1; }
+      }
+
+      .map-dot {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--lime);
+        box-shadow: 0 0 24px rgba(201,255,63,0.7);
+      }
+
+      .dot-1 { left: 35%; top: 34%; }
+      .dot-2 { left: 61%; top: 45%; background: var(--cyan); }
+      .dot-3 { left: 47%; top: 62%; background: var(--gold); }
+
+      .feature-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .feature-list .card {
+        min-height: auto;
+        display: grid;
+        grid-template-columns: 54px 1fr;
+        gap: 14px;
+        align-items: start;
+      }
+
+      .icon {
+        display: grid;
+        place-items: center;
+        width: 54px;
+        height: 54px;
+        border-radius: 18px;
+        color: #07100b;
+        background: var(--lime);
+        font-weight: 900;
       }
 
       .quote {
         margin-top: 26px;
-        padding: 22px 26px;
-        border-left: 3px solid var(--gold);
-        border-radius: 18px;
-        background: rgba(244, 238, 226, 0.05);
-        color: var(--milk);
-        font-size: clamp(1.25rem, 2.4vw, 2rem);
+        padding: 24px;
+        border: 1px solid rgba(201,255,63,0.22);
+        border-radius: 28px;
+        background: rgba(201,255,63,0.06);
+        color: var(--ink);
+        font-size: clamp(1.25rem, 2.3vw, 1.85rem);
         font-weight: 900;
-        line-height: 1.15;
+        line-height: 1.14;
         letter-spacing: -0.04em;
       }
 
@@ -455,8 +561,8 @@
         gap: 18px;
         padding: 20px;
         border: 1px solid var(--line);
-        border-radius: 22px;
-        background: rgba(244, 238, 226, 0.045);
+        border-radius: 24px;
+        background: rgba(243,247,239,0.045);
       }
 
       .step span {
@@ -465,8 +571,8 @@
         width: 54px;
         height: 54px;
         border-radius: 50%;
-        color: #071016;
-        background: var(--gold-2);
+        color: #07100b;
+        background: var(--lime);
         font-weight: 900;
       }
 
@@ -481,53 +587,53 @@
       .price {
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: 16px;
       }
 
       .price strong {
-        color: var(--gold-2);
-        font-size: clamp(1.6rem, 2.8vw, 2.35rem);
+        color: var(--lime);
+        font-size: clamp(1.55rem, 2.5vw, 2.25rem);
         letter-spacing: -0.04em;
       }
 
       .table {
-        overflow: hidden;
+        max-width: 100%;
+        overflow-x: auto;
         border: 1px solid var(--line);
-        border-radius: var(--radius);
+        border-radius: 28px;
       }
 
       .table-row {
         display: grid;
         grid-template-columns: 0.9fr 1.15fr 1.15fr;
         gap: 1px;
+        min-width: 760px;
         background: var(--line);
       }
 
       .table-row > div {
         padding: 18px;
-        background: rgba(15, 27, 35, 0.92);
+        background: rgba(10,16,16,0.94);
       }
 
       .table-row.head-row > div {
-        color: var(--gold-2);
+        color: var(--lime);
         font-weight: 900;
       }
 
       details {
         border: 1px solid var(--line);
         border-radius: 20px;
-        background: rgba(244, 238, 226, 0.04);
+        background: rgba(243,247,239,0.04);
       }
 
       details + details { margin-top: 10px; }
-
       summary {
         cursor: pointer;
         padding: 20px;
         font-weight: 900;
         list-style: none;
       }
-
       summary::-webkit-details-marker { display: none; }
       details p {
         padding: 0 20px 20px;
@@ -537,7 +643,7 @@
 
       .form-panel {
         display: grid;
-        grid-template-columns: 0.86fr 1.14fr;
+        grid-template-columns: 0.85fr 1.15fr;
         gap: 22px;
         align-items: start;
       }
@@ -550,17 +656,17 @@
       label {
         display: grid;
         gap: 7px;
-        color: rgba(244, 238, 226, 0.78);
+        color: rgba(243,247,239,0.78);
         font-weight: 700;
       }
 
       input, textarea, select {
         width: 100%;
-        border: 1px solid rgba(244, 238, 226, 0.14);
+        border: 1px solid rgba(243,247,239,0.14);
         border-radius: 16px;
         padding: 14px 16px;
-        color: var(--milk);
-        background: rgba(7, 16, 22, 0.66);
+        color: var(--ink);
+        background: rgba(4,7,7,0.68);
         outline: none;
       }
 
@@ -577,10 +683,10 @@
         align-items: center;
         gap: 8px;
         padding: 12px;
-        border: 1px solid rgba(244, 238, 226, 0.12);
+        border: 1px solid rgba(243,247,239,0.12);
         border-radius: 14px;
         color: var(--muted);
-        background: rgba(244, 238, 226, 0.035);
+        background: rgba(243,247,239,0.035);
         font-weight: 600;
       }
 
@@ -598,14 +704,18 @@
       .consent input { width: auto; margin-top: 3px; }
 
       .disclaimer {
-        margin-top: 34px;
-        padding: 20px;
-        border: 1px solid rgba(232, 169, 138, 0.26);
+        margin-top: 30px;
+        padding: 18px;
+        border: 1px solid rgba(255, 143, 112, 0.26);
         border-radius: 20px;
-        color: rgba(244, 238, 226, 0.78);
-        background: rgba(232, 169, 138, 0.06);
+        color: rgba(243,247,239,0.78);
+        background: rgba(255,143,112,0.06);
         font-size: 14px;
         line-height: 1.55;
+      }
+
+      .parallax {
+        transform: translateY(calc(var(--scroll, 0) * var(--speed, 0.04px)));
       }
 
       .mobile-cta {
@@ -621,7 +731,7 @@
 
       footer {
         margin-top: 80px;
-        padding: 34px 0 96px;
+        padding: 34px 0 100px;
         border-top: 1px solid var(--line);
         color: var(--dim);
         font-size: 13px;
@@ -640,9 +750,7 @@
       }
 
       @media (max-width: 1060px) {
-        .header-inner {
-          grid-template-columns: 1fr auto;
-        }
+        .header-inner { grid-template-columns: 1fr auto; }
         .nav {
           grid-column: 1 / -1;
           justify-self: stretch;
@@ -650,26 +758,22 @@
           padding-bottom: 4px;
         }
         .hero-grid,
-        .form-panel {
-          grid-template-columns: 1fr;
-        }
-        .visual-card { min-height: 560px; }
+        .device-panel,
+        .form-panel { grid-template-columns: 1fr; }
+        .hero-visual { min-height: 620px; }
+        .founder-card { inset: 3% 0 0 26%; }
         .grid.cols-4,
         .grid.cols-3,
-        .pricing {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-        .section-head {
-          grid-template-columns: 1fr;
-        }
+        .pricing { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .section-head { grid-template-columns: 1fr; }
       }
 
       @media (max-width: 720px) {
         .wrap { width: min(100% - 22px, var(--max)); }
         .site-header { position: static; }
-        .header-inner { min-height: 68px; }
-        .brand strong { font-size: 16px; }
+        .header-inner { min-height: 66px; }
         .header-inner > .btn { display: none; }
+        .brand strong { font-size: 16px; }
         .nav { gap: 8px; font-size: 12px; }
         .btn {
           min-height: 42px;
@@ -678,52 +782,41 @@
           line-height: 1.15;
           white-space: normal;
         }
-        .hero-actions .btn,
-        .actions .btn {
-          width: 100%;
-        }
-        h1 { font-size: clamp(2.65rem, 15vw, 4.8rem); }
-        h2 { font-size: clamp(2rem, 10vw, 3.4rem); }
-        .bullet-grid,
+        .actions .btn { width: 100%; }
+        h1 { font-size: clamp(2.5rem, 13vw, 4.15rem); }
+        h2 { font-size: clamp(2rem, 9vw, 3rem); }
         .grid.cols-4,
         .grid.cols-3,
         .grid.cols-2,
         .pricing,
-        .choice-grid {
-          grid-template-columns: 1fr;
+        .choice-grid { grid-template-columns: 1fr; }
+        .hero-visual { min-height: 720px; }
+        .founder-card { inset: 16% 0 0 10%; border-radius: 32px; }
+        .score-card {
+          top: 0;
+          left: 0;
+          width: 220px;
         }
-        .visual-card { min-height: 640px; }
-        .metric-panel {
-          top: 16px;
-          left: 16px;
-          right: 16px;
-          width: auto;
-        }
-        .doctor-silhouette {
-          width: 52%;
+        .score-ring { width: 86px; height: 86px; }
+        .score-card strong { font-size: 36px; }
+        .mini-metrics {
+          top: 0;
           right: 0;
+          width: 190px;
+          padding: 14px;
         }
-        .roadmap-mini {
-          grid-template-columns: 1fr;
-          left: 16px;
-          right: 16px;
-          bottom: 16px;
+        .road-card {
+          left: 0;
+          right: 0;
+          bottom: 0;
         }
-        .step {
-          grid-template-columns: 1fr;
-        }
-        .table {
-          max-width: 100%;
-          overflow-x: auto;
-        }
-        .table-row {
-          min-width: 760px;
-        }
-        .footer-grid {
-          grid-template-columns: 1fr;
-        }
+        .road-line { grid-template-columns: 1fr; }
+        .feature-list .card { grid-template-columns: 1fr; }
+        .step { grid-template-columns: 1fr; }
+        .data-viz { min-height: 330px; }
+        .table-row { min-width: 720px; }
+        .footer-grid { grid-template-columns: 1fr; }
         .mobile-cta { display: block; }
-        footer { padding-bottom: 112px; }
       }
     </style>
   </head>
@@ -750,21 +843,14 @@
       <section class="hero">
         <div class="wrap hero-grid">
           <div>
-            <p class="eyebrow">Личная медицинская стратегия</p>
+            <p class="eyebrow">Personal heart intelligence</p>
             <h1>Кардиодолголетие by Dr. Isaeva</h1>
             <p class="lead">
               Персональная программа управления сердечно-сосудистыми и метаболическими рисками.
               Не чекап. Не биохакинг. Не разовая консультация. Это личная медицинская стратегия для тех,
               кто хочет понимать своё состояние, контролировать риски и принимать решения о здоровье на основе данных.
             </p>
-            <div class="bullet-grid">
-              <div class="bullet">Личный кардиолог-стратег</div>
-              <div class="bullet">Карта сердечно-сосудистых и метаболических рисков</div>
-              <div class="bullet">Годовой medical roadmap</div>
-              <div class="bullet">Медицинская навигация и сопровождение в динамике</div>
-              <div class="bullet">Доказательный подход без обещаний “вечной молодости”</div>
-            </div>
-            <div class="hero-actions">
+            <div class="actions">
               <a class="btn" href="#apply">Оставить заявку на первичную оценку</a>
               <a class="btn secondary" href="#check">Узнать, подходит ли мне программа</a>
             </div>
@@ -772,20 +858,30 @@
               Первичная заявка не является медицинской консультацией. После заявки мы уточним вашу ситуацию и подскажем возможный следующий шаг.
             </p>
           </div>
-          <div class="visual-card" aria-label="Визуал программы">
-            <div class="metric-panel">
-              <h3>Heart risk map</h3>
-              <div class="risk-row"><span>Давление</span><div class="bar"><span style="width: 68%"></span></div><b>контроль</b></div>
-              <div class="risk-row"><span>Липиды</span><div class="bar"><span style="width: 54%"></span></div><b>цель</b></div>
-              <div class="risk-row"><span>Глюкоза</span><div class="bar"><span style="width: 42%"></span></div><b>динамика</b></div>
-              <div class="risk-row"><span>Вес</span><div class="bar"><span style="width: 61%"></span></div><b>roadmap</b></div>
+
+          <div class="hero-visual">
+            <div class="founder-card parallax" style="--speed:-0.015px">
+              <img src="/lab/assets/dr-isaeva-founder.jpeg" alt="Dr. Isaeva" />
             </div>
-            <div class="doctor-silhouette"></div>
-            <div class="roadmap-mini">
-              <article><strong>3 мес.</strong><span>первичные цели и диагностика</span></article>
-              <article><strong>6 мес.</strong><span>контроль динамики и коррекция</span></article>
-              <article><strong>12 мес.</strong><span>годовой медицинский маршрут</span></article>
+            <article class="health-card score-card parallax" style="--speed:0.025px">
+              <div class="score-ring" aria-hidden="true"></div>
+              <strong>71</strong>
+              <span>Heart Longevity readiness. Клиентский интерфейс, не диагностический инструмент.</span>
+            </article>
+            <div class="health-card mini-metrics parallax" style="--speed:0.045px">
+              <div class="metric-row"><span>BP control</span><small>24h</small></div>
+              <div class="metric-row"><span>Lipids target</span><small>3m</small></div>
+              <div class="metric-row"><span>Glucose trend</span><small>6m</small></div>
+              <div class="metric-row"><span>Stress load</span><small>live</small></div>
             </div>
+            <article class="health-card road-card parallax" style="--speed:-0.02px">
+              <h3>Medical roadmap</h3>
+              <div class="road-line">
+                <div><b>3 мес.</b><span>приоритеты, диагностика, цели</span></div>
+                <div><b>6 мес.</b><span>динамика, коррекция, безопасность</span></div>
+                <div><b>12 мес.</b><span>годовой маршрут и контроль</span></div>
+              </div>
+            </article>
           </div>
         </div>
       </section>
@@ -795,33 +891,39 @@
           <div class="section-head">
             <div>
               <p class="eyebrow">Проблема</p>
-              <h2>У вас может быть доступ к врачам, анализам и клиникам. Но нет единой медицинской стратегии.</h2>
+              <h2>Данные есть. Врачей много. Единой медицинской стратегии часто нет.</h2>
             </div>
-            <p>Многие пациенты приходят не из-за отсутствия медицины. Наоборот — обследований, мнений и рекомендаций становится слишком много.</p>
+            <p>Сайт ведёт человека от тревоги и хаоса к ощущению управляемой системы: риски, приоритеты, маршрут, сопровождение.</p>
           </div>
-          <div class="copy-block">
-            <p>Один врач смотрит сердце, другой — сахар и вес, третий — сон, четвёртый советует “омоложение”, пятый назначает ещё десять анализов.</p>
-            <p>В итоге человек остаётся один на один с главным вопросом: что из этого действительно важно, что делать сейчас, а что можно не трогать?</p>
+          <div class="device-panel">
+            <div class="data-viz">
+              <span class="map-dot dot-1"></span>
+              <span class="map-dot dot-2"></span>
+              <span class="map-dot dot-3"></span>
+            </div>
+            <div class="feature-list">
+              <article class="card"><span class="icon">01</span><div><h3>Медицинский хаос</h3><p>Разные мнения, противоречивые назначения, непонимание приоритетов.</p></div></article>
+              <article class="card"><span class="icon">02</span><div><h3>Скрытые риски</h3><p>Давление, липиды, глюкоза, вес, сон и стресс могут долго ухудшаться без ярких симптомов.</p></div></article>
+              <article class="card"><span class="icon">03</span><div><h3>Фрагментарная медицина</h3><p>Есть специалисты по отдельным органам, но нет врача, который держит картину целиком.</p></div></article>
+              <article class="card"><span class="icon">04</span><div><h3>Псевдолонживити</h3><p>Капельницы, БАДы, гаджеты и “секретные протоколы” часто продаются громче, чем объясняются.</p></div></article>
+            </div>
           </div>
-          <div class="grid cols-3" style="margin-top:28px">
-            <article class="card"><h3>Медицинский хаос</h3><p>Разные мнения, противоречивые назначения, непонимание приоритетов.</p></article>
-            <article class="card"><h3>Скрытые риски</h3><p>Давление, липиды, глюкоза, вес, сон и стресс могут долго ухудшаться без ярких симптомов.</p></article>
-            <article class="card"><h3>Фрагментарная медицина</h3><p>Есть специалисты по отдельным органам, но нет врача, который держит картину целиком.</p></article>
-            <article class="card"><h3>Псевдолонживити</h3><p>Капельницы, БАДы, гаджеты и “секретные протоколы” часто продаются громче, чем объясняются.</p></article>
-            <article class="card accent-card"><h3>Высокая цена ошибки</h3><p>Для предпринимателя, руководителя или публичного человека здоровье — это ресурс решений, семьи, бизнеса и качества жизни.</p></article>
-          </div>
+          <div class="quote">Не больше медицины. А больше ясности в медицине.</div>
         </div>
       </section>
 
       <section class="section">
         <div class="wrap">
-          <p class="eyebrow">Главная идея</p>
-          <h2>Вы покупаете не анализы. Вы покупаете медицинский интеллект, стратегию и ответственность.</h2>
-          <div class="copy-block" style="margin-top:24px">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Идея программы</p>
+              <h2>Вы покупаете не анализы. Вы покупаете медицинский интеллект, стратегию и ответственность.</h2>
+            </div>
+          </div>
+          <div class="copy">
             <p>“Кардиодолголетие by Dr. Isaeva” — это программа, в которой врач-кардиолог становится вашим личным медицинским стратегом: собирает данные, оценивает риски, помогает выбрать обследования, интерпретирует результаты, выстраивает roadmap и сопровождает вас в динамике.</p>
             <p>Программа не обещает “продлить жизнь” или “гарантировать здоровье”. Её задача — помочь выявлять и контролировать факторы риска, выстроить понятный маршрут и принимать медицинские решения спокойно, последовательно и на основе данных.</p>
           </div>
-          <div class="quote">Не больше медицины. А больше ясности в медицине.</div>
         </div>
       </section>
 
@@ -834,7 +936,7 @@
             </div>
           </div>
           <div class="grid cols-3">
-            <article class="card"><h3>Собственники бизнеса и топ-менеджеры</h3><p>Много нагрузки, стресса и ответственности. Нужны ясность, контроль и экономия времени.</p></article>
+            <article class="card lime-card"><h3>Собственники бизнеса и топ-менеджеры</h3><p>Много нагрузки, стресса и ответственности. Нужны ясность, контроль и экономия времени.</p></article>
             <article class="card"><h3>Люди 40–65+ с высокой ценностью времени</h3><p>Хочется понимать состояние организма, не запускать риски и иметь врача, который видит картину целиком.</p></article>
             <article class="card"><h3>Пациенты с уже выявленными рисками</h3><p>Гипертония, высокий холестерин, атеросклероз, предиабет, ожирение, семейный анамнез.</p></article>
             <article class="card"><h3>Люди 35–45, которые хотят начать раньше</h3><p>Пока нет тяжёлых диагнозов, но уже есть усталость, вес, плохой сон, стресс, давление или наследственные риски.</p></article>
@@ -846,21 +948,15 @@
 
       <section class="section" id="check">
         <div class="wrap">
-          <p class="eyebrow">Самооценка</p>
-          <h2>Программа может быть вам актуальна, если…</h2>
-          <div class="card accent-card" style="margin-top:26px">
-            <ul class="checklist">
-              <li>вы много работаете и живёте в постоянном стрессе;</li>
-              <li>у вас бывает повышенное давление;</li>
-              <li>есть лишний вес или сложности с его снижением;</li>
-              <li>повышен холестерин, сахар или инсулин;</li>
-              <li>в семье были инфаркты, инсульты, диабет, выраженная гипертония;</li>
-              <li>вы сдавали анализы, но не понимаете, что из них действительно важно;</li>
-              <li>вы уже получали разные медицинские мнения и хотите собрать их в систему;</li>
-              <li>вы хотите заниматься профилактикой, но без модного биохакинг-хаоса;</li>
-              <li>вы цените время и хотите медицинскую навигацию, а не самостоятельный квест по клиникам.</li>
-            </ul>
-            <div class="actions"><a class="btn" href="#apply">Проверить, подходит ли мне программа</a></div>
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Проверка актуальности</p>
+              <h2>Программа может быть вам актуальна, если…</h2>
+            </div>
+          </div>
+          <div class="grid cols-2">
+            <article class="card"><ul><li>вы много работаете и живёте в постоянном стрессе;</li><li>у вас бывает повышенное давление;</li><li>есть лишний вес или сложности с его снижением;</li><li>повышен холестерин, сахар или инсулин;</li><li>в семье были инфаркты, инсульты, диабет, выраженная гипертония;</li></ul></article>
+            <article class="card lime-card"><ul><li>вы сдавали анализы, но не понимаете, что из них действительно важно;</li><li>вы уже получали разные медицинские мнения и хотите собрать их в систему;</li><li>вы хотите профилактику без биохакинг-хаоса;</li><li>вы цените время и хотите медицинскую навигацию, а не квест по клиникам.</li></ul><div class="actions"><a class="btn secondary" href="#apply">Проверить, подходит ли мне программа</a></div></article>
           </div>
         </div>
       </section>
@@ -872,25 +968,33 @@
               <p class="eyebrow">Что получает пациент</p>
               <h2>Вместо папки с анализами — персональная система управления рисками</h2>
             </div>
+            <p>Разные визуальные блоки работают как продуктовый интерфейс: карта, маршрут, динамика, фильтр решений.</p>
           </div>
           <div class="grid cols-3">
-            <article class="card"><h3>1. Личная карта кардиодолголетия</h3><p>Собраны сердечно-сосудистые и метаболические риски: давление, липиды, вес, глюкозо-инсулиновый обмен, сон, наследственность, воспалительные маркеры, диагнозы и лечение.</p></article>
-            <article class="card"><h3>2. Годовой medical roadmap</h3><p>План на 3, 6 и 12 месяцев: что контролируем, какие анализы сдаём, какие обследования нужны и какие показатели отслеживаем.</p></article>
-            <article class="card"><h3>3. Динамическое наблюдение</h3><p>Контроль дневников давления, веса и самочувствия, оценка анализов в динамике, корректировка маршрута и безопасность назначений.</p></article>
-            <article class="card"><h3>4. Медицинская навигация</h3><p>Помощь в выборе клиники, врача, обследования, второго мнения и последовательности действий.</p></article>
-            <article class="card"><h3>5. Фильтр от псевдолонживити</h3><p>Отделяем клинически разумные решения от модных, дорогих и сомнительных практик.</p></article>
-            <article class="card"><h3>6. Один центр медицинской картины</h3><p>Доктор держит в фокусе сердце, сосуды, обмен веществ, сон, стресс, образ жизни, лечение и цели пациента.</p></article>
+            <article class="card"><h3>Личная карта кардиодолголетия</h3><p>Собраны сердечно-сосудистые и метаболические риски: давление, липиды, вес, глюкозо-инсулиновый обмен, сон, наследственность, диагнозы и лечение.</p></article>
+            <article class="card"><h3>Годовой medical roadmap</h3><p>План на 3, 6 и 12 месяцев: что контролируем, какие анализы сдаём, какие обследования нужны и какие показатели отслеживаем.</p></article>
+            <article class="card"><h3>Динамическое наблюдение</h3><p>Контроль дневников давления, веса и самочувствия, оценка анализов в динамике, корректировка маршрута и безопасность назначений.</p></article>
+            <article class="card"><h3>Медицинская навигация</h3><p>Помощь в выборе клиники, врача, обследования, второго мнения и последовательности действий.</p></article>
+            <article class="card"><h3>Фильтр от псевдолонживити</h3><p>Отделяем клинически разумные решения от модных, дорогих и сомнительных практик.</p></article>
+            <article class="card"><h3>Один центр медицинской картины</h3><p>Доктор держит в фокусе сердце, сосуды, обмен веществ, сон, стресс, образ жизни, лечение и цели пациента.</p></article>
           </div>
         </div>
       </section>
 
       <section class="section">
         <div class="wrap">
-          <p class="eyebrow">Почему это важно</p>
-          <h2>Сердечно-сосудистые риски часто развиваются тихо. Поэтому ими нужно управлять до кризиса.</h2>
-          <div class="copy-block" style="margin-top:24px">
-            <p>Сердечно-сосудистые заболевания остаются ведущей причиной смерти в мире. По данным WHO, в 2022 году они стали причиной около 19,8 млн смертей, то есть примерно 32% всех глобальных смертей.</p>
-            <p>При этом значимая часть риска связана с факторами, которые можно выявлять и контролировать: давление, глюкоза, липиды, вес, питание, активность, курение, алкоголь и другие параметры.</p>
+          <div class="device-panel">
+            <div>
+              <p class="eyebrow">Почему это важно</p>
+              <h2>Сердечно-сосудистые риски часто развиваются тихо. Поэтому ими нужно управлять до кризиса.</h2>
+              <p class="lead">Сердечно-сосудистые заболевания остаются ведущей причиной смерти в мире. По данным WHO, в 2022 году они стали причиной около 19,8 млн смертей, то есть примерно 32% всех глобальных смертей.</p>
+              <p class="lead">Задача программы — вовремя увидеть картину, расставить приоритеты и выстроить медицинский маршрут, который подходит конкретному человеку.</p>
+            </div>
+            <div class="data-viz parallax" style="--speed:-0.018px">
+              <span class="map-dot dot-1"></span>
+              <span class="map-dot dot-2"></span>
+              <span class="map-dot dot-3"></span>
+            </div>
           </div>
           <div class="quote">Чем выше нагрузка, ответственность и цена времени — тем дороже обходится медицинская неопределённость.</div>
         </div>
@@ -901,30 +1005,31 @@
           <div class="section-head">
             <div>
               <p class="eyebrow">Первый месяц</p>
-              <h2>Первый месяц — стратегический старт программы</h2>
+              <h2>Стратегический старт программы</h2>
             </div>
-            <p>Его задача — собрать полную картину, определить риски, назначить разумную диагностику, интерпретировать результаты и выдать понятный годовой маршрут.</p>
+            <p>Собираем полную картину, определяем риски, назначаем разумную диагностику, интерпретируем результаты и выдаём годовой маршрут.</p>
           </div>
           <div class="timeline">
             <article class="step"><span>1</span><div><h3>Вводная диагностика</h3><p>Анкета, жалобы, цели, анамнез, выписки, анализы, обследования, назначения, данные давления, веса и самочувствия.</p></div></article>
             <article class="step"><span>2</span><div><h3>Первичная консультация</h3><p>Разбор состояния, текущего лечения, факторов риска, медицинских ограничений и приоритетов.</p></div></article>
-            <article class="step"><span>3</span><div><h3>Диагностический маршрут</h3><p>Список анализов и обследований под вашу ситуацию. Не “сдать всё подряд”, а пройти то, что имеет клинический смысл.</p></div></article>
+            <article class="step"><span>3</span><div><h3>Диагностический маршрут</h3><p>Не “сдать всё подряд”, а пройти то, что имеет клинический смысл.</p></div></article>
             <article class="step"><span>4</span><div><h3>Интерпретация результатов</h3><p>Доктор анализирует данные как систему: сердце, сосуды, давление, липиды, глюкоза/инсулин, вес, сон, стресс, наследственность, лечение.</p></div></article>
             <article class="step"><span>5</span><div><h3>Карта кардиодолголетия</h3><p>Понятный документ: что в норме, что требует контроля, какие риски есть, какие цели ставятся, что делать дальше.</p></div></article>
             <article class="step"><span>6</span><div><h3>Годовой roadmap</h3><p>План на 3, 6 и 12 месяцев: анализы, обследования, специалисты, контрольные точки и показатели эффективности.</p></div></article>
-            <article class="step"><span>7</span><div><h3>Финальная стратегическая встреча</h3><p>Доктор объясняет простым языком: что важно, где нельзя тянуть, какие действия первоочередные и как будет устроено сопровождение.</p></div></article>
           </div>
         </div>
       </section>
 
       <section class="section">
         <div class="wrap">
-          <p class="eyebrow">Сопровождение</p>
-          <h2>После первого месяца вы сохраняете медицинскую стратегию в динамике</h2>
-          <div class="copy-block" style="margin-top:24px">
-            <p>Сопровождение — это не “доступ к врачу в чат” и не безлимитный медицинский WhatsApp. Это регулярный контроль, корректировки, навигация и обновление плана при изменении состояния.</p>
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Сопровождение</p>
+              <h2>После первого месяца стратегия сохраняется в динамике</h2>
+            </div>
+            <p>Это не безлимитный медицинский WhatsApp. Это регулярный контроль, корректировки, навигация и обновление плана при изменении состояния.</p>
           </div>
-          <div class="grid cols-2" style="margin-top:26px">
+          <div class="grid cols-2">
             <article class="card"><ul><li>регулярная онлайн-точка с доктором;</li><li>контроль дневников давления, веса и самочувствия;</li><li>оценка динамики анализов и обследований;</li><li>коррекция медицинского маршрута;</li><li>контроль эффективности и безопасности назначений;</li></ul></article>
             <article class="card"><ul><li>ответы на медицинские вопросы в рамках программы;</li><li>помощь с выбором специалистов и обследований;</li><li>подключение врачей из сети при необходимости;</li><li>подготовка к очным визитам и разбор их результатов;</li><li>обновление плана при изменении состояния.</li></ul></article>
           </div>
@@ -934,9 +1039,13 @@
 
       <section class="section">
         <div class="wrap">
-          <p class="eyebrow">Итоговые документы</p>
-          <h2>У вас появляется не хаос обследований, а понятная медицинская карта движения</h2>
-          <div class="grid cols-4" style="margin-top:28px">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Документы</p>
+              <h2>У вас появляется не хаос обследований, а понятная medical operating system</h2>
+            </div>
+          </div>
+          <div class="grid cols-4">
             <article class="card"><h3>Медицинский паспорт долголетия</h3><p>Итоговый документ с картой рисков, ключевыми показателями, целями, roadmap, календарём контроля и планом действий.</p></article>
             <article class="card"><h3>Heart Longevity Index</h3><p>Визуальная шкала для объяснения динамики пациенту. Это клиентский интерфейс, а не официальный диагностический инструмент.</p></article>
             <article class="card"><h3>Executive Health Brief</h3><p>Краткий отчёт: что изменилось, что улучшилось, что требует внимания, какие решения приняты и что делаем дальше.</p></article>
@@ -947,20 +1056,21 @@
 
       <section class="section">
         <div class="wrap">
-          <div class="section-head">
+          <div class="device-panel">
+            <div class="founder-card" style="position:relative; inset:auto; min-height:520px">
+              <img src="/lab/assets/dr-isaeva-founder.jpeg" alt="Dr. Isaeva" />
+            </div>
             <div>
               <p class="eyebrow">Почему Dr. Isaeva</p>
               <h2>Врач, который держит медицинскую картину целиком</h2>
+              <p class="lead">Программа построена вокруг экспертизы Dr. Isaeva: кардиология, клиническое мышление, управление рисками, безопасность лечения и долгосрочное наблюдение.</p>
+              <div class="grid cols-2" style="margin-top:20px">
+                <article class="card"><h3>Авторская программа врача-кардиолога</h3><p>Фокус на сердечно-сосудистых и метаболических рисках.</p></article>
+                <article class="card"><h3>Доказательный подход</h3><p>Управляемые факторы риска, клиническая логика и разумная профилактика.</p></article>
+                <article class="card"><h3>Медицинская навигация</h3><p>Пациенту не нужно самому решать, куда идти, кому верить и что сдавать.</p></article>
+                <article class="card lime-card"><h3>Премиальный сервис</h3><p>Ограниченное количество пациентов, персональный формат и уважение ко времени клиента.</p></article>
+              </div>
             </div>
-            <p>Программа построена вокруг экспертизы Dr. Isaeva: кардиология, клиническое мышление, управление рисками, безопасность лечения и долгосрочное наблюдение.</p>
-          </div>
-          <div class="grid cols-3">
-            <article class="card"><h3>Авторская программа врача-кардиолога</h3><p>Фокус на сердечно-сосудистых и метаболических рисках.</p></article>
-            <article class="card"><h3>Доказательный подход</h3><p>В основе — управляемые факторы риска, клиническая логика и разумная профилактика.</p></article>
-            <article class="card"><h3>Медицинская навигация</h3><p>Пациенту не нужно самому решать, куда идти, кому верить и что сдавать.</p></article>
-            <article class="card"><h3>Врачебная сеть</h3><p>При необходимости подключаются профильные специалисты: эндокринолог, сомнолог, невролог, гинеколог, генетик и другие.</p></article>
-            <article class="card accent-card"><h3>Премиальный сервис</h3><p>Ограниченное количество пациентов, персональный формат, понятная коммуникация и уважение ко времени клиента.</p></article>
-            <article class="card"><h3>Что нужно добавить</h3><p>Фото доктора, образование, опыт, специализация, лицензии/клиника, реальные регалии и юридически корректные формулировки.</p></article>
           </div>
         </div>
       </section>
@@ -982,26 +1092,29 @@
 
       <section class="section" id="price">
         <div class="wrap">
-          <p class="eyebrow">Стоимость</p>
-          <h2>Стоимость программы</h2>
-          <p class="lead">Цена зависит от объёма задач, уровня сопровождения, количества плановых точек и необходимости координации специалистов.</p>
-          <div class="pricing" style="margin-top:28px">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Стоимость</p>
+              <h2>Премиальный формат для высокой цены времени</h2>
+            </div>
+            <p>Цена зависит от объёма задач, уровня сопровождения, количества плановых точек и необходимости координации специалистов.</p>
+          </div>
+          <div class="pricing">
             <article class="card price"><h3>Launch / Старт</h3><strong>200 000 ₽</strong><p>Сопровождение: от 50 000 ₽/мес. Для пациента с умеренными рисками, которому нужна первичная стратегия и базовое сопровождение.</p><ul><li>первичная консультация;</li><li>разбор документов;</li><li>диагностический маршрут;</li><li>карта кардиодолголетия;</li><li>годовой roadmap;</li><li>1 плановая онлайн-точка в месяц.</li></ul></article>
-            <article class="card price accent-card"><h3>Premium</h3><strong>250 000–300 000 ₽</strong><p>Сопровождение: от 100 000 ₽/мес. Для пациента с несколькими рисками и потребностью в более плотной медицинской навигации.</p><ul><li>2 плановые точки в месяц;</li><li>плотный контроль динамики;</li><li>координация нескольких специалистов;</li><li>приоритетная коммуникация;</li><li>medical summary.</li></ul></article>
-            <article class="card price"><h3>VIP / Executive</h3><strong>от 1 200 000 ₽/год</strong><p>Для собственников бизнеса, публичных людей, семей и пациентов с высокой ценностью времени.</p><ul><li>годовое сопровождение;</li><li>расширенный medical roadmap;</li><li>консьерж-маршрутизация;</li><li>регулярные стратегические сессии;</li><li>семейный формат как опция.</li></ul></article>
+            <article class="card price lime-card"><h3>Premium</h3><strong>250 000–300 000 ₽</strong><p>Сопровождение: от 100 000 ₽/мес. Для пациента с несколькими рисками и потребностью в более плотной медицинской навигации.</p><ul><li>2 плановые точки в месяц;</li><li>плотный контроль динамики;</li><li>координация специалистов;</li><li>приоритетная коммуникация;</li><li>medical summary.</li></ul></article>
+            <article class="card price"><h3>VIP / Executive</h3><strong>от 1 200 000 ₽/год</strong><p>Для собственников бизнеса, публичных людей, семей и пациентов с высокой ценностью времени.</p><ul><li>годовое сопровождение;</li><li>расширенный medical roadmap;</li><li>консьерж-маршрутизация;</li><li>стратегические сессии;</li><li>семейный формат как опция.</li></ul></article>
           </div>
           <div class="disclaimer">Что не входит в стоимость: анализы, инструментальные обследования, госпитализация, очные приёмы других специалистов, процедуры, лекарственные препараты, операции, экстренная медицинская помощь, услуги клиник-партнёров.</div>
-          <div class="actions"><a class="btn" href="#apply">Оставить заявку и обсудить формат</a></div>
         </div>
       </section>
 
       <section class="section">
         <div class="wrap">
-          <p class="eyebrow">Цена</p>
+          <p class="eyebrow">Границы</p>
           <h2>Пациент платит не за созвон. Он платит за систему ответственности.</h2>
-          <div class="copy-block" style="margin-top:24px">
-            <p>Обычная консультация отвечает на вопрос: “Что делать сейчас?” Эта программа отвечает на другой вопрос: “Как мне системно управлять здоровьем в течение года?”</p>
-            <p>Первый месяц стоит дорого, потому что это стратегический старт: сбор данных, диагностика, интерпретация, карта рисков, годовой маршрут и финальная встреча с понятным планом.</p>
+          <div class="grid cols-2" style="margin-top:24px">
+            <article class="card"><h3>Почему это стоит дорого</h3><p>Первый месяц — стратегический старт: сбор данных, диагностика, интерпретация, карта рисков, годовой маршрут и финальная встреча с понятным планом.</p></article>
+            <article class="card"><h3>Кому не подходит</h3><ul><li>у вас острое состояние и нужна экстренная помощь;</li><li>вы ищете “волшебное омоложение”;</li><li>вы хотите гарантий, что “ничего никогда не случится”;</li><li>вы не готовы выполнять рекомендации;</li><li>вы хотите безлимитного врача 24/7.</li></ul></article>
           </div>
           <div class="quote">Главная ценность — не количество анализов. Главная ценность — правильные решения на основе полной картины.</div>
         </div>
@@ -1009,23 +1122,9 @@
 
       <section class="section">
         <div class="wrap">
-          <p class="eyebrow">Границы</p>
-          <h2>Программа подходит не всем. И это нормально.</h2>
-          <div class="card" style="margin-top:26px">
-            <p>Программа не подходит, если:</p>
-            <ul><li>у вас острое состояние и нужна экстренная помощь;</li><li>вы ищете “волшебное омоложение”;</li><li>вы хотите гарантии, что “ничего никогда не случится”;</li><li>вы не готовы выполнять рекомендации;</li><li>вы хотите безлимитного врача 24/7;</li><li>вы ожидаете, что программа заменит скорую помощь, госпитализацию или очное вмешательство при острых состояниях.</li></ul>
-          </div>
-          <div class="quote">Мы работаем с управлением рисками, медицинской стратегией и сопровождением. Не с обещаниями невозможного.</div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="wrap">
-          <p class="eyebrow">Входной продукт</p>
-          <h2>Можно начать с разбора медицинских документов</h2>
-          <div class="grid cols-2" style="margin-top:26px">
-            <article class="card"><p>Если вы пока не готовы к годовой программе, возможен входной формат: второе мнение или разбор анализов, обследований и назначений с позиции кардиолога-стратега.</p><p style="margin-top:14px">Такой формат помогает понять, есть ли у вас медицинская задача для более глубокого сопровождения.</p></article>
-            <article class="card accent-card"><h3>Разбор документов / второе мнение</h3><p style="margin-top:12px; font-size:28px; color:var(--gold-2); font-weight:900">50 000–100 000 ₽</p><div class="actions"><a class="btn" href="#apply">Оставить заявку на разбор</a></div></article>
+          <div class="grid cols-2">
+            <article class="card"><p class="eyebrow">Входной продукт</p><h2>Можно начать с разбора медицинских документов</h2><p class="lead">Если вы пока не готовы к годовой программе, возможен входной формат: второе мнение или разбор анализов, обследований и назначений с позиции кардиолога-стратега.</p></article>
+            <article class="card lime-card"><h3>Разбор документов / второе мнение</h3><p style="margin-top:12px; font-size:30px; font-weight:900">50 000–100 000 ₽</p><p style="margin-top:10px">Формат помогает понять, есть ли медицинская задача для более глубокого сопровождения.</p><div class="actions"><a class="btn secondary" href="#apply">Оставить заявку на разбор</a></div></article>
           </div>
         </div>
       </section>
@@ -1096,12 +1195,23 @@
             <a href="/privacy.html">Политика конфиденциальности</a>
             <a href="/personal-data.html">Согласие на обработку персональных данных</a>
             <a href="#apply">Контакты</a>
-            <a href="https://www.who.int/health-topics/cardiovascular-diseases/" target="_blank" rel="noreferrer">WHO</a>
           </div>
         </div>
       </div>
     </footer>
 
     <div class="mobile-cta"><a class="btn" href="#apply">Оставить заявку</a></div>
+
+    <script>
+      const parallaxItems = document.querySelectorAll(".parallax");
+      const updateParallax = () => {
+        document.documentElement.style.setProperty("--scroll", String(window.scrollY));
+      };
+      updateParallax();
+      window.addEventListener("scroll", updateParallax, { passive: true });
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        parallaxItems.forEach((item) => item.classList.remove("parallax"));
+      }
+    </script>
   </body>
 </html>
