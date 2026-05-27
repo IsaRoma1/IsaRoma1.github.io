@@ -3,60 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Роман Исаев - lab version</title>
-    <meta
-      name="description"
-      content="Экспериментальная визуальная версия сайта Романа Исаева: практическое внедрение ИИ для предпринимателей и команд."
-    />
+    <title>Роман Исаев - lab</title>
+    <meta name="description" content="Экспериментальная версия сайта Романа Исаева о практическом внедрении ИИ в бизнес." />
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/svg+xml" href="/favicon-ai.svg?v=3" />
-    <link rel="preconnect" href="https://getfile.dokpub.com" />
-    <link rel="dns-prefetch" href="https://getfile.dokpub.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet" />
     <style>
       :root {
-        color-scheme: light;
-        --ink: #101111;
-        --ink-soft: rgba(16, 17, 17, 0.68);
-        --paper: #ede8dc;
-        --paper-2: #f8f3ea;
-        --glass: rgba(255, 255, 255, 0.54);
-        --glass-strong: rgba(255, 255, 255, 0.76);
-        --dark-glass: rgba(17, 18, 18, 0.72);
-        --line: rgba(16, 17, 17, 0.13);
-        --white-line: rgba(255, 255, 255, 0.48);
-        --accent: #ff6a2a;
-        --lime: #d8ff7c;
-        --blue: #bfeaff;
-        --radius-xl: 54px;
-        --radius-lg: 36px;
-        --radius-md: 24px;
-        --max: 1180px;
+        color-scheme: dark;
+        --bg: #111b1d;
+        --panel: rgba(15, 29, 30, 0.86);
+        --panel-soft: rgba(26, 45, 46, 0.72);
+        --text: #f4fffb;
+        --muted: rgba(244, 255, 251, 0.68);
+        --dim: rgba(244, 255, 251, 0.46);
+        --line: rgba(139, 255, 224, 0.18);
+        --neon: #20f0ba;
+        --neon-2: #72fff2;
+        --orange: #ff7938;
+        --max: 1160px;
+        --radius: 34px;
       }
 
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
       body {
         margin: 0;
         min-width: 320px;
-        background:
-          radial-gradient(circle at 16% 4%, rgba(191, 234, 255, 0.48), transparent 34rem),
-          radial-gradient(circle at 84% 14%, rgba(255, 106, 42, 0.2), transparent 29rem),
-          linear-gradient(180deg, #e9e2d6 0%, #f7f1e8 42%, #e3dbcf 100%);
-        color: var(--ink);
+        color: var(--text);
         font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        letter-spacing: 0;
+        background:
+          radial-gradient(circle at 50% -14%, rgba(56, 255, 211, 0.28), transparent 28rem),
+          radial-gradient(circle at 88% 16%, rgba(48, 240, 186, 0.18), transparent 24rem),
+          radial-gradient(circle at 14% 24%, rgba(255, 121, 56, 0.12), transparent 22rem),
+          linear-gradient(180deg, #0e1719 0%, #142224 44%, #101819 100%);
         overflow-x: hidden;
       }
 
@@ -64,71 +46,62 @@
         content: "";
         position: fixed;
         inset: 0;
-        z-index: -3;
+        z-index: -2;
         background:
-          linear-gradient(rgba(237, 232, 220, 0.64), rgba(237, 232, 220, 0.84)),
-          url("/gallery-08-stage-full.jpg") center 18% / cover no-repeat;
-        filter: saturate(0.45) contrast(0.92);
-        transform: scale(1.05);
+          linear-gradient(rgba(9, 17, 18, 0.8), rgba(9, 17, 18, 0.9)),
+          url("/gallery-08-stage-full.jpg") center / cover no-repeat;
+        filter: saturate(0.7) blur(1px);
+        transform: scale(1.04);
       }
 
       body::after {
         content: "";
         position: fixed;
         inset: 0;
-        z-index: -2;
+        z-index: -1;
         pointer-events: none;
-        opacity: 0.28;
-        background-image:
-          linear-gradient(rgba(255, 255, 255, 0.48) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.34) 1px, transparent 1px);
-        background-size: 64px 64px;
-        mask-image: radial-gradient(circle at 50% 0%, #000, transparent 72%);
+        opacity: 0.34;
+        background:
+          linear-gradient(120deg, transparent 0 38%, rgba(114, 255, 242, 0.13) 48%, transparent 60%),
+          radial-gradient(circle at 50% 20%, rgba(32, 240, 186, 0.2), transparent 22rem);
       }
 
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
+      a { color: inherit; text-decoration: none; }
+      img { display: block; max-width: 100%; }
+      p, h1, h2, h3 { margin: 0; }
 
-      img {
-        display: block;
-        max-width: 100%;
-      }
-
-      .page-shell {
-        width: min(100% - 32px, 1380px);
+      .wrap {
+        width: min(100% - 28px, 1240px);
         margin: 0 auto;
       }
 
-      .topline {
-        display: flex;
+      .topbar {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 18px;
         align-items: center;
-        justify-content: space-between;
-        gap: 24px;
-        padding: 34px 0 22px;
-        font: 700 14px/1 Space Grotesk, sans-serif;
-        letter-spacing: 0.02em;
-        text-transform: uppercase;
+        padding: 28px 0 22px;
       }
 
       .brand {
-        display: inline-flex;
+        display: flex;
         align-items: center;
         gap: 12px;
+        color: var(--muted);
+        font: 800 12px/1 Space Grotesk, sans-serif;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
       }
 
-      .brand-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 58px;
-        height: 58px;
-        border: 1px solid rgba(255, 255, 255, 0.76);
-        border-radius: 18px;
-        background: rgba(255, 255, 255, 0.7);
-        box-shadow: 0 18px 48px rgba(38, 35, 29, 0.14);
-        backdrop-filter: blur(18px);
+      .brand-logo {
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 46px;
+        border: 1px solid rgba(114, 255, 242, 0.36);
+        border-radius: 14px;
+        background: rgba(10, 20, 21, 0.76);
+        box-shadow: 0 0 28px rgba(32, 240, 186, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12);
       }
 
       .brand-mark {
@@ -141,127 +114,111 @@
         line-height: 0.85;
       }
 
-      .brand-mark span:first-child {
-        color: #121212;
-        font-size: 16px;
-      }
-
-      .brand-mark span:last-child {
-        color: #e21d1d;
-        font-size: 14px;
-      }
+      .brand-mark span:first-child { color: #ffffff; font-size: 14px; }
+      .brand-mark span:last-child { color: #ff3f2d; font-size: 12px; }
 
       .nav {
+        justify-self: center;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: clamp(14px, 3vw, 38px);
-        min-height: 54px;
-        padding: 0 24px;
-        border: 1px solid var(--white-line);
+        gap: 8px;
+        padding: 7px;
+        border: 1px solid rgba(114, 255, 242, 0.15);
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.34);
-        box-shadow: 0 22px 55px rgba(20, 20, 20, 0.09);
-        backdrop-filter: blur(22px);
+        background: rgba(14, 27, 28, 0.62);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
+        backdrop-filter: blur(18px);
       }
 
       .nav a {
-        color: rgba(16, 17, 17, 0.68);
+        padding: 11px 14px;
+        border-radius: 999px;
+        color: var(--muted);
         font-size: 12px;
         font-weight: 800;
-        transition: color 0.25s ease, transform 0.25s ease;
+        transition: 0.25s ease;
       }
 
       .nav a:hover {
-        color: var(--ink);
-        transform: translateY(-1px);
+        color: var(--text);
+        background: rgba(114, 255, 242, 0.08);
       }
 
-      .nav-cta,
-      .pill-button,
-      .ghost-button {
+      .btn {
         position: relative;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-height: 52px;
-        padding: 0 24px;
+        min-height: 46px;
+        padding: 0 20px;
         overflow: hidden;
+        border: 1px solid rgba(114, 255, 242, 0.28);
         border-radius: 999px;
+        color: #041815;
+        background: linear-gradient(135deg, #15f0b0, #93fff1);
+        box-shadow: 0 0 34px rgba(32, 240, 186, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.5);
         font-weight: 900;
-        letter-spacing: -0.01em;
         white-space: nowrap;
       }
 
-      .nav-cta,
-      .pill-button {
-        color: #121212;
-        background: linear-gradient(135deg, #e7ff8c, #bff4ff 52%, #ffffff);
-        box-shadow: 0 18px 44px rgba(113, 139, 93, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.88);
-      }
-
-      .nav-cta::before,
-      .pill-button::before {
+      .btn::before {
         content: "";
         position: absolute;
-        inset: -80% auto -80% -42%;
-        width: 36%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.88), transparent);
-        transform: rotate(18deg);
-        animation: shine 4.2s ease-in-out infinite;
+        inset: -60% auto -60% -35%;
+        width: 32%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent);
+        transform: rotate(20deg);
+        animation: shine 4s ease-in-out infinite;
       }
 
-      .ghost-button {
-        border: 1px solid rgba(16, 17, 17, 0.14);
-        color: rgba(16, 17, 17, 0.8);
-        background: rgba(255, 255, 255, 0.42);
-        backdrop-filter: blur(16px);
+      .btn span { position: relative; z-index: 1; }
+
+      .btn.dark {
+        color: var(--text);
+        background: rgba(11, 23, 24, 0.72);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
       }
+
+      .btn.dark::before { opacity: 0.18; }
 
       @keyframes shine {
-        0%,
-        42% {
-          transform: translateX(0) rotate(18deg);
-        }
-        72%,
-        100% {
-          transform: translateX(520%) rotate(18deg);
-        }
+        0%, 44% { transform: translateX(0) rotate(20deg); }
+        82%, 100% { transform: translateX(520%) rotate(20deg); }
       }
 
       .hero {
         position: relative;
-        min-height: calc(100svh - 114px);
-        padding: clamp(18px, 3vw, 34px);
+        min-height: calc(100svh - 108px);
+        padding: clamp(18px, 2.8vw, 34px);
         overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.72);
-        border-radius: clamp(34px, 5vw, 76px);
+        border: 1px solid rgba(114, 255, 242, 0.18);
+        border-radius: 42px;
         background:
-          linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.14)),
-          linear-gradient(145deg, rgba(191, 234, 255, 0.45), rgba(255, 255, 255, 0.44) 40%, rgba(255, 106, 42, 0.08));
-        box-shadow: 0 52px 120px rgba(29, 28, 25, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.88);
-        backdrop-filter: blur(20px);
+          linear-gradient(120deg, rgba(20, 37, 38, 0.96), rgba(9, 18, 19, 0.92)),
+          radial-gradient(circle at 72% 16%, rgba(32, 240, 186, 0.18), transparent 18rem);
+        box-shadow:
+          0 0 80px rgba(32, 240, 186, 0.16),
+          0 44px 120px rgba(0, 0, 0, 0.42),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
       }
 
       .hero::before {
         content: "ИИ41";
         position: absolute;
-        right: 3vw;
-        bottom: -2.5vw;
-        z-index: 0;
-        color: rgba(255, 255, 255, 0.5);
-        font: 900 clamp(7rem, 18vw, 17rem) / 0.8 Space Grotesk, sans-serif;
+        left: clamp(14px, 3vw, 42px);
+        top: 46px;
+        color: rgba(255, 255, 255, 0.05);
+        font: 900 clamp(4.8rem, 14vw, 12rem)/0.78 Space Grotesk, sans-serif;
         letter-spacing: -0.09em;
-        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
       }
 
-      .hero-grid {
+      .hero-inner {
         position: relative;
-        z-index: 2;
+        z-index: 1;
         display: grid;
-        grid-template-columns: minmax(0, 0.92fr) minmax(360px, 1.08fr);
-        gap: clamp(22px, 4vw, 56px);
-        min-height: calc(100svh - 184px);
+        grid-template-columns: 0.95fr 1.05fr;
+        gap: clamp(22px, 4vw, 54px);
+        align-items: stretch;
+        min-height: calc(100svh - 176px);
       }
 
       .hero-copy {
@@ -269,588 +226,447 @@
         flex-direction: column;
         justify-content: space-between;
         gap: 34px;
-        max-width: 670px;
+        padding: clamp(8px, 1.4vw, 18px);
       }
 
       .kicker {
         display: inline-flex;
-        width: max-content;
-        max-width: 100%;
-        gap: 8px;
-        padding: 8px 10px;
-        border: 1px solid rgba(16, 17, 17, 0.1);
+        width: fit-content;
+        padding: 8px 12px;
+        border: 1px solid rgba(32, 240, 186, 0.24);
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.42);
-        color: rgba(16, 17, 17, 0.64);
-        font-size: 12px;
-        font-weight: 900;
+        color: var(--neon);
+        background: rgba(32, 240, 186, 0.06);
+        font: 900 12px/1 Space Grotesk, sans-serif;
+        letter-spacing: 0.16em;
         text-transform: uppercase;
-        letter-spacing: 0.12em;
-        backdrop-filter: blur(16px);
-      }
-
-      h1,
-      h2,
-      h3,
-      p {
-        margin: 0;
       }
 
       h1 {
-        max-width: 700px;
-        margin-top: 24px;
-        color: rgba(16, 17, 17, 0.92);
-        font: 900 clamp(2.6rem, 6.1vw, 6.6rem) / 0.88 Space Grotesk, sans-serif;
-        letter-spacing: -0.055em;
+        margin-top: 26px;
+        max-width: 650px;
+        font: 900 clamp(2.75rem, 6.2vw, 6.4rem)/0.88 Space Grotesk, sans-serif;
+        letter-spacing: -0.058em;
       }
 
-      .hero-lead {
-        max-width: 610px;
+      .accent {
+        color: var(--neon);
+        text-shadow: 0 0 28px rgba(32, 240, 186, 0.4);
+      }
+
+      .lead {
+        max-width: 620px;
         margin-top: 22px;
-        color: rgba(16, 17, 17, 0.68);
-        font-size: clamp(1rem, 1.4vw, 1.22rem);
+        color: var(--muted);
+        font-size: clamp(1rem, 1.35vw, 1.16rem);
         line-height: 1.55;
       }
 
-      .hero-actions {
+      .actions {
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
-        margin-top: 28px;
+        margin-top: 26px;
       }
 
-      .micro-statement {
+      .system-note {
         position: relative;
-        width: min(100%, 520px);
-        padding: 18px 22px;
+        width: min(100%, 560px);
+        padding: 18px 22px 18px 74px;
         overflow: hidden;
-        border: 1px solid rgba(16, 17, 17, 0.11);
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.46);
-        box-shadow: 0 20px 54px rgba(31, 31, 29, 0.1);
-        backdrop-filter: blur(18px);
-      }
-
-      .micro-statement::before {
-        content: "";
-        position: absolute;
-        inset: 0 auto 0 0;
-        width: 36%;
-        opacity: 0.72;
-        background: repeating-linear-gradient(
-          90deg,
-          rgba(255, 106, 42, 0.72) 0 3px,
-          transparent 3px 10px,
-          rgba(191, 234, 255, 0.86) 10px 13px,
-          transparent 13px 20px
-        );
-        mask-image: linear-gradient(90deg, #000, transparent);
-        animation: scan 3.8s ease-in-out infinite;
-      }
-
-      .micro-statement span {
-        position: relative;
-        z-index: 1;
-        color: rgba(16, 17, 17, 0.82);
-        font-size: clamp(1rem, 1.8vw, 1.36rem);
+        border: 1px solid rgba(114, 255, 242, 0.2);
+        border-radius: 24px;
+        color: var(--text);
+        background: rgba(11, 23, 24, 0.72);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
         font-weight: 900;
+        line-height: 1.25;
       }
 
-      @keyframes scan {
-        0%,
-        100% {
-          transform: translateX(-10%);
-        }
-        50% {
-          transform: translateX(230%);
-        }
-      }
-
-      .hero-visual {
-        position: relative;
-        display: flex;
-        align-items: stretch;
-        min-height: 620px;
-      }
-
-      .portrait-card {
-        position: relative;
-        width: 100%;
-        min-height: 100%;
-        overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.7);
-        border-radius: clamp(36px, 5vw, 66px);
-        background: rgba(9, 10, 10, 0.9);
-        box-shadow: 0 44px 100px rgba(19, 18, 17, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.24);
-      }
-
-      .portrait-card::after {
+      .system-note::before {
         content: "";
         position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background:
-          linear-gradient(90deg, rgba(0, 0, 0, 0.42), transparent 34%),
-          linear-gradient(0deg, rgba(0, 0, 0, 0.36), transparent 46%);
+        left: 22px;
+        top: 50%;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: conic-gradient(from 40deg, var(--neon), transparent 36%, var(--neon-2), transparent 76%, var(--neon));
+        box-shadow: 0 0 28px rgba(32, 240, 186, 0.48);
+        transform: translateY(-50%);
+        animation: spin 5s linear infinite;
       }
 
-      .portrait-card img {
+      @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+      .visual {
+        position: relative;
+        min-height: 620px;
+        overflow: hidden;
+        border: 1px solid rgba(114, 255, 242, 0.22);
+        border-radius: 34px;
+        background: #071112;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 56px rgba(32, 240, 186, 0.14);
+      }
+
+      .visual img {
         width: 100%;
         height: 100%;
         min-height: 620px;
         object-fit: cover;
         object-position: center 36%;
-        filter: saturate(0.98) contrast(1.02);
+        opacity: 0.94;
+        filter: saturate(0.95) contrast(1.06);
+      }
+
+      .visual::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(7, 17, 18, 0.74), transparent 40%),
+          linear-gradient(0deg, rgba(7, 17, 18, 0.64), transparent 44%);
+        pointer-events: none;
       }
 
       .signature {
         position: absolute;
-        top: 20%;
-        right: 8%;
-        z-index: 3;
-        color: rgba(255, 255, 255, 0.78);
-        font: 500 clamp(1.5rem, 3vw, 3rem) / 1.02 "Comic Sans MS", "Segoe Print", cursive;
+        right: 7%;
+        top: 17%;
+        z-index: 2;
+        color: rgba(255,255,255,0.72);
+        font: 500 clamp(1.5rem, 3vw, 3rem)/1.02 "Comic Sans MS", "Segoe Print", cursive;
         transform: rotate(-5deg);
       }
 
-      .trust-stack {
+      .trust {
         position: absolute;
-        right: clamp(16px, 3vw, 36px);
-        bottom: clamp(16px, 3vw, 36px);
-        z-index: 4;
+        right: 20px;
+        bottom: 20px;
+        left: 20px;
+        z-index: 2;
         display: grid;
+        grid-template-columns: repeat(3, 1fr);
         gap: 10px;
-        width: min(280px, 68%);
       }
 
-      .trust-card,
-      .floating-card,
-      .glass-card {
-        border: 1px solid rgba(255, 255, 255, 0.44);
-        background: rgba(255, 255, 255, 0.28);
-        box-shadow: 0 24px 70px rgba(16, 17, 17, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.56);
-        backdrop-filter: blur(22px);
-      }
-
-      .trust-card {
-        padding: 16px 18px;
-        border-radius: 24px;
-        color: #fff;
-        background: rgba(18, 20, 20, 0.5);
-        transition: transform 0.35s ease, box-shadow 0.35s ease;
-      }
-
-      .trust-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 30px 80px rgba(255, 106, 42, 0.25);
-      }
-
-      .trust-card strong {
-        display: block;
-        font: 900 28px/1 Space Grotesk, sans-serif;
-        color: #f8fbff;
-      }
-
-      .trust-card span {
-        display: block;
-        margin-top: 6px;
-        color: rgba(255, 255, 255, 0.74);
-        font-size: 13px;
-        line-height: 1.35;
-      }
-
-      .hero-note {
-        position: absolute;
-        left: clamp(18px, 3vw, 38px);
-        bottom: clamp(18px, 3vw, 38px);
-        z-index: 5;
-        max-width: 420px;
-        padding: 18px 22px;
-        border-radius: 30px;
-        color: #fff;
-        background: rgba(18, 20, 20, 0.64);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+      .trust article,
+      .glass {
+        border: 1px solid rgba(114, 255, 242, 0.18);
+        background: rgba(9, 20, 21, 0.72);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 18px 52px rgba(0,0,0,0.24);
         backdrop-filter: blur(18px);
       }
 
-      .hero-note p {
-        color: rgba(255, 255, 255, 0.82);
+      .trust article {
+        min-height: 112px;
+        padding: 18px;
+        border-radius: 22px;
+      }
+
+      .trust strong {
+        display: block;
+        color: var(--neon);
+        font: 900 28px/1 Space Grotesk, sans-serif;
+      }
+
+      .trust span {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.3;
+      }
+
+      .hero-bottom {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 18px;
+        align-items: end;
+      }
+
+      .hero-bottom p {
+        max-width: 640px;
+        color: var(--muted);
         font-size: 15px;
-        line-height: 1.45;
+        line-height: 1.5;
       }
 
       .section {
-        width: min(100% - 32px, var(--max));
-        margin: clamp(76px, 9vw, 130px) auto 0;
+        width: min(100% - 28px, var(--max));
+        margin: clamp(64px, 9vw, 118px) auto 0;
       }
 
-      .section-wide {
-        width: min(100% - 32px, 1380px);
-      }
+      .section.wide { width: min(100% - 28px, 1240px); }
 
-      .section-head {
+      .head {
         display: grid;
-        grid-template-columns: minmax(0, 0.76fr) minmax(280px, 0.24fr);
+        grid-template-columns: minmax(0, 0.8fr) minmax(260px, 0.2fr);
         gap: 28px;
         align-items: end;
-        margin-bottom: 28px;
+        margin-bottom: 24px;
       }
 
       .eyebrow {
-        display: inline-flex;
         margin-bottom: 12px;
-        color: rgba(16, 17, 17, 0.48);
+        color: var(--neon);
         font: 900 12px/1 Space Grotesk, sans-serif;
-        letter-spacing: 0.22em;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
       }
 
       h2 {
-        color: rgba(16, 17, 17, 0.9);
-        font: 900 clamp(2rem, 4.5vw, 4.8rem) / 0.94 Space Grotesk, sans-serif;
-        letter-spacing: -0.055em;
+        font: 900 clamp(2rem, 4.5vw, 4.6rem)/0.94 Space Grotesk, sans-serif;
+        letter-spacing: -0.052em;
       }
 
-      .section-head p:not(.eyebrow) {
-        color: var(--ink-soft);
-        font-size: 16px;
+      .head > p {
+        color: var(--muted);
         line-height: 1.55;
       }
 
       .panel {
         position: relative;
         overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.68);
-        border-radius: var(--radius-xl);
-        background: rgba(255, 255, 255, 0.44);
-        box-shadow: 0 34px 90px rgba(29, 28, 25, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.84);
-        backdrop-filter: blur(22px);
+        border: 1px solid rgba(114, 255, 242, 0.16);
+        border-radius: var(--radius);
+        background: rgba(11, 23, 24, 0.78);
+        box-shadow: 0 34px 110px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.08);
       }
 
       .panel::before {
         content: "";
         position: absolute;
-        inset: -40% auto -40% -20%;
-        width: 22%;
-        opacity: 0.35;
-        background: linear-gradient(90deg, transparent, #fff, transparent);
-        transform: rotate(18deg);
-        animation: panelShine 8s ease-in-out infinite;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(circle at 70% 0%, rgba(32, 240, 186, 0.18), transparent 28rem);
       }
 
-      @keyframes panelShine {
-        0%,
-        50% {
-          transform: translateX(0) rotate(18deg);
-        }
-        82%,
-        100% {
-          transform: translateX(640%) rotate(18deg);
-        }
-      }
-
-      .problem-strip {
+      .problem-grid,
+      .case-grid,
+      .media-grid,
+      .article-grid,
+      .process-grid {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 14px;
-        padding: 16px;
       }
 
-      .mini-card {
+      .problem-grid { grid-template-columns: repeat(4, 1fr); padding: 14px; }
+      .case-grid { grid-template-columns: repeat(3, 1fr); }
+      .media-grid, .article-grid { grid-template-columns: repeat(3, 1fr); }
+      .process-grid { grid-template-columns: repeat(4, 1fr); }
+
+      .image-card {
         position: relative;
-        min-height: 260px;
         overflow: hidden;
-        border-radius: 38px;
-        background: #111;
+        min-height: 260px;
+        border-radius: 26px;
+        background: #071112;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
       }
 
-      .mini-card img,
-      .case-card img,
-      .format-card img,
-      .gallery-card img,
-      .step-card img {
+      .image-card > img {
+        position: absolute;
+        inset: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
+        filter: saturate(0.95) contrast(1.04);
+        transition: transform 0.5s ease;
       }
 
-      .mini-card img,
-      .case-card > img,
-      .gallery-card > img {
-        position: absolute;
-        inset: 0;
-      }
+      .image-card:hover > img { transform: scale(1.04); }
 
-      .mini-card::after,
-      .case-card::after,
-      .gallery-card::after {
+      .image-card::after {
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), transparent 62%);
+        background: linear-gradient(0deg, rgba(3, 12, 13, 0.82), transparent 58%);
       }
 
-      .mini-card p {
+      .image-card .copy {
         position: absolute;
-        right: 18px;
-        bottom: 18px;
-        left: 18px;
+        right: 16px;
+        bottom: 16px;
+        left: 16px;
         z-index: 1;
-        color: #fff;
-        font-size: 17px;
-        font-weight: 900;
-        line-height: 1.15;
       }
 
-      .case-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 18px;
-      }
-
-      .case-card {
-        position: relative;
-        min-height: 420px;
-        overflow: hidden;
-        border-radius: 42px;
-        background: #111;
-        box-shadow: 0 24px 70px rgba(20, 20, 20, 0.13);
-        transform-style: preserve-3d;
-      }
-
-      .case-card:nth-child(2),
-      .case-card:nth-child(5) {
-        transform: translateY(28px);
-      }
-
-      .case-copy {
-        position: absolute;
-        inset: auto 18px 18px;
-        z-index: 2;
-        padding: 20px;
-        border-radius: 28px;
-        color: #fff;
-        background: rgba(255, 255, 255, 0.17);
-        border: 1px solid rgba(255, 255, 255, 0.22);
-        backdrop-filter: blur(18px);
-      }
-
-      .case-copy span {
-        color: var(--blue);
-        font: 900 22px/1 Space Grotesk, sans-serif;
-      }
-
-      .case-copy h3 {
-        margin-top: 14px;
-        font: 900 25px/1 Space Grotesk, sans-serif;
+      .image-card h3 {
+        font: 900 23px/1 Space Grotesk, sans-serif;
         text-transform: uppercase;
       }
 
-      .case-copy p {
+      .image-card p {
         margin-top: 10px;
-        color: rgba(255, 255, 255, 0.74);
-        line-height: 1.45;
+        color: var(--muted);
+        line-height: 1.4;
+      }
+
+      .num {
+        display: inline-flex;
+        margin-bottom: 12px;
+        color: var(--neon);
+        font: 900 24px/1 Space Grotesk, sans-serif;
       }
 
       .formats {
         display: grid;
         grid-template-columns: 1.12fr 0.88fr;
-        gap: 18px;
+        gap: 14px;
       }
 
-      .format-card {
-        position: relative;
-        min-height: 500px;
-        overflow: hidden;
-        padding: 26px;
-        border-radius: 48px;
-        color: #fff;
-        background: #111;
+      .format-main { min-height: 560px; }
+      .format-side {
+        display: grid;
+        gap: 14px;
       }
+      .format-side .image-card { min-height: 273px; }
 
-      .format-card.small {
-        min-height: 241px;
-      }
-
-      .format-card img {
-        position: absolute;
-        inset: 0;
-        opacity: 0.9;
-      }
-
-      .format-card::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          linear-gradient(0deg, rgba(0, 0, 0, 0.74), rgba(0, 0, 0, 0.12) 62%),
-          linear-gradient(90deg, rgba(0, 0, 0, 0.46), transparent);
-      }
-
-      .format-copy {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        min-height: inherit;
-      }
-
-      .format-copy small {
-        color: var(--blue);
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-      }
-
-      .format-copy h3 {
-        margin-top: 12px;
-        font: 900 clamp(1.65rem, 3vw, 3.4rem) / 0.98 Space Grotesk, sans-serif;
-        letter-spacing: -0.04em;
-      }
-
-      .format-copy p,
-      .format-copy li {
-        color: rgba(255, 255, 255, 0.76);
-        line-height: 1.5;
-      }
-
-      .format-copy p {
-        margin-top: 14px;
-        max-width: 620px;
-      }
-
-      .format-copy ul {
+      .format-main .copy { max-width: 680px; }
+      .format-main ul {
         display: grid;
         gap: 8px;
-        margin: 18px 0 0;
+        margin: 16px 0 0;
         padding: 0;
+        color: var(--muted);
         list-style: none;
       }
-
-      .format-copy li::before {
+      .format-main li::before {
         content: "↗";
         margin-right: 8px;
-        color: var(--lime);
+        color: var(--neon);
       }
 
-      .format-stack {
+      .lazar {
         display: grid;
-        gap: 18px;
-      }
-
-      .lazar-panel {
-        display: grid;
-        grid-template-columns: 0.92fr 1.08fr;
+        grid-template-columns: 0.9fr 1.1fr;
         gap: 28px;
         align-items: center;
-        padding: clamp(20px, 4vw, 54px);
+        padding: clamp(20px, 4vw, 50px);
       }
 
-      .lazar-copy p {
+      .lazar p {
         margin-top: 18px;
-        max-width: 610px;
-        color: var(--ink-soft);
+        color: var(--muted);
         font-size: 18px;
-        line-height: 1.6;
+        line-height: 1.58;
       }
 
       .phone-stage {
         position: relative;
-        min-height: 660px;
-        border-radius: 56px;
+        min-height: 620px;
+        overflow: hidden;
+        border-radius: 30px;
         background:
-          radial-gradient(circle at 68% 36%, rgba(191, 234, 255, 0.8), transparent 18rem),
-          radial-gradient(circle at 40% 70%, rgba(255, 106, 42, 0.22), transparent 15rem),
-          rgba(255, 255, 255, 0.4);
+          radial-gradient(circle at 50% 42%, rgba(32,240,186,0.22), transparent 16rem),
+          rgba(5, 14, 15, 0.78);
+      }
+
+      .phone-stage::before,
+      .phone-stage::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        border: 1px solid rgba(32,240,186,0.32);
+        box-shadow: 0 0 40px rgba(32,240,186,0.28);
       }
 
       .phone-stage::before {
-        content: "";
-        position: absolute;
-        inset: 8% 8% 14% 16%;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.34);
-        filter: blur(4px);
-        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.48), 0 44px 100px rgba(38, 35, 29, 0.2);
+        width: 280px;
+        height: 280px;
+        top: 42px;
+        right: 46px;
+      }
+      .phone-stage::after {
+        width: 160px;
+        height: 160px;
+        bottom: 52px;
+        left: 58px;
       }
 
       .phone {
         position: absolute;
+        z-index: 1;
         top: 50%;
         left: 50%;
-        width: min(330px, 58vw);
+        width: min(330px, 64%);
         overflow: hidden;
-        border: 10px solid rgba(20, 20, 20, 0.88);
-        border-radius: 42px;
-        box-shadow: 0 34px 90px rgba(16, 17, 17, 0.26);
+        border: 8px solid #081314;
+        border-radius: 38px;
+        box-shadow: 0 34px 80px rgba(0,0,0,0.44), 0 0 50px rgba(32,240,186,0.2);
         transform: translate(-50%, -50%) rotate(-3deg);
       }
 
-      .phone img {
-        width: 100%;
-      }
-
-      .orb {
-        position: absolute;
-        border: 1px solid rgba(255, 255, 255, 0.72);
-        border-radius: 50%;
-        background: radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.2) 55%, rgba(93, 105, 108, 0.18));
-        box-shadow: inset -12px -16px 28px rgba(79, 91, 96, 0.16), 0 22px 48px rgba(37, 38, 35, 0.12);
-        backdrop-filter: blur(18px);
-        animation: float 7s ease-in-out infinite;
-      }
-
-      .orb.one {
-        width: 94px;
-        height: 94px;
-        top: 14%;
-        left: 18%;
-      }
-
-      .orb.two {
-        width: 56px;
-        height: 56px;
-        right: 20%;
-        top: 24%;
-        animation-delay: -2s;
-      }
-
-      .orb.three {
-        width: 120px;
-        height: 120px;
-        right: 12%;
-        bottom: 18%;
-        animation-delay: -4s;
-      }
-
-      @keyframes float {
-        0%,
-        100% {
-          transform: translateY(0);
-        }
-        50% {
-          transform: translateY(-18px);
-        }
-      }
-
-      .media-grid,
-      .article-grid,
-      .process-grid {
+      .cert {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 16px;
+        grid-template-columns: 0.94fr 1.06fr;
+        gap: 18px;
+        padding: 18px;
+      }
+
+      .cert-view {
+        display: grid;
+        place-items: center;
+        min-height: 600px;
+        border-radius: 26px;
+        background: rgba(5, 14, 15, 0.72);
+      }
+
+      .cert-view img {
+        max-height: 540px;
+        width: auto;
+        border-radius: 18px;
+        box-shadow: 0 28px 72px rgba(0,0,0,0.46);
+      }
+
+      .cert-copy {
+        padding: clamp(18px, 3vw, 42px);
+      }
+
+      .cert-copy p {
+        margin-top: 16px;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.55;
+      }
+
+      .thumbs {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .thumbs button {
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid rgba(114,255,242,0.16);
+        border-radius: 16px;
+        background: transparent;
+        cursor: pointer;
+        opacity: 0.62;
+      }
+
+      .thumbs button.active,
+      .thumbs button:hover {
+        opacity: 1;
+        border-color: rgba(32,240,186,0.62);
+      }
+
+      .thumbs img {
+        width: 100%;
+        aspect-ratio: 1 / 1.25;
+        object-fit: cover;
       }
 
       .media-card,
       .article-card,
       .step-card {
         overflow: hidden;
-        border-radius: 34px;
-        background: rgba(255, 255, 255, 0.48);
-        border: 1px solid rgba(255, 255, 255, 0.58);
-        box-shadow: 0 24px 70px rgba(20, 20, 20, 0.1);
-        backdrop-filter: blur(20px);
+        border: 1px solid rgba(114,255,242,0.16);
+        border-radius: 26px;
+        background: rgba(11, 23, 24, 0.76);
       }
 
       .media-card img {
@@ -860,234 +676,96 @@
       }
 
       .media-card div,
-      .article-card div {
-        padding: 20px;
+      .article-card div,
+      .step-card div {
+        padding: 18px;
       }
 
-      .media-card small,
-      .article-card small {
-        color: rgba(16, 17, 17, 0.46);
+      small {
+        display: block;
+        color: var(--neon);
         font-weight: 900;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        letter-spacing: 0.12em;
       }
 
       .media-card h3,
       .article-card h3 {
         margin-top: 8px;
-        font-size: 22px;
-        line-height: 1.08;
+        font: 900 21px/1.08 Space Grotesk, sans-serif;
+      }
+
+      .media-card p,
+      .article-card p,
+      .step-card p {
+        margin-top: 8px;
+        color: var(--muted);
+        line-height: 1.4;
       }
 
       .article-card {
-        min-height: 230px;
-        display: flex;
-        align-items: stretch;
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        min-height: 190px;
       }
 
       .article-logo {
         display: grid;
         place-items: center;
-        width: 34%;
-        min-width: 120px;
-        background:
-          radial-gradient(circle at center, rgba(255, 255, 255, 0.96), rgba(191, 234, 255, 0.34)),
-          rgba(255, 255, 255, 0.5);
+        background: rgba(32,240,186,0.08);
       }
 
       .article-logo img {
-        width: 64px;
-        height: 64px;
+        width: 56px;
+        height: 56px;
       }
 
-      .cert-layout {
-        display: grid;
-        grid-template-columns: 0.95fr 1.05fr;
-        gap: 18px;
-        align-items: stretch;
-      }
-
-      .cert-stage {
-        display: grid;
-        place-items: center;
-        min-height: 620px;
-        padding: 24px;
-      }
-
-      .cert-stage img {
-        max-height: 560px;
-        width: auto;
-        border-radius: 24px;
-        box-shadow: 0 30px 80px rgba(20, 20, 20, 0.22);
-      }
-
-      .cert-copy {
-        padding: clamp(24px, 4vw, 54px);
-      }
-
-      .cert-copy h3 {
-        margin-top: 14px;
-        font: 900 clamp(2.1rem, 4vw, 4.5rem) / 0.92 Space Grotesk, sans-serif;
-        letter-spacing: -0.05em;
-      }
-
-      .cert-copy p {
-        margin-top: 18px;
-        color: var(--ink-soft);
-        font-size: 18px;
-        line-height: 1.6;
-      }
-
-      .cert-thumbs {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 10px;
-        margin-top: 28px;
-      }
-
-      .cert-thumbs button {
-        padding: 0;
-        overflow: hidden;
-        border: 1px solid rgba(16, 17, 17, 0.12);
-        border-radius: 18px;
-        background: transparent;
-        cursor: pointer;
-        opacity: 0.62;
-        transition: opacity 0.2s ease, transform 0.2s ease;
-      }
-
-      .cert-thumbs button:hover,
-      .cert-thumbs button.active {
-        opacity: 1;
-        transform: translateY(-2px);
-      }
-
-      .cert-thumbs img {
-        width: 100%;
-        aspect-ratio: 1 / 1.25;
-        object-fit: cover;
-      }
-
-      .gallery-grid {
+      .gallery {
         display: grid;
         grid-template-columns: repeat(12, 1fr);
         gap: 14px;
       }
 
-      .gallery-card {
-        position: relative;
-        min-height: 360px;
-        overflow: hidden;
-        border-radius: 34px;
-        background: #111;
-      }
-
-      .gallery-card:nth-child(1),
-      .gallery-card:nth-child(6),
-      .gallery-card:nth-child(12) {
-        grid-column: span 5;
-      }
-
-      .gallery-card:nth-child(2),
-      .gallery-card:nth-child(7),
-      .gallery-card:nth-child(13) {
-        grid-column: span 4;
-      }
-
-      .gallery-card:nth-child(3),
-      .gallery-card:nth-child(4),
-      .gallery-card:nth-child(5),
-      .gallery-card:nth-child(8),
-      .gallery-card:nth-child(9),
-      .gallery-card:nth-child(10),
-      .gallery-card:nth-child(11),
-      .gallery-card:nth-child(14),
-      .gallery-card:nth-child(15),
-      .gallery-card:nth-child(16),
-      .gallery-card:nth-child(17) {
-        grid-column: span 3;
-      }
-
-      .gallery-card div {
-        position: absolute;
-        inset: auto 14px 14px;
-        z-index: 1;
-        padding: 16px;
-        border-radius: 24px;
-        color: #fff;
-        background: rgba(255, 255, 255, 0.16);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        backdrop-filter: blur(16px);
-      }
-
-      .gallery-card h3 {
-        font-size: 18px;
-        line-height: 1.1;
-      }
-
-      .gallery-card p {
-        margin-top: 8px;
-        color: rgba(255, 255, 255, 0.72);
-        font-size: 13px;
-        line-height: 1.35;
-      }
-
-      .process-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-
-      .step-card {
-        min-height: 340px;
-      }
+      .gallery .image-card { min-height: 350px; grid-column: span 3; }
+      .gallery .image-card:nth-child(1),
+      .gallery .image-card:nth-child(6),
+      .gallery .image-card:nth-child(12) { grid-column: span 5; }
+      .gallery .image-card:nth-child(2),
+      .gallery .image-card:nth-child(7),
+      .gallery .image-card:nth-child(13) { grid-column: span 4; }
 
       .step-card img {
-        height: 190px;
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
       }
 
-      .step-card div {
-        padding: 20px;
-      }
-
-      .step-card span {
-        color: var(--accent);
+      .step-card strong {
+        color: var(--neon);
         font: 900 34px/1 Space Grotesk, sans-serif;
       }
 
-      .step-card p {
-        margin-top: 14px;
-        color: var(--ink-soft);
-        line-height: 1.45;
-      }
-
-      .final-panel {
+      .final {
         display: grid;
-        grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.55fr);
+        grid-template-columns: 1fr 0.62fr;
         gap: 18px;
         padding: 18px;
       }
 
       .final-copy {
-        padding: clamp(24px, 4vw, 54px);
+        padding: clamp(22px, 4vw, 52px);
       }
 
       .final-copy p {
-        margin-top: 18px;
-        color: var(--ink-soft);
+        margin-top: 16px;
+        color: var(--muted);
         font-size: 18px;
-        line-height: 1.6;
-      }
-
-      .final-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 28px;
+        line-height: 1.56;
       }
 
       .final-photo {
         overflow: hidden;
-        border-radius: 42px;
-        background: #111;
+        border-radius: 26px;
       }
 
       .final-photo img {
@@ -1095,218 +773,163 @@
         height: 100%;
         min-height: 520px;
         object-fit: cover;
-        object-position: center 34%;
-      }
-
-      .social-strip {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 28px;
-      }
-
-      .social-strip a {
-        display: inline-flex;
-        min-height: 44px;
-        align-items: center;
-        border-radius: 999px;
-        padding: 0 16px;
-        background: rgba(255, 255, 255, 0.52);
-        border: 1px solid rgba(16, 17, 17, 0.1);
-        font-weight: 900;
+        object-position: center 35%;
       }
 
       .footer {
-        width: min(100% - 32px, 1180px);
-        margin: 60px auto 34px;
+        width: min(100% - 28px, var(--max));
+        margin: 54px auto 30px;
         display: flex;
         justify-content: space-between;
-        gap: 20px;
-        color: rgba(16, 17, 17, 0.54);
+        gap: 18px;
+        color: var(--dim);
         font-size: 13px;
       }
 
       [data-reveal] {
         opacity: 0;
-        transform: translateY(34px);
-        transition: opacity 0.8s ease, transform 0.8s ease;
+        transform: translateY(26px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
       }
-
       [data-reveal].visible {
         opacity: 1;
         transform: translateY(0);
       }
 
-      .tilt {
-        transition: transform 0.3s ease;
-      }
-
       @media (max-width: 1080px) {
-        .topline {
-          flex-wrap: wrap;
+        .topbar {
+          grid-template-columns: 1fr auto;
         }
-
         .nav {
-          order: 3;
-          width: 100%;
+          grid-column: 1 / -1;
+          justify-self: stretch;
           overflow-x: auto;
           justify-content: flex-start;
         }
-
-        .hero-grid,
+        .hero-inner,
         .formats,
-        .lazar-panel,
-        .cert-layout,
-        .final-panel {
+        .lazar,
+        .cert,
+        .final {
           grid-template-columns: 1fr;
         }
-
-        .hero {
-          min-height: auto;
-        }
-
-        .hero-grid {
-          min-height: auto;
-        }
-
-        .portrait-card img,
-        .hero-visual {
-          min-height: 540px;
-        }
-
-        .problem-strip,
+        .problem-grid,
         .case-grid,
         .media-grid,
         .article-grid,
         .process-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-template-columns: repeat(2, 1fr);
         }
-
-        .case-card:nth-child(2),
-        .case-card:nth-child(5) {
-          transform: none;
+        .hero,
+        .hero-inner {
+          min-height: auto;
         }
       }
 
       @media (max-width: 680px) {
-        .page-shell,
-        .section,
-        .section-wide {
-          width: min(100% - 20px, 1180px);
+        .wrap, .section, .section.wide, .footer {
+          width: min(100% - 18px, var(--max));
         }
-
-        .topline {
-          padding-top: 16px;
+        .topbar {
+          padding-top: 14px;
+          gap: 12px;
         }
-
-        .brand span:last-child {
-          display: none;
-        }
-
-        .nav-cta {
-          min-height: 46px;
-          padding: 0 16px;
-          font-size: 13px;
-        }
-
-        .nav {
-          min-height: 48px;
-          padding: 0 16px;
-        }
-
+        .brand > span:last-child { display: none; }
+        .btn { min-height: 42px; padding: 0 14px; font-size: 13px; }
+        .nav { padding: 6px; }
+        .nav a { padding: 10px 12px; font-size: 11px; }
         .hero {
           padding: 12px;
-          border-radius: 34px;
+          border-radius: 28px;
         }
-
         .hero::before {
-          right: -8px;
-          bottom: 44%;
-          font-size: 6rem;
+          top: 22px;
+          font-size: 5.6rem;
         }
-
-        .hero-copy {
-          gap: 24px;
-        }
-
+        .hero-copy { padding: 0; }
         .kicker {
-          flex-direction: column;
-          width: 100%;
-          align-items: flex-start;
-          border-radius: 22px;
+          max-width: 100%;
+          white-space: normal;
+          line-height: 1.3;
         }
-
         h1 {
-          font-size: clamp(2.4rem, 13vw, 4.4rem);
+          font-size: clamp(2.35rem, 13vw, 4.4rem);
         }
-
-        .hero-lead {
+        .lead { font-size: 15px; }
+        .system-note {
+          padding: 16px 16px 16px 62px;
+          border-radius: 20px;
           font-size: 15px;
         }
-
-        .micro-statement {
-          border-radius: 24px;
+        .visual,
+        .visual img {
+          min-height: 520px;
         }
-
-        .portrait-card img,
-        .hero-visual {
-          min-height: 500px;
+        .signature {
+          top: 14%;
+          right: 8%;
         }
-
-        .trust-stack {
-          position: relative;
-          right: auto;
-          bottom: auto;
-          width: 100%;
-          margin-top: -126px;
-          padding: 0 14px 14px;
-        }
-
-        .hero-note {
+        .trust {
+          grid-template-columns: 1fr;
           position: relative;
           left: auto;
+          right: auto;
           bottom: auto;
-          margin-top: 12px;
+          margin: -134px 12px 12px;
         }
-
-        .problem-strip,
+        .trust article {
+          min-height: auto;
+          padding: 14px;
+        }
+        .hero-bottom {
+          grid-template-columns: 1fr;
+        }
+        .head {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+        h2 {
+          font-size: clamp(2rem, 10vw, 3.2rem);
+        }
+        .problem-grid,
         .case-grid,
         .media-grid,
         .article-grid,
-        .process-grid,
-        .cert-thumbs {
+        .process-grid {
           grid-template-columns: 1fr;
         }
-
-        .section-head {
-          grid-template-columns: 1fr;
-        }
-
-        .case-card,
-        .format-card,
-        .mini-card {
+        .image-card,
+        .format-main,
+        .format-side .image-card {
           min-height: 360px;
-          border-radius: 32px;
+          border-radius: 24px;
         }
-
         .phone-stage {
-          min-height: 540px;
+          min-height: 520px;
         }
-
-        .cert-stage {
+        .cert-view {
           min-height: auto;
+          padding: 14px;
         }
-
-        .cert-thumbs {
-          grid-template-columns: repeat(4, 1fr);
+        .cert-view img {
+          max-height: 460px;
+          width: auto;
+          max-width: 100%;
         }
-
-        .gallery-card,
-        .gallery-card:nth-child(n) {
+        .thumbs {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .article-card {
+          grid-template-columns: 82px 1fr;
+        }
+        .gallery .image-card,
+        .gallery .image-card:nth-child(n) {
           grid-column: span 12;
           min-height: 390px;
         }
-
+        .final-photo img {
+          min-height: 380px;
+        }
         .footer {
           flex-direction: column;
         }
@@ -1314,13 +937,11 @@
     </style>
   </head>
   <body>
-    <div class="page-shell">
-      <header class="topline">
+    <div class="wrap">
+      <header class="topbar">
         <a class="brand" href="#top" aria-label="На главную">
-          <span class="brand-badge">
-            <span class="brand-mark"><span>ИИ</span><span>41</span></span>
-          </span>
-          <span>Roman Isaev</span>
+          <span class="brand-logo"><span class="brand-mark"><span>ИИ</span><span>41</span></span></span>
+          <span>Roman Isaev / AI systems</span>
         </a>
         <nav class="nav" aria-label="Навигация">
           <a href="#offers">Форматы</a>
@@ -1329,47 +950,38 @@
           <a href="#aggregator">ЛАЗАРЬ</a>
           <a href="#contacts">Контакты</a>
         </nav>
-        <a class="nav-cta" href="https://t.me/r1isaev" target="_blank" rel="noreferrer">Обсудить задачу</a>
+        <a class="btn" href="https://t.me/r1isaev" target="_blank" rel="noreferrer"><span>Обсудить задачу</span></a>
       </header>
 
       <main id="top">
         <section class="hero">
-          <div class="hero-grid">
+          <div class="hero-inner">
             <div class="hero-copy">
               <div>
-                <p class="kicker"><span>ИИ для бизнеса</span><span>без хаоса и лишних подписок</span></p>
-                <h1>Внедряю ИИ в процессы, которые каждый день съедают время и деньги</h1>
-                <p class="hero-lead">
+                <p class="kicker">ИИ для бизнеса без хаоса и лишних подписок</p>
+                <h1>Внедряю ИИ в процессы, которые каждый день съедают <span class="accent">время и деньги</span></h1>
+                <p class="lead">
                   Обучаю предпринимателей и команды использовать нейросети в контенте, продажах и операционке:
                   от разовых задач до рабочих регламентов, ботов и AI-стека под ваш бизнес.
                 </p>
-                <div class="hero-actions">
-                  <a class="pill-button" href="https://t.me/r1isaev" target="_blank" rel="noreferrer">Разобрать мою задачу</a>
-                  <a class="ghost-button" href="#offers">Посмотреть форматы</a>
+                <div class="actions">
+                  <a class="btn" href="https://t.me/r1isaev" target="_blank" rel="noreferrer"><span>Разобрать мою задачу</span></a>
+                  <a class="btn dark" href="#offers"><span>Посмотреть форматы</span></a>
                 </div>
               </div>
-              <div class="micro-statement">
-                <span>Не набор промптов. А рабочая система под ваши задачи.</span>
+              <div class="hero-bottom">
+                <div class="system-note">Не набор промптов. А рабочая система под ваши задачи.</div>
+                <p>Приходите с задачей. Уходите с AI-процессом, который команда реально использует.</p>
               </div>
             </div>
 
-            <div class="hero-visual">
-              <div class="portrait-card tilt">
-                <img
-                  src="https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/i/N2AgYgh795IKNg"
-                  alt="Роман Исаев"
-                  loading="eager"
-                  referrerpolicy="no-referrer"
-                />
-                <div class="signature">Роман<br />Исаев</div>
-                <div class="trust-stack">
-                  <article class="trust-card"><strong>30+</strong><span>выступлений об ИИ для бизнеса</span></article>
-                  <article class="trust-card"><strong>5000+</strong><span>учеников и участников обучений</span></article>
-                  <article class="trust-card"><strong>Co-founder</strong><span>AI-агрегатора «ЛАЗАРЬ»</span></article>
-                </div>
-                <div class="hero-note">
-                  <p>Приходите с задачей. Уходите с AI-процессом, который команда реально использует.</p>
-                </div>
+            <div class="visual">
+              <img src="https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/i/N2AgYgh795IKNg" alt="Роман Исаев" referrerpolicy="no-referrer" />
+              <div class="signature">Роман<br />Исаев</div>
+              <div class="trust">
+                <article><strong>30+</strong><span>выступлений об ИИ для бизнеса</span></article>
+                <article><strong>5000+</strong><span>учеников и участников обучений</span></article>
+                <article><strong>Co-founder</strong><span>AI-агрегатора «ЛАЗАРЬ»</span></article>
               </div>
             </div>
           </div>
@@ -1377,59 +989,55 @@
       </main>
     </div>
 
-    <section class="section section-wide" data-reveal>
-      <div class="section-head">
+    <section class="section wide" data-reveal>
+      <div class="head">
         <div>
           <p class="eyebrow">Проблема</p>
           <h2>ИИ уже есть, а практического внедрения практически ни у кого нет.</h2>
         </div>
-        <p>Переходим от случайных экспериментов к рабочим сценариям: инструменты, деньги, команда, повторяемые процессы.</p>
+        <p>Сайт должен быстро объяснять, где нейросети становятся рабочим процессом, а не очередной подпиской.</p>
       </div>
-      <div class="panel problem-strip">
-        <article class="mini-card"><img src="/prompt-library.jpg" alt="" /><p>Какие инструменты реально использовать?</p></article>
-        <article class="mini-card"><img src="/stage-talk.jpg" alt="" /><p>Где AI экономит время или приносит деньги?</p></article>
-        <article class="mini-card"><img src="/auditorium.jpg" alt="" /><p>Как обучить команду без абстрактных лекций?</p></article>
-        <article class="mini-card"><img src="/generative-content-workflow.jpg" alt="" /><p>Как перейти от случайных экспериментов к повторяемым процессам?</p></article>
+      <div class="panel problem-grid">
+        <article class="image-card"><img src="/prompt-library.jpg" alt="" /><div class="copy"><h3>Инструменты</h3><p>Какие инструменты реально использовать?</p></div></article>
+        <article class="image-card"><img src="/stage-talk.jpg" alt="" /><div class="copy"><h3>Экономика</h3><p>Где AI экономит время или приносит деньги?</p></div></article>
+        <article class="image-card"><img src="/auditorium.jpg" alt="" /><div class="copy"><h3>Команда</h3><p>Как обучить команду без абстрактных лекций?</p></div></article>
+        <article class="image-card"><img src="/generative-content-workflow.jpg" alt="" /><div class="copy"><h3>Система</h3><p>Как перейти от случайных экспериментов к повторяемым процессам?</p></div></article>
       </div>
     </section>
 
-    <section class="section section-wide" data-reveal>
-      <div class="section-head">
+    <section class="section wide" data-reveal>
+      <div class="head">
         <div>
           <p class="eyebrow">Что делаем</p>
           <h2>От конкретной задачи до рабочего AI-процесса</h2>
         </div>
-        <p>Шесть направлений, где нейросети становятся не игрушкой, а частью ежедневной работы.</p>
+        <p>Шесть направлений вынесены в отдельные карточки, чтобы текст не терялся и фото не ломали сетку.</p>
       </div>
       <div class="case-grid">
-        <article class="case-card tilt"><img src="/ai-sales-agent.jpg" alt="" /><div class="case-copy"><span>01</span><h3>Бизнес-процессы</h3><p>Находим задачи, где AI снижает ручную работу и ускоряет решения.</p></div></article>
-        <article class="case-card tilt"><img src="/ai-assistant-expert.jpg" alt="" /><div class="case-copy"><span>02</span><h3>AI-помощники</h3><p>Проектируем помощников для планирования, контента, исследований и документов.</p></div></article>
-        <article class="case-card tilt"><img src="/gallery-17-content-stage.jpg" alt="" /><div class="case-copy"><span>03</span><h3>Генеративный контент</h3><p>Изображения, видео, презентации, визуальные концепции, Reels и карусели.</p></div></article>
-        <article class="case-card tilt"><img src="/gallery-13-audience-room.jpg" alt="" /><div class="case-copy"><span>04</span><h3>Обучение команд</h3><p>Обучение по отделам и реальным рабочим задачам, а не по общим трендам.</p></div></article>
-        <article class="case-card tilt"><img src="/roman-editorial-suit.jpg" alt="" /><div class="case-copy"><span>05</span><h3>Техническая база</h3><p>Подбираем связку инструментов, доступов и правил, чтобы AI-процесс можно было повторять без хаоса.</p></div></article>
-        <article class="case-card tilt"><img src="/generative-content-workflow.jpg" alt="" /><div class="case-copy"><span>06</span><h3>Маркетплейсы</h3><p>Готовим AI-процессы для карточек товара, изображений и описаний.</p></div></article>
+        <article class="image-card"><img src="/ai-sales-agent.jpg" alt="" /><div class="copy"><span class="num">01</span><h3>Бизнес-процессы</h3><p>Находим задачи, где AI снижает ручную работу и ускоряет решения.</p></div></article>
+        <article class="image-card"><img src="/ai-assistant-expert.jpg" alt="" /><div class="copy"><span class="num">02</span><h3>AI-помощники</h3><p>Проектируем помощников для планирования, контента, исследований и документов.</p></div></article>
+        <article class="image-card"><img src="/gallery-17-content-stage.jpg" alt="" /><div class="copy"><span class="num">03</span><h3>Генеративный контент</h3><p>Изображения, видео, презентации, визуальные концепции, Reels и карусели.</p></div></article>
+        <article class="image-card"><img src="/gallery-13-audience-room.jpg" alt="" /><div class="copy"><span class="num">04</span><h3>Обучение команд</h3><p>Обучение по отделам и реальным рабочим задачам, а не по общим трендам.</p></div></article>
+        <article class="image-card"><img src="/roman-editorial-suit.jpg" alt="" /><div class="copy"><span class="num">05</span><h3>Техническая база</h3><p>Подбираем связку инструментов, доступов и правил, чтобы AI-процесс можно было повторять без хаоса.</p></div></article>
+        <article class="image-card"><img src="/marketplace-pack.jpg" alt="" /><div class="copy"><span class="num">06</span><h3>Маркетплейсы</h3><p>Готовим AI-процессы для карточек товара, изображений и описаний.</p></div></article>
       </div>
     </section>
 
-    <section class="section section-wide" id="offers" data-reveal>
-      <div class="section-head">
+    <section class="section wide" id="offers" data-reveal>
+      <div class="head">
         <div>
           <p class="eyebrow">Форматы</p>
           <h2>Выберите формат под текущую задачу</h2>
         </div>
-        <p>Можно начать с одной задачи, месяца внедрения или обучения команды.</p>
+        <p>Разовая консультация, месячное наставничество и обучение команды остаются на своих местах.</p>
       </div>
       <div class="formats">
-        <article class="format-card">
+        <article class="image-card format-main">
           <img src="/stage-phone-proof.jpg" alt="" />
-          <div class="format-copy">
-            <small>Быстрый старт</small>
+          <div class="copy">
+            <span class="num">Быстрый старт</span>
             <h3>Разовая AI-консультация</h3>
-            <p>
-              Не курс по нейросетям "в целом". Вы приходите с задачей: контент, презентации, изображения,
-              видео, помощник, обучение команды или бизнес-процесс. Мы выбираем инструменты, собираем процесс,
-              тестируем промпты и фиксируем следующий шаг.
-            </p>
+            <p>Не курс по нейросетям "в целом". Вы приходите с задачей: контент, презентации, изображения, видео, помощник, обучение команды или бизнес-процесс. Мы выбираем инструменты, собираем процесс, тестируем промпты и фиксируем следующий шаг.</p>
             <ul>
               <li>понимаете, какие нейросети использовать именно вам;</li>
               <li>получаете промпты, сценарий работы и следующий шаг;</li>
@@ -1438,133 +1046,101 @@
             </ul>
           </div>
         </article>
-        <div class="format-stack">
-          <article class="format-card small">
-            <img src="/gallery-08-stage-full.jpg" alt="" />
-            <div class="format-copy">
-              <small>Внедрение</small>
-              <h3>Месячное наставничество</h3>
-              <p>Структурная работа по внедрению AI в задачи предпринимателя: 4 глубокие встречи, цели на неделю и поддержка между встречами.</p>
-            </div>
-          </article>
-          <article class="format-card small">
-            <img src="/event-hall.jpg" alt="" />
-            <div class="format-copy">
-              <small>Команды</small>
-              <h3>Обучение команды</h3>
-              <p>Обучаю команды применять ИИ в ежедневной работе, а не просто "знать про ChatGPT".</p>
-            </div>
-          </article>
+        <div class="format-side">
+          <article class="image-card"><img src="/gallery-08-stage-full.jpg" alt="" /><div class="copy"><span class="num">Внедрение</span><h3>Месячное наставничество</h3><p>Структурная работа по внедрению AI в задачи предпринимателя: 4 глубокие встречи, цели на неделю и поддержка между встречами.</p></div></article>
+          <article class="image-card"><img src="/event-hall.jpg" alt="" /><div class="copy"><span class="num">Команды</span><h3>Обучение команды</h3><p>Обучаю команды применять ИИ в ежедневной работе, а не просто "знать про ChatGPT".</p></div></article>
         </div>
       </div>
     </section>
 
-    <section class="section section-wide" id="aggregator" data-reveal>
-      <div class="panel lazar-panel">
-        <div class="lazar-copy">
+    <section class="section wide" id="aggregator" data-reveal>
+      <div class="panel lazar">
+        <div>
           <p class="eyebrow">AI-продукт Лазарь</p>
           <h2>Инструмент для визуального контента в одном месте</h2>
-          <p>
-            Лазарь помогает не просто генерировать картинки, а встраивать визуал в воронки продаж:
-            под бренд, задачу, формат площадки и следующий шаг клиента. Контент должен выглядеть
-            не как случайный AI-шум, а как часть системы, которая усиливает доверие и помогает продавать.
-          </p>
-          <div class="hero-actions">
-            <a class="pill-button" href="https://t.me/lazar_ai_bot" target="_blank" rel="noreferrer">Попробовать Лазарь</a>
-          </div>
+          <p>Лазарь помогает не просто генерировать картинки, а встраивать визуал в воронки продаж: под бренд, задачу, формат площадки и следующий шаг клиента. Контент должен выглядеть не как случайный AI-шум, а как часть системы, которая усиливает доверие и помогает продавать.</p>
+          <div class="actions"><a class="btn" href="https://t.me/lazar_ai_bot" target="_blank" rel="noreferrer"><span>Попробовать Лазарь</span></a></div>
         </div>
-        <div class="phone-stage">
-          <span class="orb one"></span>
-          <span class="orb two"></span>
-          <span class="orb three"></span>
-          <div class="phone"><img src="/lazar-bot.jpg" alt="Интерфейс Telegram-бота Лазарь" /></div>
-        </div>
+        <div class="phone-stage"><div class="phone"><img src="/lazar-bot.jpg" alt="Интерфейс Telegram-бота Лазарь" /></div></div>
       </div>
     </section>
 
-    <section class="section section-wide" id="proof" data-reveal>
-      <div class="section-head">
+    <section class="section wide" id="proof" data-reveal>
+      <div class="head">
         <div>
           <p class="eyebrow">Доверие</p>
           <h2>Отзывы, медиа и публичная экспертиза</h2>
         </div>
-        <p>Отзывы клиентов, публикации и эфиры собраны в компактный proof-блок.</p>
+        <p>Отзывы, публикации и эфиры не прячутся в тексте, а выглядят как понятная витрина доверия.</p>
       </div>
       <div class="media-grid">
         <a class="media-card" href="https://youtu.be/cVdL_r988l0" target="_blank" rel="noreferrer"><img src="https://img.youtube.com/vi/cVdL_r988l0/maxresdefault.jpg" alt="" /><div><small>Отзыв клиента</small><h3>Александр Свитеньков</h3><p>Загородная недвижимость Урала</p></div></a>
         <a class="media-card" href="https://youtu.be/UrL9pZcnVfQ" target="_blank" rel="noreferrer"><img src="https://img.youtube.com/vi/UrL9pZcnVfQ/maxresdefault.jpg" alt="" /><div><small>Отзыв клиента</small><h3>Сергей Климин</h3><p>CNC66</p></div></a>
         <a class="media-card" href="https://youtu.be/kG-OHTIJphs" target="_blank" rel="noreferrer"><img src="https://img.youtube.com/vi/kG-OHTIJphs/maxresdefault.jpg" alt="" /><div><small>Отзыв участников</small><h3>Выездное обучение</h3><p>Командный формат</p></div></a>
       </div>
-      <div class="article-grid" style="margin-top:16px">
+      <div class="article-grid" style="margin-top:14px">
         <a class="article-card" href="https://argumenti.ru/science/2025/12/978921" target="_blank" rel="noreferrer"><span class="article-logo"><img src="https://www.google.com/s2/favicons?domain=argumenti.ru&sz=128" alt="" /></span><div><small>Федеральный медиаресурс / Аргументы недели</small><h3>5 способов внедрить ИИ в малый бизнес без IT-отдела</h3></div></a>
         <a class="article-card" href="https://people-vlast-rf.ru/interv/nejroseti-ne-zamenyayut-lyudej.-они-ускоряют-тех.-кто-умеет-думать" target="_blank" rel="noreferrer"><span class="article-logo"><img src="https://www.google.com/s2/favicons?domain=people-vlast-rf.ru&sz=128" alt="" /></span><div><small>Онлайн-журнал / Люди власти</small><h3>Нейросети не заменяют людей. Они ускоряют тех, кто умеет думать</h3></div></a>
         <a class="article-card" href="https://argumenti.ru/society/2026/02/985926" target="_blank" rel="noreferrer"><span class="article-logo"><img src="https://www.google.com/s2/favicons?domain=argumenti.ru&sz=128" alt="" /></span><div><small>Федеральный медиаресурс / Аргументы недели</small><h3>Почему важно учить команды, а не просто платить за подписки</h3></div></a>
       </div>
     </section>
 
-    <section class="section section-wide" id="credentials" data-reveal>
-      <div class="section-head">
+    <section class="section wide" id="credentials" data-reveal>
+      <div class="head">
         <div>
           <p class="eyebrow">Регалии</p>
           <h2>Грамоты, благодарности и публичное признание</h2>
         </div>
-        <p>Документы вынесены в кинематографичную витрину: крупный просмотр и быстрые миниатюры.</p>
+        <p>Интерактивная витрина документов: без горизонтального хаоса и без потери текста.</p>
       </div>
-      <div class="panel cert-layout">
-        <div class="cert-stage"><img id="certImage" src="/certificates/01-diplom.jpg" alt="ТОП молодых предпринимателей" /></div>
+      <div class="panel cert">
+        <div class="cert-view"><img id="certImage" src="/certificates/01-diplom.jpg" alt="ТОП молодых предпринимателей" /></div>
         <div class="cert-copy">
           <p class="eyebrow" id="certBadge">Победитель</p>
-          <h3 id="certTitle">ТОП молодых предпринимателей</h3>
+          <h2 id="certTitle">ТОП молодых предпринимателей</h2>
           <p id="certMeta">Свердловская область, 2025</p>
           <p id="certText">Победитель престиж-премии «ТОП молодых предпринимателей Свердловской области».</p>
-          <div class="cert-thumbs" id="certThumbs"></div>
+          <div class="thumbs" id="certThumbs"></div>
         </div>
       </div>
     </section>
 
-    <section class="section section-wide" data-reveal>
-      <div class="section-head">
+    <section class="section wide" data-reveal>
+      <div class="head">
         <div>
           <p class="eyebrow">Роман в работе</p>
           <h2>Фото с выступлений, медиа и проектов, где AI становится практикой</h2>
         </div>
-        <p>Живая галерея с мероприятий, выступлений и рабочих встреч.</p>
+        <p>Галерея держит единую сетку и не должна резать лица в ключевых карточках.</p>
       </div>
-      <div class="gallery-grid" id="galleryGrid"></div>
+      <div class="gallery" id="gallery"></div>
     </section>
 
-    <section class="section section-wide" data-reveal>
-      <div class="section-head">
+    <section class="section wide" data-reveal>
+      <div class="head">
         <div>
           <p class="eyebrow">Процесс</p>
           <h2>Как проходит работа</h2>
         </div>
-        <p>Минимум хаоса: задача, быстрый фокус, сборка процесса и проверка на практике.</p>
+        <p>Четыре шага без перегруза: задача, фокус, сборка процесса, проверка.</p>
       </div>
       <div class="process-grid">
-        <article class="step-card"><img src="/business-process.jpg" alt="" /><div><span>1</span><p>Вы описываете задачу или бизнес-контекст.</p></div></article>
-        <article class="step-card"><img src="/ai-assistant-expert.jpg" alt="" /><div><span>2</span><p>Определяем, где AI может дать результат быстрее всего.</p></div></article>
-        <article class="step-card"><img src="/roman-stage-profile.jpg" alt="" /><div><span>3</span><p>Выбираем инструменты и собираем рабочий процесс.</p></div></article>
-        <article class="step-card"><img src="/workshop-host.jpg" alt="" /><div><span>4</span><p>Тестируем на реальных примерах и фиксируем следующий шаг.</p></div></article>
+        <article class="step-card"><img src="/business-process.jpg" alt="" /><div><strong>1</strong><p>Вы описываете задачу или бизнес-контекст.</p></div></article>
+        <article class="step-card"><img src="/ai-assistant-expert.jpg" alt="" /><div><strong>2</strong><p>Определяем, где AI может дать результат быстрее всего.</p></div></article>
+        <article class="step-card"><img src="/roman-stage-profile.jpg" alt="" /><div><strong>3</strong><p>Выбираем инструменты и собираем рабочий процесс.</p></div></article>
+        <article class="step-card"><img src="/workshop-host.jpg" alt="" /><div><strong>4</strong><p>Тестируем на реальных примерах и фиксируем следующий шаг.</p></div></article>
       </div>
     </section>
 
-    <section class="section section-wide" id="contacts" data-reveal>
-      <div class="panel final-panel">
+    <section class="section wide" id="contacts" data-reveal>
+      <div class="panel final">
         <div class="final-copy">
           <p class="eyebrow">Следующий шаг</p>
           <h2>Напишите задачу. Я предложу подходящий формат.</h2>
-          <p>
-            Разовая консультация, месячное наставничество, обучение команды или AI-продукт Лазарь.
-            Начнем с того, что реально нужно в вашей ситуации.
-          </p>
-          <div class="final-actions">
-            <a class="pill-button" href="https://t.me/r1isaev" target="_blank" rel="noreferrer">Написать в Telegram</a>
-            <a class="ghost-button" href="https://t.me/lazar_ai_bot" target="_blank" rel="noreferrer">Тестировать Лазарь</a>
-          </div>
-          <div class="social-strip">
-            <a href="https://t.me/r1isaev" target="_blank" rel="noreferrer">Telegram</a>
-            <a href="https://youtube.com/@romanisaev.vc1?si=dF8opM_gPWU-D5b4" target="_blank" rel="noreferrer">YouTube</a>
+          <p>Разовая консультация, месячное наставничество, обучение команды или AI-продукт Лазарь. Начнем с того, что реально нужно в вашей ситуации.</p>
+          <div class="actions">
+            <a class="btn" href="https://t.me/r1isaev" target="_blank" rel="noreferrer"><span>Написать в Telegram</span></a>
+            <a class="btn dark" href="https://t.me/lazar_ai_bot" target="_blank" rel="noreferrer"><span>Тестировать Лазарь</span></a>
           </div>
         </div>
         <div class="final-photo"><img src="/expert-close-live.jpg" alt="" /></div>
@@ -1582,7 +1158,12 @@
         ["/certificates/02-sverdlovskoe.jpg", "Благодарность", "Союз женщин России", "I форум «Семья - колыбель нации», 2026", "За активное участие, профессионализм и вклад в создание атмосферы поддержки, доверия и взаимопомощи."],
         ["/certificates/03-blagodarstvennoe.jpg", "Спикер", "Форум «Творчество, которое объединяет»", "Верхотурье, 2026", "За экспертную поддержку и выступление на семинаре о творчестве как инструменте культурной идентичности."],
         ["/certificates/04.jpg", "Высокий вклад", "Нейрошторм 2.0", "Конференция об искусственном интеллекте, 2025", "За участие в конференции и высокий профессиональный вклад в программу."],
-        ["/certificates/16-neurostorm-2026.jpg", "Благодарственное письмо", "Нейрошторм 3.0", "27-29 апреля 2026", "За энергию, личный опыт и практические фишки в выступлении."]
+        ["/certificates/16-neurostorm-2026.jpg", "Благодарственное письмо", "Нейрошторм 3.0", "27-29 апреля 2026", "За энергию, личный опыт и практические фишки в выступлении."],
+        ["/certificates/15-buildural-2026.jpg", "Диплом спикера", "BuildUral Design Space", "Екатеринбург-ЭКСПО, 2026", "За участие в деловой программе BuildUral и ценный вклад в развитие профессионального сообщества дизайнеров и архитекторов."],
+        ["/certificates/10-arkhipelag-isaev.jpg", "Экспертиза", "Архипелаг", "Проектно-образовательная программа", "Благодарность за участие в проектно-образовательных программах и работу с предпринимательскими командами."],
+        ["/certificates/11-arkhipelag.jpg", "Наставничество", "Архипелаг", "Интенсив и технологические проекты", "Подтверждение опыта в сопровождении команд, стартапов и проектных инициатив."],
+        ["/certificates/08-adobe-scan-2.jpg", "Опыт", "Фонд развития инноваций УрФУ", "Инновационные проекты", "Подтверждение участия в программах, связанных с инновационными проектами, предпринимательством и развитием команд."],
+        ["/certificates/09-adobe-scan.jpg", "Опыт", "Фонд развития инноваций УрФУ", "Профессиональная среда", "Еще одно подтверждение практического опыта в проектной, образовательной и предпринимательской среде."]
       ];
 
       const gallery = [
@@ -1610,22 +1191,9 @@
           if (entry.isIntersecting) entry.target.classList.add("visible");
         });
       }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
-
       document.querySelectorAll("[data-reveal]").forEach((element) => revealObserver.observe(element));
 
-      document.querySelectorAll(".tilt").forEach((card) => {
-        card.addEventListener("mousemove", (event) => {
-          const rect = card.getBoundingClientRect();
-          const x = (event.clientX - rect.left) / rect.width - 0.5;
-          const y = (event.clientY - rect.top) / rect.height - 0.5;
-          card.style.transform = `perspective(900px) rotateX(${y * -4}deg) rotateY(${x * 5}deg) translateY(-2px)`;
-        });
-        card.addEventListener("mouseleave", () => {
-          card.style.transform = "";
-        });
-      });
-
-      const certThumbs = document.getElementById("certThumbs");
+      const thumbs = document.getElementById("certThumbs");
       certificates.forEach((item, index) => {
         const button = document.createElement("button");
         button.type = "button";
@@ -1637,18 +1205,18 @@
           document.getElementById("certTitle").textContent = item[2];
           document.getElementById("certMeta").textContent = item[3];
           document.getElementById("certText").textContent = item[4];
-          certThumbs.querySelectorAll("button").forEach((thumb) => thumb.classList.remove("active"));
+          thumbs.querySelectorAll("button").forEach((thumb) => thumb.classList.remove("active"));
           button.classList.add("active");
         });
-        certThumbs.appendChild(button);
+        thumbs.appendChild(button);
       });
 
-      const galleryGrid = document.getElementById("galleryGrid");
+      const galleryRoot = document.getElementById("gallery");
       gallery.forEach((item) => {
         const card = document.createElement("article");
-        card.className = "gallery-card";
-        card.innerHTML = `<img src="${item[0]}" alt="${item[1]}" loading="lazy"><div><h3>${item[1]}</h3><p>${item[2]}</p></div>`;
-        galleryGrid.appendChild(card);
+        card.className = "image-card";
+        card.innerHTML = `<img src="${item[0]}" alt="${item[1]}" loading="lazy"><div class="copy"><h3>${item[1]}</h3><p>${item[2]}</p></div>`;
+        galleryRoot.appendChild(card);
       });
     </script>
   </body>
