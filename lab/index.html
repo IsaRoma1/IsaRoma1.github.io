@@ -136,6 +136,8 @@
         background: linear-gradient(135deg, var(--gold-2), var(--gold));
         box-shadow: 0 16px 42px rgba(200, 169, 106, 0.2);
         font-weight: 900;
+        max-width: 100%;
+        text-align: center;
         white-space: nowrap;
       }
 
@@ -657,6 +659,17 @@
         .brand strong { font-size: 16px; }
         .header-inner > .btn { display: none; }
         .nav { gap: 8px; font-size: 12px; }
+        .btn {
+          min-height: 42px;
+          padding: 10px 14px;
+          font-size: 13px;
+          line-height: 1.15;
+          white-space: normal;
+        }
+        .hero-actions .btn,
+        .actions .btn {
+          width: 100%;
+        }
         h1 { font-size: clamp(2.65rem, 15vw, 4.8rem); }
         h2 { font-size: clamp(2rem, 10vw, 3.4rem); }
         .bullet-grid,
@@ -687,7 +700,10 @@
         .step {
           grid-template-columns: 1fr;
         }
-        .table { overflow-x: auto; }
+        .table {
+          max-width: 100%;
+          overflow-x: auto;
+        }
         .table-row {
           min-width: 760px;
         }
