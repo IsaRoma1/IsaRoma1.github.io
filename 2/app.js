@@ -170,6 +170,7 @@ function defaultState() {
     maintenance: [],
     report: "",
     actionDone: false,
+    demoMode: "analysis",
     mapOpened: false
   };
 }
@@ -461,40 +462,210 @@ function missingPassport() {
   return misses.slice(0, 5);
 }
 
+function characterMode(score, flags) {
+  if (flags.length) return ["Нужен сигнал внимания", "red"];
+  if (score < 60) return ["Бережный режим", "orange"];
+  if (score < 80) return ["Рабочий режим", "yellow"];
+  return ["Хороший ресурс", "green"];
+}
+
+function compactSystemStatus() {
+  const data = systemData();
+  const byName = (name) => data.find((item) => item.name === name);
+  const heart = byName("Сердце и сосуды");
+  const metabolism = byName("Обмен веществ");
+  const sleep = byName("Сон и восстановление");
+  const deficits = byName("Витамины и дефициты");
+  const breathing = byName("Дыхание и лёгкие");
+  const dataCompletion = passportScore();
+  return [
+    {id: "heart", title: "Сердце", icon: "♡", completion: heart?.completion || 18, signal: heart?.signal || "gray", label: findBiomarker("ЛПНП") ? "ЛПНП выше" : "Нет давления", detail: ["Сердце и сосуды", signalText(heart?.signal || "gray"), findBiomarker("ЛПНП") ? "ЛПНП выше, давления пока нет" : "Давление пока не добавлено", "Добавить давление"]},
+    {id: "metabolism", title: "Обмен", icon: "◎", completion: metabolism?.completion || 22, signal: metabolism?.signal || "gray", label: findBiomarker("HbA1c") ? "HbA1c рядом" : "Нет талии", detail: ["Обмен веществ", signalText(metabolism?.signal || "gray"), findBiomarker("Глюкоза") ? "Глюкоза/HbA1c требуют динамики" : "Нет талии и глюкозы", "Добавить талию"]},
+    {id: "sleep", title: "Сон", icon: "◐", completion: sleep?.completion || 30, signal: sleep?.signal || "yellow", label: latestCheckin() ? "Стресс влияет" : "Данных мало", detail: ["Сон и восстановление", signalText(sleep?.signal || "yellow"), latestCheckin() ? "Сон и стресс снижают ресурс" : "Нужен check-in", "Отметить сон завтра"]},
+    {id: "deficits", title: "Дефициты", icon: "✦", completion: deficits?.completion || 20, signal: deficits?.signal || "gray", label: findBiomarker("Витамин D") ? "D ниже" : "Нет D/B12", detail: ["Витамины и дефициты", signalText(deficits?.signal || "gray"), findBiomarker("Витамин D") ? "Витамин D ниже референса" : "Нет данных по D, B12, ферритину", "Сформировать вопросы врачу"]},
+    {id: "breathing", title: "Дыхание", icon: "⌁", completion: breathing?.completion || 18, signal: breathing?.signal || "gray", label: redFlags().some((f) => f.type === "resp") ? "Есть сигнал" : "Данных мало", detail: ["Дыхание и лёгкие", signalText(breathing?.signal || "gray"), redFlags().some((f) => f.type === "resp") ? "Есть симптом, который нельзя игнорировать" : "Нужны кашель, одышка, сатурация", "Ответить на 4 вопроса"]},
+    {id: "data", title: "Данные", icon: "▣", completion: dataCompletion, signal: dataCompletion < 45 ? "gray" : "yellow", label: dataCompletion < 55 ? "Есть пробелы" : "База есть", detail: ["Данные", dataCompletion < 55 ? "Есть пробелы" : "База есть", `Паспорт заполнен на ${dataCompletion}%`, "Закрыть 1 пробел"]}
+  ];
+}
+
+function ringStyle(item) {
+  const color = {gray: "#64748B", green: "#39FF88", yellow: "#FACC15", orange: "#FB923C", red: "#F43F5E"}[item.signal] || "#64748B";
+  return `--ring-color:${color};--ring:${item.completion * 3.6}deg`;
+}
+
+function renderDemoSwitch() {
+  const mount = document.getElementById("demo-state-switch");
+  if (!mount) return;
+  const modes = [["minimal", "Minimal"], ["analysis", "Demo analysis"], ["after", "After action"]];
+  mount.innerHTML = modes.map(([id, label]) => `<button class="${(state.demoMode || "analysis") === id ? "active" : ""}" data-demo="${id}" type="button">${label}</button>`).join("");
+  mount.querySelectorAll("[data-demo]").forEach((button) => {
+    button.onclick = () => {
+      applyDemoMode(button.dataset.demo);
+      renderToday();
+      showToast(button.dataset.demo === "minimal" ? "Минимум данных: видны пробелы." : button.dataset.demo === "after" ? "Сценарий после действия: миссия выросла." : "Демо-анализ добавлен: карта ожила.");
+    };
+  });
+}
+
+function applyDemoMode(mode) {
+  state.demoMode = mode;
+  fillDemoProfile();
+  if (mode === "minimal") {
+    state.biomarkers = [];
+    state.actionDone = false;
+    state.profile.waist = "";
+    state.profile.supplements = "";
+    state.checkins = [{date: todayISO(), sleep: 5, energy: 6, stress: 8, activity: 4, symptoms: "none", symptomList: [], note: "", score: 52}];
+    state.missionTasks.passport = {};
+  }
+  if (mode === "analysis") {
+    state.biomarkers = parseBiomarkers(demoLabText);
+    state.actionDone = false;
+    addDemoCheckins(false);
+    state.profile.waist = "";
+    state.profile.supplements = "";
+  }
+  if (mode === "after") {
+    state.biomarkers = parseBiomarkers(demoLabText);
+    addDemoCheckins(false);
+    state.actionDone = true;
+    state.profile.waist = "94";
+    state.profile.supplements = "витамин D обсуждается со специалистом";
+    state.maintenance = state.maintenance.map((event) => event.title.includes("давление") ? {...event, status: "выполнено"} : event);
+    state.missionTasks.passport ||= {};
+    state.missionTasks.passport[9] = true;
+  }
+  state.onboarded = true;
+  ensureMaintenance();
+  saveState();
+}
+
+function showToast(text) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+  toast.textContent = text;
+  toast.classList.add("show");
+  window.setTimeout(() => toast.classList.remove("show"), 2200);
+}
+
+function openQuickSheet(title, status, reason, next) {
+  const sheet = document.getElementById("quick-sheet");
+  const panel = document.getElementById("sheet-panel");
+  if (!sheet || !panel) return;
+  panel.innerHTML = `<div class="sheet-handle"></div><h2>${title}</h2><p><strong>Статус:</strong> ${status}</p><p><strong>Причина:</strong> ${reason}</p><p><strong>Следующий шаг:</strong> ${next}</p><button class="btn full" id="sheet-close" type="button">Понятно</button>`;
+  sheet.classList.remove("hidden");
+  sheet.setAttribute("aria-hidden", "false");
+  document.getElementById("sheet-close").onclick = closeQuickSheet;
+  document.getElementById("sheet-backdrop").onclick = closeQuickSheet;
+}
+
+function closeQuickSheet() {
+  const sheet = document.getElementById("quick-sheet");
+  if (!sheet) return;
+  sheet.classList.add("hidden");
+  sheet.setAttribute("aria-hidden", "true");
+}
+
+function openMissingForm(type) {
+  const config = {
+    pressure: ["Давление", "Добавьте утро и вечер", `<label>Утро<input id="sheet-pressure-am" placeholder="Например: 122/78"></label><label>Вечер<input id="sheet-pressure-pm" placeholder="Например: 118/76"></label>`],
+    waist: ["Талия", "Одно число уточнит метаболический контур", `<label>Окружность талии, см<input id="sheet-waist" inputmode="decimal" placeholder="Например: 94"></label>`],
+    supplements: ["БАДы", "Важно для печени, ЖКТ и отчёта врачу", `<label>Что принимаете<textarea id="sheet-supplements" rows="3" placeholder="Например: витамин D, магний"></textarea></label>`]
+  }[type];
+  const sheet = document.getElementById("quick-sheet");
+  const panel = document.getElementById("sheet-panel");
+  panel.innerHTML = `<div class="sheet-handle"></div><h2>${config[0]}</h2><p class="muted">${config[1]}</p><div class="form-grid">${config[2]}</div><button class="btn full" id="sheet-save" type="button">Сохранить</button>`;
+  sheet.classList.remove("hidden");
+  document.getElementById("sheet-backdrop").onclick = closeQuickSheet;
+  document.getElementById("sheet-save").onclick = () => {
+    if (type === "pressure") state.maintenance = state.maintenance.map((event) => event.title.includes("давление") ? {...event, status: "выполнено"} : event);
+    if (type === "waist") state.profile.waist = document.getElementById("sheet-waist").value || "94";
+    if (type === "supplements") state.profile.supplements = document.getElementById("sheet-supplements").value || "не указаны";
+    saveState();
+    closeQuickSheet();
+    renderToday();
+    showToast(type === "pressure" ? "Давление добавлено. Сердце стало понятнее." : type === "waist" ? "Талия добавлена. Контур обмена обновлён." : "БАДы сохранены. Отчёт стал точнее.");
+  };
+}
+
 function renderToday() {
   if (document.body.dataset.page !== "today") return;
+  if (!state.onboarded) applyDemoMode(state.demoMode || "analysis");
   const c = latestCheckin();
   const score = scoreCheckin(c);
-  const [status, tone] = scoreStatus(score);
   const flags = redFlags();
-  const p = state.profile;
+  const [status, tone] = characterMode(score, flags);
   document.getElementById("today-date").textContent = new Intl.DateTimeFormat("ru-RU", {weekday: "long", day: "numeric", month: "long"}).format(new Date());
-  document.getElementById("today-title").textContent = c ? `${p.name || "Вы"}, ${status}` : "Утренний briefing появится после check-in";
-  document.getElementById("today-lead").textContent = c ? `Главные факторы: ${factor(c)}. Сон ${c.sleep}/10, стресс ${c.stress}/10, активность ${c.activity}/10. Ниже: сигнал безопасности, один шаг дня и что изменится после действия.` : "Данных пока мало. Пройдите check-in, чтобы приложение рассчитало ресурс дня.";
+  document.getElementById("today-title").textContent = "Экран организма";
   document.getElementById("score-value").textContent = score;
-  document.getElementById("score-arc").setAttribute("stroke-dashoffset", String(301.6 - (score / 100) * 301.6));
-  document.getElementById("score-status").textContent = "Индекс ресурса";
-  document.getElementById("score-dot").style.background = `var(--${tone})`;
-  document.getElementById("score-explain").textContent = whyScore(c);
-  document.getElementById("red-flags-copy").textContent = flags.length ? flags[0].text + " Если состояние ухудшается, не откладывайте обращение к врачу." : "Тревожных симптомов в сегодняшнем check-in не отмечено.";
-  document.getElementById("red-flags-status").textContent = flags.length ? "есть сигнал" : "спокойно";
-  document.getElementById("red-flags-status").className = `badge ${flags.length ? "red" : "green"}`;
+  document.getElementById("score-status").textContent = status;
+  document.getElementById("avatar-shell").dataset.tone = tone;
+  document.getElementById("score-explain").textContent = flags.length ? "Есть симптом, который лучше не игнорировать" : c ? (factor(c) === "сон" || factor(c) === "стресс" ? "Сон и стресс сегодня снижают ресурс" : `${factor(c)} сегодня сильнее всего влияет на ресурс`) : "Данных пока мало для точной оценки";
   const [action, note] = mainAction(c);
-  document.getElementById("main-action").textContent = action;
-  document.getElementById("main-action-note").textContent = note;
-  document.getElementById("action-reason").textContent = c ? `Почему: главный фактор сегодня - ${factor(c)}.` : "Почему: пока данных мало.";
-  document.getElementById("action-result").textContent = state.actionDone ? "Выполнено: миссия получила прогресс, а карта обмена веществ получила daily-сигнал." : "Что изменится: миссия +7%, карта обмена веществ получит новый daily-сигнал.";
-  document.getElementById("secondary-actions").innerHTML = [`Добавить давление: это улучшит заполненность блока “Сердце и сосуды”.`, `Добавить талию: это уточнит метаболический контур.`].map((x) => `<div class="mini-item">${x}</div>`).join("");
+  document.getElementById("main-action").textContent = action.replace(" после еды", "");
+  document.getElementById("main-action-note").textContent = state.actionDone ? "Выполнено: миссия +7%" : "+7% к миссии “Обмен веществ”";
+  document.getElementById("action-result").textContent = state.actionDone ? "Миссия обновлена, daily-сигнал закрыт" : note.includes("метабол") ? "Обновит активность и метаболический контур" : "Обновит ресурс и дневной план";
+  document.getElementById("primary-action-card").classList.toggle("completed", state.actionDone);
+  renderDemoSwitch();
+  renderOrbitLayer();
+  renderMissingChips();
+  renderCompactSystems();
   renderSymptomChips();
-  document.getElementById("mission-progress-label").textContent = `${missionPercent("passport")}%`;
+  const missionDone = Math.round((missionPercent("passport") / 100) * 14);
+  document.getElementById("mission-progress-label").textContent = `${missionDone}/14`;
   document.getElementById("mission-progress-bar").style.width = `${missionPercent("passport")}%`;
-  document.getElementById("active-mission-copy").textContent = `Паспорт заполнен на ${passportScore()}%. Больше всего не хватает: ${missingPassport().join(", ") || "регулярной динамики"}.`;
-  ensureMaintenance();
-  const next = state.maintenance.find((e) => e.status === "запланировано") || state.maintenance[0];
-  document.getElementById("next-maintenance-copy").textContent = `${next.title}: ${next.why}`;
-  document.getElementById("next-maintenance-date").textContent = formatDate(next.date);
+  document.getElementById("active-mission-copy").textContent = state.actionDone ? "Сегодня: действие закрыто" : "Сегодня: добавить давление";
   renderWeek();
+  const weekly = document.querySelector(".weekly-insight")?.textContent || "";
+  document.getElementById("weekly-one-line").textContent = weekly.replace("За 7 дней ", "").split(".").slice(0, 2).join(".");
   bindCheckin(score, c);
+  document.getElementById("complete-action").onclick = () => {
+    state.actionDone = true;
+    state.demoMode = "after";
+    state.missionTasks.passport ||= {};
+    state.missionTasks.passport[9] = true;
+    saveState();
+    renderToday();
+    showToast("Шаг выполнен. Миссия +7%");
+  };
+}
+
+function renderOrbitLayer() {
+  const orbit = document.getElementById("orbit-layer");
+  if (!orbit) return;
+  const items = compactSystemStatus().filter((item) => item.id !== "data").slice(0, 5);
+  const dataItem = compactSystemStatus().find((item) => item.id === "data");
+  const orbitItems = [items[0], items[2], items[1], dataItem, items[3], items[4]].filter(Boolean);
+  orbit.innerHTML = orbitItems.map((item, index) => `<button class="orbit-stat orbit-${index + 1} ${item.signal}" style="${ringStyle(item)}" data-orbit="${item.id}" type="button"><span>${item.icon}</span><b>${item.title}</b><small>${item.label}</small></button>`).join("");
+  orbit.querySelectorAll("[data-orbit]").forEach((button) => {
+    button.onclick = () => {
+      const item = compactSystemStatus().find((entry) => entry.id === button.dataset.orbit);
+      openQuickSheet(item.detail[0], item.detail[1], item.detail[2], item.detail[3]);
+    };
+  });
+}
+
+function renderMissingChips() {
+  const missing = [
+    {id: "pressure", label: "Давление", icon: "⌁", done: state.maintenance.some((e) => e.title.includes("давление") && e.status === "выполнено")},
+    {id: "waist", label: "Талия", icon: "◎", done: Boolean(state.profile.waist)},
+    {id: "supplements", label: "БАДы", icon: "✦", done: Boolean(state.profile.supplements)}
+  ];
+  document.getElementById("data-completion-label").textContent = `${passportScore()}%`;
+  document.getElementById("missing-data-chips").innerHTML = missing.map((item) => `<button class="missing-chip ${item.done ? "done" : ""}" data-missing="${item.id}" type="button"><span>${item.icon}</span>${item.done ? item.label + " ✓" : item.label}</button>`).join("");
+  document.querySelectorAll("[data-missing]").forEach((button) => button.onclick = () => openMissingForm(button.dataset.missing));
+}
+
+function renderCompactSystems() {
+  const grid = document.getElementById("compact-system-grid");
+  if (!grid) return;
+  grid.innerHTML = compactSystemStatus().map((item, index) => `<button class="compact-system ${item.signal}" style="--delay:${index * 35}ms" data-system="${item.id}" type="button"><span>${item.icon}</span><strong>${item.title}</strong><b>${item.completion}%</b><small>${item.label}</small></button>`).join("");
+  grid.querySelectorAll("[data-system]").forEach((button) => {
+    button.onclick = () => {
+      const item = compactSystemStatus().find((entry) => entry.id === button.dataset.system);
+      openQuickSheet(item.detail[0], item.detail[1], item.detail[2], item.detail[3]);
+    };
+  });
 }
 
 function renderSymptomChips() {
@@ -831,19 +1002,19 @@ function fillDemoProfile() {
   saveState();
 }
 
-function addDemoCheckins() {
+function addDemoCheckins(silent = false) {
   state.checkins = [-6, -5, -4, -3, -2, -1, 0].map((offset, i) => {
     const c = {date: todayISO(offset), sleep: [6, 7, 5, 7, 8, 6, 7][i], energy: [6, 7, 5, 6, 8, 6, 7][i], stress: [7, 5, 8, 6, 4, 7, 5][i], activity: [4, 6, 3, 5, 7, 4, 6][i], symptoms: i === 2 ? "mild" : "none", symptomList: i === 2 ? ["усталость"] : [], note: ""};
     c.score = scoreCheckin(c);
     return c;
   });
   saveState();
-  alert("Добавлены 7 дней check-in. Недельная динамика теперь показывает закономерности.");
+  if (!silent) alert("Добавлены 7 дней check-in. Недельная динамика теперь показывает закономерности.");
 }
 
 function init() {
   nav();
-  if (!state.onboarded) renderOnboarding();
+  if (!state.onboarded && document.body.dataset.page !== "today") renderOnboarding();
   ensureMaintenance();
   renderToday();
   renderMap();
