@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Раздел /1 - ИИ41</title>
+    <meta
+      name="description"
+      content="Новый раздел сайта ИИ41. Скоро здесь появится отдельная страница."
+    />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon-ai.svg?v=3" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0d10;
+        --panel: rgba(255, 255, 255, 0.08);
+        --text: #f6f7fb;
+        --muted: rgba(246, 247, 251, 0.68);
+        --line: rgba(255, 255, 255, 0.16);
+        --accent: #86f2c6;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background:
+          radial-gradient(circle at 20% 15%, rgba(134, 242, 198, 0.14), transparent 32%),
+          linear-gradient(135deg, #0b0d10 0%, #171b22 100%);
+        color: var(--text);
+        font-family:
+          Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      main {
+        width: min(100%, 680px);
+        padding: clamp(28px, 7vw, 56px);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--panel);
+        backdrop-filter: blur(22px);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(16px, 2vw, 19px);
+        line-height: 1.6;
+      }
+
+      .label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .label::before {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: currentColor;
+        content: "";
+      }
+
+      h1 {
+        max-width: 12ch;
+        margin: 0 0 18px;
+        font-size: clamp(42px, 10vw, 86px);
+        line-height: 0.95;
+        letter-spacing: 0;
+      }
+
+      a {
+        display: inline-flex;
+        margin-top: 32px;
+        color: var(--text);
+        font-weight: 700;
+        text-decoration-color: rgba(134, 242, 198, 0.72);
+        text-underline-offset: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="label">ИИ41 / 1</div>
+      <h1>Раздел готов</h1>
+      <p>
+        Это техническая заготовка страницы по адресу /1. Когда будет инструкция,
+        здесь появится нужный материал.
+      </p>
+      <a href="/">Вернуться на главную</a>
+    </main>
+  </body>
+</html>
