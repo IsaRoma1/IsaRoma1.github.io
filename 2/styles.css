@@ -108,6 +108,50 @@ a {
   letter-spacing: -0.01em;
 }
 
+.today-brief {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+  border: 1px solid rgba(0, 229, 255, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.055);
+  padding: 12px;
+}
+
+.today-brief div {
+  display: grid;
+  min-width: 94px;
+  place-items: center;
+  border-radius: 16px;
+  background: rgba(0, 229, 255, 0.08);
+  padding: 8px;
+}
+
+.today-brief span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.today-brief strong {
+  margin-top: 2px;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.today-brief strong b {
+  font: inherit;
+}
+
+.today-brief p {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 1.24;
+}
+
 .profile-dot {
   display: grid;
   width: 42px;
@@ -122,14 +166,14 @@ a {
 .character-hero {
   position: relative;
   overflow: hidden;
-  min-height: 482px;
+  min-height: 338px;
   border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 28px;
+  border-radius: 24px;
   background:
     radial-gradient(circle at 50% 38%, rgba(0, 229, 255, 0.18), transparent 34%),
     radial-gradient(circle at 72% 18%, rgba(57, 255, 136, 0.12), transparent 30%),
     rgba(255, 255, 255, 0.045);
-  padding: 12px;
+  padding: 10px;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     0 0 60px rgba(0, 229, 255, 0.06);
@@ -137,7 +181,7 @@ a {
 
 .character-hero::after {
   position: absolute;
-  inset: 22px;
+  inset: 52px 26px 44px;
   pointer-events: none;
   content: "";
   border: 1px solid rgba(0, 229, 255, 0.08);
@@ -148,20 +192,24 @@ a {
 .demo-switch {
   position: relative;
   z-index: 4;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  border-radius: 16px;
-  background: rgba(0, 0, 0, 0.22);
-  padding: 4px;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin: 0 auto;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.16);
+  padding: 3px;
+  width: fit-content;
+  max-width: 100%;
 }
 
 .demo-switch button {
-  min-height: 32px;
-  border-radius: 12px;
+  min-height: 28px;
+  border-radius: 999px;
   background: transparent;
   color: var(--muted);
-  font-size: 11px;
+  padding: 0 10px;
+  font-size: 10px;
   font-weight: 850;
 }
 
@@ -172,16 +220,16 @@ a {
 
 .avatar-stage {
   position: relative;
-  height: 402px;
+  height: 286px;
 }
 
 .body-avatar-shell {
   position: absolute;
   right: 50%;
-  bottom: 18px;
+  bottom: 38px;
   z-index: 2;
-  width: 190px;
-  height: 318px;
+  width: 126px;
+  height: 226px;
   transform: translateX(50%);
   animation: bodyBreath 4.8s ease-in-out infinite;
 }
@@ -213,20 +261,20 @@ a {
 .hero-score {
   position: absolute;
   right: 50%;
-  bottom: 12px;
+  bottom: -8px;
   display: grid;
-  min-width: 116px;
+  min-width: 94px;
   transform: translateX(50%);
   place-items: center;
   border: 1px solid rgba(0, 229, 255, 0.18);
-  border-radius: 20px;
+  border-radius: 17px;
   background: rgba(5, 11, 18, 0.72);
-  padding: 10px 12px;
+  padding: 8px 10px;
   backdrop-filter: blur(16px);
 }
 
 .hero-score strong {
-  font-size: 34px;
+  font-size: 27px;
   line-height: 0.95;
 }
 
@@ -239,115 +287,117 @@ a {
 .hero-score span {
   margin-top: 4px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 850;
 }
 
 .orbit-layer {
   position: absolute;
-  inset: 44px 0 0;
+  inset: 36px 0 0;
   z-index: 3;
 }
 
 .orbit-stat {
   position: absolute;
   display: grid;
-  width: 86px;
-  min-height: 76px;
+  width: 70px;
+  min-height: 58px;
   place-items: center;
-  border-radius: 22px;
+  border-radius: 18px;
   background:
     linear-gradient(var(--bg), var(--bg)) padding-box,
     conic-gradient(var(--ring-color) var(--ring), rgba(255, 255, 255, 0.12) 0) border-box;
   border: 2px solid transparent;
   color: var(--ink);
-  padding: 8px;
-  box-shadow: 0 0 20px color-mix(in srgb, var(--ring-color) 22%, transparent);
+  padding: 6px;
+  box-shadow: 0 0 16px color-mix(in srgb, var(--ring-color) 18%, transparent);
   animation: orbitIn 420ms ease-out both;
 }
 
 .orbit-stat span {
   display: grid;
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   place-items: center;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
   color: var(--ring-color);
-  font-size: 16px;
+  font-size: 13px;
 }
 
 .orbit-stat b {
-  margin-top: 4px;
-  font-size: 12px;
+  margin-top: 3px;
+  font-size: 11px;
 }
 
 .orbit-stat small {
   color: var(--muted);
-  font-size: 10px;
+  display: none;
+  font-size: 9px;
   line-height: 1.15;
   text-align: center;
 }
 
 .orbit-1 {
-  top: 16px;
+  top: 18px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .orbit-2 {
-  top: 112px;
-  left: 2px;
+  top: 92px;
+  left: 8px;
 }
 
 .orbit-3 {
-  top: 112px;
-  right: 2px;
+  top: 92px;
+  right: 8px;
 }
 
 .orbit-4 {
-  right: 12px;
-  bottom: 56px;
+  right: 18px;
+  bottom: 64px;
 }
 
 .orbit-5 {
-  bottom: 56px;
-  left: 12px;
+  bottom: 64px;
+  left: 18px;
 }
 
 .orbit-6 {
   right: 50%;
-  bottom: 0;
+  bottom: 6px;
   transform: translateX(50%);
 }
 
 .micro-insight {
   position: absolute;
-  right: 18px;
-  bottom: 18px;
-  left: 18px;
+  right: 14px;
+  bottom: 14px;
+  left: 14px;
   z-index: 4;
   border: 1px solid rgba(0, 229, 255, 0.12);
-  border-radius: 18px;
+  border-radius: 16px;
   background: rgba(5, 11, 18, 0.68);
   color: var(--ink);
-  padding: 12px 14px;
+  padding: 10px 12px;
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 850;
   backdrop-filter: blur(16px);
 }
 
 .primary-action-card {
   display: grid;
-  gap: 14px;
-  margin-top: 14px;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 10px;
   border: 1px solid rgba(57, 255, 136, 0.18);
-  border-radius: 24px;
+  border-radius: 22px;
   background:
     radial-gradient(circle at top right, rgba(57, 255, 136, 0.14), transparent 38%),
     rgba(255, 255, 255, 0.065);
-  padding: 18px;
+  padding: 15px;
   backdrop-filter: blur(18px);
 }
 
@@ -366,12 +416,12 @@ a {
 .primary-action-card strong {
   display: block;
   margin-top: 6px;
-  font-size: 23px;
+  font-size: 21px;
   line-height: 1.05;
 }
 
 .primary-action-card p {
-  margin-top: 8px;
+  margin-top: 6px;
   color: var(--green);
   font-size: 14px;
   font-weight: 850;
@@ -383,7 +433,7 @@ a {
 }
 
 .missing-strip {
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 .strip-head {

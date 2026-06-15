@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="manifest" href="/2/manifest.json" />
     <link rel="apple-touch-icon" href="/2/icons/icon-192.png" />
-    <link rel="stylesheet" href="/2/styles.css?v=2" />
+    <link rel="stylesheet" href="/2/styles.css?v=3" />
   </head>
   <body data-page="today">
     <main class="app character-app">
@@ -24,6 +24,14 @@
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
           </a>
         </header>
+
+        <section class="today-brief">
+          <div>
+            <span>Индекс ресурса</span>
+            <strong><b id="brief-score">64</b>/100</strong>
+          </div>
+          <p id="brief-copy">Бережный режим: сон и стресс снижают ресурс</p>
+        </section>
 
         <section class="character-hero" aria-label="Экран персонажа организма">
           <div class="demo-switch" id="demo-state-switch"></div>
@@ -166,6 +174,6 @@
       <section class="sheet-panel" id="sheet-panel"></section>
     </div>
     <nav class="bottom-nav" data-active="today"></nav>
-    <script src="/2/app.js?v=2"></script>
+    <script src="/2/app.js?v=3"></script>
   </body>
 </html>

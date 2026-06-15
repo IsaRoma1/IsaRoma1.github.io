@@ -496,7 +496,7 @@ function ringStyle(item) {
 function renderDemoSwitch() {
   const mount = document.getElementById("demo-state-switch");
   if (!mount) return;
-  const modes = [["minimal", "Minimal"], ["analysis", "Demo analysis"], ["after", "After action"]];
+  const modes = [["minimal", "Мало"], ["analysis", "Анализ"], ["after", "После шага"]];
   mount.innerHTML = modes.map(([id, label]) => `<button class="${(state.demoMode || "analysis") === id ? "active" : ""}" data-demo="${id}" type="button">${label}</button>`).join("");
   mount.querySelectorAll("[data-demo]").forEach((button) => {
     button.onclick = () => {
@@ -598,9 +598,12 @@ function renderToday() {
   document.getElementById("today-date").textContent = new Intl.DateTimeFormat("ru-RU", {weekday: "long", day: "numeric", month: "long"}).format(new Date());
   document.getElementById("today-title").textContent = "Экран организма";
   document.getElementById("score-value").textContent = score;
+  document.getElementById("brief-score").textContent = score;
   document.getElementById("score-status").textContent = status;
   document.getElementById("avatar-shell").dataset.tone = tone;
-  document.getElementById("score-explain").textContent = flags.length ? "Есть симптом, который лучше не игнорировать" : c ? (factor(c) === "сон" || factor(c) === "стресс" ? "Сон и стресс сегодня снижают ресурс" : `${factor(c)} сегодня сильнее всего влияет на ресурс`) : "Данных пока мало для точной оценки";
+  const shortInsight = flags.length ? "Есть симптом, который лучше не игнорировать" : c ? (factor(c) === "сон" || factor(c) === "стресс" ? "Сон и стресс сегодня снижают ресурс" : `${factor(c)} сегодня сильнее всего влияет на ресурс`) : "Данных пока мало для точной оценки";
+  document.getElementById("brief-copy").textContent = `${status}: ${shortInsight}`;
+  document.getElementById("score-explain").textContent = shortInsight;
   const [action, note] = mainAction(c);
   document.getElementById("main-action").textContent = action.replace(" после еды", "");
   document.getElementById("main-action-note").textContent = state.actionDone ? "Выполнено: миссия +7%" : "+7% к миссии “Обмен веществ”";
