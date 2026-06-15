@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ТО организма — Анализы</title>
+    <meta name="theme-color" content="#111827" />
+    <link rel="manifest" href="/1/manifest.json" />
+    <link rel="stylesheet" href="/1/styles.css?v=4" />
+  </head>
+  <body data-page="labs">
+    <main class="app">
+      <section id="onboarding" class="onboarding hidden"></section>
+      <section class="page">
+        <header class="hero">
+          <p class="eyebrow">Анализы</p>
+          <h1>Добавьте показатели и обновите карту</h1>
+          <p class="lead">Пока без OCR и сервера: вставьте текст анализа, распознайте показатели локально и сохраните их в браузере.</p>
+        </header>
+        <div class="stack">
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <h2>Текст анализа</h2>
+                <p class="muted">Файл можно выбрать как демо, но распознавание работает по вставленному тексту.</p>
+              </div>
+              <span class="pill" id="labs-count">0 показателей</span>
+            </div>
+            <div class="form-grid">
+              <label>Файл PDF/фото <input type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" /></label>
+              <label>Текст анализа <textarea id="lab-text" rows="9" placeholder="Вставьте текст анализа или нажмите кнопку демо"></textarea></label>
+              <div class="button-row">
+                <button class="btn secondary" id="insert-demo-lab" type="button">Вставить демо-анализ</button>
+                <button class="btn" id="parse-lab" type="button">Распознать</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <h2>Таблица показателей</h2>
+                <p class="muted">Отредактируйте значения перед сохранением. Карта организма обновится после сохранения.</p>
+              </div>
+            </div>
+            <div id="biomarker-table" class="biomarker-table empty-state">Пока нет показателей. Вставьте демо-анализ или текст лаборатории.</div>
+            <button class="btn full" id="save-biomarkers" type="button">Сохранить показатели</button>
+            <p class="success hidden" id="labs-message">Показатели сохранены</p>
+          </article>
+
+          <article class="card">
+            <h2>Разбор анализа</h2>
+            <div id="lab-analysis" class="analysis-block muted">После сохранения появится разбор: что в норме, что требует внимания, какие системы обновились и что спросить у врача.</div>
+          </article>
+        </div>
+      </section>
+    </main>
+    <nav class="bottom-nav" data-active="labs"></nav>
+    <script src="/1/app.js?v=4"></script>
+  </body>
+</html>

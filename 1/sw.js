@@ -1,4 +1,4 @@
-const CACHE_NAME = "to-organizma-static-v3";
+const CACHE_NAME = "to-organizma-static-v4";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

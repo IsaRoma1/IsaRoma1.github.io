@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ТО организма — Карта</title>
+    <meta name="theme-color" content="#111827" />
+    <link rel="manifest" href="/1/manifest.json" />
+    <link rel="stylesheet" href="/1/styles.css?v=4" />
+  </head>
+  <body data-page="map">
+    <main class="app">
+      <section id="onboarding" class="onboarding hidden"></section>
+      <section class="page">
+        <header class="hero">
+          <p class="eyebrow">Карта организма</p>
+          <h1 id="map-title">Каких данных не хватает</h1>
+          <p class="lead" id="map-lead">Карта обновляется от профиля, check-in и сохранённых показателей анализов.</p>
+        </header>
+        <div class="stack">
+          <article class="card">
+            <h2>Сводка по данным</h2>
+            <p class="muted" id="map-summary">Сводка появится после загрузки данных.</p>
+            <div class="chips" id="map-priority-chips"></div>
+          </article>
+          <div id="systems-list" class="stack"></div>
+        </div>
+      </section>
+    </main>
+    <nav class="bottom-nav" data-active="map"></nav>
+    <script src="/1/app.js?v=4"></script>
+  </body>
+</html>
