@@ -6,7 +6,7 @@
     <title>ТО организма — Анализы</title>
     <meta name="theme-color" content="#111827" />
     <link rel="manifest" href="/1/manifest.json" />
-    <link rel="stylesheet" href="/1/styles.css?v=4" />
+    <link rel="stylesheet" href="/1/styles.css?v=5" />
   </head>
   <body data-page="labs">
     <main class="app">
@@ -14,15 +14,15 @@
       <section class="page">
         <header class="hero">
           <p class="eyebrow">Анализы</p>
-          <h1>Добавьте показатели и обновите карту</h1>
-          <p class="lead">Пока без OCR и сервера: вставьте текст анализа, распознайте показатели локально и сохраните их в браузере.</p>
+          <h1>Загрузите анализы. Получите карту организма.</h1>
+          <p class="lead">Используйте демо-данные, чтобы увидеть, как приложение превращает цифры в карту организма, план действий и вопросы врачу.</p>
         </header>
         <div class="stack">
           <article class="card">
             <div class="card-head">
               <div>
-                <h2>Текст анализа</h2>
-                <p class="muted">Файл можно выбрать как демо, но распознавание работает по вставленному тексту.</p>
+              <h2>Демо-анализ или текст</h2>
+              <p class="muted">Это демо-данные, не данные реального пациента. Файл можно выбрать как демо, но распознавание работает по тексту.</p>
               </div>
               <span class="pill" id="labs-count">0 показателей</span>
             </div>
@@ -30,9 +30,10 @@
               <label>Файл PDF/фото <input type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" /></label>
               <label>Текст анализа <textarea id="lab-text" rows="9" placeholder="Вставьте текст анализа или нажмите кнопку демо"></textarea></label>
               <div class="button-row">
-                <button class="btn secondary" id="insert-demo-lab" type="button">Вставить демо-анализ</button>
+                <button class="btn secondary" id="insert-demo-lab" type="button">Добавить демо-анализ</button>
                 <button class="btn" id="parse-lab" type="button">Распознать</button>
               </div>
+              <button class="btn secondary full" id="manual-marker" type="button">Добавить показатель вручную</button>
             </div>
           </article>
 
@@ -52,10 +53,22 @@
             <h2>Разбор анализа</h2>
             <div id="lab-analysis" class="analysis-block muted">После сохранения появится разбор: что в норме, что требует внимания, какие системы обновились и что спросить у врача.</div>
           </article>
+
+          <article class="card active-card">
+            <h2>Зачем нужна подписка</h2>
+            <p class="muted">Разовая расшифровка анализа полезна, но здоровье меняется каждый день. Подписка нужна, чтобы приложение хранило историю, отслеживало динамику, напоминало о профилактическом ТО и вело вас по понятным шагам между анализами и визитами к врачу.</p>
+            <div class="value-grid">
+              <div class="value-card"><strong>Понимать анализы</strong><span>Не просто видеть цифры, а понимать, какие показатели спокойные, какие требуют внимания и какие вопросы задать врачу.</span></div>
+              <div class="value-card"><strong>Видеть динамику</strong><span>Приложение помнит прошлые анализы, check-in и изменения. Чем дольше вы пользуетесь, тем точнее карта организма.</span></div>
+              <div class="value-card"><strong>Не забывать профилактику</strong><span>ТО-календарь напоминает, что проверить, что добавить и когда вернуться к показателям.</span></div>
+              <div class="value-card"><strong>Получать действия дня</strong><span>Каждый день приложение даёт один простой шаг на основе сна, энергии, стресса, активности и симптомов.</span></div>
+              <div class="value-card"><strong>Готовиться к врачу</strong><span>Вместо хаоса из PDF и скриншотов вы получаете структурированный отчёт.</span></div>
+            </div>
+          </article>
         </div>
       </section>
     </main>
     <nav class="bottom-nav" data-active="labs"></nav>
-    <script src="/1/app.js?v=4"></script>
+    <script src="/1/app.js?v=5"></script>
   </body>
 </html>

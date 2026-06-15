@@ -6,7 +6,7 @@
     <title>ТО организма — Профиль</title>
     <meta name="theme-color" content="#111827" />
     <link rel="manifest" href="/1/manifest.json" />
-    <link rel="stylesheet" href="/1/styles.css?v=4" />
+    <link rel="stylesheet" href="/1/styles.css?v=5" />
   </head>
   <body data-page="profile">
     <main class="app">
@@ -14,8 +14,8 @@
       <section class="page">
         <header class="hero">
           <p class="eyebrow">Паспорт здоровья</p>
-          <h1 id="profile-title">Профиль</h1>
-          <p class="lead" id="profile-lead">Заполненность считается по данным, которые реально есть в приложении.</p>
+          <h1 id="profile-title">Паспорт здоровья</h1>
+          <p class="lead" id="profile-lead">Чем больше важных данных заполнено, тем точнее карта организма и ежедневные рекомендации.</p>
         </header>
         <div class="stack">
           <article class="card">
@@ -34,6 +34,8 @@
             <form id="profile-form" class="form-grid"></form>
           </article>
 
+          <div id="profile-blocks" class="stack"></div>
+
           <article class="card" id="calendar">
             <div class="card-head">
               <div>
@@ -44,13 +46,14 @@
             <div id="maintenance-list" class="stack"></div>
           </article>
 
-          <article class="card">
+          <article class="card" id="report">
             <h2>Отчёт для врача</h2>
             <p class="muted">Отчёт собирается из профиля, целей, жалоб, анализов и динамики check-in. Это не диагноз.</p>
             <div class="button-row">
               <button class="btn" id="build-report" type="button">Сформировать отчёт</button>
               <button class="btn secondary" id="copy-report" type="button">Скопировать</button>
             </div>
+            <button class="btn secondary full" id="mark-report-ready" type="button">Отметить как подготовлено</button>
             <textarea id="doctor-report" rows="12" readonly placeholder="Отчёт появится здесь"></textarea>
           </article>
 
@@ -58,9 +61,20 @@
             <h2>Демо и настройки</h2>
             <div class="button-grid">
               <button class="btn secondary" id="demo-profile" type="button">Заполнить демо-профиль</button>
+              <button class="btn secondary" id="demo-lab-profile" type="button">Добавить демо-анализ</button>
               <button class="btn secondary" id="demo-checkins" type="button">Добавить 7 дней check-in</button>
               <button class="btn secondary" id="save-text-report" type="button">Сохранить отчёт как текст</button>
               <button class="btn danger" id="reset-demo" type="button">Сбросить данные</button>
+            </div>
+          </article>
+
+          <article class="card active-card">
+            <h2>Зачем нужна подписка</h2>
+            <p class="muted">Подписка нужна не ради одной расшифровки. Она хранит историю, отслеживает динамику, напоминает о профилактическом ТО и ведёт по шагам между анализами и визитами к врачу.</p>
+            <div class="value-grid">
+              <div class="value-card"><strong>История вместо хаоса</strong><span>PDF, скриншоты, check-in и вопросы врачу собираются в один паспорт здоровья.</span></div>
+              <div class="value-card"><strong>Динамика вместо разового снимка</strong><span>Карта становится точнее с каждым анализом и каждым check-in.</span></div>
+              <div class="value-card"><strong>ТО-календарь</strong><span>Приложение напоминает, что добавить, что проверить и когда вернуться к показателям.</span></div>
             </div>
           </article>
 
@@ -72,6 +86,6 @@
       </section>
     </main>
     <nav class="bottom-nav" data-active="profile"></nav>
-    <script src="/1/app.js?v=4"></script>
+    <script src="/1/app.js?v=5"></script>
   </body>
 </html>
