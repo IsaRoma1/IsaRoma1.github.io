@@ -293,16 +293,21 @@
         gap: 4px;
       }
 
-      .nav button {
+      .nav a {
+        display: flex;
         min-height: 56px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         border-radius: 16px;
         background: transparent;
         color: var(--muted);
         font-size: 11px;
         font-weight: 800;
+        text-decoration: none;
       }
 
-      .nav button.active {
+      .nav a.active {
         background: var(--ink);
         color: white;
       }
@@ -326,6 +331,64 @@
         color: var(--muted);
         font-size: 12px;
         line-height: 1.45;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: start;
+      }
+
+      .task {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        border-radius: 16px;
+        background: #f9fafb;
+        padding: 12px;
+        color: #374151;
+        font-size: 14px;
+        line-height: 1.45;
+        font-weight: 650;
+      }
+
+      .task::before {
+        display: grid;
+        width: 22px;
+        height: 22px;
+        flex: 0 0 22px;
+        place-items: center;
+        border-radius: 999px;
+        background: #111827;
+        color: white;
+        content: "✓";
+        font-size: 12px;
+      }
+
+      .task.pending::before {
+        background: #e5e7eb;
+        color: #6b7280;
+        content: "";
+      }
+
+      .kv {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        border-bottom: 1px solid #f1f2f0;
+        padding: 11px 0;
+        color: #374151;
+        font-size: 14px;
+      }
+
+      .kv:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .kv strong {
+        text-align: right;
       }
 
       .hidden {
@@ -420,7 +483,13 @@
           <p class="eyebrow">ТО организма</p>
           <h1>Карта организма</h1>
         </header>
-        <div id="systems" class="stack"></div>
+        <div class="stack">
+          <article class="card">
+            <h2>Сводка</h2>
+            <p class="muted" style="margin-top: 8px">Карта показывает 12 систем организма, заполненность данных, пробелы, связанные показатели и следующие шаги. Это не диагноз, а навигация по профилактическому ТО.</p>
+          </article>
+          <div id="systems" class="stack"></div>
+        </div>
       </section>
 
       <section id="labs" class="screen">
@@ -446,6 +515,27 @@
             <h2>Разбор анализа</h2>
             <p id="labSummary" class="muted" style="margin-top: 8px">Пока нет загруженных анализов. Вставьте текст, чтобы получить базовый разбор без диагностики.</p>
           </article>
+          <article class="card">
+            <h2>Поддерживаемые показатели MVP</h2>
+            <div class="chips" style="margin-top: 12px">
+              <span class="chip">ОАК</span>
+              <span class="chip">Биохимия</span>
+              <span class="chip">Липиды</span>
+              <span class="chip">Ферритин</span>
+              <span class="chip">Витамин D</span>
+              <span class="chip">B12</span>
+              <span class="chip">ТТГ</span>
+              <span class="chip">HbA1c</span>
+            </div>
+          </article>
+          <article class="card">
+            <h2>Следующие шаги</h2>
+            <div class="stack" style="margin-top: 12px">
+              <div class="task">Проверить распознанные значения и единицы измерения.</div>
+              <div class="task">Отметить показатели с низкой уверенностью.</div>
+              <div class="task pending">После серверного этапа файл будет сохраняться в приватном Storage.</div>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -454,7 +544,13 @@
           <p class="eyebrow">ТО организма</p>
           <h1>Миссии</h1>
         </header>
-        <div id="missionsList" class="stack"></div>
+        <div class="stack">
+          <article class="card">
+            <h2>Активная миссия</h2>
+            <p class="muted" style="margin-top: 8px">Собрать базовый паспорт здоровья: 14 дней, цель — довести заполненность до 70%.</p>
+          </article>
+          <div id="missionsList" class="stack"></div>
+        </div>
       </section>
 
       <section id="profile" class="screen">
@@ -482,8 +578,31 @@
             <p class="muted" style="margin-top: 8px">iPhone: Safari → Поделиться → На экран Домой. Android: Chrome → Установить приложение.</p>
           </article>
           <article class="card">
+            <h2>Паспорт здоровья</h2>
+            <div style="margin-top: 10px">
+              <div class="kv"><span>Цели</span><strong>2 из 3</strong></div>
+              <div class="kv"><span>Жалобы</span><strong>не заполнено</strong></div>
+              <div class="kv"><span>Лекарства</span><strong>не заполнено</strong></div>
+              <div class="kv"><span>БАДы</span><strong>не заполнено</strong></div>
+              <div class="kv"><span>Семейный анамнез</span><strong>нужен</strong></div>
+              <div class="kv"><span>Документы</span><strong>1 демо</strong></div>
+            </div>
+          </article>
+          <article class="card">
+            <h2>ТО-календарь</h2>
+            <div class="stack" style="margin-top: 12px">
+              <div class="task">Через 3 дня: добавить давление за 3 дня.</div>
+              <div class="task pending">Через 7 дней: пройти анкету сна и стресса.</div>
+              <div class="task pending">Через 14 дней: сформировать отчёт для врача.</div>
+            </div>
+          </article>
+          <article class="card">
             <h2>Юридическое предупреждение</h2>
             <p class="muted" style="margin-top: 8px">Приложение не ставит диагнозы, не назначает лечение и не заменяет консультацию врача. Все рекомендации носят информационный и профилактический характер.</p>
+          </article>
+          <article class="card">
+            <h2>Настройки MVP</h2>
+            <p class="muted" style="margin-top: 8px">Экспорт данных в JSON, удаление аккаунта и авторизация появятся в серверной версии. Сейчас это закрытый статический прототип на личной ссылке.</p>
           </article>
         </div>
       </section>
@@ -491,51 +610,51 @@
 
     <nav class="nav" aria-label="Главная навигация">
       <div class="nav-grid">
-        <button class="active" data-tab="today">
+        <a class="active" href="#today" data-tab="today">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
           Сегодня
-        </button>
-        <button data-tab="map">
+        </a>
+        <a href="#map" data-tab="map">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3z"/><path d="M9 3v15"/><path d="M15 6v15"/></svg>
           Карта
-        </button>
-        <button data-tab="labs">
+        </a>
+        <a href="#labs" data-tab="labs">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6"/><path d="M10 3v6l-5 8a4 4 0 0 0 3.4 6h7.2a4 4 0 0 0 3.4-6l-5-8V3"/></svg>
           Анализы
-        </button>
-        <button data-tab="missions">
+        </a>
+        <a href="#missions" data-tab="missions">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.5-1.5 2-4.5 0-6.5s-5-1.5-6.5 0L12 8l-.5-.5C10 6 7 5.5 5 7.5S3.5 12.5 5 14l7 7 7-7z"/></svg>
           Миссии
-        </button>
-        <button data-tab="profile">
+        </a>
+        <a href="#profile" data-tab="profile">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
           Профиль
-        </button>
+        </a>
       </div>
     </nav>
 
     <script>
       const systems = [
-        ["Сердце и сосуды", "yellow", 52, "Есть данные по липидам, но нет давления и семейного анамнеза."],
-        ["Обмен веществ", "yellow", 48, "Для оценки динамики нужны глюкоза, HbA1c, талия и активность."],
-        ["Печень", "gray", 24, "Данных пока мало. Нужны основные показатели биохимии."],
-        ["Почки", "gray", 28, "Пока не хватает креатинина и мочевины."],
-        ["Щитовидная железа", "gray", 20, "Нет свежих данных по ТТГ и свободным гормонам."],
-        ["Кровь и железо", "yellow", 60, "Есть часть общего анализа крови, но для железа нужен ферритин."],
-        ["Витамины и дефициты", "gray", 18, "Нужны витамин D, B12 и магний."],
-        ["Воспаление", "green", 55, "По доступным данным нет выраженного сигнала, но динамики мало."],
-        ["Сон и восстановление", "yellow", 45, "Сон отмечен как средний, стоит собрать неделю наблюдений."],
-        ["Стресс и нервная система", "yellow", 42, "Стресс выше обычного, данных пока мало."],
-        ["Вес и композиция тела", "gray", 30, "Есть вес, но нет талии и динамики."],
-        ["Образ жизни", "yellow", 50, "Нужна регулярная отметка активности, сна и привычек."]
+        ["Сердце и сосуды", "yellow", 52, "Есть данные по липидам, но нет давления и семейного анамнеза.", ["Добавить давление за 3 дня", "Указать семейный анамнез", "Загрузить липидограмму"]],
+        ["Обмен веществ", "yellow", 48, "Для оценки динамики нужны глюкоза, HbA1c, талия и активность.", ["Добавить окружность талии", "Проверить HbA1c", "Отметить прогулки после еды"]],
+        ["Печень", "gray", 24, "Данных пока мало. Нужны основные показатели биохимии.", ["Загрузить АЛТ, АСТ, ГГТ", "Добавить билирубин", "Сравнить показатели в динамике"]],
+        ["Почки", "gray", 28, "Пока не хватает креатинина, мочевины и мочевой кислоты.", ["Добавить креатинин", "Добавить мочевину", "Проверить eGFR, если есть"]],
+        ["Щитовидная железа", "gray", 20, "Нет свежих данных по ТТГ и свободным гормонам.", ["Добавить ТТГ", "Добавить Т4 свободный", "Добавить антитела к ТПО"]],
+        ["Кровь и железо", "yellow", 60, "Есть часть общего анализа крови, но для железа нужен ферритин.", ["Добавить ферритин", "Добавить железо", "Сравнить гемоглобин и MCV"]],
+        ["Витамины и дефициты", "gray", 18, "Нужны витамин D, B12, фолиевая кислота, магний и цинк.", ["Добавить витамин D", "Добавить B12", "Добавить магний"]],
+        ["Воспаление", "green", 55, "По доступным данным нет выраженного сигнала, но динамики мало.", ["Добавить С-реактивный белок", "Сравнить СОЭ", "Проверить лейкоциты"]],
+        ["Сон и восстановление", "yellow", 45, "Сон отмечен как средний, стоит собрать неделю наблюдений.", ["Отмечать сон 7 дней", "Пройти анкету сна", "Лечь до 23:30 три дня подряд"]],
+        ["Стресс и нервная система", "yellow", 42, "Стресс выше обычного, данных пока мало.", ["Пройти анкету стресса", "Добавить вечернюю рутину", "Отметить симптомы"]],
+        ["Вес и композиция тела", "gray", 30, "Есть вес, но нет талии и динамики.", ["Добавить талию", "Обновлять вес раз в неделю", "Отметить активность"]],
+        ["Образ жизни", "yellow", 50, "Нужна регулярная отметка активности, сна и привычек.", ["Пройти daily check-in", "Отметить активность", "Добавить цели"]]
       ];
 
       const missions = [
-        ["Собрать базовый паспорт здоровья", 42, "14 дней, цель: заполненность паспорта до 70%."],
-        ["Энергия и дефициты", 0, "Фокус: усталость, сон, ферритин, витамин D, B12, стресс."],
-        ["Обмен веществ", 0, "Фокус: глюкоза, HbA1c, вес, талия, прогулки после еды."],
-        ["Сердце и сосуды", 0, "Фокус: давление, холестерин, активность и семейный анамнез."],
-        ["Сон и восстановление", 0, "Фокус: сон, стресс, энергия и вечерняя рутина."]
+        ["Собрать базовый паспорт здоровья", 42, "14 дней, цель: заполненность паспорта до 70%.", ["Заполнить базовый профиль", "Указать лекарства и БАДы", "Загрузить первый анализ", "Сформировать отчёт"]],
+        ["Энергия и дефициты", 0, "Фокус: усталость, сон, ферритин, витамин D, B12, стресс.", ["Оценить энергию 7 дней", "Добавить витамин D", "Добавить B12", "Добавить ферритин"]],
+        ["Обмен веществ", 0, "Фокус: глюкоза, HbA1c, вес, талия, прогулки после еды.", ["Добавить глюкозу", "Добавить HbA1c", "Отметить талию", "Прогулка после еды"]],
+        ["Сердце и сосуды", 0, "Фокус: давление, холестерин, активность и семейный анамнез.", ["Давление 3 дня", "Загрузить липиды", "Указать семейный анамнез", "Отметить активность"]],
+        ["Сон и восстановление", 0, "Фокус: сон, стресс, энергия и вечерняя рутина.", ["Отмечать сон", "Снизить кофеин вечером", "Лечь до 23:30", "Оценить энергию утром"]]
       ];
 
       function todayText() {
@@ -566,7 +685,7 @@
 
       function renderSystems() {
         document.getElementById("systems").innerHTML = systems
-          .map(([name, tone, score, text]) => `
+          .map(([name, tone, score, text, steps]) => `
             <article class="card">
               <div class="row">
                 <h2>${name}</h2>
@@ -575,6 +694,7 @@
               <p class="muted" style="margin-top: 8px">${text}</p>
               <div class="row" style="margin-top: 14px"><span class="small">Заполненность</span><strong>${score}%</strong></div>
               <div class="progress" style="margin-top: 8px"><i style="width:${score}%"></i></div>
+              <div class="chips" style="margin-top: 12px">${steps.map((step) => `<span class="chip">${step}</span>`).join("")}</div>
             </article>
           `)
           .join("");
@@ -582,7 +702,7 @@
 
       function renderMissions() {
         document.getElementById("missionsList").innerHTML = missions
-          .map(([name, progress, text]) => `
+          .map(([name, progress, text, tasks]) => `
             <article class="card">
               <div class="row">
                 <h2>${name}</h2>
@@ -590,6 +710,7 @@
               </div>
               <p class="muted" style="margin-top: 8px">${text}</p>
               <div class="progress" style="margin-top: 14px"><i style="width:${progress}%"></i></div>
+              <div class="stack" style="margin-top: 12px">${tasks.map((task, index) => `<div class="task ${index > 1 ? "pending" : ""}">${task}</div>`).join("")}</div>
             </article>
           `)
           .join("");
@@ -631,15 +752,23 @@
         document.getElementById("labSummary").textContent = "Показатели распознаны в демо-режиме. Значимые отклонения стоит обсудить со специалистом. Приложение не ставит диагноз и не назначает лечение.";
       }
 
-      document.querySelectorAll(".nav button").forEach((button) => {
-        button.addEventListener("click", () => {
-          document.querySelectorAll(".nav button").forEach((item) => item.classList.remove("active"));
-          document.querySelectorAll(".screen").forEach((item) => item.classList.remove("active"));
-          button.classList.add("active");
-          document.getElementById(button.dataset.tab).classList.add("active");
-          window.scrollTo({ top: 0, behavior: "smooth" });
+      function openTab(tab) {
+        const nextTab = document.getElementById(tab) ? tab : "today";
+        document.querySelectorAll(".nav a").forEach((item) => item.classList.toggle("active", item.dataset.tab === nextTab));
+        document.querySelectorAll(".screen").forEach((item) => item.classList.toggle("active", item.id === nextTab));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      document.querySelectorAll(".nav a").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          const tab = link.dataset.tab;
+          history.replaceState(null, "", `#${tab}`);
+          openTab(tab);
         });
       });
+
+      window.addEventListener("hashchange", () => openTab(location.hash.replace("#", "")));
 
       ["sleep", "energy", "stress", "activity", "symptoms"].forEach((id) => {
         document.getElementById(id).addEventListener("input", updateScore);
@@ -659,6 +788,7 @@
       renderSystems();
       renderMissions();
       parseLab();
+      openTab(location.hash.replace("#", "") || "today");
     </script>
   </body>
 </html>

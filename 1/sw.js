@@ -1,4 +1,4 @@
-const CACHE_NAME = "to-organizma-static-v1";
+const CACHE_NAME = "to-organizma-static-v2";
 const SHELL = ["/1/", "/1/manifest.json", "/1/icons/icon-192.png", "/1/icons/icon-512.png"];
 
 self.addEventListener("install", (event) => {
@@ -18,5 +18,19 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (event.request.method !== "GET" || url.pathname.includes("/api/") || url.pathname.includes("lab-documents")) return;
+
+  if (event.request.mode === "navigate" || url.pathname === "/1/" || url.pathname === "/1/index.html") {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put("/1/", clone));
+          return response;
+        })
+        .catch(() => caches.match("/1/"))
+    );
+    return;
+  }
+
   event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request)));
 });
