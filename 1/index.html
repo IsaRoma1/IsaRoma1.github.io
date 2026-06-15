@@ -2,23 +2,28 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Раздел /1 - ИИ41</title>
-    <meta
-      name="description"
-      content="Новый раздел сайта ИИ41. Скоро здесь появится отдельная страница."
-    />
-    <meta name="robots" content="noindex" />
-    <link rel="icon" type="image/svg+xml" href="/favicon-ai.svg?v=3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ТО организма</title>
+    <meta name="description" content="Минимальный MVP дневника здоровья и профилактического ТО организма" />
+    <meta name="theme-color" content="#111827" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="ТО организма" />
+    <link rel="manifest" href="/1/manifest.json" />
+    <link rel="apple-touch-icon" href="/1/icons/icon-192.png" />
     <style>
       :root {
-        color-scheme: dark;
-        --bg: #0b0d10;
-        --panel: rgba(255, 255, 255, 0.08);
-        --text: #f6f7fb;
-        --muted: rgba(246, 247, 251, 0.68);
-        --line: rgba(255, 255, 255, 0.16);
-        --accent: #86f2c6;
+        color-scheme: light;
+        --bg: #f6f7f4;
+        --ink: #111827;
+        --muted: #6b7280;
+        --card: #ffffff;
+        --line: #e5e7eb;
+        --green: #22c55e;
+        --yellow: #eab308;
+        --orange: #f97316;
+        --red: #ef4444;
+        --blue: #2563eb;
       }
 
       * {
@@ -26,83 +31,634 @@
       }
 
       body {
-        min-height: 100vh;
         margin: 0;
-        display: grid;
-        place-items: center;
-        padding: 24px;
         background:
-          radial-gradient(circle at 20% 15%, rgba(134, 242, 198, 0.14), transparent 32%),
-          linear-gradient(135deg, #0b0d10 0%, #171b22 100%);
-        color: var(--text);
-        font-family:
-          Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          radial-gradient(circle at 50% -10%, rgba(37, 99, 235, 0.08), transparent 360px),
+          var(--bg);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        letter-spacing: 0;
       }
 
-      main {
-        width: min(100%, 680px);
-        padding: clamp(28px, 7vw, 56px);
-        border: 1px solid var(--line);
-        border-radius: 20px;
-        background: var(--panel);
-        backdrop-filter: blur(22px);
-        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      button {
+        border: 0;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .app {
+        position: relative;
+        width: min(100%, 430px);
+        min-height: 100dvh;
+        margin: 0 auto;
+        padding: calc(18px + env(safe-area-inset-top)) 16px calc(96px + env(safe-area-inset-bottom));
+        background: var(--bg);
+        box-shadow: 0 0 0 1px rgba(17, 24, 39, 0.04);
+      }
+
+      .screen {
+        display: none;
+        animation: show 180ms ease-out;
+      }
+
+      .screen.active {
+        display: block;
+      }
+
+      @keyframes show {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header {
+        margin-bottom: 18px;
+      }
+
+      .eyebrow {
+        margin: 0 0 7px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 30px;
+        line-height: 1.06;
+        letter-spacing: -0.03em;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
       }
 
       p {
         margin: 0;
-        color: var(--muted);
-        font-size: clamp(16px, 2vw, 19px);
-        line-height: 1.6;
       }
 
-      .label {
+      .stack {
+        display: grid;
+        gap: 14px;
+      }
+
+      .card {
+        border-radius: 20px;
+        background: var(--card);
+        padding: 18px;
+        box-shadow: 0 1px 8px rgba(17, 24, 39, 0.06);
+      }
+
+      .muted {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .btn {
+        display: inline-flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border-radius: 16px;
+        padding: 12px 18px;
+        background: var(--ink);
+        color: white;
+        font-weight: 750;
+        text-decoration: none;
+      }
+
+      .btn.secondary {
+        border: 1px solid var(--line);
+        background: white;
+        color: var(--ink);
+      }
+
+      .btn.full {
+        width: 100%;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .chip,
+      .badge {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        margin-bottom: 24px;
-        color: var(--accent);
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .label::before {
-        width: 8px;
-        height: 8px;
         border-radius: 999px;
-        background: currentColor;
-        content: "";
+        background: #f3f4f6;
+        color: #374151;
+        padding: 8px 11px;
+        font-size: 13px;
+        font-weight: 750;
       }
 
-      h1 {
-        max-width: 12ch;
-        margin: 0 0 18px;
-        font-size: clamp(42px, 10vw, 86px);
-        line-height: 0.95;
-        letter-spacing: 0;
+      .badge.green {
+        background: rgba(34, 197, 94, 0.12);
+        color: #15803d;
       }
 
-      a {
-        display: inline-flex;
-        margin-top: 32px;
-        color: var(--text);
-        font-weight: 700;
-        text-decoration-color: rgba(134, 242, 198, 0.72);
-        text-underline-offset: 6px;
+      .badge.yellow {
+        background: rgba(234, 179, 8, 0.16);
+        color: #854d0e;
+      }
+
+      .badge.orange {
+        background: rgba(249, 115, 22, 0.14);
+        color: #c2410c;
+      }
+
+      .badge.gray {
+        background: #f3f4f6;
+        color: #4b5563;
+      }
+
+      .score {
+        display: grid;
+        grid-template-columns: 1fr 128px;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .circle {
+        position: relative;
+        width: 128px;
+        height: 128px;
+      }
+
+      .circle svg {
+        width: 128px;
+        height: 128px;
+        transform: rotate(-90deg);
+      }
+
+      .circle strong {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        font-size: 31px;
+      }
+
+      .progress {
+        height: 8px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #eef0ed;
+      }
+
+      .progress i {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--ink);
+      }
+
+      label {
+        display: grid;
+        gap: 8px;
+        color: #374151;
+        font-size: 14px;
+        font-weight: 750;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        min-height: 48px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: white;
+        padding: 12px 14px;
+        color: var(--ink);
+        outline: none;
+      }
+
+      input[type="range"] {
+        min-height: auto;
+        padding: 0;
+        accent-color: var(--ink);
+      }
+
+      textarea {
+        min-height: 138px;
+        resize: vertical;
+        line-height: 1.5;
+      }
+
+      .nav {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 20;
+        width: min(100%, 430px);
+        margin: 0 auto;
+        border-top: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.94);
+        padding: 8px 8px calc(10px + env(safe-area-inset-bottom));
+        backdrop-filter: blur(18px);
+      }
+
+      .nav-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+      }
+
+      .nav button {
+        min-height: 56px;
+        border-radius: 16px;
+        background: transparent;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .nav button.active {
+        background: var(--ink);
+        color: white;
+      }
+
+      .nav svg {
+        display: block;
+        margin: 0 auto 3px;
+      }
+
+      .lab-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: center;
+        border-radius: 16px;
+        background: #f9fafb;
+        padding: 12px;
+      }
+
+      .small {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
       }
     </style>
   </head>
   <body>
-    <main>
-      <div class="label">ИИ41 / 1</div>
-      <h1>Раздел готов</h1>
-      <p>
-        Это техническая заготовка страницы по адресу /1. Когда будет инструкция,
-        здесь появится нужный материал.
-      </p>
-      <a href="/">Вернуться на главную</a>
+    <main class="app">
+      <section id="today" class="screen active">
+        <header class="header">
+          <p class="eyebrow" id="date"></p>
+          <h1>Роман, сегодня организм в нормальном режиме</h1>
+        </header>
+
+        <div class="stack">
+          <article class="card score">
+            <div>
+              <h2>Индекс ресурса</h2>
+              <p class="muted" id="scoreText">Сон средний, стресс выше обычного. Индекс не является медицинской оценкой здоровья.</p>
+            </div>
+            <div class="circle">
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#eef0ed" stroke-width="12"></circle>
+                <circle id="scoreArc" cx="60" cy="60" r="48" fill="none" stroke="#111827" stroke-linecap="round" stroke-width="12" stroke-dasharray="301.6" stroke-dashoffset="96.5"></circle>
+              </svg>
+              <strong><span id="scoreValue">68</span></strong>
+            </div>
+          </article>
+
+          <article class="card stack">
+            <div>
+              <h2>Быстрый check-in</h2>
+              <p class="muted">Ответьте на 4 коротких вопроса, чтобы обновить день.</p>
+            </div>
+            <label>Как спали? <input id="sleep" type="range" min="1" max="10" value="7" /></label>
+            <label>Энергия сейчас <input id="energy" type="range" min="1" max="10" value="7" /></label>
+            <label>Стресс <input id="stress" type="range" min="1" max="10" value="6" /></label>
+            <label>Активность <input id="activity" type="range" min="1" max="10" value="5" /></label>
+            <label>
+              Симптомы
+              <select id="symptoms">
+                <option value="none">Нет симптомов</option>
+                <option value="mild">Лёгкие</option>
+                <option value="moderate">Умеренные</option>
+                <option value="strong">Сильные</option>
+              </select>
+            </label>
+            <button class="btn full" id="saveCheckin">Сохранить check-in</button>
+            <p class="small hidden" id="checkinSaved">Check-in сохранён в этой сессии.</p>
+          </article>
+
+          <article class="card">
+            <h2>Главное действие дня</h2>
+            <div style="margin-top: 14px; border-radius: 18px; background: #111827; color: white; padding: 16px">
+              <strong>Прогулка 20 минут после еды</strong>
+              <p style="margin-top: 6px; color: #d1d5db; font-size: 14px; line-height: 1.5">Мягкая нагрузка поможет поддержать энергию без перегруза.</p>
+            </div>
+            <div class="chips" style="margin-top: 12px">
+              <span class="chip">Добавить вес</span>
+              <span class="chip">Лечь до 23:30</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="row">
+              <div>
+                <h2>Миссия месяца</h2>
+                <p class="muted">Собрать базовый паспорт здоровья</p>
+              </div>
+              <strong>42%</strong>
+            </div>
+            <div class="progress" style="margin-top: 14px"><i style="width: 42%"></i></div>
+          </article>
+
+          <article class="card">
+            <h2>Ближайшее ТО</h2>
+            <p class="muted" style="margin-top: 8px">Через 9 дней: добавить давление за 3 дня.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="map" class="screen">
+        <header class="header">
+          <p class="eyebrow">ТО организма</p>
+          <h1>Карта организма</h1>
+        </header>
+        <div id="systems" class="stack"></div>
+      </section>
+
+      <section id="labs" class="screen">
+        <header class="header">
+          <p class="eyebrow">ТО организма</p>
+          <h1>Анализы</h1>
+        </header>
+        <div class="stack">
+          <article class="card stack">
+            <div>
+              <h2>Загрузить анализ</h2>
+              <p class="muted">В статической версии файл не отправляется на сервер. Вставьте текст анализа вручную, чтобы проверить сценарий.</p>
+            </div>
+            <label>Файл PDF/фото <input type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" /></label>
+            <label>Текст анализа <textarea id="labText" placeholder="Например: Гемоглобин 146 г/л, Глюкоза 5.7 ммоль/л, Витамин D 24 нг/мл, ТТГ 2.1 мМЕ/л"></textarea></label>
+            <button class="btn full" id="parseLab">Распознать показатели</button>
+          </article>
+          <article class="card">
+            <h2>Распознанные показатели</h2>
+            <div id="biomarkers" class="stack" style="margin-top: 14px"></div>
+          </article>
+          <article class="card">
+            <h2>Разбор анализа</h2>
+            <p id="labSummary" class="muted" style="margin-top: 8px">Пока нет загруженных анализов. Вставьте текст, чтобы получить базовый разбор без диагностики.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="missions" class="screen">
+        <header class="header">
+          <p class="eyebrow">ТО организма</p>
+          <h1>Миссии</h1>
+        </header>
+        <div id="missionsList" class="stack"></div>
+      </section>
+
+      <section id="profile" class="screen">
+        <header class="header">
+          <p class="eyebrow">ТО организма</p>
+          <h1>Профиль</h1>
+        </header>
+        <div class="stack">
+          <article class="card">
+            <h2>Роман</h2>
+            <p class="muted" style="margin-top: 8px">180 см · 82 кг · Россия</p>
+          </article>
+          <article class="card">
+            <div class="row">
+              <div>
+                <h2>Паспорт здоровья</h2>
+                <p class="muted">Профиль, цели, жалобы, лекарства, БАДы и документы.</p>
+              </div>
+              <strong>42%</strong>
+            </div>
+            <div class="progress" style="margin-top: 14px"><i style="width: 42%"></i></div>
+          </article>
+          <article class="card">
+            <h2>Установка на главный экран</h2>
+            <p class="muted" style="margin-top: 8px">iPhone: Safari → Поделиться → На экран Домой. Android: Chrome → Установить приложение.</p>
+          </article>
+          <article class="card">
+            <h2>Юридическое предупреждение</h2>
+            <p class="muted" style="margin-top: 8px">Приложение не ставит диагнозы, не назначает лечение и не заменяет консультацию врача. Все рекомендации носят информационный и профилактический характер.</p>
+          </article>
+        </div>
+      </section>
     </main>
+
+    <nav class="nav" aria-label="Главная навигация">
+      <div class="nav-grid">
+        <button class="active" data-tab="today">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Сегодня
+        </button>
+        <button data-tab="map">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3z"/><path d="M9 3v15"/><path d="M15 6v15"/></svg>
+          Карта
+        </button>
+        <button data-tab="labs">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6"/><path d="M10 3v6l-5 8a4 4 0 0 0 3.4 6h7.2a4 4 0 0 0 3.4-6l-5-8V3"/></svg>
+          Анализы
+        </button>
+        <button data-tab="missions">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.5-1.5 2-4.5 0-6.5s-5-1.5-6.5 0L12 8l-.5-.5C10 6 7 5.5 5 7.5S3.5 12.5 5 14l7 7 7-7z"/></svg>
+          Миссии
+        </button>
+        <button data-tab="profile">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+          Профиль
+        </button>
+      </div>
+    </nav>
+
+    <script>
+      const systems = [
+        ["Сердце и сосуды", "yellow", 52, "Есть данные по липидам, но нет давления и семейного анамнеза."],
+        ["Обмен веществ", "yellow", 48, "Для оценки динамики нужны глюкоза, HbA1c, талия и активность."],
+        ["Печень", "gray", 24, "Данных пока мало. Нужны основные показатели биохимии."],
+        ["Почки", "gray", 28, "Пока не хватает креатинина и мочевины."],
+        ["Щитовидная железа", "gray", 20, "Нет свежих данных по ТТГ и свободным гормонам."],
+        ["Кровь и железо", "yellow", 60, "Есть часть общего анализа крови, но для железа нужен ферритин."],
+        ["Витамины и дефициты", "gray", 18, "Нужны витамин D, B12 и магний."],
+        ["Воспаление", "green", 55, "По доступным данным нет выраженного сигнала, но динамики мало."],
+        ["Сон и восстановление", "yellow", 45, "Сон отмечен как средний, стоит собрать неделю наблюдений."],
+        ["Стресс и нервная система", "yellow", 42, "Стресс выше обычного, данных пока мало."],
+        ["Вес и композиция тела", "gray", 30, "Есть вес, но нет талии и динамики."],
+        ["Образ жизни", "yellow", 50, "Нужна регулярная отметка активности, сна и привычек."]
+      ];
+
+      const missions = [
+        ["Собрать базовый паспорт здоровья", 42, "14 дней, цель: заполненность паспорта до 70%."],
+        ["Энергия и дефициты", 0, "Фокус: усталость, сон, ферритин, витамин D, B12, стресс."],
+        ["Обмен веществ", 0, "Фокус: глюкоза, HbA1c, вес, талия, прогулки после еды."],
+        ["Сердце и сосуды", 0, "Фокус: давление, холестерин, активность и семейный анамнез."],
+        ["Сон и восстановление", 0, "Фокус: сон, стресс, энергия и вечерняя рутина."]
+      ];
+
+      function todayText() {
+        document.getElementById("date").textContent = new Intl.DateTimeFormat("ru-RU", {
+          weekday: "long",
+          day: "numeric",
+          month: "long"
+        }).format(new Date());
+      }
+
+      function updateScore() {
+        const sleep = Number(document.getElementById("sleep").value) * 10;
+        const energy = Number(document.getElementById("energy").value) * 10;
+        const stress = (11 - Number(document.getElementById("stress").value)) * 10;
+        const activity = Number(document.getElementById("activity").value) * 10;
+        const symptoms = document.getElementById("symptoms").value;
+        const symptomScore = symptoms === "none" ? 100 : symptoms === "mild" ? 70 : symptoms === "moderate" ? 40 : 15;
+        const score = Math.round(sleep * 0.25 + energy * 0.25 + stress * 0.2 + activity * 0.15 + symptomScore * 0.15);
+        document.getElementById("scoreValue").textContent = score;
+        document.getElementById("scoreArc").setAttribute("stroke-dashoffset", String(301.6 - (score / 100) * 301.6));
+        const reasons = [];
+        if (sleep <= 50) reasons.push("сон ниже обычного");
+        if (stress <= 40) reasons.push("стресс выше обычного");
+        if (activity <= 40) reasons.push("активность снижена");
+        if (symptoms !== "none") reasons.push("есть отмеченные симптомы");
+        document.getElementById("scoreText").textContent = (reasons.length ? reasons.slice(0, 2).join(", ") : "ключевые показатели сегодня выглядят спокойно") + ". Индекс не является медицинской оценкой здоровья.";
+      }
+
+      function renderSystems() {
+        document.getElementById("systems").innerHTML = systems
+          .map(([name, tone, score, text]) => `
+            <article class="card">
+              <div class="row">
+                <h2>${name}</h2>
+                <span class="badge ${tone}">${tone === "green" ? "спокойно" : tone === "yellow" ? "есть пробелы" : "данных мало"}</span>
+              </div>
+              <p class="muted" style="margin-top: 8px">${text}</p>
+              <div class="row" style="margin-top: 14px"><span class="small">Заполненность</span><strong>${score}%</strong></div>
+              <div class="progress" style="margin-top: 8px"><i style="width:${score}%"></i></div>
+            </article>
+          `)
+          .join("");
+      }
+
+      function renderMissions() {
+        document.getElementById("missionsList").innerHTML = missions
+          .map(([name, progress, text]) => `
+            <article class="card">
+              <div class="row">
+                <h2>${name}</h2>
+                <strong>${progress}%</strong>
+              </div>
+              <p class="muted" style="margin-top: 8px">${text}</p>
+              <div class="progress" style="margin-top: 14px"><i style="width:${progress}%"></i></div>
+            </article>
+          `)
+          .join("");
+      }
+
+      function parseLab() {
+        const text = document.getElementById("labText").value || "Гемоглобин 146 г/л, Глюкоза 5.7 ммоль/л, Витамин D 24 нг/мл, ТТГ 2.1 мМЕ/л";
+        const catalog = [
+          ["Гемоглобин", /гемоглобин\\D+(\\d+[.,]?\\d*)/i, "г/л", "normal"],
+          ["Глюкоза", /глюкоза\\D+(\\d+[.,]?\\d*)/i, "ммоль/л", "borderline"],
+          ["Витамин D", /(?:витамин\\s*d|25\\(?oh\\)?d)\\D+(\\d+[.,]?\\d*)/i, "нг/мл", "low"],
+          ["ТТГ", /ттг\\D+(\\d+[.,]?\\d*)/i, "мМЕ/л", "normal"],
+          ["Ферритин", /ферритин\\D+(\\d+[.,]?\\d*)/i, "нг/мл", "unknown"],
+          ["Холестерин общий", /холестерин\\D+(\\d+[.,]?\\d*)/i, "ммоль/л", "unknown"]
+        ];
+        const rows = catalog
+          .map(([name, regex, unit, status]) => {
+            const match = text.match(regex);
+            return match ? { name, value: match[1].replace(",", "."), unit, status } : null;
+          })
+          .filter(Boolean);
+        const finalRows = rows.length ? rows : [
+          { name: "Гемоглобин", value: "146", unit: "г/л", status: "normal" },
+          { name: "Глюкоза", value: "5.7", unit: "ммоль/л", status: "borderline" },
+          { name: "Витамин D", value: "24", unit: "нг/мл", status: "low" },
+          { name: "ТТГ", value: "2.1", unit: "мМЕ/л", status: "normal" }
+        ];
+        document.getElementById("biomarkers").innerHTML = finalRows
+          .map((row) => `
+            <div class="lab-row">
+              <div>
+                <strong>${row.name}</strong>
+                <div class="small">${row.value} ${row.unit} · уверенность MVP 80%</div>
+              </div>
+              <span class="badge ${row.status === "normal" ? "green" : row.status === "low" ? "yellow" : "gray"}">${row.status}</span>
+            </div>
+          `)
+          .join("");
+        document.getElementById("labSummary").textContent = "Показатели распознаны в демо-режиме. Значимые отклонения стоит обсудить со специалистом. Приложение не ставит диагноз и не назначает лечение.";
+      }
+
+      document.querySelectorAll(".nav button").forEach((button) => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll(".nav button").forEach((item) => item.classList.remove("active"));
+          document.querySelectorAll(".screen").forEach((item) => item.classList.remove("active"));
+          button.classList.add("active");
+          document.getElementById(button.dataset.tab).classList.add("active");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      });
+
+      ["sleep", "energy", "stress", "activity", "symptoms"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", updateScore);
+      });
+      document.getElementById("saveCheckin").addEventListener("click", () => {
+        updateScore();
+        document.getElementById("checkinSaved").classList.remove("hidden");
+      });
+      document.getElementById("parseLab").addEventListener("click", parseLab);
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/1/sw.js").catch(() => undefined);
+      }
+
+      todayText();
+      updateScore();
+      renderSystems();
+      renderMissions();
+      parseLab();
+    </script>
   </body>
 </html>
