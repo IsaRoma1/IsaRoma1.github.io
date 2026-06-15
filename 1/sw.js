@@ -1,8 +1,12 @@
-const CACHE_NAME = "to-organizma-static-v2";
-const SHELL = ["/1/", "/1/manifest.json", "/1/icons/icon-192.png", "/1/icons/icon-512.png"];
+const CACHE_NAME = "to-organizma-static-v3";
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL)).catch(() => undefined));
+  event.waitUntil(
+    caches
+      .keys()
+      .then((keys) => Promise.all(keys.filter((key) => key.startsWith("to-organizma")).map((key) => caches.delete(key))))
+      .catch(() => undefined)
+  );
   self.skipWaiting();
 });
 
@@ -10,27 +14,11 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
-      .then(() => self.clients.claim())
+      .then((keys) => Promise.all(keys.filter((key) => key.startsWith("to-organizma")).map((key) => caches.delete(key))))
+      .then(() => self.registration.unregister())
   );
 });
 
 self.addEventListener("fetch", (event) => {
-  const url = new URL(event.request.url);
-  if (event.request.method !== "GET" || url.pathname.includes("/api/") || url.pathname.includes("lab-documents")) return;
-
-  if (event.request.mode === "navigate" || url.pathname === "/1/" || url.pathname === "/1/index.html") {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put("/1/", clone));
-          return response;
-        })
-        .catch(() => caches.match("/1/"))
-    );
-    return;
-  }
-
-  event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request)));
+  return;
 });
