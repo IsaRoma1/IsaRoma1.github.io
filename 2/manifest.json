@@ -1,0 +1,25 @@
+{
+  "name": "ТО организма",
+  "short_name": "ТО организма",
+  "description": "Персональный дневник здоровья и профилактического ТО организма",
+  "start_url": "/2/",
+  "scope": "/2/",
+  "display": "standalone",
+  "background_color": "#050B12",
+  "theme_color": "#050B12",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/2/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/2/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

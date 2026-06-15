@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ТО организма v2 — Карта</title>
+    <meta name="theme-color" content="#050B12" />
+    <link rel="manifest" href="/2/manifest.json" />
+    <link rel="stylesheet" href="/2/styles.css?v=1" />
+  </head>
+  <body data-page="map">
+    <main class="app">
+      <section id="onboarding" class="onboarding hidden"></section>
+      <section class="page">
+        <header class="hero">
+          <p class="eyebrow">Карта организма</p>
+          <h1 id="map-title">Каких данных не хватает</h1>
+          <p class="lead" id="map-lead">Карта обновляется от профиля, check-in и сохранённых показателей анализов.</p>
+        </header>
+        <div class="stack">
+          <article class="card">
+            <h2>Смысловые контуры</h2>
+            <p class="muted">Карта связывает показатели в цепочки: данные, пробелы, сигнал внимания и следующий шаг.</p>
+            <div id="health-contours" class="contour-grid"></div>
+          </article>
+
+          <article class="card">
+            <h2>Сводка по данным</h2>
+            <p class="muted" id="map-summary">Сводка появится после загрузки данных.</p>
+            <div class="chips" id="map-priority-chips"></div>
+          </article>
+          <article class="card warning-card">
+            <h2>Безопасность</h2>
+            <p class="muted">Приложение не ставит диагноз и не заменяет врача. Выводы носят информационный и профилактический характер.</p>
+          </article>
+          <div id="systems-list" class="stack"></div>
+        </div>
+      </section>
+    </main>
+    <nav class="bottom-nav" data-active="map"></nav>
+    <script src="/2/app.js?v=1"></script>
+  </body>
+</html>

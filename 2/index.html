@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ТО организма v2 — Сегодня</title>
+    <meta name="theme-color" content="#050B12" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="/2/manifest.json" />
+    <link rel="apple-touch-icon" href="/2/icons/icon-192.png" />
+    <link rel="stylesheet" href="/2/styles.css?v=1" />
+  </head>
+  <body data-page="today">
+    <main class="app">
+      <section id="onboarding" class="onboarding hidden"></section>
+      <section class="page">
+        <header class="hero">
+          <p class="eyebrow" id="today-date">Сегодня</p>
+          <h1 id="today-title">ТО организма в телефоне</h1>
+          <p class="lead" id="today-lead">Как машина проходит регулярное обслуживание, так и организм должен иметь план профилактики, историю данных и понятные сигналы внимания.</p>
+        </header>
+
+        <div class="stack">
+          <article class="card score-card">
+            <div>
+              <div class="card-topline">
+                <span class="status-dot" id="score-dot"></span>
+                <span id="score-status">Индекс ресурса</span>
+              </div>
+              <h2>Индекс ресурса</h2>
+              <p class="muted" id="score-explain">Индекс появится после check-in.</p>
+              <p class="muted">Это не медицинская оценка. Индекс показывает ежедневное состояние по данным сна, энергии, стресса, активности и симптомов.</p>
+            </div>
+            <div class="score-ring" aria-label="Индекс ресурса">
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#eef0ed" stroke-width="12"></circle>
+                <circle id="score-arc" cx="60" cy="60" r="48" fill="none" stroke="#050B12" stroke-linecap="round" stroke-width="12" stroke-dasharray="301.6" stroke-dashoffset="301.6"></circle>
+              </svg>
+              <strong id="score-value">0</strong>
+            </div>
+          </article>
+
+          <article class="card" id="red-flags-card">
+            <div class="card-head">
+              <div>
+                <h2>Красные сигналы</h2>
+                <p class="muted" id="red-flags-copy">Тревожных симптомов в сегодняшнем check-in не отмечено.</p>
+              </div>
+              <span class="badge green" id="red-flags-status">спокойно</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <h2>Быстрый check-in</h2>
+                <p class="muted">Запись сохраняется в браузере и обновляет день, миссии и динамику.</p>
+              </div>
+              <span class="pill" id="checkin-state">не сохранён</span>
+            </div>
+            <form id="checkin-form" class="form-grid">
+              <label>Качество сна <input id="sleep" type="range" min="1" max="10" value="7" /></label>
+              <label>Энергия <input id="energy" type="range" min="1" max="10" value="7" /></label>
+              <label>Стресс <input id="stress" type="range" min="1" max="10" value="5" /></label>
+              <label>Активность <input id="activity" type="range" min="1" max="10" value="5" /></label>
+              <label>
+                Симптомы
+                <select id="symptoms">
+                  <option value="none">Нет симптомов</option>
+                  <option value="mild">Лёгкие</option>
+                  <option value="moderate">Умеренные</option>
+                  <option value="strong">Сильные</option>
+                </select>
+              </label>
+              <div id="symptom-list" class="chips"></div>
+              <label>Заметка дня <textarea id="day-note" rows="3" placeholder="Например: плохо спал, была тренировка, болела голова"></textarea></label>
+              <button class="btn full" type="submit">Сохранить check-in</button>
+              <p class="success hidden" id="checkin-message">Check-in сохранён</p>
+            </form>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <h2>Действие дня</h2>
+                <p class="muted" id="action-reason">Будет выбрано из check-in.</p>
+              </div>
+              <span class="pill">сегодня</span>
+            </div>
+            <div class="action-box">
+              <strong id="main-action">Пройдите check-in, чтобы получить действие дня.</strong>
+              <p id="main-action-note">Действие связано с вашим ресурсом, активной миссией и пробелами данных.</p>
+            </div>
+            <div class="result-strip" id="action-result">После выполнения: миссия +7%, карта получит новый daily-сигнал.</div>
+            <div class="mini-list" id="secondary-actions"></div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <h2>Активная миссия</h2>
+                <p class="muted" id="active-mission-copy">Соберите данные, чтобы карта организма стала полезной.</p>
+              </div>
+              <strong id="mission-progress-label">0%</strong>
+            </div>
+            <div class="progress"><i id="mission-progress-bar"></i></div>
+            <a class="btn secondary full" href="/2/missions.html">Открыть задания миссии</a>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <h2>Ближайшее ТО</h2>
+                <p class="muted" id="next-maintenance-copy">События появятся после онбординга.</p>
+              </div>
+              <span class="pill" id="next-maintenance-date">план</span>
+            </div>
+            <a class="btn secondary full" href="/2/profile.html#calendar">Открыть ТО-календарь</a>
+          </article>
+
+          <article class="card">
+            <h2>За 7 дней</h2>
+            <div class="stats-grid" id="weekly-stats"></div>
+            <div class="sparkline" id="sparkline"></div>
+          </article>
+
+          <article class="card">
+            <h2>Зачем заходить каждый день</h2>
+            <div class="value-grid">
+              <div class="value-card"><strong>Понять ресурс дня</strong><span>Check-in показывает, что сегодня сильнее влияет на состояние: сон, стресс, активность или симптомы.</span></div>
+              <div class="value-card"><strong>Закрыть действие дня</strong><span>Одно маленькое действие обновляет прогресс миссии и карту организма.</span></div>
+              <div class="value-card"><strong>Видеть динамику</strong><span>Через 3–7 дней приложение начинает показывать закономерности, а не отдельные случайные дни.</span></div>
+              <div class="value-card"><strong>Не забывать ТО</strong><span>Система напоминает, какие данные добавить и что проверить дальше.</span></div>
+              <div class="value-card"><strong>Подготовиться к врачу</strong><span>Чем больше данных собрано, тем точнее отчёт и список вопросов.</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+    <nav class="bottom-nav" data-active="today"></nav>
+    <script src="/2/app.js?v=1"></script>
+  </body>
+</html>

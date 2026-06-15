@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ТО организма v2 — Миссии</title>
+    <meta name="theme-color" content="#050B12" />
+    <link rel="manifest" href="/2/manifest.json" />
+    <link rel="stylesheet" href="/2/styles.css?v=1" />
+  </head>
+  <body data-page="missions">
+    <main class="app">
+      <section id="onboarding" class="onboarding hidden"></section>
+      <section class="page">
+        <header class="hero">
+          <p class="eyebrow">Миссии</p>
+          <h1>Миссии здоровья</h1>
+          <p class="lead">Каждая миссия превращает заботу о здоровье в понятный план: что заполнить, что проверить, что делать каждый день.</p>
+        </header>
+        <div class="stack">
+          <article class="card">
+            <h2>Активная миссия</h2>
+            <p class="muted" id="mission-headline">Соберите базовый паспорт здоровья, чтобы карта организма перестала гадать на кофейной гуще.</p>
+            <div class="progress"><i id="mission-page-progress"></i></div>
+          </article>
+          <div id="missions-list" class="stack"></div>
+        </div>
+      </section>
+    </main>
+    <nav class="bottom-nav" data-active="missions"></nav>
+    <script src="/2/app.js?v=1"></script>
+  </body>
+</html>
