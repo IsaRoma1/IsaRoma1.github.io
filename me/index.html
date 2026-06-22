@@ -2,273 +2,33 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Личный раздел | ИИ41</title>
-    <style>
-      :root {
-        color-scheme: dark;
-        --bg: #050505;
-        --panel: rgba(17, 17, 17, 0.82);
-        --text: #ffffff;
-        --muted: rgba(255, 255, 255, 0.64);
-        --line: rgba(255, 255, 255, 0.14);
-        --accent: #ff6600;
-        --accent-2: #d8ff7c;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        min-height: 100vh;
-        margin: 0;
-        background:
-          radial-gradient(circle at 78% 10%, rgba(255, 102, 0, 0.2), transparent 30rem),
-          radial-gradient(circle at 16% 18%, rgba(216, 255, 124, 0.11), transparent 24rem),
-          var(--bg);
-        color: var(--text);
-        font-family: "Space Grotesk", Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        letter-spacing: 0;
-      }
-
-      .shell {
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 1rem;
-      }
-
-      .brand {
-        position: absolute;
-        top: clamp(1rem, 3vw, 2rem);
-        left: clamp(1rem, 5vw, 5rem);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: clamp(2.8rem, 4.5vw, 4.05rem);
-        height: clamp(2.8rem, 4.5vw, 4.05rem);
-        border: 1px solid rgba(255, 255, 255, 0.72);
-        border-radius: 0.82rem;
-        background: #f4f1ea;
-        text-decoration: none;
-      }
-
-      .mark {
-        display: inline-flex;
-        align-items: baseline;
-        gap: 0.04rem;
-        transform: skewX(-14deg) rotate(-5deg);
-        font-family: Arial Black, Impact, system-ui, sans-serif;
-        font-weight: 900;
-        line-height: 0.85;
-      }
-
-      .mark span:first-child {
-        color: #121212;
-        font-size: clamp(0.74rem, 1.3vw, 1.05rem);
-      }
-
-      .mark span:last-child {
-        color: #e21d1d;
-        font-size: clamp(0.66rem, 1.15vw, 0.92rem);
-      }
-
-      .panel,
-      .dashboard {
-        width: min(100%, 30rem);
-        border: 1px solid var(--line);
-        border-radius: 1.2rem;
-        padding: clamp(1.2rem, 4vw, 2rem);
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.035)), var(--panel);
-        box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.14);
-        backdrop-filter: blur(18px);
-      }
-
-      .icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 3.1rem;
-        height: 3.1rem;
-        border: 1px solid rgba(255, 102, 0, 0.34);
-        border-radius: 0.92rem;
-        background: rgba(255, 102, 0, 0.12);
-        color: var(--accent);
-        font-size: 1.55rem;
-      }
-
-      .eyebrow {
-        margin: 1.1rem 0 0.7rem;
-        color: var(--accent);
-        font-size: 0.78rem;
-        font-weight: 800;
-        text-transform: uppercase;
-      }
-
-      h1 {
-        margin: 0 0 1.4rem;
-        font-size: clamp(2.2rem, 8vw, 4rem);
-        line-height: 0.94;
-        font-weight: 800;
-        text-transform: uppercase;
-      }
-
-      label {
-        display: block;
-        margin-bottom: 0.5rem;
-        color: var(--muted);
-        font-size: 0.78rem;
-        font-weight: 800;
-        text-transform: uppercase;
-      }
-
-      input {
-        width: 100%;
-        height: 3.5rem;
-        border: 1px solid var(--line);
-        border-radius: 0.78rem;
-        padding: 0 1rem;
-        background: rgba(0, 0, 0, 0.32);
-        color: var(--text);
-        font: inherit;
-        font-size: 1.35rem;
-        font-weight: 800;
-        letter-spacing: 0.28em;
-        outline: none;
-      }
-
-      input:focus {
-        border-color: rgba(255, 102, 0, 0.8);
-        box-shadow: 0 0 0 0.22rem rgba(255, 102, 0, 0.15);
-      }
-
-      button {
-        width: 100%;
-        min-height: 3.2rem;
-        margin-top: 0.9rem;
-        border: 1px solid rgba(216, 255, 124, 0.62);
-        border-radius: 0.78rem;
-        background: var(--accent-2);
-        color: #101010;
-        font: inherit;
-        font-weight: 900;
-        cursor: pointer;
-      }
-
-      .error {
-        min-height: 1.2rem;
-        margin: 0.62rem 0 0;
-        color: #ff8a66;
-        font-size: 0.86rem;
-        font-weight: 700;
-      }
-
-      .dashboard {
-        display: none;
-        width: min(100%, 54rem);
-      }
-
-      .dashboard p {
-        color: var(--muted);
-        line-height: 1.5;
-      }
-
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 0.75rem;
-        margin-top: 1.4rem;
-      }
-
-      .grid article {
-        min-height: 8rem;
-        border: 1px solid var(--line);
-        border-radius: 0.86rem;
-        padding: 1rem;
-        background: rgba(255, 255, 255, 0.055);
-      }
-
-      .grid span {
-        display: block;
-        color: var(--accent);
-        font-weight: 900;
-      }
-
-      @media (max-width: 720px) {
-        .grid {
-          grid-template-columns: 1fr;
-        }
-
-        .brand {
-          position: static;
-          margin: 0 auto 2rem;
-        }
-
-        .shell {
-          display: block;
-          padding-top: 1rem;
-        }
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Меморандум Романа</title>
+    <meta name="description" content="Личная утренняя операционная система Романа Исаева." />
+    <meta name="theme-color" content="#050505" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Меморандум" />
+    <link rel="manifest" href="/me/manifest.json" />
+    <link rel="icon" href="/me/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/me/icon.svg" />
+    <link rel="preload" href="/me/roman-hero.png" as="image" />
+    <link rel="stylesheet" href="/me/styles.css" />
   </head>
   <body>
-    <main class="shell">
-      <a class="brand" href="/" aria-label="На главную">
-        <span class="mark"><span>ИИ</span><span>41</span></span>
-      </a>
-
-      <section class="panel" id="lock" aria-labelledby="lock-title">
-        <span class="icon" aria-hidden="true">⌕</span>
-        <p class="eyebrow">Личный раздел</p>
-        <h1 id="lock-title">Введите пароль</h1>
-        <form id="form">
-          <label for="password">Пароль</label>
-          <input id="password" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="••••••" type="password" autocomplete="off" autofocus />
-          <p class="error" id="error" aria-live="polite"></p>
-          <button type="submit">Войти</button>
-        </form>
+    <noscript>Для работы личной системы нужен JavaScript.</noscript>
+    <div id="app">
+      <section class="boot-screen" aria-label="Загрузка">
+        <div class="boot-mark">RI</div>
+        <p>Собираю утро...</p>
       </section>
-
-      <section class="dashboard" id="dashboard" aria-labelledby="dashboard-title">
-        <p class="eyebrow">Личный раздел</p>
-        <h1 id="dashboard-title">Мой личный кабинет</h1>
-        <p>Закрытая часть сайта открыта. Здесь можно будет разместить личные материалы, ссылки, заметки, документы или внутренние страницы.</p>
-        <div class="grid">
-          <article><span>OK</span><p>При новом заходе на страницу пароль снова потребуется.</p></article>
-          <article><span>01</span><p>Личные материалы</p></article>
-          <article><span>02</span><p>Быстрые ссылки</p></article>
-          <article><span>03</span><p>Закрытые заметки</p></article>
-        </div>
-      </section>
-    </main>
-
+    </div>
     <script>
-      const form = document.querySelector("#form");
-      const input = document.querySelector("#password");
-      const error = document.querySelector("#error");
-      const lock = document.querySelector("#lock");
-      const dashboard = document.querySelector("#dashboard");
-
-      input.addEventListener("input", () => {
-        input.value = input.value.replace(/\D/g, "").slice(0, 6);
-        error.textContent = "";
-      });
-
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-
-        if (input.value === "251187") {
-          lock.style.display = "none";
-          dashboard.style.display = "block";
-          input.value = "";
-          return;
-        }
-
-        input.value = "";
-        error.textContent = "Неверный пароль. Попробуйте еще раз.";
-        input.focus();
-      });
+      window.MEMO_CONFIG = {
+        // Вставьте сюда URL опубликованного Google Apps Script Web App.
+        apiUrl: "",
+      };
     </script>
+    <script src="/me/app.js" defer></script>
   </body>
 </html>

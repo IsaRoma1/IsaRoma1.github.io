@@ -1,0 +1,19 @@
+{
+  "name": "Меморандум Романа",
+  "short_name": "Меморандум",
+  "description": "Личная утренняя операционная система Романа Исаева.",
+  "start_url": "/me/",
+  "scope": "/me/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#050505",
+  "background_color": "#050505",
+  "icons": [
+    {
+      "src": "/me/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
