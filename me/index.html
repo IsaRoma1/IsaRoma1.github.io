@@ -9,11 +9,61 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Меморандум" />
+    <script>
+      (function () {
+        var isPhone = /iPhone|iPod|Android.*Mobile/i.test(navigator.userAgent) || Math.min(screen.width, screen.height) <= 760;
+        if (isPhone) document.documentElement.classList.add("phone-layout");
+      })();
+    </script>
     <link rel="manifest" href="/me/manifest.json" />
     <link rel="icon" href="/me/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/me/icon.svg" />
     <link rel="preload" href="/me/roman-hero.png" as="image" />
     <style>
+      .phone-layout,
+      .phone-layout body,
+      .phone-layout #app {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+      }
+
+      .phone-layout .app-shell,
+      .phone-layout .content,
+      .phone-layout .hero,
+      .phone-layout .bottom-nav,
+      .phone-layout .bottom-nav-inner {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+      }
+
+      .phone-layout .content {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+      }
+
+      .phone-layout .hero-copy,
+      .phone-layout .hero-actions,
+      .phone-layout .hero-actions .button,
+      .phone-layout .lead,
+      .phone-layout h1 {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+      }
+
+      .phone-layout h1 {
+        font-size: 32px !important;
+        line-height: 1.08 !important;
+        overflow-wrap: anywhere !important;
+      }
+
+      .phone-layout .hero-actions {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+      }
+
       @media (max-width: 759px) {
         html,
         body,
@@ -55,7 +105,7 @@
         }
       }
     </style>
-    <link rel="stylesheet" href="/me/styles.css?v=atlas-5" />
+    <link rel="stylesheet" href="/me/styles.css?v=atlas-6" />
   </head>
   <body>
     <noscript>Для работы личной системы нужен JavaScript.</noscript>
@@ -71,6 +121,6 @@
         apiUrl: "",
       };
     </script>
-    <script src="/me/app.js?v=atlas-5" defer></script>
+    <script src="/me/app.js?v=atlas-6" defer></script>
   </body>
 </html>

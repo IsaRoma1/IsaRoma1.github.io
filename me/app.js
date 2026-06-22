@@ -156,6 +156,13 @@ const state = {
   modal: null
 };
 
+function enablePhoneLayout() {
+  const isPhone = /iPhone|iPod|Android.*Mobile/i.test(navigator.userAgent)
+    || Math.min(screen.width || 9999, screen.height || 9999) <= 760
+    || (window.visualViewport?.width || window.innerWidth) <= 760;
+  document.documentElement.classList.toggle("phone-layout", Boolean(isPhone));
+}
+
 function todayISO() {
   const formatter = new Intl.DateTimeFormat("en-CA", {
     timeZone: TZ,
@@ -957,6 +964,9 @@ async function handleAction(element) {
 }
 
 async function boot() {
+  enablePhoneLayout();
+  window.visualViewport?.addEventListener("resize", enablePhoneLayout);
+  window.addEventListener("orientationchange", enablePhoneLayout);
   renderLock();
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/me/sw.js")

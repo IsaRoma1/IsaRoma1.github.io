@@ -1989,6 +1989,192 @@ details[open] summary::after {
   }
 }
 
+.phone-layout,
+.phone-layout body {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+}
+
+.phone-layout body {
+  position: relative !important;
+}
+
+.phone-layout #app,
+.phone-layout .app-shell {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+}
+
+.phone-layout .topbar,
+.phone-layout .content,
+.phone-layout .bottom-nav {
+  left: 0 !important;
+  right: 0 !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+}
+
+.phone-layout .topbar-inner,
+.phone-layout .bottom-nav-inner {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+.phone-layout .content {
+  margin: 0 !important;
+  padding: 12px 10px 30px !important;
+}
+
+.phone-layout .section,
+.phone-layout .hero,
+.phone-layout .accordion,
+.phone-layout .card,
+.phone-layout .focus-card,
+.phone-layout .finance-card,
+.phone-layout .atlas-overview,
+.phone-layout .atlas-prime,
+.phone-layout .territory-grid,
+.phone-layout .habit-board,
+.phone-layout .focus-grid,
+.phone-layout .grid,
+.phone-layout .stack {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+.phone-layout .hero {
+  display: block !important;
+  min-height: auto !important;
+  border-radius: 24px !important;
+}
+
+.phone-layout .hero-image {
+  min-height: min(430px, 108vw) !important;
+}
+
+.phone-layout .hero-image img {
+  object-position: 58% 16% !important;
+}
+
+.phone-layout .hero-copy {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: -132px !important;
+  padding: 0 14px 18px !important;
+}
+
+.phone-layout .hero-command {
+  width: 100% !important;
+  max-width: 100% !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+}
+
+.phone-layout .hero-actions,
+.phone-layout .button-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.phone-layout .button,
+.phone-layout .tap-card,
+.phone-layout .mini-actions button,
+.phone-layout .bottom-nav button {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  white-space: normal !important;
+}
+
+.phone-layout .hero-actions .button,
+.phone-layout .button-row .button {
+  width: 100% !important;
+}
+
+.phone-layout h1 {
+  width: 100% !important;
+  max-width: 100% !important;
+  font-size: 32px !important;
+  line-height: 1.08 !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+.phone-layout h2 {
+  max-width: 100% !important;
+  font-size: 28px !important;
+  overflow-wrap: anywhere !important;
+}
+
+.phone-layout .lead,
+.phone-layout .hero-note,
+.phone-layout .fine-print,
+.phone-layout .goal-row p,
+.phone-layout .territory-tile span,
+.phone-layout .territory-tile strong,
+.phone-layout .territory-tile em,
+.phone-layout .goal-title strong,
+.phone-layout .category-title {
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+}
+
+.phone-layout .hero-stats,
+.phone-layout .metric-grid,
+.phone-layout .territory-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  overflow: visible !important;
+}
+
+.phone-layout .metric,
+.phone-layout .command-card,
+.phone-layout .territory-tile {
+  min-width: 0 !important;
+}
+
+.phone-layout .power-rail {
+  max-width: calc(100vw - 20px) !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.phone-layout .power-card {
+  flex-basis: min(82vw, 320px) !important;
+  min-width: 0 !important;
+}
+
+.phone-layout .bottom-nav {
+  overflow: hidden !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+.phone-layout .bottom-nav-inner {
+  gap: 4px !important;
+}
+
+.phone-layout .bottom-nav button {
+  padding-left: 2px !important;
+  padding-right: 2px !important;
+  border-radius: 14px !important;
+  font-size: 10px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
 @supports not (overflow: clip) {
   html,
   body,
