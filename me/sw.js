@@ -1,8 +1,8 @@
-const CACHE_NAME = "roman-memo-v2";
+const CACHE_NAME = "roman-memo-v3";
 const APP_SHELL = [
   "/me/",
   "/me/index.html",
-  "/me/styles.css",
+  "/me/styles.css?v=markethouse-1",
   "/me/app.js",
   "/me/manifest.json",
   "/me/icon.svg",
