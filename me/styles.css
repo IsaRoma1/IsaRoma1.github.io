@@ -62,11 +62,17 @@
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 body {
   margin: 0;
   min-width: 320px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
   background:
     radial-gradient(circle at 78% -6%, rgba(214, 179, 106, 0.18), transparent 22rem),
     radial-gradient(circle at 12% 8%, rgba(120, 166, 255, 0.12), transparent 18rem),
@@ -105,6 +111,13 @@ body::after {
 
 body.is-locked {
   overflow: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
 }
 
 button,
@@ -1796,5 +1809,190 @@ details[open] summary::after {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 759px) {
+  .app-shell,
+  .topbar,
+  .topbar-inner,
+  .content,
+  .section,
+  .hero,
+  .card,
+  .accordion,
+  .focus-card,
+  .finance-card,
+  .bottom-nav,
+  .bottom-nav-inner {
+    max-width: 100%;
+  }
+
+  .content {
+    overflow: clip;
+    padding-inline: 10px;
+  }
+
+  .section {
+    margin-top: 18px;
+  }
+
+  .hero {
+    width: 100%;
+    min-width: 0;
+    min-height: auto;
+    border-radius: 24px;
+    overflow: hidden;
+  }
+
+  .hero-image {
+    min-width: 0;
+    min-height: clamp(330px, 92vw, 440px);
+  }
+
+  .hero-image img {
+    object-position: 58% 16%;
+  }
+
+  .hero-copy {
+    width: 100%;
+    min-width: 0;
+    margin-top: -138px;
+    padding: 0 14px 18px;
+  }
+
+  h1 {
+    max-width: 100%;
+    font-size: clamp(30px, 9vw, 38px);
+    line-height: 1.04;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  h2 {
+    max-width: 100%;
+    font-size: clamp(25px, 7.4vw, 34px);
+    overflow-wrap: anywhere;
+  }
+
+  .lead {
+    max-width: 100%;
+    font-size: 15px;
+    overflow-wrap: break-word;
+  }
+
+  .kicker {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .hero-actions,
+  .button-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .button,
+  .tap-card {
+    width: 100%;
+    min-width: 0;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: visible;
+  }
+
+  .metric {
+    min-width: 0;
+  }
+
+  .metric strong,
+  .command-card strong,
+  .status-pill strong {
+    overflow-wrap: anywhere;
+  }
+
+  .hero-command {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: 1fr;
+    padding-inline: 14px;
+  }
+
+  .command-card {
+    min-width: 0;
+    min-height: 58px;
+  }
+
+  .power-rail {
+    max-width: calc(100vw - 20px);
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+
+  .power-card {
+    flex-basis: min(82vw, 320px);
+    min-width: 0;
+  }
+
+  .territory-grid,
+  .hero-stats,
+  .metric-grid {
+    gap: 8px;
+  }
+
+  .territory-tile {
+    min-width: 0;
+    min-height: 120px;
+    padding: 11px;
+  }
+
+  .territory-tile span,
+  .territory-tile strong,
+  .territory-tile em,
+  .goal-title strong,
+  .category-title {
+    overflow-wrap: anywhere;
+  }
+
+  .mini-actions {
+    max-width: 100%;
+  }
+
+  .bottom-nav {
+    overflow: hidden;
+    padding-inline: 8px;
+  }
+
+  .bottom-nav-inner {
+    width: 100%;
+    min-width: 0;
+    gap: 4px;
+  }
+
+  .bottom-nav button {
+    min-width: 0;
+    padding-inline: 2px;
+    border-radius: 14px;
+    font-size: clamp(10px, 3.1vw, 11px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sheet {
+    max-width: 100%;
+  }
+}
+
+@supports not (overflow: clip) {
+  html,
+  body,
+  .content {
+    overflow-x: hidden;
   }
 }

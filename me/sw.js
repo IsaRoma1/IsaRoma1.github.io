@@ -1,9 +1,9 @@
-const CACHE_NAME = "roman-memo-v6";
+const CACHE_NAME = "roman-memo-v7";
 const APP_SHELL = [
   "/me/",
   "/me/index.html",
-  "/me/styles.css?v=atlas-3",
-  "/me/app.js?v=atlas-3",
+  "/me/styles.css?v=atlas-4",
+  "/me/app.js?v=atlas-4",
   "/me/manifest.json",
   "/me/icon.svg",
   "/me/roman-hero.png"
