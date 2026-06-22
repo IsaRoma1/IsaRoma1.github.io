@@ -1,5 +1,20 @@
 :root {
   color-scheme: dark;
+  --background-primary: #08090d;
+  --background-secondary: #10131a;
+  --surface-base: #161a23;
+  --surface-elevated: #1d2230;
+  --surface-glass: rgba(22, 26, 35, 0.76);
+  --border-strong: rgba(214, 179, 106, 0.52);
+  --warning-refinement: #f0b45b;
+  --future-locked: #7d8492;
+  --travel: #76c7d8;
+  --finance: #d6b36a;
+  --health: #77d39b;
+  --mission: #b99cff;
+  --experience: #e08b72;
+  --learning: #9fb4ff;
+  --relationships: #e0c6a8;
   --bg-primary: #08090d;
   --bg-elevated: #10131a;
   --surface: #161a23;
@@ -14,16 +29,16 @@
   --success-completed: #6fd19a;
   --warning-refine: #f0b45b;
   --locked-future: #7d8492;
-  --category-travel: #76c7d8;
-  --category-money: #d6b36a;
-  --category-health: #77d39b;
-  --category-mission: #b99cff;
-  --category-experience: #e08b72;
-  --category-life: #e0c6a8;
-  --bg: var(--bg-primary);
-  --bg-2: var(--bg-elevated);
+  --category-travel: var(--travel);
+  --category-money: var(--finance);
+  --category-health: var(--health);
+  --category-mission: var(--mission);
+  --category-experience: var(--experience);
+  --category-life: var(--relationships);
+  --bg: var(--background-primary);
+  --bg-2: var(--background-secondary);
   --card: var(--surface-glass);
-  --card-strong: rgba(29, 33, 44, 0.92);
+  --card-strong: rgba(29, 34, 48, 0.92);
   --border: var(--border-subtle);
   --border-strong: var(--border-active);
   --text: var(--text-primary);
@@ -501,6 +516,7 @@ summary:focus-visible,
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
+  animation: atlas-reveal 420ms ease both;
 }
 
 .card,
@@ -748,10 +764,17 @@ details[open] summary::after {
 }
 
 .category-section summary {
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.category-title {
+  min-width: 0;
 }
 
 .category-summary {
+  justify-self: end;
   margin-right: 38px;
   color: var(--text-muted);
   font-size: 11px;
@@ -759,6 +782,24 @@ details[open] summary::after {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.category-route {
+  grid-column: 1 / -1;
+  position: relative;
+  overflow: hidden;
+  height: 6px;
+  margin-right: 38px;
+  border-radius: 999px;
+  background: rgba(232, 226, 214, 0.07);
+}
+
+.category-route span {
+  display: block;
+  width: max(8%, var(--category-progress, 0%));
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--cat), transparent);
 }
 
 .category-money,
@@ -796,6 +837,7 @@ details[open] summary::after {
   overflow: hidden;
   grid-template-columns: 1fr;
   border-color: color-mix(in srgb, var(--cat) 24%, rgba(232, 226, 214, 0.08));
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
 .goal-row::before {
@@ -813,12 +855,25 @@ details[open] summary::after {
     rgba(255, 255, 255, 0.045);
 }
 
+.goal-row:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--cat) 42%, rgba(232, 226, 214, 0.12));
+}
+
 .goal-future {
   opacity: 0.78;
 }
 
 .goal-completed {
   border-color: rgba(111, 209, 154, 0.22);
+}
+
+.goal-status-paused {
+  --cat: var(--warning-refinement);
+}
+
+.goal-status-next {
+  --cat: var(--future-locked);
 }
 
 .goal-title {
@@ -858,6 +913,7 @@ details[open] summary::after {
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, var(--cat), rgba(243, 239, 231, 0.76));
+  transition: width 260ms ease;
 }
 
 .mini-actions {
@@ -1228,5 +1284,16 @@ details[open] summary::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+}
+
+@keyframes atlas-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

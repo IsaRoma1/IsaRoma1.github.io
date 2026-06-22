@@ -622,10 +622,11 @@ function goalsSection(data) {
         const completed = goals.filter((goal) => goal.status === "done").length;
         const progress = goals.length ? Math.round((completed / goals.length) * 100) : 0;
         return html`
-          <details class="accordion category-section ${categoryClass(category)}" ${index < 2 ? "open" : ""}>
+          <details class="accordion category-section ${categoryClass(category)}" style="--category-progress:${progress}%" ${index < 2 ? "open" : ""}>
             <summary>
-              <span>${escapeHtml(category)}</span>
+              <span class="category-title">${escapeHtml(category)}</span>
               <span class="category-summary">${goals.length} целей · ${progress}%</span>
+              <span class="category-route" aria-hidden="true"><span></span></span>
             </summary>
             <div class="accordion-body stack">
               ${goals.length ? goals.map(goalRow).join("") : `<p class="empty">Здесь пока пусто. Цель появится, когда будет настоящая причина.</p>`}
@@ -642,7 +643,7 @@ function goalRow(goal) {
   const doneClass = goal.status === "done" ? " done" : "";
   const variant = goal.status === "active" ? "featured" : goal.status === "next" ? "future" : goal.status === "done" ? "completed" : "milestone";
   return html`
-    <article class="goal-row goal-${variant} ${categoryClass(goal.category)}${doneClass}" style="--goal-progress:${goalProgress(goal.status)}%">
+    <article class="goal-row goal-${variant} goal-status-${escapeHtml(goal.status)} ${categoryClass(goal.category)}${doneClass}" style="--goal-progress:${goalProgress(goal.status)}%">
       <div class="goal-title">
         <strong>${statusSymbol(goal.status)} ${escapeHtml(goal.title)}</strong>
         <span class="tag">${escapeHtml(goal.status)}</span>
