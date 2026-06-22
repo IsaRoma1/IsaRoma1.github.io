@@ -13,7 +13,49 @@
     <link rel="icon" href="/me/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/me/icon.svg" />
     <link rel="preload" href="/me/roman-hero.png" as="image" />
-    <link rel="stylesheet" href="/me/styles.css?v=atlas-4" />
+    <style>
+      @media (max-width: 759px) {
+        html,
+        body,
+        #app,
+        .app-shell,
+        .content,
+        .hero,
+        .bottom-nav,
+        .bottom-nav-inner {
+          width: 100% !important;
+          max-width: 100% !important;
+          overflow-x: hidden !important;
+        }
+
+        .content {
+          padding-left: 10px !important;
+          padding-right: 10px !important;
+        }
+
+        .hero-copy,
+        .hero-actions,
+        .hero-actions .button,
+        .lead,
+        h1 {
+          width: 100% !important;
+          max-width: 100% !important;
+          min-width: 0 !important;
+        }
+
+        h1 {
+          font-size: clamp(29px, 8.4vw, 36px) !important;
+          line-height: 1.06 !important;
+          overflow-wrap: anywhere !important;
+        }
+
+        .hero-actions {
+          display: grid !important;
+          grid-template-columns: minmax(0, 1fr) !important;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/me/styles.css?v=atlas-5" />
   </head>
   <body>
     <noscript>Для работы личной системы нужен JavaScript.</noscript>
@@ -29,6 +71,6 @@
         apiUrl: "",
       };
     </script>
-    <script src="/me/app.js?v=atlas-4" defer></script>
+    <script src="/me/app.js?v=atlas-5" defer></script>
   </body>
 </html>

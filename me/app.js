@@ -958,7 +958,11 @@ async function handleAction(element) {
 
 async function boot() {
   renderLock();
-  if ("serviceWorker" in navigator) navigator.serviceWorker.register("/me/sw.js").catch(() => {});
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/me/sw.js")
+      .then((registration) => registration.update())
+      .catch(() => {});
+  }
 }
 
 async function loadDashboard() {

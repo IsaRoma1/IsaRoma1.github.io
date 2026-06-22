@@ -1,9 +1,7 @@
-const CACHE_NAME = "roman-memo-v7";
+const CACHE_NAME = "roman-memo-v8";
 const APP_SHELL = [
-  "/me/",
-  "/me/index.html",
-  "/me/styles.css?v=atlas-4",
-  "/me/app.js?v=atlas-4",
+  "/me/styles.css?v=atlas-5",
+  "/me/app.js?v=atlas-5",
   "/me/manifest.json",
   "/me/icon.svg",
   "/me/roman-hero.png"
@@ -26,14 +24,27 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
+  if (event.request.mode === "navigate" || event.request.destination === "document") {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          return response;
+        })
+        .catch(() => caches.match(event.request).then((cached) => cached || caches.match("/me/index.html"))),
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request).then((response) => {
+      const fetched = fetch(event.request).then((response) => {
         const copy = response.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
         return response;
       });
+      return cached || fetched;
     }),
   );
 });
