@@ -399,7 +399,7 @@ function render() {
           <nav class="desktop-nav" aria-label="Навигация">${navButtons()}</nav>
         </div>
       </header>
-      <main class="content">
+      <main class="content atlas-canvas">
         ${morningSection(data, c)}
         ${powerSection()}
         ${habitsSection(data, c)}
@@ -485,6 +485,20 @@ function morningSection(data, c) {
           <div class="metric"><span>Доход месяца</span><strong>${currency(c.incomeTotal)}</strong></div>
         </div>
       </div>
+      <aside class="hero-command" aria-label="Состояние дня">
+        <div class="command-card">
+          <span>Сегодня</span>
+          <strong>${c.morningDone ? "выполнено" : "ожидает"}</strong>
+        </div>
+        <div class="command-card">
+          <span>Привычки</span>
+          <strong>${c.habitsDone}/${c.habitsTotal}</strong>
+        </div>
+        <div class="command-card">
+          <span>До 1 млн</span>
+          <strong>${currency(Math.max(0, Number(data.settings.monthly_income_target || 1000000) - c.incomeTotal))}</strong>
+        </div>
+      </aside>
     </section>
     <section class="section" id="memo">
       <details class="accordion" ${c.morningDone ? "open" : ""}>
@@ -497,12 +511,12 @@ function morningSection(data, c) {
 
 function powerSection() {
   return html`
-    <section class="section" id="power">
+    <section class="section vault-section" id="power">
       <div class="section-head">
         <h2>Мои суперсилы</h2>
         <p>Это не список приятных качеств для самоуспокоения. Это реальные рычаги, которые уже приносили результат.</p>
       </div>
-      <div class="grid two">
+      <div class="power-rail" aria-label="Карточки суперсил">
         ${superpowers.map((power) => html`
           <article class="card power-card">
             <h3>${escapeHtml(power.title)}</h3>
@@ -517,7 +531,7 @@ function powerSection() {
         <h2>Уже создано</h2>
         <p>Когда мозг говорит ты не двигаешься, я показываю ему факты.</p>
       </div>
-      <div class="card">
+      <div class="card achievement-vault">
         <ul class="done-list">${achievements.map((item) => `<li><span class="check">✓</span><span>${escapeHtml(item)}</span></li>`).join("")}</ul>
         <p class="fine-print">Я уже умею создавать результат. Моя задача сейчас не искать доказательства собственной ценности. Моя задача превратить силу в систему.</p>
       </div>
@@ -548,7 +562,7 @@ function habitsSection(data, c) {
         <div class="metric"><span>Текущая серия</span><strong>${c.morningStreak} дней</strong></div>
       </div>
       ${allDone ? `<p class="card fine-print">Система закрыта на сегодня. Теперь не обесценивай. Это и есть фундамент масштаба.</p>` : ""}
-      <div class="stack">
+      <div class="habit-board">
         ${data.habits.filter((habit) => habit.is_active).map((habit) => {
           const stats = habitStats(data, habit.id);
           return html`
@@ -580,7 +594,7 @@ function focusSection(data) {
     ["health", "Здоровье / энергия", "health_task", "health_trigger", "health_action", "health_limit"]
   ];
   return html`
-    <section class="section" id="focus">
+    <section class="section mission-board" id="focus">
       <div class="section-head">
         <h2>Фокус дня</h2>
         <p>Сегодня не нужно делать всё. Сегодня нужно сделать то, что двигает деньги, контент и энергию.</p>
@@ -608,11 +622,42 @@ function focusSection(data) {
 }
 
 function goalsSection(data) {
+  const visibleGoals = data.goals.filter((goal) => goal.status !== "removed");
+  const activeGoals = visibleGoals.filter((goal) => goal.status === "active").slice(0, 4);
   return html`
-    <section class="section" id="goals">
+    <section class="section atlas-map" id="goals">
       <div class="section-head">
         <h2>Цели</h2>
         <p>Не бесконечный список мечтаний. Компактная карта того, что я строю.</p>
+      </div>
+      <div class="atlas-overview">
+        <article class="atlas-prime">
+          <span class="atlas-label">Главные активные маршруты</span>
+          <div class="prime-goals">
+            ${activeGoals.map((goal) => html`
+              <div class="prime-goal ${categoryClass(goal.category)}">
+                <span>${escapeHtml(goal.category)}</span>
+                <strong>${escapeHtml(goal.title)}</strong>
+              </div>
+            `).join("")}
+          </div>
+        </article>
+        <div class="territory-grid" aria-label="Карта направлений">
+          ${categories.map((category) => {
+            const goals = visibleGoals.filter((goal) => goal.category === category);
+            const completed = goals.filter((goal) => goal.status === "done").length;
+            const active = goals.filter((goal) => goal.status === "active").length;
+            const progress = goals.length ? Math.round((completed / goals.length) * 100) : 0;
+            return html`
+              <button class="territory-tile ${categoryClass(category)}" data-category-jump="${escapeHtml(category)}" style="--category-progress:${progress}%">
+                <span>${escapeHtml(category)}</span>
+                <strong>${active} активных</strong>
+                <em>${goals.length} целей · ${progress}%</em>
+                <i aria-hidden="true"><b></b></i>
+              </button>
+            `;
+          }).join("")}
+        </div>
       </div>
       <div class="habit-meta">
         <span class="tag">● Активная</span><span class="tag">○ Следующая</span><span class="tag">✓ Выполнена</span><span class="tag">⏸ На паузе</span><span class="tag">✕ Больше не моя</span>
@@ -622,7 +667,7 @@ function goalsSection(data) {
         const completed = goals.filter((goal) => goal.status === "done").length;
         const progress = goals.length ? Math.round((completed / goals.length) * 100) : 0;
         return html`
-          <details class="accordion category-section ${categoryClass(category)}" style="--category-progress:${progress}%" ${index < 2 ? "open" : ""}>
+          <details class="accordion category-section ${categoryClass(category)}" data-category="${escapeHtml(category)}" style="--category-progress:${progress}%" ${index < 2 ? "open" : ""}>
             <summary>
               <span class="category-title">${escapeHtml(category)}</span>
               <span class="category-summary">${goals.length} целей · ${progress}%</span>
@@ -764,6 +809,15 @@ function bindEvents() {
     button.addEventListener("click", () => {
       const target = document.getElementById(button.dataset.scroll);
       if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  document.querySelectorAll("[data-category-jump]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const target = document.querySelector(`[data-category="${CSS.escape(button.dataset.categoryJump)}"]`);
+      if (!target) return;
+      target.open = true;
+      window.setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
     });
   });
 

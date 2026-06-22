@@ -1155,6 +1155,412 @@ details[open] summary::after {
   display: none;
 }
 
+.atlas-canvas {
+  position: relative;
+}
+
+.atlas-canvas::before {
+  content: "";
+  position: fixed;
+  left: 50%;
+  top: 82px;
+  z-index: -1;
+  width: min(86vw, 740px);
+  height: min(86vw, 740px);
+  pointer-events: none;
+  border: 1px solid rgba(214, 179, 106, 0.08);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(circle, rgba(214, 179, 106, 0.08), transparent 58%),
+    conic-gradient(from 210deg, rgba(214, 179, 106, 0.18), transparent 22%, rgba(120, 166, 255, 0.1), transparent 62%, rgba(111, 209, 154, 0.1), transparent);
+  mask-image: radial-gradient(circle, transparent 0 30%, #000 31% 61%, transparent 62%);
+  opacity: 0.72;
+}
+
+.hero {
+  display: grid;
+  align-content: stretch;
+  min-height: calc(100dvh - 80px);
+  border-color: rgba(214, 179, 106, 0.32);
+  background:
+    linear-gradient(180deg, rgba(8, 9, 13, 0.1), rgba(8, 9, 13, 0.96) 72%),
+    radial-gradient(circle at 56% 20%, rgba(214, 179, 106, 0.2), transparent 19rem),
+    #07080c;
+}
+
+.hero::before {
+  inset: 0;
+  border: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, rgba(232, 226, 214, 0.055) 1px, transparent 1px),
+    linear-gradient(rgba(232, 226, 214, 0.045) 1px, transparent 1px),
+    linear-gradient(180deg, transparent 0 62%, rgba(8, 9, 13, 0.92) 86%);
+  background-size: 52px 52px, 52px 52px, auto;
+  mask-image: linear-gradient(180deg, #000, transparent 84%);
+}
+
+.hero::after {
+  right: 18px;
+  bottom: 98px;
+  width: 150px;
+  height: 150px;
+  border-style: dashed;
+  opacity: 0.8;
+}
+
+.hero-image {
+  min-height: 455px;
+  margin: -1px;
+}
+
+.hero-image::before {
+  background:
+    radial-gradient(circle at 52% 33%, transparent 0 7rem, rgba(8, 9, 13, 0.08) 15rem, rgba(8, 9, 13, 0.9) 100%),
+    linear-gradient(180deg, rgba(8, 9, 13, 0.02), rgba(8, 9, 13, 0.28) 44%, #08090d 94%);
+}
+
+.hero-copy {
+  margin-top: -174px;
+  padding: 0 18px 22px;
+}
+
+.hero-command {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 0 18px 18px;
+}
+
+.command-card {
+  min-height: 72px;
+  border: 1px solid rgba(232, 226, 214, 0.1);
+  border-radius: 18px;
+  padding: 11px;
+  background: rgba(8, 9, 13, 0.68);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.command-card span {
+  display: block;
+  color: var(--soft);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.command-card strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.hero-stats {
+  grid-template-columns: repeat(4, minmax(118px, 1fr));
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scroll-snap-type: x proximity;
+}
+
+.hero-stats .metric {
+  scroll-snap-align: start;
+}
+
+.vault-section {
+  overflow: visible;
+}
+
+.power-rail {
+  display: flex;
+  gap: 12px;
+  margin: 0 -14px;
+  padding: 0 14px 4px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.power-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.power-card {
+  flex: 0 0 min(82vw, 340px);
+  min-height: 198px;
+  scroll-snap-align: start;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(214, 179, 106, 0.14), transparent 9rem),
+    rgba(18, 22, 31, 0.86);
+}
+
+.achievement-vault {
+  position: relative;
+  overflow: hidden;
+}
+
+.achievement-vault::after {
+  content: "";
+  position: absolute;
+  inset: auto 14px 14px auto;
+  width: 98px;
+  height: 98px;
+  border: 1px solid rgba(111, 209, 154, 0.2);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(111, 209, 154, 0.12), transparent 68%);
+}
+
+.habit-board {
+  display: grid;
+  gap: 10px;
+}
+
+.habit-card {
+  grid-template-columns: 1fr;
+  border-radius: 18px;
+  background:
+    linear-gradient(90deg, rgba(214, 179, 106, 0.09), transparent 42%),
+    rgba(18, 22, 31, 0.82);
+}
+
+.mission-board .focus-grid {
+  position: relative;
+}
+
+.mission-board .focus-card {
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(120, 166, 255, 0.09), transparent 38%),
+    rgba(18, 22, 31, 0.86);
+}
+
+.mission-board .focus-card:nth-child(2) {
+  background:
+    linear-gradient(180deg, rgba(224, 139, 114, 0.1), transparent 38%),
+    rgba(18, 22, 31, 0.86);
+}
+
+.mission-board .focus-card:nth-child(3) {
+  background:
+    linear-gradient(180deg, rgba(119, 211, 155, 0.1), transparent 38%),
+    rgba(18, 22, 31, 0.86);
+}
+
+.atlas-map {
+  position: relative;
+}
+
+.atlas-overview {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.atlas-prime {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(214, 179, 106, 0.24);
+  border-radius: 22px;
+  padding: 16px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(214, 179, 106, 0.16), transparent 12rem),
+    linear-gradient(135deg, rgba(29, 34, 48, 0.95), rgba(10, 12, 18, 0.96));
+  box-shadow: var(--shadow-soft);
+}
+
+.atlas-prime::before {
+  content: "";
+  position: absolute;
+  inset: 18px 16px auto auto;
+  width: 122px;
+  height: 122px;
+  border: 1px solid rgba(214, 179, 106, 0.16);
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, transparent 48%, rgba(214, 179, 106, 0.18) 49% 51%, transparent 52%),
+    linear-gradient(transparent 48%, rgba(214, 179, 106, 0.18) 49% 51%, transparent 52%);
+  opacity: 0.72;
+}
+
+.atlas-label {
+  display: block;
+  margin-bottom: 12px;
+  color: #ead19a;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.prime-goals {
+  display: grid;
+  gap: 9px;
+}
+
+.prime-goal {
+  --cat: var(--category-life);
+  position: relative;
+  display: grid;
+  gap: 4px;
+  border: 1px solid color-mix(in srgb, var(--cat) 26%, rgba(232, 226, 214, 0.08));
+  border-radius: 15px;
+  padding: 11px 12px 11px 36px;
+  background: color-mix(in srgb, var(--cat) 9%, rgba(255, 255, 255, 0.035));
+}
+
+.prime-goal::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 15px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--cat);
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--cat) 12%, transparent);
+}
+
+.prime-goal span {
+  color: var(--soft);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.prime-goal strong {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.territory-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.territory-tile {
+  --cat: var(--category-life);
+  min-height: 132px;
+  display: grid;
+  align-content: space-between;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--cat) 22%, rgba(232, 226, 214, 0.08));
+  border-radius: 18px;
+  padding: 13px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--cat) 15%, transparent), transparent 7rem),
+    rgba(18, 22, 31, 0.78);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.territory-tile:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--cat) 46%, rgba(232, 226, 214, 0.12));
+}
+
+.territory-tile span {
+  font-size: 13px;
+  font-weight: 950;
+  line-height: 1.2;
+}
+
+.territory-tile strong {
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.territory-tile em {
+  color: var(--soft);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.territory-tile i {
+  overflow: hidden;
+  display: block;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(232, 226, 214, 0.08);
+}
+
+.territory-tile b {
+  display: block;
+  width: max(8%, var(--category-progress, 0%));
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--cat), transparent);
+}
+
+.category-section {
+  margin-top: 12px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 0 0, color-mix(in srgb, var(--cat) 10%, transparent), transparent 12rem),
+    rgba(18, 22, 31, 0.82);
+}
+
+.category-section::before {
+  width: 0;
+}
+
+.category-section summary {
+  min-height: 76px;
+  padding: 16px;
+}
+
+.category-title {
+  font-size: 18px;
+  line-height: 1.18;
+}
+
+.category-summary {
+  justify-self: start;
+  grid-column: 1 / -1;
+  margin: 2px 38px 0 0;
+  color: color-mix(in srgb, var(--cat) 62%, var(--text-muted));
+}
+
+.category-route {
+  margin-top: 6px;
+}
+
+.goal-row {
+  border-radius: 16px;
+  padding: 13px 13px 13px 15px;
+}
+
+.goal-row::before {
+  width: 2px;
+}
+
+.goal-featured {
+  padding: 16px;
+  border-color: color-mix(in srgb, var(--cat) 42%, rgba(232, 226, 214, 0.08));
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--cat) 11%, transparent), transparent 54%),
+    rgba(255, 255, 255, 0.05);
+}
+
+.goal-title strong {
+  font-size: 15.5px;
+}
+
+.mini-actions {
+  margin: 2px -2px 0;
+}
+
+.mini-actions button {
+  min-height: 44px;
+  padding: 9px 12px;
+}
+
 @media (min-width: 760px) {
   .app-shell {
     padding-bottom: 0;
@@ -1284,6 +1690,101 @@ details[open] summary::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+}
+
+@media (min-width: 760px) {
+  .atlas-canvas::before {
+    top: 96px;
+    width: 720px;
+    height: 720px;
+    transform: translateX(-18%);
+  }
+
+  .hero {
+    min-height: 680px;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 0.72fr);
+    grid-template-rows: 1fr auto;
+  }
+
+  .hero-image {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    min-height: 680px;
+  }
+
+  .hero-copy {
+    grid-column: 1;
+    grid-row: 1;
+    margin-top: 0;
+    align-self: end;
+    padding: 56px 52px 22px;
+  }
+
+  .hero-command {
+    grid-column: 1;
+    grid-row: 2;
+    padding: 0 52px 46px;
+  }
+
+  .hero-stats {
+    overflow: visible;
+  }
+
+  .power-rail {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .power-card {
+    min-width: 0;
+    min-height: 240px;
+  }
+
+  .habit-board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .atlas-overview {
+    grid-template-columns: minmax(320px, 0.78fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .territory-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .atlas-prime {
+    min-height: 100%;
+  }
+
+  .prime-goals {
+    gap: 11px;
+  }
+
+  .category-section summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .category-summary {
+    justify-self: end;
+    grid-column: auto;
+    margin-top: 0;
+  }
+
+  .category-route {
+    grid-column: 1 / -1;
+  }
+
+  .category-section .accordion-body {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .category-section .button.secondary {
+    grid-column: 1 / -1;
   }
 }
 
