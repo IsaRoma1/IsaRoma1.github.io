@@ -362,6 +362,24 @@ function statusSymbol(status) {
   return { active: "●", next: "○", done: "✓", paused: "⏸", removed: "✕" }[status] || "○";
 }
 
+function categoryClass(category) {
+  const map = {
+    "Деньги и капитал": "category-money",
+    "Бизнес и продукты": "category-mission",
+    "Медийность и личный бренд": "category-experience",
+    "Здоровье и энергия": "category-health",
+    "Семья и образ жизни": "category-life",
+    "Навыки и мышление": "category-mission",
+    "Вклад и след": "category-mission",
+    "Путешествия и свобода": "category-travel"
+  };
+  return map[category] || "category-life";
+}
+
+function goalProgress(status) {
+  return { active: 52, next: 18, done: 100, paused: 34, removed: 0 }[status] ?? 18;
+}
+
 function render() {
   const data = state.dashboard;
   if (!data) return;
@@ -601,9 +619,14 @@ function goalsSection(data) {
       </div>
       ${categories.map((category, index) => {
         const goals = data.goals.filter((goal) => goal.category === category && goal.status !== "removed");
+        const completed = goals.filter((goal) => goal.status === "done").length;
+        const progress = goals.length ? Math.round((completed / goals.length) * 100) : 0;
         return html`
-          <details class="accordion" ${index < 2 ? "open" : ""}>
-            <summary>${escapeHtml(category)}</summary>
+          <details class="accordion category-section ${categoryClass(category)}" ${index < 2 ? "open" : ""}>
+            <summary>
+              <span>${escapeHtml(category)}</span>
+              <span class="category-summary">${goals.length} целей · ${progress}%</span>
+            </summary>
             <div class="accordion-body stack">
               ${goals.length ? goals.map(goalRow).join("") : `<p class="empty">Здесь пока пусто. Цель появится, когда будет настоящая причина.</p>`}
               <button class="button secondary" data-modal="goal" data-category="${escapeHtml(category)}">Добавить цель</button>
@@ -617,12 +640,14 @@ function goalsSection(data) {
 
 function goalRow(goal) {
   const doneClass = goal.status === "done" ? " done" : "";
+  const variant = goal.status === "active" ? "featured" : goal.status === "next" ? "future" : goal.status === "done" ? "completed" : "milestone";
   return html`
-    <article class="goal-row${doneClass}">
+    <article class="goal-row goal-${variant} ${categoryClass(goal.category)}${doneClass}" style="--goal-progress:${goalProgress(goal.status)}%">
       <div class="goal-title">
         <strong>${statusSymbol(goal.status)} ${escapeHtml(goal.title)}</strong>
         <span class="tag">${escapeHtml(goal.status)}</span>
       </div>
+      <div class="goal-route" aria-hidden="true"><span></span></div>
       ${goal.description ? `<p>${escapeHtml(goal.description)}</p>` : ""}
       ${goal.deadline ? `<p>Срок: ${escapeHtml(goal.deadline)}</p>` : ""}
       <div class="mini-actions">
@@ -716,6 +741,13 @@ function modalMarkup() {
           <label class="field">Название цели<input id="goal-title-input" value="${escapeHtml(goal?.title || "")}" /></label>
           <label class="field">Описание<textarea id="goal-description">${escapeHtml(goal?.description || "")}</textarea></label>
           <label class="field">Причина / зачем<textarea id="goal-reason">${escapeHtml(goal?.reason || "")}</textarea></label>
+          <fieldset class="quality-filter" aria-label="Проверка качества цели">
+            <legend>Проверка качества цели</legend>
+            <label><input type="checkbox" /> <span>цель завершённая</span></label>
+            <label><input type="checkbox" /> <span>цель измеримая</span></label>
+            <label><input type="checkbox" /> <span>цель конкретная</span></label>
+            <label><input type="checkbox" /> <span>цель доказуемая</span></label>
+          </fieldset>
           <label class="field">Статус<select id="goal-status">${["active", "next", "done", "paused", "removed"].map((s) => `<option value="${s}" ${goal?.status === s ? "selected" : ""}>${s}</option>`).join("")}</select></label>
           <label class="field">Срок<input id="goal-deadline" type="date" value="${escapeHtml(goal?.deadline || "")}" /></label>
           <label class="field">Заметки<textarea id="goal-notes">${escapeHtml(goal?.notes || "")}</textarea></label>
