@@ -641,8 +641,8 @@ function goalsSection(data) {
         <article class="atlas-prime">
           <span class="atlas-label">Главные активные маршруты</span>
           <div class="prime-goals">
-            ${activeGoals.map((goal) => html`
-              <div class="prime-goal ${categoryClass(goal.category)}">
+            ${activeGoals.map((goal, index) => html`
+              <div class="prime-goal motion-item ${categoryClass(goal.category)}" style="--motion-index:${index}">
                 <span>${escapeHtml(goal.category)}</span>
                 <strong>${escapeHtml(goal.title)}</strong>
               </div>
@@ -656,7 +656,7 @@ function goalsSection(data) {
             const active = goals.filter((goal) => goal.status === "active").length;
             const progress = goals.length ? Math.round((completed / goals.length) * 100) : 0;
             return html`
-              <button class="territory-tile ${categoryClass(category)}" data-category-jump="${escapeHtml(category)}" style="--category-progress:${progress}%">
+              <button class="territory-tile motion-item ${categoryClass(category)}" data-category-jump="${escapeHtml(category)}" style="--category-progress:${progress}%;--motion-index:${categories.indexOf(category)}">
                 <span>${escapeHtml(category)}</span>
                 <strong>${active} активных</strong>
                 <em>${goals.length} целей · ${progress}%</em>
@@ -674,14 +674,14 @@ function goalsSection(data) {
         const completed = goals.filter((goal) => goal.status === "done").length;
         const progress = goals.length ? Math.round((completed / goals.length) * 100) : 0;
         return html`
-          <details class="accordion category-section ${categoryClass(category)}" data-category="${escapeHtml(category)}" style="--category-progress:${progress}%" ${index < 2 ? "open" : ""}>
+          <details class="accordion category-section motion-item ${categoryClass(category)}" data-category="${escapeHtml(category)}" style="--category-progress:${progress}%;--motion-index:${index}" ${index < 2 ? "open" : ""}>
             <summary>
               <span class="category-title">${escapeHtml(category)}</span>
               <span class="category-summary">${goals.length} целей · ${progress}%</span>
               <span class="category-route" aria-hidden="true"><span></span></span>
             </summary>
             <div class="accordion-body stack">
-              ${goals.length ? goals.map(goalRow).join("") : `<p class="empty">Здесь пока пусто. Цель появится, когда будет настоящая причина.</p>`}
+              ${goals.length ? goals.map((goal, goalIndex) => goalRow(goal, goalIndex)).join("") : `<p class="empty">Здесь пока пусто. Цель появится, когда будет настоящая причина.</p>`}
               <button class="button secondary" data-modal="goal" data-category="${escapeHtml(category)}">Добавить цель</button>
             </div>
           </details>
@@ -691,11 +691,12 @@ function goalsSection(data) {
   `;
 }
 
-function goalRow(goal) {
+function goalRow(goal, index = 0) {
   const doneClass = goal.status === "done" ? " done" : "";
   const variant = goal.status === "active" ? "featured" : goal.status === "next" ? "future" : goal.status === "done" ? "completed" : "milestone";
   return html`
-    <article class="goal-row goal-${variant} goal-status-${escapeHtml(goal.status)} ${categoryClass(goal.category)}${doneClass}" style="--goal-progress:${goalProgress(goal.status)}%">
+    <article class="goal-row motion-item goal-${variant} goal-status-${escapeHtml(goal.status)} ${categoryClass(goal.category)}${doneClass}" style="--goal-progress:${goalProgress(goal.status)}%;--motion-index:${index}">
+      <span class="goal-orbit" aria-hidden="true"></span>
       <div class="goal-title">
         <strong>${statusSymbol(goal.status)} ${escapeHtml(goal.title)}</strong>
         <span class="tag">${escapeHtml(goal.status)}</span>
@@ -845,6 +846,21 @@ function bindEvents() {
       if (event.target === element || element.hasAttribute("data-close-modal")) closeModal();
     });
   });
+
+  const motionTargets = document.querySelectorAll(".section, .motion-item, .goal-route span, .category-route span, .progress span, .bar-track span");
+  if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const motionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          motionObserver.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.12 });
+    motionTargets.forEach((target) => motionObserver.observe(target));
+  } else {
+    motionTargets.forEach((target) => target.classList.add("is-visible"));
+  }
 
   const observer = new IntersectionObserver((entries) => {
     const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];

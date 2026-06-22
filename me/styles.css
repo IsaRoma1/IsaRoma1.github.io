@@ -54,6 +54,10 @@
   --shadow: 0 28px 90px rgba(0, 0, 0, 0.44);
   --shadow-soft: 0 18px 48px rgba(0, 0, 0, 0.28);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-fast: 180ms;
+  --motion-medium: 360ms;
+  --motion-slow: 520ms;
 }
 
 * {
@@ -529,7 +533,7 @@ summary:focus-visible,
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  animation: atlas-reveal 420ms ease both;
+  animation: atlas-reveal 520ms var(--motion-ease) both;
 }
 
 .card,
@@ -766,6 +770,7 @@ details[open] summary::after {
 .category-section {
   --cat: var(--category-life);
   position: relative;
+  isolation: isolate;
 }
 
 .category-section::before {
@@ -780,6 +785,7 @@ details[open] summary::after {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
+  transition: background var(--motion-fast) var(--motion-ease), color var(--motion-fast) var(--motion-ease);
 }
 
 .category-title {
@@ -813,6 +819,9 @@ details[open] summary::after {
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, var(--cat), transparent);
+  transform: scaleX(0.2);
+  transform-origin: 0 50%;
+  transition: transform 620ms var(--motion-ease);
 }
 
 .category-money,
@@ -850,7 +859,13 @@ details[open] summary::after {
   overflow: hidden;
   grid-template-columns: 1fr;
   border-color: color-mix(in srgb, var(--cat) 24%, rgba(232, 226, 214, 0.08));
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  transform: translateZ(0);
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    background var(--motion-fast) var(--motion-ease),
+    opacity var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease);
 }
 
 .goal-row::before {
@@ -861,6 +876,19 @@ details[open] summary::after {
   background: linear-gradient(180deg, var(--cat), transparent);
 }
 
+.goal-orbit {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid color-mix(in srgb, var(--cat) 24%, transparent);
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--cat) 11%, transparent), transparent 64%);
+  opacity: 0.62;
+  pointer-events: none;
+}
+
 .goal-featured {
   padding: 14px;
   background:
@@ -869,8 +897,9 @@ details[open] summary::after {
 }
 
 .goal-row:hover {
-  transform: translateY(-1px);
+  transform: translateY(-3px);
   border-color: color-mix(in srgb, var(--cat) 42%, rgba(232, 226, 214, 0.12));
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
 }
 
 .goal-future {
@@ -879,6 +908,9 @@ details[open] summary::after {
 
 .goal-completed {
   border-color: rgba(111, 209, 154, 0.22);
+  background:
+    linear-gradient(90deg, rgba(111, 209, 154, 0.1), transparent 52%),
+    rgba(255, 255, 255, 0.035);
 }
 
 .goal-status-paused {
@@ -926,7 +958,9 @@ details[open] summary::after {
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, var(--cat), rgba(243, 239, 231, 0.76));
-  transition: width 260ms ease;
+  transform: scaleX(0.12);
+  transform-origin: 0 50%;
+  transition: transform 620ms var(--motion-ease), width 260ms var(--motion-ease);
 }
 
 .mini-actions {
@@ -979,12 +1013,25 @@ details[open] summary::after {
   color: var(--muted);
   font-size: 13px;
   font-weight: 800;
+  cursor: pointer;
+  transition: border-color var(--motion-fast) var(--motion-ease), background var(--motion-fast) var(--motion-ease), transform var(--motion-fast) var(--motion-ease);
 }
 
 .quality-filter input {
   width: 18px;
   height: 18px;
   accent-color: var(--accent);
+}
+
+.quality-filter label:has(input:checked) {
+  border-color: rgba(214, 179, 106, 0.36);
+  background: rgba(214, 179, 106, 0.11);
+  color: var(--text);
+}
+
+.quality-filter label:hover {
+  transform: translateY(-1px);
+  border-color: rgba(214, 179, 106, 0.26);
 }
 
 .progress {
@@ -1001,6 +1048,9 @@ details[open] summary::after {
   width: var(--progress, 0%);
   border-radius: inherit;
   background: linear-gradient(90deg, var(--accent), var(--success));
+  transform: scaleX(0.08);
+  transform-origin: 0 50%;
+  transition: transform 680ms var(--motion-ease), width 260ms var(--motion-ease);
 }
 
 .bars {
@@ -1030,6 +1080,9 @@ details[open] summary::after {
   height: 100%;
   border-radius: inherit;
   background: var(--accent);
+  transform: scaleX(0.08);
+  transform-origin: 0 50%;
+  transition: transform 620ms var(--motion-ease);
 }
 
 .toast {
@@ -1105,6 +1158,7 @@ details[open] summary::after {
 
 .dialog-backdrop.show {
   display: flex;
+  animation: backdrop-in 180ms var(--motion-ease) both;
 }
 
 .sheet {
@@ -1118,6 +1172,7 @@ details[open] summary::after {
     radial-gradient(circle at 100% 0%, rgba(214, 179, 106, 0.12), transparent 12rem),
     #11141d;
   box-shadow: var(--shadow);
+  animation: sheet-in 260ms var(--motion-ease) both;
 }
 
 .sheet-head {
@@ -1704,6 +1759,17 @@ details[open] summary::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
+
+  .section,
+  .motion-item,
+  .goal-route span,
+  .category-route span,
+  .progress span,
+  .bar-track span {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
 }
 
 @media (min-width: 760px) {
@@ -1809,6 +1875,111 @@ details[open] summary::after {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+.section,
+.motion-item {
+  animation-delay: calc(var(--motion-index, 0) * 38ms);
+}
+
+.section:not(.hero) {
+  opacity: 0.001;
+  transform: translateY(14px);
+  filter: blur(5px);
+  transition:
+    opacity var(--motion-slow) var(--motion-ease),
+    transform var(--motion-slow) var(--motion-ease),
+    filter var(--motion-slow) var(--motion-ease);
+}
+
+.section.is-visible,
+.section.hero {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.motion-item {
+  opacity: 0.001;
+  transform: translateY(10px);
+  transition:
+    opacity var(--motion-medium) var(--motion-ease),
+    transform var(--motion-medium) var(--motion-ease),
+    border-color var(--motion-fast) var(--motion-ease),
+    background var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) var(--motion-ease);
+  transition-delay: calc(var(--motion-index, 0) * 38ms);
+}
+
+.motion-item.is-visible,
+.section.is-visible .motion-item {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.goal-route span.is-visible,
+.category-route span.is-visible,
+.progress span.is-visible,
+.bar-track span.is-visible,
+.section.is-visible .goal-route span,
+.section.is-visible .category-route span,
+.section.is-visible .progress span,
+.section.is-visible .bar-track span {
+  transform: scaleX(1);
+}
+
+details[open].category-section {
+  border-color: color-mix(in srgb, var(--cat) 34%, rgba(232, 226, 214, 0.1));
+}
+
+details[open].category-section summary {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--cat) 8%, transparent), transparent);
+}
+
+.territory-tile:focus-visible,
+.goal-row:focus-within,
+.focus-card:focus-within,
+.finance-card:focus-within,
+.card:focus-within {
+  outline: 3px solid color-mix(in srgb, var(--cat, var(--accent)) 32%, transparent);
+  outline-offset: 2px;
+}
+
+.goal-status-active .tag {
+  border-color: color-mix(in srgb, var(--cat) 32%, rgba(232, 226, 214, 0.1));
+  background: color-mix(in srgb, var(--cat) 11%, rgba(255, 255, 255, 0.04));
+  color: var(--text);
+}
+
+.goal-status-done .tag {
+  border-color: rgba(111, 209, 154, 0.32);
+  background: rgba(111, 209, 154, 0.1);
+  color: #b8f1cc;
+}
+
+.goal-status-next .tag,
+.goal-status-paused .tag {
+  color: rgba(243, 239, 231, 0.62);
+}
+
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
