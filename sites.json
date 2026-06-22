@@ -1,0 +1,56 @@
+{
+  "generatedAt": "2026-06-22T21:59:46.579Z",
+  "count": 5,
+  "sites": [
+    {
+      "slug": "1",
+      "path": "/1/",
+      "sourcePath": "/1/",
+      "title": "ТО организма v1",
+      "description": "Первый мобильный PWA-дневник здоровья: check-in, индекс ресурса, карта организма, анализы, миссии, паспорт здоровья и отчёт для врача.",
+      "type": "Health PWA",
+      "status": "published",
+      "accent": "health"
+    },
+    {
+      "slug": "2",
+      "path": "/2/",
+      "sourcePath": "/2/",
+      "title": "ТО организма v2",
+      "description": "Обновлённая версия health-приложения с визуальной картой систем, смысловыми контурами, демо-режимами, анализами и профилактическим ТО.",
+      "type": "Health PWA",
+      "status": "published",
+      "accent": "health-dark"
+    },
+    {
+      "slug": "lab",
+      "path": "/lab/",
+      "sourcePath": "/lab/",
+      "title": "Кардиодолголетие",
+      "description": "Лендинг программы Dr. Isaeva по управлению сердечно-сосудистыми и метаболическими рисками: карта рисков, medical roadmap и сопровождение.",
+      "type": "Medical landing",
+      "status": "published",
+      "accent": "medical"
+    },
+    {
+      "slug": "mi",
+      "path": "/mi/",
+      "sourcePath": "/me/",
+      "title": "Меморандум Романа",
+      "description": "Личная утренняя операционная система Романа Исаева: состояние дня, фокус, привычки, цели, деньги и личные правила.",
+      "type": "Personal OS",
+      "status": "private",
+      "accent": "personal"
+    },
+    {
+      "slug": "csv",
+      "path": "/csv/",
+      "sourcePath": "/csv/",
+      "title": "Снижение веса с Анной Исаевой",
+      "description": "Лендинг индивидуального 3-месячного сопровождения врача: программа снижения веса, подход, маршрут пациента, стоимость и запись.",
+      "type": "Medical landing",
+      "status": "published",
+      "accent": "care"
+    }
+  ]
+}

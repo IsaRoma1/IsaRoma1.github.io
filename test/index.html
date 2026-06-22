@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Каталог проектов ИИ41</title>
+    <meta
+      name="description"
+      content="Автоматический каталог внутренних проектов и отдельных разделов сайта ii41.ru."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon-ai.svg?v=3" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #06070a;
+        --panel: #10131a;
+        --panel-strong: #151a24;
+        --line: rgba(232, 226, 214, 0.13);
+        --text: #f3efe7;
+        --muted: rgba(243, 239, 231, 0.7);
+        --quiet: rgba(243, 239, 231, 0.48);
+        --accent: #d6b36a;
+        --accent-2: #78a6ff;
+        --danger: #e08b72;
+        --max: 1120px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background:
+          radial-gradient(circle at 16% -12%, rgba(214, 179, 106, 0.18), transparent 28rem),
+          radial-gradient(circle at 88% 2%, rgba(120, 166, 255, 0.12), transparent 26rem),
+          linear-gradient(180deg, #06070a 0%, #090b11 48%, #050609 100%);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        letter-spacing: 0;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .shell {
+        width: min(100% - 32px, var(--max));
+        margin: 0 auto;
+        padding: 28px 0 48px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        min-height: 56px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border: 1px solid rgba(243, 239, 231, 0.72);
+        border-radius: 12px;
+        background: #f4f1ea;
+        color: #111;
+        font-family: Arial Black, Impact, system-ui, sans-serif;
+        font-size: 13px;
+        font-weight: 900;
+        transform: skewX(-12deg) rotate(-4deg);
+      }
+
+      .home-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0 14px;
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 700;
+        transition: border-color 180ms ease, color 180ms ease, background 180ms ease;
+      }
+
+      .home-link:hover,
+      .home-link:focus-visible {
+        border-color: rgba(214, 179, 106, 0.55);
+        background: rgba(214, 179, 106, 0.08);
+        color: var(--text);
+        outline: none;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 28px;
+        align-items: end;
+        padding: 82px 0 34px;
+      }
+
+      h1 {
+        max-width: 760px;
+        margin: 0;
+        font-size: 58px;
+        line-height: 0.95;
+        letter-spacing: -0.035em;
+        text-wrap: balance;
+      }
+
+      .lead {
+        max-width: 690px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.55;
+        text-wrap: pretty;
+      }
+
+      .summary {
+        min-width: 210px;
+        border: 1px solid rgba(214, 179, 106, 0.32);
+        border-radius: 16px;
+        padding: 18px;
+        background: rgba(16, 19, 26, 0.72);
+      }
+
+      .summary span {
+        display: block;
+        color: var(--quiet);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .summary strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 34px;
+        line-height: 1;
+      }
+
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        padding: 16px 0;
+      }
+
+      .status {
+        color: var(--quiet);
+        font-size: 14px;
+      }
+
+      .reload {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        border: 1px solid rgba(120, 166, 255, 0.3);
+        border-radius: 12px;
+        padding: 0 14px;
+        color: var(--text);
+        background: rgba(120, 166, 255, 0.1);
+        font: inherit;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 14px;
+        padding-top: 22px;
+      }
+
+      .site-card {
+        position: relative;
+        min-height: 248px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
+        background: linear-gradient(180deg, rgba(21, 26, 36, 0.94), rgba(13, 16, 23, 0.94));
+        transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      }
+
+      .site-card:hover,
+      .site-card:focus-within {
+        transform: translateY(-2px);
+        border-color: rgba(214, 179, 106, 0.4);
+        background: linear-gradient(180deg, rgba(26, 31, 42, 0.98), rgba(13, 16, 23, 0.98));
+      }
+
+      .site-card::before {
+        content: "";
+        display: block;
+        width: 42px;
+        height: 4px;
+        border-radius: 999px;
+        background: var(--card-accent, var(--accent));
+        margin-bottom: 18px;
+      }
+
+      .site-card[data-accent="health"] {
+        --card-accent: #6fd19a;
+      }
+
+      .site-card[data-accent="health-dark"] {
+        --card-accent: #39ff88;
+      }
+
+      .site-card[data-accent="medical"] {
+        --card-accent: #d7ff35;
+      }
+
+      .site-card[data-accent="personal"] {
+        --card-accent: #d6b36a;
+      }
+
+      .site-card[data-accent="care"] {
+        --card-accent: #e08b72;
+      }
+
+      .card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .slug {
+        color: var(--text);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .badge {
+        border: 1px solid rgba(243, 239, 231, 0.13);
+        border-radius: 999px;
+        padding: 5px 9px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .site-card h2 {
+        margin: 0;
+        font-size: 24px;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        text-wrap: balance;
+      }
+
+      .site-card p {
+        margin: 12px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.5;
+        text-wrap: pretty;
+      }
+
+      .card-footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 22px;
+      }
+
+      .type {
+        color: var(--quiet);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .open {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        border-radius: 12px;
+        padding: 0 13px;
+        background: var(--text);
+        color: #08090d;
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .empty {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
+        color: var(--muted);
+        background: rgba(16, 19, 26, 0.62);
+      }
+
+      @media (max-width: 760px) {
+        .shell {
+          width: min(100% - 24px, var(--max));
+          padding-top: 18px;
+        }
+
+        .topbar {
+          align-items: flex-start;
+        }
+
+        .brand span:not(.brand-mark) {
+          display: none;
+        }
+
+        .hero {
+          grid-template-columns: 1fr;
+          padding: 54px 0 26px;
+        }
+
+        h1 {
+          font-size: 40px;
+        }
+
+        .lead {
+          font-size: 16px;
+        }
+
+        .summary {
+          min-width: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 1ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="На главную ИИ41">
+          <span class="brand-mark" aria-hidden="true">ИИ41</span>
+          <span>Каталог проектов</span>
+        </a>
+        <a class="home-link" href="/">На главную</a>
+      </header>
+
+      <section class="hero" aria-labelledby="title">
+        <div>
+          <h1 id="title">Все отдельные разделы сайта в одном месте</h1>
+          <p class="lead">
+            Каталог собирается из папок сайта при сборке. Если добавить новый раздел с собственным
+            <code>index.html</code>, он появится здесь после следующей публикации.
+          </p>
+        </div>
+        <aside class="summary" aria-label="Сводка">
+          <span>Найдено разделов</span>
+          <strong id="site-count">...</strong>
+        </aside>
+      </section>
+
+      <section class="toolbar" aria-label="Статус каталога">
+        <div class="status" id="status">Загружаю sites.json</div>
+        <button class="reload" type="button" id="reload">Обновить список</button>
+      </section>
+
+      <section class="grid" id="grid" aria-live="polite"></section>
+    </main>
+
+    <script>
+      const grid = document.getElementById("grid");
+      const statusEl = document.getElementById("status");
+      const countEl = document.getElementById("site-count");
+      const reloadButton = document.getElementById("reload");
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;");
+      }
+
+      function card(site) {
+        const path = site.path || `/${site.slug}/`;
+        return `
+          <article class="site-card" data-accent="${escapeHtml(site.accent || "default")}">
+            <div class="card-top">
+              <span class="slug">${escapeHtml(path)}</span>
+              <span class="badge">${escapeHtml(site.status || "published")}</span>
+            </div>
+            <h2>${escapeHtml(site.title || path)}</h2>
+            <p>${escapeHtml(site.description || "Описание раздела пока не заполнено.")}</p>
+            <div class="card-footer">
+              <span class="type">${escapeHtml(site.type || "Project")}</span>
+              <a class="open" href="${escapeHtml(path)}">Открыть</a>
+            </div>
+          </article>
+        `;
+      }
+
+      async function loadSites() {
+        statusEl.textContent = "Загружаю sites.json";
+        grid.innerHTML = "";
+
+        try {
+          const response = await fetch(`/sites.json?v=${Date.now()}`, { cache: "no-store" });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const data = await response.json();
+          const sites = Array.isArray(data.sites) ? data.sites : [];
+
+          countEl.textContent = sites.length;
+          statusEl.textContent = data.generatedAt
+            ? `Обновлено: ${new Date(data.generatedAt).toLocaleString("ru-RU")}`
+            : "Каталог загружен";
+          grid.innerHTML = sites.length
+            ? sites.map(card).join("")
+            : '<div class="empty">Пока нет разделов с index.html.</div>';
+        } catch (error) {
+          countEl.textContent = "0";
+          statusEl.textContent = "Не удалось загрузить sites.json";
+          grid.innerHTML =
+            '<div class="empty">Запустите сборку или команду <code>npm run generate:sites</code>, чтобы создать список разделов.</div>';
+        }
+      }
+
+      reloadButton.addEventListener("click", loadSites);
+      loadSites();
+    </script>
+  </body>
+</html>
