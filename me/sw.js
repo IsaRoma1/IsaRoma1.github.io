@@ -1,4 +1,4 @@
-const CACHE_NAME = "roman-memo-v1";
+const CACHE_NAME = "roman-memo-v2";
 const APP_SHELL = [
   "/me/",
   "/me/index.html",

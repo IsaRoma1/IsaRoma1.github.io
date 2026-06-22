@@ -1,6 +1,7 @@
 const API_URL = window.MEMO_CONFIG?.apiUrl || "";
 const TZ = "Asia/Yekaterinburg";
 const STORAGE_KEY = "roman-memo-demo-v1";
+const ACCESS_PASSWORD = "251187";
 
 const morningText = [
   "Я Роман Исаев.",
@@ -147,6 +148,8 @@ const defaultFocus = {
 
 const state = {
   dashboard: null,
+  unlocked: false,
+  lockError: "",
   saving: {},
   toast: "",
   activeNav: "morning",
@@ -395,6 +398,43 @@ function render() {
   bindEvents();
   updateActiveNav();
   if (state.toast) requestAnimationFrame(() => document.getElementById("toast")?.classList.add("show"));
+}
+
+function renderLock() {
+  document.getElementById("app").innerHTML = html`
+    <main class="lock-screen">
+      <section class="lock-card" aria-labelledby="lock-title">
+        <div class="app-mark">RI</div>
+        <p class="kicker">Закрытый раздел</p>
+        <h1 id="lock-title">Введите пароль</h1>
+        <p class="lead">Личная утренняя система открывается только после входа.</p>
+        <form id="lock-form" class="field-grid">
+          <label class="field">Пароль<input id="lock-password" type="password" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="••••••" autofocus /></label>
+          ${state.lockError ? `<p class="personal-error">${escapeHtml(state.lockError)}</p>` : ""}
+          <button class="button primary" type="submit">Войти</button>
+        </form>
+      </section>
+    </main>
+  `;
+
+  document.getElementById("lock-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const value = document.getElementById("lock-password").value;
+    if (value !== ACCESS_PASSWORD) {
+      state.lockError = "Неверный пароль. Попробуйте ещё раз.";
+      renderLock();
+      return;
+    }
+
+    state.unlocked = true;
+    state.lockError = "";
+    await loadDashboard();
+  });
+
+  document.getElementById("lock-password").addEventListener("input", (event) => {
+    event.target.value = event.target.value.replace(/\D/g, "").slice(0, 6);
+    state.lockError = "";
+  });
 }
 
 function navButtons() {
@@ -830,10 +870,14 @@ async function handleAction(element) {
 }
 
 async function boot() {
+  renderLock();
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("/me/sw.js").catch(() => {});
+}
+
+async function loadDashboard() {
   try {
     state.dashboard = await api("getDashboard");
     render();
-    if ("serviceWorker" in navigator) navigator.serviceWorker.register("/me/sw.js").catch(() => {});
   } catch (error) {
     console.error(error);
     state.dashboard = loadLocal();

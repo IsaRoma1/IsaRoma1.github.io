@@ -88,6 +88,28 @@ a {
   color: var(--muted);
 }
 
+.lock-screen {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.lock-card {
+  width: min(100%, 390px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(216, 168, 78, 0.16), transparent 14rem),
+    rgba(255, 255, 255, 0.055);
+}
+
+.lock-card h1 {
+  margin-bottom: 10px;
+  font-size: 34px;
+}
+
 .app-shell {
   min-height: 100dvh;
   padding-bottom: calc(86px + var(--safe-bottom));
