@@ -387,13 +387,51 @@ function goalProgress(status) {
   return { active: 52, next: 18, done: 100, paused: 34, removed: 0 }[status] ?? 18;
 }
 
+function signalGraphic(type = "core", value = 54) {
+  const safeValue = Math.max(6, Math.min(100, Number(value) || 54));
+  return html`
+    <span class="signal-graphic signal-${escapeHtml(type)}" aria-hidden="true" style="--signal:${safeValue}%">
+      <span class="signal-orb"></span>
+      <span class="signal-ring"></span>
+      <span class="signal-bars"><i></i><i></i><i></i></span>
+    </span>
+  `;
+}
+
+function miniInfographic(type = "map", value = 48) {
+  const safeValue = Math.max(8, Math.min(100, Number(value) || 48));
+  return html`
+    <span class="mini-infographic mini-${escapeHtml(type)}" aria-hidden="true" style="--mini:${safeValue}%">
+      <svg viewBox="0 0 120 82" focusable="false">
+        <path class="terrain" d="M8 24 C28 12 42 30 60 20 C80 9 93 22 112 14" />
+        <path class="terrain muted" d="M8 45 C26 36 42 52 62 40 C80 30 96 48 112 38" />
+        <path class="route" d="M14 66 C34 48 48 68 64 46 C78 28 92 45 108 22" />
+        <circle class="node a" cx="14" cy="66" r="4" />
+        <circle class="node b" cx="64" cy="46" r="4" />
+        <circle class="node c" cx="108" cy="22" r="4" />
+      </svg>
+      <span class="mini-fill"></span>
+    </span>
+  `;
+}
+
+function focusFigure(type) {
+  const icons = { business: "₽", content: "▶", health: "⌁" };
+  return html`
+    <span class="focus-figure figure-${escapeHtml(type)}" aria-hidden="true">
+      <span>${icons[type] || "•"}</span>
+      <i></i>
+    </span>
+  `;
+}
+
 function render() {
   const data = state.dashboard;
   if (!data) return;
   const c = compute(data);
 
   document.getElementById("app").innerHTML = html`
-    <div class="app-shell">
+    <div class="app-shell neon-skins-shell">
       <header class="topbar">
         <div class="topbar-inner">
           <div class="app-mark">RI</div>
@@ -407,6 +445,8 @@ function render() {
         </div>
       </header>
       <main class="content atlas-canvas">
+        <div class="scene-glow glow-a" aria-hidden="true"></div>
+        <div class="scene-glow glow-b" aria-hidden="true"></div>
         ${morningSection(data, c)}
         ${powerSection()}
         ${habitsSection(data, c)}
@@ -474,8 +514,11 @@ function navButtons() {
 
 function morningSection(data, c) {
   return html`
-    <section class="hero section" id="morning">
-      <div class="hero-image"><img src="/me/roman-hero.png" alt="Роман Исаев в тёмном кинематографичном свете" /></div>
+    <section class="hero section parallax-zone" id="morning">
+      <div class="hero-orbit" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="hero-image parallax-item" data-parallax="0.10"><img src="/me/roman-hero.png" alt="Роман Исаев в тёмном кинематографичном свете" /></div>
       <div class="hero-copy">
         <p class="kicker">Личная система утра</p>
         <h1>Роман Исаев. День начинается с выбора состояния.</h1>
@@ -486,22 +529,25 @@ function morningSection(data, c) {
         </div>
         <p class="hero-note">${c.morningDone ? "Утро уже начато. Второй раз система не считает." : "Нажатие фиксирует сегодняшний утренний ритуал. Один день. Один выбор. Одна точка возвращения к себе."}</p>
         <div class="hero-stats">
-          <div class="metric"><span>Серия утра</span><strong>${c.morningStreak} дней</strong></div>
-          <div class="metric"><span>С начала пути</span><strong>${c.morningTotal} из ${c.totalDays}</strong></div>
-          <div class="metric"><span>Привычки сегодня</span><strong>${c.habitsDone}/${c.habitsTotal}</strong></div>
-          <div class="metric"><span>Доход месяца</span><strong>${currency(c.incomeTotal)}</strong></div>
+          <div class="metric metric-skin">${signalGraphic("streak", Math.min(100, c.morningStreak * 12))}<span>Серия утра</span><strong>${c.morningStreak} дней</strong></div>
+          <div class="metric metric-skin">${signalGraphic("path", Math.min(100, (c.morningTotal / Math.max(1, c.totalDays)) * 100))}<span>С начала пути</span><strong>${c.morningTotal} из ${c.totalDays}</strong></div>
+          <div class="metric metric-skin">${signalGraphic("habit", Math.min(100, (c.habitsDone / Math.max(1, c.habitsTotal)) * 100))}<span>Привычки сегодня</span><strong>${c.habitsDone}/${c.habitsTotal}</strong></div>
+          <div class="metric metric-skin">${signalGraphic("money", Math.min(100, c.incomeProgress))}<span>Доход месяца</span><strong>${currency(c.incomeTotal)}</strong></div>
         </div>
       </div>
       <aside class="hero-command" aria-label="Состояние дня">
         <div class="command-card">
+          ${miniInfographic("state", c.morningDone ? 100 : 28)}
           <span>Сегодня</span>
           <strong>${c.morningDone ? "выполнено" : "ожидает"}</strong>
         </div>
         <div class="command-card">
+          ${miniInfographic("habits", Math.min(100, (c.habitsDone / Math.max(1, c.habitsTotal)) * 100))}
           <span>Привычки</span>
           <strong>${c.habitsDone}/${c.habitsTotal}</strong>
         </div>
         <div class="command-card">
+          ${miniInfographic("capital", Math.min(100, c.incomeProgress))}
           <span>До 1 млн</span>
           <strong>${currency(Math.max(0, Number(data.settings.monthly_income_target || 1000000) - c.incomeTotal))}</strong>
         </div>
@@ -524,8 +570,9 @@ function powerSection() {
         <p>Это не список приятных качеств для самоуспокоения. Это реальные рычаги, которые уже приносили результат.</p>
       </div>
       <div class="power-rail" aria-label="Карточки суперсил">
-        ${superpowers.map((power) => html`
-          <article class="card power-card">
+        ${superpowers.map((power, index) => html`
+          <article class="card power-card parallax-card" style="--motion-index:${index};--tilt:${(index % 5) - 2}">
+            ${miniInfographic("power", 28 + ((index * 9) % 62))}
             <h3>${escapeHtml(power.title)}</h3>
             <p>${escapeHtml(power.evidence)}</p>
             <p class="rule">${escapeHtml(power.today_rule)}</p>
@@ -570,10 +617,11 @@ function habitsSection(data, c) {
       </div>
       ${allDone ? `<p class="card fine-print">Система закрыта на сегодня. Теперь не обесценивай. Это и есть фундамент масштаба.</p>` : ""}
       <div class="habit-board">
-        ${data.habits.filter((habit) => habit.is_active).map((habit) => {
+        ${data.habits.filter((habit) => habit.is_active).map((habit, index) => {
           const stats = habitStats(data, habit.id);
           return html`
-            <article class="card habit-card">
+            <article class="card habit-card parallax-card" style="--motion-index:${index};--habit:${stats.doneToday ? 100 : Math.min(100, stats.streak * 14)}">
+              ${signalGraphic(stats.doneToday ? "done" : "wait", stats.doneToday ? 100 : Math.min(100, stats.streak * 14))}
               <div>
                 <h3>${escapeHtml(habit.title)}</h3>
                 <p>${escapeHtml(habit.description)}</p>
@@ -608,7 +656,8 @@ function focusSection(data) {
       </div>
       <div class="focus-grid">
         ${items.map(([type, title, task, trigger, action, limit]) => html`
-          <article class="focus-card">
+          <article class="focus-card parallax-card">
+            ${focusFigure(type)}
             <h3>${title}</h3>
             <div class="field-grid">
               <label class="field">Задача<textarea data-focus="${task}">${escapeHtml(focus[task] || "")}</textarea></label>
@@ -643,6 +692,7 @@ function goalsSection(data) {
           <div class="prime-goals">
             ${activeGoals.map((goal, index) => html`
               <div class="prime-goal motion-item ${categoryClass(goal.category)}" style="--motion-index:${index}">
+                ${miniInfographic("prime", goalProgress(goal.status))}
                 <span>${escapeHtml(goal.category)}</span>
                 <strong>${escapeHtml(goal.title)}</strong>
               </div>
@@ -657,6 +707,7 @@ function goalsSection(data) {
             const progress = goals.length ? Math.round((completed / goals.length) * 100) : 0;
             return html`
               <button class="territory-tile motion-item ${categoryClass(category)}" data-category-jump="${escapeHtml(category)}" style="--category-progress:${progress}%;--motion-index:${categories.indexOf(category)}">
+                ${miniInfographic("territory", progress || 18)}
                 <span>${escapeHtml(category)}</span>
                 <strong>${active} активных</strong>
                 <em>${goals.length} целей · ${progress}%</em>
@@ -697,6 +748,7 @@ function goalRow(goal, index = 0) {
   return html`
     <article class="goal-row motion-item goal-${variant} goal-status-${escapeHtml(goal.status)} ${categoryClass(goal.category)}${doneClass}" style="--goal-progress:${goalProgress(goal.status)}%;--motion-index:${index}">
       <span class="goal-orbit" aria-hidden="true"></span>
+      ${miniInfographic("goal", goalProgress(goal.status))}
       <div class="goal-title">
         <strong>${statusSymbol(goal.status)} ${escapeHtml(goal.title)}</strong>
         <span class="tag">${escapeHtml(goal.status)}</span>
@@ -732,6 +784,7 @@ function financeSection(data, c) {
       </div>
       <div class="grid two">
         <article class="finance-card card">
+          ${miniInfographic("finance", Math.min(100, c.incomeProgress))}
           <h3>Главный статус</h3>
           <div class="metric-grid">
             <div class="metric"><span>Доход месяца</span><strong>${currency(c.incomeTotal)}</strong></div>
@@ -847,7 +900,7 @@ function bindEvents() {
     });
   });
 
-  const motionTargets = document.querySelectorAll(".section, .motion-item, .goal-route span, .category-route span, .progress span, .bar-track span");
+  const motionTargets = document.querySelectorAll(".section, .motion-item, .parallax-card, .goal-route span, .category-route span, .progress span, .bar-track span");
   if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     const motionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -862,23 +915,73 @@ function bindEvents() {
     motionTargets.forEach((target) => target.classList.add("is-visible"));
   }
 
-  const observer = new IntersectionObserver((entries) => {
-    const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-    if (visible) {
-      state.activeNav = visible.target.id === "created" ? "power" : visible.target.id;
-      updateActiveNav();
-    }
-  }, { rootMargin: "-35% 0px -55% 0px", threshold: [0.1, 0.3, 0.6] });
-  ["morning", "power", "habits", "goals", "money"].forEach((id) => {
-    const section = document.getElementById(id);
-    if (section) observer.observe(section);
-  });
+  const requestNavSync = () => syncActiveNavFromScroll();
+  window.addEventListener("scroll", requestNavSync, { passive: true });
+  document.addEventListener("scroll", requestNavSync, { passive: true, capture: true });
+  window.visualViewport?.addEventListener("resize", requestNavSync, { passive: true });
+  syncActiveNavFromScroll();
+
+  setupParallax();
+}
+
+function setupParallax() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const targets = [...document.querySelectorAll(".parallax-item, .parallax-card")];
+  if (!targets.length) return;
+
+  let ticking = false;
+  const update = () => {
+    const height = window.innerHeight || 800;
+    targets.forEach((target, index) => {
+      const rect = target.getBoundingClientRect();
+      if (rect.bottom < -120 || rect.top > height + 120) return;
+      const strength = Number(target.dataset.parallax || (target.classList.contains("parallax-card") ? 0.035 : 0.08));
+      const centerOffset = (rect.top + rect.height / 2 - height / 2) * strength;
+      const rotate = target.classList.contains("parallax-card") ? ` rotate(${Number(target.style.getPropertyValue("--tilt") || 0) * 0.45}deg)` : "";
+      target.style.setProperty("--parallax-y", `${centerOffset.toFixed(2)}px`);
+      target.style.setProperty("--parallax-r", rotate);
+      target.style.setProperty("--parallax-index", index);
+    });
+    ticking = false;
+  };
+
+  const request = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  };
+
+  update();
+  window.addEventListener("scroll", request, { passive: true });
+  window.visualViewport?.addEventListener("resize", request, { passive: true });
 }
 
 function updateActiveNav() {
   document.querySelectorAll("[data-scroll]").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.scroll === state.activeNav);
   });
+}
+
+function syncActiveNavFromScroll() {
+  const navMap = [
+    ["morning", "morning"],
+    ["power", "power"],
+    ["created", "power"],
+    ["habits", "habits"],
+    ["focus", "habits"],
+    ["goals", "goals"],
+    ["money", "money"],
+  ];
+  const marker = window.scrollY + Math.max(160, window.innerHeight * 0.38);
+  let active = state.activeNav;
+  navMap.forEach(([sectionId, navId]) => {
+    const section = document.getElementById(sectionId);
+    if (section && section.offsetTop <= marker) active = navId;
+  });
+  if (active !== state.activeNav) {
+    state.activeNav = active;
+    updateActiveNav();
+  }
 }
 
 function closeModal() {
