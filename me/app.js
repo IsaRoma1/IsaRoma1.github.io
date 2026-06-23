@@ -1,6 +1,7 @@
 const API_URL = window.MEMO_CONFIG?.apiUrl || "";
 const TZ = "Asia/Yekaterinburg";
 const STORAGE_KEY = "roman-memo-demo-v1";
+const AUTH_KEY = "roman-memo-auth-v1";
 const ACCESS_PASSWORD = "251187";
 
 const morningText = [
@@ -229,7 +230,12 @@ function initialDashboard() {
 }
 
 function loadLocal() {
-  const saved = localStorage.getItem(STORAGE_KEY);
+  let saved = null;
+  try {
+    saved = localStorage.getItem(STORAGE_KEY);
+  } catch {
+    saved = null;
+  }
   if (!saved) return initialDashboard();
   const data = JSON.parse(saved);
   const today = todayISO();
@@ -242,7 +248,28 @@ function loadLocal() {
 }
 
 function saveLocal(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch {}
+}
+
+function rememberAuth() {
+  try {
+    localStorage.setItem(AUTH_KEY, "1");
+  } catch {}
+  try {
+    sessionStorage.setItem(AUTH_KEY, "1");
+  } catch {}
+}
+
+function hasRememberedAuth() {
+  try {
+    if (localStorage.getItem(AUTH_KEY) === "1") return true;
+  } catch {}
+  try {
+    if (sessionStorage.getItem(AUTH_KEY) === "1") return true;
+  } catch {}
+  return false;
 }
 
 async function api(action, payload = {}) {
@@ -427,8 +454,11 @@ function focusFigure(type) {
 
 const artAssets = {
   morning: "/me/assets/art-morning.jpg",
+  memo: "/me/assets/art-memo.jpg",
   power: "/me/assets/art-power.jpg",
+  created: "/me/assets/art-created.jpg",
   habits: "/me/assets/art-habits.jpg",
+  focus: "/me/assets/art-focus.jpg",
   goals: "/me/assets/art-goals.jpg",
   finance: "/me/assets/art-finance.jpg",
 };
@@ -514,6 +544,7 @@ function renderLock() {
 
     state.unlocked = true;
     state.lockError = "";
+    rememberAuth();
     await loadDashboard();
   });
 
@@ -576,10 +607,13 @@ function morningSection(data, c) {
       </aside>
     </section>
     <section class="section" id="memo">
-      <details class="accordion" ${c.morningDone ? "open" : ""}>
-        <summary>Меморандум утра</summary>
-        <div class="accordion-body memorandum-text">${morningText.map((p) => `<p>${escapeHtml(p)}</p>`).join("")}</div>
-      </details>
+      <div class="visual-ledger memo-ledger">
+        ${artPlate("memo", "Меморандум", c.morningDone ? "открыт" : "после старта утра")}
+        <details class="accordion" ${c.morningDone ? "open" : ""}>
+          <summary>Меморандум утра</summary>
+          <div class="accordion-body memorandum-text">${morningText.map((p) => `<p>${escapeHtml(p)}</p>`).join("")}</div>
+        </details>
+      </div>
     </section>
   `;
 }
@@ -615,6 +649,7 @@ function powerSection() {
         <p>Когда мозг говорит ты не двигаешься, я показываю ему факты.</p>
       </div>
       <div class="card achievement-vault">
+        ${artPlate("created", "Доказательства", `${achievements.length} фактов`)}
         <ul class="done-list">${achievements.map((item) => `<li><span class="check">✓</span><span>${escapeHtml(item)}</span></li>`).join("")}</ul>
         <p class="fine-print">Я уже умею создавать результат. Моя задача сейчас не искать доказательства собственной ценности. Моя задача превратить силу в систему.</p>
       </div>
@@ -689,6 +724,13 @@ function focusSection(data) {
       <div class="section-head">
         <h2>Фокус дня</h2>
         <p>Сегодня не нужно делать всё. Сегодня нужно сделать то, что двигает деньги, контент и энергию.</p>
+      </div>
+      <div class="visual-ledger focus-ledger">
+        ${artPlate("focus", "Командный треугольник", "деньги · контент · энергия")}
+        <div class="visual-ledger-copy card">
+          <h3>Три действия</h3>
+          <p>Фокус дня собран как командная панель: одно действие для денег, одно для контента, одно для здоровья.</p>
+        </div>
       </div>
       <div class="focus-grid">
         ${items.map(([type, title, task, trigger, action, limit]) => html`
@@ -1123,7 +1165,9 @@ async function boot() {
   enablePhoneLayout();
   window.visualViewport?.addEventListener("resize", enablePhoneLayout);
   window.addEventListener("orientationchange", enablePhoneLayout);
-  renderLock();
+  state.unlocked = hasRememberedAuth();
+  if (state.unlocked) await loadDashboard();
+  else renderLock();
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/me/sw.js")
       .then((registration) => registration.update())

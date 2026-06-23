@@ -1,13 +1,16 @@
-const CACHE_NAME = "roman-memo-v12";
+const CACHE_NAME = "roman-memo-v13";
 const APP_SHELL = [
-  "/me/styles.css?v=atlas-9",
-  "/me/app.js?v=atlas-9",
+  "/me/styles.css?v=atlas-10",
+  "/me/app.js?v=atlas-10",
   "/me/manifest.json",
   "/me/icon.svg",
   "/me/roman-hero.png",
   "/me/assets/art-morning.jpg",
+  "/me/assets/art-memo.jpg",
   "/me/assets/art-power.jpg",
+  "/me/assets/art-created.jpg",
   "/me/assets/art-habits.jpg",
+  "/me/assets/art-focus.jpg",
   "/me/assets/art-goals.jpg",
   "/me/assets/art-finance.jpg"
 ];
