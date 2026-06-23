@@ -425,6 +425,27 @@ function focusFigure(type) {
   `;
 }
 
+const artAssets = {
+  morning: "/me/assets/art-morning.jpg",
+  power: "/me/assets/art-power.jpg",
+  habits: "/me/assets/art-habits.jpg",
+  goals: "/me/assets/art-goals.jpg",
+  finance: "/me/assets/art-finance.jpg",
+};
+
+function artPlate(type, label, meta = "") {
+  const src = artAssets[type] || artAssets.morning;
+  return html`
+    <figure class="art-plate art-${escapeHtml(type)} parallax-card" data-parallax="0.045">
+      <img src="${src}" alt="" loading="lazy" decoding="async" />
+      <figcaption>
+        <span>${escapeHtml(label)}</span>
+        ${meta ? `<strong>${escapeHtml(meta)}</strong>` : ""}
+      </figcaption>
+    </figure>
+  `;
+}
+
 function render() {
   const data = state.dashboard;
   if (!data) return;
@@ -536,6 +557,7 @@ function morningSection(data, c) {
         </div>
       </div>
       <aside class="hero-command" aria-label="Состояние дня">
+        ${artPlate("morning", "Утренний артефакт", c.morningDone ? "состояние выбрано" : "ожидает запуска")}
         <div class="command-card">
           ${miniInfographic("state", c.morningDone ? 100 : 28)}
           <span>Сегодня</span>
@@ -568,6 +590,13 @@ function powerSection() {
       <div class="section-head">
         <h2>Мои суперсилы</h2>
         <p>Это не список приятных качеств для самоуспокоения. Это реальные рычаги, которые уже приносили результат.</p>
+      </div>
+      <div class="visual-ledger">
+        ${artPlate("power", "Ядро силы", "10 рычагов")}
+        <div class="visual-ledger-copy card">
+          <h3>Режим суперсил</h3>
+          <p>Сила здесь выглядит не как список, а как инвентарь реальных рычагов: каждый уже приносил результат и может быть включён сегодня.</p>
+        </div>
       </div>
       <div class="power-rail" aria-label="Карточки суперсил">
         ${superpowers.map((power, index) => html`
@@ -614,6 +643,13 @@ function habitsSection(data, c) {
       <div class="metric-grid">
         <div class="metric"><span>Сегодня выполнено</span><strong>${c.habitsDone} из ${c.habitsTotal}</strong></div>
         <div class="metric"><span>Текущая серия</span><strong>${c.morningStreak} дней</strong></div>
+      </div>
+      <div class="visual-ledger visual-ledger-reverse">
+        <div class="visual-ledger-copy card">
+          <h3>Колесо системы</h3>
+          <p>Шесть привычек теперь собраны как один механизм: если закрывается маленький модуль, двигается вся система.</p>
+        </div>
+        ${artPlate("habits", "Контур привычек", `${c.habitsDone}/${c.habitsTotal} сегодня`)}
       </div>
       ${allDone ? `<p class="card fine-print">Система закрыта на сегодня. Теперь не обесценивай. Это и есть фундамент масштаба.</p>` : ""}
       <div class="habit-board">
@@ -689,6 +725,7 @@ function goalsSection(data) {
       <div class="atlas-overview">
         <article class="atlas-prime">
           <span class="atlas-label">Главные активные маршруты</span>
+          ${artPlate("goals", "Карта целей", `${activeGoals.length} активных маршрута`)}
           <div class="prime-goals">
             ${activeGoals.map((goal, index) => html`
               <div class="prime-goal motion-item ${categoryClass(goal.category)}" style="--motion-index:${index}">
@@ -784,7 +821,7 @@ function financeSection(data, c) {
       </div>
       <div class="grid two">
         <article class="finance-card card">
-          ${miniInfographic("finance", Math.min(100, c.incomeProgress))}
+          ${artPlate("finance", "Финансовое ядро", `${Math.round(c.incomeProgress)}% к цели`)}
           <h3>Главный статус</h3>
           <div class="metric-grid">
             <div class="metric"><span>Доход месяца</span><strong>${currency(c.incomeTotal)}</strong></div>
