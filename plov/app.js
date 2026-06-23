@@ -11,6 +11,7 @@ const toast = document.getElementById("toast");
 
 function unlock() {
   body.classList.remove("locked");
+  body.classList.add("is-unlocked");
   passwordScreen.hidden = true;
   siteShell.hidden = false;
 }
