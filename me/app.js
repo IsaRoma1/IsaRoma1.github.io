@@ -613,6 +613,7 @@ function emptyGoal() {
     category: "Личное"
   }, 0);
   goal.id = "";
+  goal.title = "";
   return goal;
 }
 
