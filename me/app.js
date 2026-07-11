@@ -44,6 +44,22 @@ const STRENGTHS = [
 
 const GOAL_SEEDS = [
   {
+    id: "goal-urus",
+    title: "Lamborghini Urus SE · Arancio Borealis",
+    description: "Оранжевый Urus — приобрести к началу следующего лета.",
+    category: "Автомобиль",
+    source_url: "https://www.lamborghini.com/en-en/models/urus/urus-se",
+    image_url: "/me/assets/goals/urus.webp",
+    price_value: 35000000,
+    currency: "RUB",
+    price_text: "≈ 35 000 000 ₽",
+    target_date: "2027-06-01",
+    source_checked_at: "2026-07-11",
+    source_note: "Ориентир бюджета на июль 2026. Перед покупкой обновить по конкретной комплектации и рынку.",
+    status: "active",
+    sort_order: 0
+  },
+  {
     id: "goal-income",
     title: "1 000 000 ₽ чистыми в месяц",
     description: "Безопасность семьи, закрытие долгов, свобода действий и ресурс для роста.",
@@ -51,6 +67,7 @@ const GOAL_SEEDS = [
     price_value: 1000000,
     currency: "RUB",
     price_text: "1 000 000 ₽ / месяц",
+    image_url: "/me/assets/goals/income.webp",
     status: "active"
   },
   {
@@ -61,6 +78,7 @@ const GOAL_SEEDS = [
     price_value: 2000000,
     currency: "RUB",
     price_text: "2 000 000 ₽",
+    image_url: "/me/assets/goals/reserve.webp",
     status: "active"
   },
   {
@@ -71,6 +89,7 @@ const GOAL_SEEDS = [
     price_value: 25000,
     currency: "USD",
     price_text: "$25 000",
+    image_url: "/me/assets/goals/debt.webp",
     status: "active"
   },
   {
@@ -78,6 +97,7 @@ const GOAL_SEEDS = [
     title: "Лазарь: стабильный рекуррентный доход",
     description: "Продукт, который масштабируется без постоянного личного времени.",
     category: "Продукт",
+    image_url: "/me/assets/goals/lazar.webp",
     status: "active"
   },
   {
@@ -85,6 +105,7 @@ const GOAL_SEEDS = [
     title: "Меднаправление с Анной",
     description: "Найти рабочую стратегию продукта, монетизации и выхода на рынок.",
     category: "Бизнес",
+    image_url: "/me/assets/goals/medical.webp",
     status: "active"
   },
   {
@@ -93,6 +114,7 @@ const GOAL_SEEDS = [
     description: "Энергия и тело, способные удерживать выбранный масштаб.",
     category: "Здоровье",
     price_text: "84 кг",
+    image_url: "/me/assets/goals/health.webp",
     status: "active"
   }
 ].map((goal, index) => ({
@@ -170,8 +192,35 @@ function normalizeGoal(goal, index) {
     updated_at: goal.updated_at || nowISO(),
     source_checked_at: goal.source_checked_at || "",
     source_note: goal.source_note || "",
-    sort_order: Number(goal.sort_order || index + 1)
+    sort_order: Number(goal.sort_order ?? index + 1)
   };
+}
+
+function hydrateGoals(rawGoals) {
+  const source = Array.isArray(rawGoals) ? rawGoals : [];
+  const seedById = new Map(GOAL_SEEDS.map((goal) => [goal.id, goal]));
+  const seedByTitle = new Map(GOAL_SEEDS.map((goal) => [goal.title, goal]));
+  const hydrated = source.map((rawGoal, index) => {
+    const normalized = normalizeGoal(rawGoal, index);
+    const seed = seedById.get(normalized.id) || seedByTitle.get(normalized.title);
+    if (!seed) return normalized;
+    return normalizeGoal({
+      ...seed,
+      ...normalized,
+      image_url: normalized.image_url || seed.image_url,
+      source_url: normalized.source_url || seed.source_url,
+      target_date: normalized.target_date || seed.target_date,
+      source_checked_at: normalized.source_checked_at || seed.source_checked_at,
+      source_note: normalized.source_note || seed.source_note
+    }, index);
+  });
+
+  GOAL_SEEDS.forEach((seed, index) => {
+    const exists = hydrated.some((goal) => goal.id === seed.id || goal.title === seed.title);
+    if (!exists) hydrated.push(normalizeGoal(seed, source.length + index));
+  });
+
+  return hydrated.sort((a, b) => Number(a.sort_order) - Number(b.sort_order));
 }
 
 function normalizeDashboard(data) {
@@ -194,9 +243,7 @@ function normalizeDashboard(data) {
     today,
     morning_logs: Array.isArray(data?.morning_logs) ? data.morning_logs : [],
     strengths: Array.isArray(data?.strengths) && data.strengths.length ? data.strengths : STRENGTHS,
-    goals: Array.isArray(data?.goals) && data.goals.length
-      ? data.goals.map(normalizeGoal).filter((goal) => goal.status !== "removed")
-      : GOAL_SEEDS,
+    goals: hydrateGoals(data?.goals).filter((goal) => goal.status !== "removed"),
     daily_focus: focus
   };
 }
@@ -384,6 +431,30 @@ function daysWord(value) {
   return "дней";
 }
 
+function goalTimelineMarkup(goal) {
+  if (!goal.target_date) return "";
+  const target = new Date(`${String(goal.target_date).slice(0, 10)}T12:00:00Z`);
+  const today = new Date(`${todayISO()}T12:00:00Z`);
+  const createdValue = String(goal.created_at || todayISO()).slice(0, 10);
+  const created = new Date(`${createdValue}T12:00:00Z`);
+  if ([target, today, created].some((date) => Number.isNaN(date.getTime()))) return "";
+
+  const total = Math.max(1, target.getTime() - created.getTime());
+  const elapsed = Math.max(0, today.getTime() - created.getTime());
+  const progress = Math.max(2, Math.min(100, (elapsed / total) * 100));
+  const remainingDays = Math.max(0, Math.ceil((target.getTime() - today.getTime()) / 86400000));
+  const remaining = remainingDays > 0
+    ? `${remainingDays} ${daysWord(remainingDays)} до цели`
+    : "Срок наступил";
+
+  return `
+    <div class="goal-timeline" aria-label="${escapeHtml(remaining)}">
+      <div class="goal-timeline-head"><span>Сейчас</span><strong>${escapeHtml(formatTargetDate(goal.target_date))}</strong></div>
+      <div class="goal-timeline-track"><span style="--timeline:${progress.toFixed(1)}%"></span><i style="--timeline:${progress.toFixed(1)}%"></i></div>
+      <small>${escapeHtml(remaining)}</small>
+    </div>`;
+}
+
 function icon(name) {
   const paths = {
     home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5M9 20v-6h6v6"/>',
@@ -439,21 +510,21 @@ function strengthMarkup(item, index) {
 function goalMarkup(goal) {
   const image = safeUrl(goal.image_url);
   return `
-    <article class="goal-poster" data-goal-card="${escapeHtml(goal.id)}">
+    <article class="goal-poster ${goal.target_date ? "has-timeline" : ""}" data-goal-card="${escapeHtml(goal.id)}">
       ${image ? `<img class="goal-image" src="${image}" alt="${escapeHtml(goal.title)}" loading="lazy" />` : '<div class="goal-fallback" aria-hidden="true"></div>'}
       <div class="goal-topline">
         <span class="goal-category">${escapeHtml(goal.category || "Цель")}</span>
-        <span class="goal-status">↗</span>
+        <button class="goal-edit" type="button" data-action="editGoal" data-goal-id="${escapeHtml(goal.id)}" aria-label="Редактировать цель ${escapeHtml(goal.title)}">${icon("edit")}</button>
       </div>
       <div class="goal-content">
         <h3>${escapeHtml(goal.title)}</h3>
         ${goal.description ? `<p class="goal-description">${escapeHtml(goal.description)}</p>` : ""}
+        ${goalTimelineMarkup(goal)}
         <div class="goal-meta">
           <span class="goal-price"><small>Стоимость / ориентир</small><strong>${escapeHtml(formatGoalPrice(goal))}</strong></span>
           <span class="goal-date"><small>Срок</small>${escapeHtml(formatTargetDate(goal.target_date))}</span>
         </div>
       </div>
-      <button class="goal-edit" data-action="editGoal" data-goal-id="${escapeHtml(goal.id)}" aria-label="Редактировать цель">${icon("edit")}</button>
     </article>`;
 }
 
@@ -461,7 +532,9 @@ function mainMarkup() {
   const data = state.dashboard;
   const streak = currentStreak(data);
   const morningDone = isMorningDone(data);
-  const goals = data.goals.filter((goal) => goal.status !== "removed");
+  const goals = data.goals
+    .filter((goal) => goal.status !== "removed")
+    .sort((a, b) => Number(a.sort_order) - Number(b.sort_order));
   const focus = data.daily_focus;
 
   return `
@@ -519,10 +592,10 @@ function mainMarkup() {
             </div>
             <button class="add-goal-button" data-action="addGoal"><span>Добавить цель</span><span>+</span></button>
           </div>
+          <p class="goals-swipe-hint">Листайте цели →</p>
           <div class="goals-grid ${state.showAllGoals ? "is-expanded" : ""}">
             ${goals.map(goalMarkup).join("") || '<p>Пока нет целей. Добавьте первую.</p>'}
           </div>
-          ${goals.length > 5 ? `<div class="goals-more"><button class="text-button" data-action="toggleGoals">${state.showAllGoals ? "Свернуть" : `Показать все · ${goals.length}`}</button></div>` : ""}
         </section>
 
         <section class="section focus-section" id="focus">
@@ -563,7 +636,7 @@ function focusRow(type, symbol, label, value, done) {
       <span class="focus-icon" aria-hidden="true">${symbol}</span>
       <span class="focus-copy">
         <label for="focus-${type}">${label}</label>
-        <input class="focus-input" id="focus-${type}" data-focus-field="${type}_task" value="${escapeHtml(value || "")}" placeholder="Одно точное действие" />
+        <textarea class="focus-input" id="focus-${type}" data-focus-field="${type}_task" rows="2" placeholder="Одно точное действие">${escapeHtml(value || "")}</textarea>
       </span>
       <button class="focus-check ${done ? "is-done" : ""}" data-action="toggleFocus" data-focus-type="${type}" aria-label="${done ? "Снять отметку" : "Отметить выполненным"}">✓</button>
     </div>`;
