@@ -1,126 +1,29 @@
 <!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Меморандум Романа</title>
-    <meta name="description" content="Личная утренняя операционная система Романа Исаева." />
-    <meta name="theme-color" content="#08090d" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Меморандум" />
-    <script>
-      (function () {
-        var isPhone = /iPhone|iPod|Android.*Mobile/i.test(navigator.userAgent) || Math.min(screen.width, screen.height) <= 760;
-        if (isPhone) document.documentElement.classList.add("phone-layout");
-      })();
-    </script>
-    <link rel="manifest" href="/me/manifest.json" />
-    <link rel="icon" href="/me/icon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/me/icon.svg" />
-    <link rel="preload" href="/me/roman-hero.png" as="image" />
-    <style>
-      .phone-layout,
-      .phone-layout body,
-      .phone-layout #app {
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow-x: hidden !important;
-      }
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f3f6ff" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="description" content="Личная система Романа Исаева: утренний настрой, сильные стороны, цели и фокус дня." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="ME" />
+  <title>ME — Роман Исаев</title>
+  <link rel="manifest" href="/me/manifest.json?v=3" />
+  <link rel="icon" href="/me/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/me/styles.css?v=3.0.0" />
+</head>
+<body>
+  <div id="app" aria-live="polite"></div>
+  <noscript>Для работы личной системы нужен JavaScript.</noscript>
 
-      .phone-layout .app-shell,
-      .phone-layout .content,
-      .phone-layout .hero,
-      .phone-layout .bottom-nav,
-      .phone-layout .bottom-nav-inner {
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow-x: hidden !important;
-      }
-
-      .phone-layout .content {
-        padding-left: 10px !important;
-        padding-right: 10px !important;
-      }
-
-      .phone-layout .hero-copy,
-      .phone-layout .hero-actions,
-      .phone-layout .hero-actions .button,
-      .phone-layout .lead,
-      .phone-layout h1 {
-        width: 100% !important;
-        max-width: 100% !important;
-        min-width: 0 !important;
-      }
-
-      .phone-layout h1 {
-        font-size: 32px !important;
-        line-height: 1.08 !important;
-        overflow-wrap: anywhere !important;
-      }
-
-      .phone-layout .hero-actions {
-        display: grid !important;
-        grid-template-columns: minmax(0, 1fr) !important;
-      }
-
-      @media (max-width: 759px) {
-        html,
-        body,
-        #app,
-        .app-shell,
-        .content,
-        .hero,
-        .bottom-nav,
-        .bottom-nav-inner {
-          width: 100% !important;
-          max-width: 100% !important;
-          overflow-x: hidden !important;
-        }
-
-        .content {
-          padding-left: 10px !important;
-          padding-right: 10px !important;
-        }
-
-        .hero-copy,
-        .hero-actions,
-        .hero-actions .button,
-        .lead,
-        h1 {
-          width: 100% !important;
-          max-width: 100% !important;
-          min-width: 0 !important;
-        }
-
-        h1 {
-          font-size: clamp(29px, 8.4vw, 36px) !important;
-          line-height: 1.06 !important;
-          overflow-wrap: anywhere !important;
-        }
-
-        .hero-actions {
-          display: grid !important;
-          grid-template-columns: minmax(0, 1fr) !important;
-        }
-      }
-    </style>
-    <link rel="stylesheet" href="/me/styles.css?v=atlas-10" />
-  </head>
-  <body>
-    <noscript>Для работы личной системы нужен JavaScript.</noscript>
-    <div id="app">
-      <section class="boot-screen" aria-label="Загрузка">
-        <div class="boot-mark">RI</div>
-        <p>Собираю утро...</p>
-      </section>
-    </div>
-    <script>
-      window.MEMO_CONFIG = {
-        // Вставьте сюда URL опубликованного Google Apps Script Web App.
-        apiUrl: "",
-      };
-    </script>
-    <script src="/me/app.js?v=atlas-10" defer></script>
-  </body>
+  <script>
+    window.MEMO_CONFIG = {
+      apiUrl: "",
+      spreadsheetId: "1ikLDWcpGYPO-gL-18-gdmi73hC-qGEjiyw-L2jgtpTM"
+    };
+  </script>
+  <script src="/me/app.js?v=3.0.0" defer></script>
+</body>
 </html>

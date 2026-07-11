@@ -1,10 +1,11 @@
-const API_URL = window.MEMO_CONFIG?.apiUrl || "";
+const API_URL = String(window.MEMO_CONFIG?.apiUrl || "").trim();
 const TZ = "Asia/Yekaterinburg";
-const STORAGE_KEY = "roman-memo-demo-v1";
+const STORAGE_KEY = "roman-me-v3";
+const LEGACY_STORAGE_KEY = "roman-memo-demo-v1";
 const AUTH_KEY = "roman-memo-auth-v1";
 const ACCESS_PASSWORD = "251187";
 
-const morningText = [
+const MORNING_TEXT = [
   "Я Роман Исаев.",
   "Я человек, который соединяет людей, идеи, бизнес и нейросети. Я вижу возможности там, где другие видят хаос. Я умею запускать диалоги, находить сильных людей, создавать смыслы и превращать сложное в понятное.",
   "Я живу в мире изобилия. Возможности уже есть вокруг меня. Деньги, люди, идеи, партнёрства и события приходят ко мне через ценность, которую я создаю.",
@@ -21,7 +22,7 @@ const morningText = [
   "Сегодня я начинаю."
 ];
 
-const superpowers = [
+const STRENGTHS = [
   ["Медийность", "15 млн+ охвата и 13 000 новых подписчиков через контент.", "Думать не что бы сказать, а что люди захотят сохранить, переслать или обсудить."],
   ["Публичная энергия", "Выступления перед аудиторией 1000+ человек на тему нейросетей.", "Выходить в голос, видео, сцену, эфир, переговоры. Сила включается через живой контакт."],
   ["Коммуникации", "Умею выходить на сильных людей, запускать диалоги и оживлять связи.", "Написать одному человеку, который может приблизить к деньгам, росту или сильному партнёрству."],
@@ -32,1158 +33,943 @@ const superpowers = [
   ["AI-экспертиза", "Обучаю предпринимателей и команды внедрять нейросети в бизнес-процессы.", "Показывать не магические инструменты, а конкретную экономию времени, денег и внимания."],
   ["Катализатор идей", "Быстро собираю новые форматы, продукты, связки и гипотезы.", "Генерировать идеи, но не убегать в каждую. Новые идеи идут в парковку, фокус остаётся на главной цели."],
   ["Энергия создателя", "Включаюсь, когда есть дедлайн, аудитория, конкретный клиент и понятная ставка.", "Создавать себе внешний контур обязательств, а не ждать внутренней дисциплины."]
-].map((item, index) => ({ id: `sp-${index + 1}`, title: item[0], evidence: item[1], today_rule: item[2], sort_order: index + 1 }));
-
-const achievements = [
-  "Привлёк $500 000+ во время работы в инвестиционном фонде",
-  "Запустил Telegram-игру и собрал 130 000 игроков",
-  "Выступил на тему нейросетей перед аудиторией 1000+ человек",
-  "Обучил сотрудников агентства недвижимости работе с нейросетями",
-  "Помог оптимизировать рабочие процессы в 2 раза",
-  "Запустил контент-завод и получил 15 млн+ охвата целевой аудитории",
-  "Привлёк 13 000 новых подписчиков через контент",
-  "Разработал механику агента для поиска новых клиентов в холодную в Instagram",
-  "Веду бизнес-подкаст и создаю медийный капитал",
-  "Создал экспертизу на стыке ИИ, маркетинга, продаж и визуального контента"
-];
-
-const habitSeeds = [
-  ["h1", "Утренний меморандум", "Начать день с себя, а не с чужого шума.", "Открыть меморандум и нажать старт.", "Отметить сегодня"],
-  ["h2", "Без энергетиков", "Вернуть себе нормальную энергию, сон и управление состоянием.", "Один день без энергетиков.", "День без энергетиков"],
-  ["h3", "Продажное действие", "Деньги приходят от контактов, офферов, follow-up и переговоров.", "Один контакт, follow-up, оффер или разговор о деньгах.", "Продажное действие сделано"],
-  ["h4", "Контент", "Моя медийность это актив. Актив растёт от регулярного выхода в поле.", "Один рилс, пост, сторис, карусель, тезис или сценарий.", "Контент сделан"],
-  ["h5", "Движение / тренировка", "Энергия, тело и деньги связаны. Разваленное тело не удерживает масштаб.", "20 минут движения или полноценная тренировка.", "Движение сделано"],
-  ["h6", "Вечерняя фиксация", "День не должен исчезать в тумане. Я фиксирую факты, выводы и следующий шаг.", "3 строки: что сделал, что принесло ценность, что завтра важно не потерять.", "День зафиксирован"]
 ].map((item, index) => ({
-  id: item[0],
-  title: item[1],
-  description: item[2],
-  minimum_action: item[3],
-  button: item[4],
+  id: `sp-${index + 1}`,
+  title: item[0],
+  evidence: item[1],
+  today_rule: item[2],
   sort_order: index + 1,
-  is_active: true
+  active: true
 }));
 
-const categories = [
-  "Деньги и капитал",
-  "Бизнес и продукты",
-  "Медийность и личный бренд",
-  "Здоровье и энергия",
-  "Семья и образ жизни",
-  "Навыки и мышление",
-  "Вклад и след",
-  "Путешествия и свобода"
-];
-
-const goalSeeds = [
-  ["Деньги и капитал", "1 000 000 ₽ чистыми в месяц", "Причина: безопасность семьи, закрытие долгов, свобода действий, ресурс для роста.", "active"],
-  ["Деньги и капитал", "300–400 тыс. ₽ стабильной базы каждый месяц", "Причина: закрыть бытовое давление и перестать принимать решения из финансового стресса.", "active"],
-  ["Деньги и капитал", "Подушка 1–2 млн ₽", "Причина: перестать жить в режиме постоянного тушения пожара.", "active"],
-  ["Деньги и капитал", "Закрыть долг $25 000", "Причина: убрать фоновое давление и вернуть спокойный фокус.", "active"],
-  ["Деньги и капитал", "Капитал $30 млн, работающий под 10% годовых", "", "next"],
-  ["Деньги и капитал", "5–10 млн ₽ в месяц как следующий уровень после первого миллиона", "", "next"],
-  ["Бизнес и продукты", "Лазарь: стабильный рекуррентный доход", "Причина: продукт, который масштабируется без постоянного личного времени Романа.", "active"],
-  ["Бизнес и продукты", "Меднаправление с Анной: найти рабочую стратегию", "Поисковое направление: рынок, боли аудитории, экспертность Анны, сценарии монетизации и IT-продукта.", "active"],
-  ["Бизнес и продукты", "2 корпоративных обучения в месяц", "Причина: быстрый денежный рычаг через высокий чек.", "active"],
-  ["Бизнес и продукты", "3–5 индивидуальных клиентов в месяц", "Причина: сильный личный денежный поток без сложной инфраструктуры.", "active"],
-  ["Бизнес и продукты", "20 консультаций в месяц по 10 000 ₽", "Причина: понятный денежный поток на 200 000 ₽ в месяц.", "active"],
-  ["Бизнес и продукты", "Системный отдел продаж: CRM, скрипты, follow-up, понятная воронка", "", "active"],
-  ["Медийность и личный бренд", "Ежедневный короткий контент", "", "active"],
-  ["Медийность и личный бренд", "Регулярные подкасты и YouTube-выпуски", "", "active"],
-  ["Медийность и личный бренд", "Telegram как основная площадка доверия", "", "active"],
-  ["Здоровье и энергия", "30 дней без энергетиков", "", "active"],
-  ["Здоровье и энергия", "Стабильный режим сна", "", "active"],
-  ["Здоровье и энергия", "Регулярное движение / тренировки", "", "active"],
-  ["Здоровье и энергия", "Вес 84 кг", "", "active"],
-  ["Семья и образ жизни", "Финансовая стабильность для семьи", "", "active"],
-  ["Семья и образ жизни", "Больше спокойствия в быту", "", "active"],
-  ["Навыки и мышление", "Усилить продажи и упаковку ценности", "", "active"],
-  ["Навыки и мышление", "Использовать ИИ как усилитель мышления и скорости", "", "active"],
-  ["Вклад и след", "Обучать предпринимателей и команды использовать ИИ практически", "", "active"],
-  ["Вклад и след", "Создавать продукты, которые дают людям ощущение будущего", "", "active"],
-  ["Путешествия и свобода", "Работать без жёсткой привязки к месту", "", "next"],
-  ["Путешествия и свобода", "Путешествовать с семьёй без финансовой тревоги", "", "next"]
+const GOAL_SEEDS = [
+  {
+    id: "goal-income",
+    title: "1 000 000 ₽ чистыми в месяц",
+    description: "Безопасность семьи, закрытие долгов, свобода действий и ресурс для роста.",
+    category: "Деньги",
+    price_value: 1000000,
+    currency: "RUB",
+    price_text: "1 000 000 ₽ / месяц",
+    status: "active"
+  },
+  {
+    id: "goal-buffer",
+    title: "Подушка 1–2 млн ₽",
+    description: "Перестать жить в режиме постоянного тушения пожара.",
+    category: "Капитал",
+    price_value: 2000000,
+    currency: "RUB",
+    price_text: "2 000 000 ₽",
+    status: "active"
+  },
+  {
+    id: "goal-debt",
+    title: "Закрыть долг $25 000",
+    description: "Убрать фоновое давление и вернуть спокойный фокус.",
+    category: "Капитал",
+    price_value: 25000,
+    currency: "USD",
+    price_text: "$25 000",
+    status: "active"
+  },
+  {
+    id: "goal-lazar",
+    title: "Лазарь: стабильный рекуррентный доход",
+    description: "Продукт, который масштабируется без постоянного личного времени.",
+    category: "Продукт",
+    status: "active"
+  },
+  {
+    id: "goal-med",
+    title: "Меднаправление с Анной",
+    description: "Найти рабочую стратегию продукта, монетизации и выхода на рынок.",
+    category: "Бизнес",
+    status: "active"
+  },
+  {
+    id: "goal-weight",
+    title: "Вес 84 кг",
+    description: "Энергия и тело, способные удерживать выбранный масштаб.",
+    category: "Здоровье",
+    price_text: "84 кг",
+    status: "active"
+  }
 ].map((goal, index) => ({
-  id: `g${index + 1}`,
-  category: goal[0],
-  title: goal[1],
-  description: goal[2],
-  reason: "",
-  status: goal[3],
-  deadline: "",
+  source_url: "",
+  image_url: "",
+  target_date: "",
   created_at: new Date().toISOString(),
-  completed_at: "",
+  updated_at: new Date().toISOString(),
   sort_order: index + 1,
-  notes: ""
+  ...goal
 }));
 
-const incomeSources = [
-  "Консультация 10 000 ₽ / час",
-  "Индивидуальная работа",
-  "Корпоративное обучение",
-  "Лазарь",
-  "Меднаправление с Анной",
-  "Партнёрка",
-  "Выступление",
-  "Маркетинг / агентские",
-  "Другое"
-];
-
-const defaultFocus = {
-  business_task: "Написать 3 follow-up людям, которые могут купить, порекомендовать или вывести на клиента.",
-  business_trigger: "Если я открыл Telegram после утреннего ритуала",
-  business_action: "то пишу 3 follow-up без ожидания идеального текста",
-  business_limit: "15 минут",
-  business_done: false,
+const FOCUS_DEFAULTS = {
+  money_task: "Написать 3 follow-up людям, которые могут купить, порекомендовать или вывести на клиента.",
+  money_done: false,
   content_task: "Записать один короткий ролик на тему дня. Не идеально. Живо.",
-  content_trigger: "Если я сел в машину или остался один на 15 минут",
-  content_action: "то записываю один короткий ролик",
-  content_limit: "15 минут",
   content_done: false,
   health_task: "Сделать 20 минут движения или поехать на тренировку.",
-  health_trigger: "Если наступило выбранное время",
-  health_action: "то я делаю движение без переговоров с собой",
-  health_limit: "20–60 минут",
-  health_done: false
+  health_done: false,
+  day_note: ""
 };
 
 const state = {
-  dashboard: null,
   unlocked: false,
-  lockError: "",
-  saving: {},
-  toast: "",
-  activeNav: "morning",
-  modal: null
+  dashboard: null,
+  meditationStep: null,
+  returnScroll: 0,
+  modal: null,
+  showAllGoals: false,
+  toastTimer: null
 };
 
-function enablePhoneLayout() {
-  const isPhone = /iPhone|iPod|Android.*Mobile/i.test(navigator.userAgent)
-    || Math.min(screen.width || 9999, screen.height || 9999) <= 760
-    || (window.visualViewport?.width || window.innerWidth) <= 760;
-  document.documentElement.classList.toggle("phone-layout", Boolean(isPhone));
-}
-
 function todayISO() {
-  const formatter = new Intl.DateTimeFormat("en-CA", {
+  return new Intl.DateTimeFormat("en-CA", {
     timeZone: TZ,
     year: "numeric",
     month: "2-digit",
     day: "2-digit"
-  });
-  return formatter.format(new Date());
+  }).format(new Date());
 }
 
-function currency(value) {
-  return new Intl.NumberFormat("ru-RU").format(Math.round(Number(value) || 0)) + " ₽";
+function nowISO() {
+  return new Date().toISOString();
 }
 
-function uid(prefix) {
+function uid(prefix = "id") {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-function parseDate(date) {
-  return new Date(`${date}T00:00:00+05:00`);
+function initialDashboard() {
+  const today = todayISO();
+  return {
+    today,
+    morning_logs: [],
+    strengths: STRENGTHS,
+    goals: GOAL_SEEDS,
+    daily_focus: { date: today, ...FOCUS_DEFAULTS, updated_at: nowISO() }
+  };
 }
 
-function addDays(date, days) {
-  const next = new Date(date);
-  next.setDate(next.getDate() + days);
-  return next.toISOString().slice(0, 10);
+function normalizeGoal(goal, index) {
+  return {
+    id: goal.id || uid("goal"),
+    title: goal.title || "Новая цель",
+    description: goal.description || goal.reason || "",
+    source_url: goal.source_url || "",
+    image_url: goal.image_url || "",
+    price_value: goal.price_value ?? "",
+    currency: goal.currency || "RUB",
+    price_text: goal.price_text || "",
+    target_date: goal.target_date || goal.deadline || "",
+    status: goal.status || "active",
+    category: goal.category || "Личное",
+    created_at: goal.created_at || nowISO(),
+    updated_at: goal.updated_at || nowISO(),
+    source_checked_at: goal.source_checked_at || "",
+    source_note: goal.source_note || "",
+    sort_order: Number(goal.sort_order || index + 1)
+  };
 }
 
-function dayDiff(from, to) {
-  return Math.max(1, Math.round((parseDate(to) - parseDate(from)) / 86400000) + 1);
+function normalizeDashboard(data) {
+  const base = initialDashboard();
+  const today = todayISO();
+  const rawFocus = data?.daily_focus || {};
+  const focus = {
+    date: today,
+    ...FOCUS_DEFAULTS,
+    ...rawFocus,
+    money_task: rawFocus.money_task || rawFocus.business_task || FOCUS_DEFAULTS.money_task,
+    money_done: Boolean(rawFocus.money_done ?? rawFocus.business_done),
+    content_done: Boolean(rawFocus.content_done),
+    health_done: Boolean(rawFocus.health_done)
+  };
+
+  return {
+    ...base,
+    ...data,
+    today,
+    morning_logs: Array.isArray(data?.morning_logs) ? data.morning_logs : [],
+    strengths: Array.isArray(data?.strengths) && data.strengths.length ? data.strengths : STRENGTHS,
+    goals: Array.isArray(data?.goals) && data.goals.length
+      ? data.goals.map(normalizeGoal).filter((goal) => goal.status !== "removed")
+      : GOAL_SEEDS,
+    daily_focus: focus
+  };
 }
 
-function currentStreak(dates, today) {
-  const set = new Set(dates);
-  let cursor = set.has(today) ? today : addDays(today, -1);
+function loadLocal() {
+  let parsed = null;
+  try {
+    const current = localStorage.getItem(STORAGE_KEY);
+    const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+    parsed = JSON.parse(current || legacy || "null");
+  } catch {
+    parsed = null;
+  }
+  return normalizeDashboard(parsed || initialDashboard());
+}
+
+function saveLocal(dashboard) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(dashboard));
+}
+
+async function remoteApi(action, payload = {}) {
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ action, payload, device_id: getDeviceId(), timezone: TZ })
+  });
+  if (!response.ok) throw new Error(`API ${response.status}`);
+  const result = await response.json();
+  if (!result.ok) throw new Error(result.error || "Google API error");
+  return result;
+}
+
+function getDeviceId() {
+  const key = "roman-me-device-v1";
+  let id = localStorage.getItem(key);
+  if (!id) {
+    id = uid("device");
+    localStorage.setItem(key, id);
+  }
+  return id;
+}
+
+async function localApi(action, payload = {}) {
+  const data = loadLocal();
+  const today = todayISO();
+  let existing = false;
+
+  if (action === "getDashboard") return { ok: true, dashboard: data, local: true };
+
+  if (action === "completeMorning") {
+    existing = data.morning_logs.some((item) => String(item.date).slice(0, 10) === today && truthy(item.completed));
+    if (!existing) {
+      data.morning_logs.push({
+        id: uid("morning"),
+        date: today,
+        completed: true,
+        completed_at: nowISO(),
+        timezone: TZ,
+        device_id: getDeviceId(),
+        note: ""
+      });
+    }
+  }
+
+  if (action === "addGoal") {
+    data.goals.unshift(normalizeGoal({ ...payload, id: uid("goal"), created_at: nowISO() }, 0));
+  }
+
+  if (action === "updateGoal") {
+    const index = data.goals.findIndex((goal) => goal.id === payload.id);
+    if (index >= 0) data.goals[index] = normalizeGoal({ ...data.goals[index], ...payload, updated_at: nowISO() }, index);
+  }
+
+  if (action === "deleteGoal") {
+    data.goals = data.goals.filter((goal) => goal.id !== payload.id);
+  }
+
+  if (action === "saveFocus") {
+    data.daily_focus = { ...data.daily_focus, ...payload, date: today, updated_at: nowISO(), device_id: getDeviceId() };
+  }
+
+  saveLocal(data);
+  return { ok: true, dashboard: normalizeDashboard(data), existing, local: true };
+}
+
+async function api(action, payload = {}) {
+  return API_URL ? remoteApi(action, payload) : localApi(action, payload);
+}
+
+function truthy(value) {
+  return value === true || value === 1 || String(value).toLowerCase() === "true" || String(value).toLowerCase() === "да";
+}
+
+function addDays(date, delta) {
+  const value = new Date(`${date}T12:00:00Z`);
+  value.setUTCDate(value.getUTCDate() + delta);
+  return value.toISOString().slice(0, 10);
+}
+
+function morningDates(data) {
+  return data.morning_logs
+    .filter((item) => truthy(item.completed))
+    .map((item) => String(item.date).slice(0, 10));
+}
+
+function currentStreak(data) {
+  const dates = new Set(morningDates(data));
+  const today = todayISO();
+  let cursor = dates.has(today) ? today : addDays(today, -1);
   let count = 0;
-  while (set.has(cursor)) {
+  while (dates.has(cursor)) {
     count += 1;
     cursor = addDays(cursor, -1);
   }
   return count;
 }
 
-function initialDashboard() {
+function isMorningDone(data) {
   const today = todayISO();
-  return {
-    settings: {
-      timezone: TZ,
-      start_date: today,
-      monthly_income_target: 1000000,
-      stable_base_min: 300000,
-      stable_base_max: 400000,
-      user_name: "Роман Исаев"
-    },
-    today,
-    morning_logs: [],
-    habits: habitSeeds,
-    habit_logs: [],
-    superpowers,
-    goals: goalSeeds,
-    income: [],
-    daily_focus: { date: today, ...defaultFocus }
-  };
+  return morningDates(data).includes(today);
 }
 
-function loadLocal() {
-  let saved = null;
+function escapeHtml(value = "") {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function safeUrl(value = "") {
   try {
-    saved = localStorage.getItem(STORAGE_KEY);
+    const url = new URL(value, window.location.origin);
+    return ["http:", "https:"].includes(url.protocol) ? escapeHtml(url.href) : "";
   } catch {
-    saved = null;
+    return "";
   }
-  if (!saved) return initialDashboard();
-  const data = JSON.parse(saved);
-  const today = todayISO();
-  return {
-    ...initialDashboard(),
-    ...data,
-    today,
-    daily_focus: data.daily_focus?.date === today ? { ...defaultFocus, ...data.daily_focus } : { date: today, ...defaultFocus }
+}
+
+function formatToday() {
+  return new Intl.DateTimeFormat("ru-RU", {
+    timeZone: TZ,
+    weekday: "long",
+    day: "numeric",
+    month: "long"
+  }).format(new Date());
+}
+
+function formatTargetDate(value) {
+  if (!value) return "Без срока";
+  const parsed = new Date(`${String(value).slice(0, 10)}T12:00:00Z`);
+  if (Number.isNaN(parsed.getTime())) return String(value);
+  return new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "short", year: "numeric" }).format(parsed);
+}
+
+function formatGoalPrice(goal) {
+  if (goal.price_text) return goal.price_text;
+  const amount = Number(goal.price_value);
+  if (!Number.isFinite(amount) || amount <= 0) return "Не указана";
+  try {
+    return new Intl.NumberFormat("ru-RU", {
+      style: "currency",
+      currency: goal.currency || "RUB",
+      maximumFractionDigits: 0
+    }).format(amount);
+  } catch {
+    return `${new Intl.NumberFormat("ru-RU").format(amount)} ${goal.currency || ""}`.trim();
+  }
+}
+
+function greeting() {
+  const hour = Number(new Intl.DateTimeFormat("ru-RU", { timeZone: TZ, hour: "2-digit", hourCycle: "h23" }).format(new Date()));
+  if (hour < 12) return "Доброе утро";
+  if (hour < 18) return "Добрый день";
+  return "Добрый вечер";
+}
+
+function daysWord(value) {
+  const number = Math.abs(Number(value)) % 100;
+  const last = number % 10;
+  if (number > 10 && number < 20) return "дней";
+  if (last === 1) return "день";
+  if (last > 1 && last < 5) return "дня";
+  return "дней";
+}
+
+function icon(name) {
+  const paths = {
+    home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5M9 20v-6h6v6"/>',
+    power: '<path d="M12 3v9"/><path d="M6.4 5.7a8 8 0 1 0 11.2 0"/>',
+    target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="m14 10 6-6"/>',
+    focus: '<path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/><circle cx="12" cy="12" r="3"/>',
+    edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>'
   };
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || ""}</svg>`;
 }
 
-function saveLocal(data) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch {}
-}
-
-function rememberAuth() {
-  try {
-    localStorage.setItem(AUTH_KEY, "1");
-  } catch {}
-  try {
-    sessionStorage.setItem(AUTH_KEY, "1");
-  } catch {}
-}
-
-function hasRememberedAuth() {
-  try {
-    if (localStorage.getItem(AUTH_KEY) === "1") return true;
-  } catch {}
-  try {
-    if (sessionStorage.getItem(AUTH_KEY) === "1") return true;
-  } catch {}
-  return false;
-}
-
-async function api(action, payload = {}) {
-  if (!API_URL) return localApi(action, payload);
-
-  const url = `${API_URL}${API_URL.includes("?") ? "&" : "?"}action=${encodeURIComponent(action)}`;
-  const options = action === "getDashboard"
-    ? {}
-    : {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload)
-      };
-  const response = await fetch(url, options);
-  if (!response.ok) throw new Error("API error");
-  const json = await response.json();
-  if (json.error) throw new Error(json.error);
-  return json;
-}
-
-async function localApi(action, payload) {
-  const data = loadLocal();
-  const today = data.today;
-  const now = new Date().toISOString();
-
-  if (action === "getDashboard") return data;
-
-  if (action === "completeMorning") {
-    const existing = data.morning_logs.some((log) => log.date === today);
-    if (!existing) data.morning_logs.push({ id: uid("m"), date: today, completed_at: now, timezone: TZ });
-    const memo = data.habit_logs.some((log) => log.habit_id === "h1" && log.date === today);
-    if (!memo) data.habit_logs.push({ id: uid("hl"), habit_id: "h1", date: today, completed_at: now });
-    saveLocal(data);
-    return { ok: true, existing, dashboard: data };
-  }
-
-  if (action === "completeHabit") {
-    const existing = data.habit_logs.some((log) => log.habit_id === payload.habit_id && log.date === today);
-    if (!existing) data.habit_logs.push({ id: uid("hl"), habit_id: payload.habit_id, date: today, completed_at: now });
-    saveLocal(data);
-    return { ok: true, existing, dashboard: data };
-  }
-
-  if (action === "saveDailyFocus") {
-    data.daily_focus = { ...data.daily_focus, ...payload, date: today, updated_at: now };
-    saveLocal(data);
-    return { ok: true, dashboard: data };
-  }
-
-  if (action === "completeFocusItem") {
-    data.daily_focus[`${payload.type}_done`] = true;
-    data.daily_focus.updated_at = now;
-    saveLocal(data);
-    return { ok: true, dashboard: data };
-  }
-
-  if (action === "addGoal") {
-    data.goals.push({ id: uid("g"), created_at: now, completed_at: "", sort_order: data.goals.length + 1, ...payload });
-    saveLocal(data);
-    return { ok: true, dashboard: data };
-  }
-
-  if (action === "updateGoal") {
-    data.goals = data.goals.map((goal) => goal.id === payload.id ? { ...goal, ...payload, completed_at: payload.status === "done" ? now : goal.completed_at } : goal);
-    saveLocal(data);
-    return { ok: true, dashboard: data };
-  }
-
-  if (action === "addIncome") {
-    data.income.push({ id: uid("i"), created_at: now, ...payload, amount: Number(payload.amount) || 0 });
-    saveLocal(data);
-    return { ok: true, dashboard: data };
-  }
-
-  return { ok: true, dashboard: data };
-}
-
-function compute(data) {
-  const today = data.today;
-  const start = data.settings.start_date || today;
-  const morningDates = [...new Set(data.morning_logs.map((log) => log.date))];
-  const habitToday = data.habit_logs.filter((log) => log.date === today);
-  const activeHabits = data.habits.filter((habit) => habit.is_active);
-  const month = today.slice(0, 7);
-  const monthIncome = data.income.filter((item) => String(item.date).slice(0, 7) === month);
-  const incomeTotal = monthIncome.reduce((sum, item) => sum + Number(item.amount || 0), 0);
-  const bySource = monthIncome.reduce((acc, item) => {
-    acc[item.source] = (acc[item.source] || 0) + Number(item.amount || 0);
-    return acc;
-  }, {});
-  const bestSource = Object.entries(bySource).sort((a, b) => b[1] - a[1])[0];
-
-  return {
-    morningDone: morningDates.includes(today),
-    morningStreak: currentStreak(morningDates, today),
-    morningTotal: morningDates.length,
-    totalDays: dayDiff(start, today),
-    habitsDone: new Set(habitToday.map((log) => log.habit_id)).size,
-    habitsTotal: activeHabits.length,
-    incomeTotal,
-    incomeProgress: Math.min(100, (incomeTotal / Number(data.settings.monthly_income_target || 1000000)) * 100),
-    bestSource: bestSource ? bestSource[0] : "Пока нет",
-    latestIncome: monthIncome.slice().sort((a, b) => String(b.date).localeCompare(String(a.date)))[0],
-    monthIncome,
-    bySource
-  };
-}
-
-function html(strings, ...values) {
-  return strings.map((string, index) => string + (values[index] ?? "")).join("");
-}
-
-function escapeHtml(value) {
-  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  })[char]);
-}
-
-function statusSymbol(status) {
-  return { active: "●", next: "○", done: "✓", paused: "⏸", removed: "✕" }[status] || "○";
-}
-
-function categoryClass(category) {
-  const map = {
-    "Деньги и капитал": "category-money",
-    "Бизнес и продукты": "category-mission",
-    "Медийность и личный бренд": "category-experience",
-    "Здоровье и энергия": "category-health",
-    "Семья и образ жизни": "category-life",
-    "Навыки и мышление": "category-mission",
-    "Вклад и след": "category-mission",
-    "Путешествия и свобода": "category-travel"
-  };
-  return map[category] || "category-life";
-}
-
-function goalProgress(status) {
-  return { active: 52, next: 18, done: 100, paused: 34, removed: 0 }[status] ?? 18;
-}
-
-function signalGraphic(type = "core", value = 54) {
-  const safeValue = Math.max(6, Math.min(100, Number(value) || 54));
-  return html`
-    <span class="signal-graphic signal-${escapeHtml(type)}" aria-hidden="true" style="--signal:${safeValue}%">
-      <span class="signal-orb"></span>
-      <span class="signal-ring"></span>
-      <span class="signal-bars"><i></i><i></i><i></i></span>
-    </span>
-  `;
-}
-
-function miniInfographic(type = "map", value = 48) {
-  const safeValue = Math.max(8, Math.min(100, Number(value) || 48));
-  return html`
-    <span class="mini-infographic mini-${escapeHtml(type)}" aria-hidden="true" style="--mini:${safeValue}%">
-      <svg viewBox="0 0 120 82" focusable="false">
-        <path class="terrain" d="M8 24 C28 12 42 30 60 20 C80 9 93 22 112 14" />
-        <path class="terrain muted" d="M8 45 C26 36 42 52 62 40 C80 30 96 48 112 38" />
-        <path class="route" d="M14 66 C34 48 48 68 64 46 C78 28 92 45 108 22" />
-        <circle class="node a" cx="14" cy="66" r="4" />
-        <circle class="node b" cx="64" cy="46" r="4" />
-        <circle class="node c" cx="108" cy="22" r="4" />
-      </svg>
-      <span class="mini-fill"></span>
-    </span>
-  `;
-}
-
-function focusFigure(type) {
-  const icons = { business: "₽", content: "▶", health: "⌁" };
-  return html`
-    <span class="focus-figure figure-${escapeHtml(type)}" aria-hidden="true">
-      <span>${icons[type] || "•"}</span>
-      <i></i>
-    </span>
-  `;
-}
-
-const artAssets = {
-  morning: "/me/assets/art-morning.jpg",
-  memo: "/me/assets/art-memo.jpg",
-  power: "/me/assets/art-power.jpg",
-  created: "/me/assets/art-created.jpg",
-  habits: "/me/assets/art-habits.jpg",
-  focus: "/me/assets/art-focus.jpg",
-  goals: "/me/assets/art-goals.jpg",
-  finance: "/me/assets/art-finance.jpg",
-};
-
-function artPlate(type, label, meta = "") {
-  const src = artAssets[type] || artAssets.morning;
-  return html`
-    <figure class="art-plate art-${escapeHtml(type)} parallax-card" data-parallax="0.045">
-      <img src="${src}" alt="" loading="lazy" decoding="async" />
-      <figcaption>
-        <span>${escapeHtml(label)}</span>
-        ${meta ? `<strong>${escapeHtml(meta)}</strong>` : ""}
-      </figcaption>
-    </figure>
-  `;
-}
-
-function render() {
-  const data = state.dashboard;
-  if (!data) return;
-  const c = compute(data);
-
-  document.getElementById("app").innerHTML = html`
-    <div class="app-shell neon-skins-shell">
-      <header class="topbar">
-        <div class="topbar-inner">
-          <div class="app-mark">RI</div>
-          <div class="status-strip" aria-label="Статус дня">
-            <span class="status-pill">Сегодня: <strong>${c.morningDone ? "выполнено" : "ожидает"}</strong></span>
-            <span class="status-pill">Привычки: <strong>${c.habitsDone}/${c.habitsTotal}</strong></span>
-            <span class="status-pill">Доход: <strong>${currency(c.incomeTotal)}</strong></span>
-            <span class="status-pill">Серия: <strong>${c.morningStreak} дн.</strong></span>
-          </div>
-          <nav class="desktop-nav" aria-label="Навигация">${navButtons()}</nav>
-        </div>
-      </header>
-      <main class="content atlas-canvas">
-        <div class="scene-glow glow-a" aria-hidden="true"></div>
-        <div class="scene-glow glow-b" aria-hidden="true"></div>
-        ${morningSection(data, c)}
-        ${powerSection()}
-        ${habitsSection(data, c)}
-        ${focusSection(data)}
-        ${goalsSection(data)}
-        ${financeSection(data, c)}
-      </main>
-      <nav class="bottom-nav" aria-label="Основная навигация"><div class="bottom-nav-inner">${navButtons()}</div></nav>
-      <div class="toast" id="toast" role="status" aria-live="polite">${escapeHtml(state.toast)}</div>
-      ${modalMarkup()}
-    </div>
-  `;
-
-  bindEvents();
-  updateActiveNav();
-  if (state.toast) requestAnimationFrame(() => document.getElementById("toast")?.classList.add("show"));
-}
-
-function renderLock() {
-  document.getElementById("app").innerHTML = html`
+function renderLock(error = "") {
+  document.getElementById("app").innerHTML = `
     <main class="lock-screen">
-      <section class="lock-card" aria-labelledby="lock-title">
-        <div class="app-mark">RI</div>
-        <p class="kicker">Закрытый раздел</p>
-        <h1 id="lock-title">Введите пароль</h1>
-        <p class="lead">Личная утренняя система открывается только после входа.</p>
-        <form id="lock-form" class="field-grid">
-          <label class="field">Пароль<input id="lock-password" type="password" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="••••••" autofocus /></label>
-          ${state.lockError ? `<p class="personal-error">${escapeHtml(state.lockError)}</p>` : ""}
-          <button class="button primary" type="submit">Войти</button>
+      <div class="lock-brand">ME.</div>
+      <div class="lock-art" aria-hidden="true">
+        <div class="lock-orb"></div>
+        <img class="lock-person" src="/me/roman-hero.png" alt="" />
+      </div>
+      <section class="lock-panel">
+        <h1>Личное<br>пространство.</h1>
+        <p>Утренний настрой, сильные стороны, цели и точный фокус дня.</p>
+        <form class="lock-form" id="lock-form">
+          <input class="lock-input" id="lock-password" type="password" inputmode="numeric" autocomplete="current-password" aria-label="Пароль" placeholder="Пароль" autofocus />
+          <button class="unlock-button" aria-label="Войти">→</button>
         </form>
+        ${error ? `<p class="lock-error">${escapeHtml(error)}</p>` : ""}
       </section>
-    </main>
-  `;
+    </main>`;
 
-  document.getElementById("lock-form").addEventListener("submit", async (event) => {
+  document.getElementById("lock-form")?.addEventListener("submit", (event) => {
     event.preventDefault();
     const value = document.getElementById("lock-password").value;
-    if (value !== ACCESS_PASSWORD) {
-      state.lockError = "Неверный пароль. Попробуйте ещё раз.";
-      renderLock();
-      return;
-    }
-
+    if (value !== ACCESS_PASSWORD) return renderLock("Не тот пароль.");
+    localStorage.setItem(AUTH_KEY, "yes");
     state.unlocked = true;
-    state.lockError = "";
-    rememberAuth();
-    await loadDashboard();
-  });
-
-  document.getElementById("lock-password").addEventListener("input", (event) => {
-    event.target.value = event.target.value.replace(/\D/g, "").slice(0, 6);
-    state.lockError = "";
+    loadDashboard();
   });
 }
 
-function navButtons() {
-  return [
-    ["morning", "Утро"],
-    ["power", "Сила"],
-    ["habits", "Привычки"],
-    ["goals", "Цели"],
-    ["money", "Деньги"]
-  ].map(([id, label]) => `<button data-scroll="${id}" class="${state.activeNav === id ? "is-active" : ""}">${label}</button>`).join("");
+function strengthMarkup(item, index) {
+  return `
+    <article class="strength-item">
+      <span class="strength-number">${String(index + 1).padStart(2, "0")}</span>
+      <div class="strength-name">${escapeHtml(item.title)}</div>
+      <div class="strength-body">
+        <p class="strength-evidence">${escapeHtml(item.evidence)}</p>
+        <p class="strength-rule">Сегодня: ${escapeHtml(item.today_rule)}</p>
+      </div>
+    </article>`;
 }
 
-function morningSection(data, c) {
-  return html`
-    <section class="hero section parallax-zone" id="morning">
-      <div class="hero-orbit" aria-hidden="true">
-        <span></span><span></span><span></span>
+function goalMarkup(goal) {
+  const image = safeUrl(goal.image_url);
+  return `
+    <article class="goal-poster" data-goal-card="${escapeHtml(goal.id)}">
+      ${image ? `<img class="goal-image" src="${image}" alt="${escapeHtml(goal.title)}" loading="lazy" />` : '<div class="goal-fallback" aria-hidden="true"></div>'}
+      <div class="goal-topline">
+        <span class="goal-category">${escapeHtml(goal.category || "Цель")}</span>
+        <span class="goal-status">↗</span>
       </div>
-      <div class="hero-image parallax-item" data-parallax="0.10"><img src="/me/roman-hero.png" alt="Роман Исаев в тёмном кинематографичном свете" /></div>
-      <div class="hero-copy">
-        <p class="kicker">Личная система утра</p>
-        <h1>Роман Исаев. День начинается с выбора состояния.</h1>
-        <p class="lead">Я начинаю день не с хаоса, телефона и чужих новостей. Я начинаю день с возвращения к себе, своим целям и действиям.</p>
-        <div class="hero-actions">
-          <button class="button primary" data-action="completeMorning" ${c.morningDone ? "disabled" : ""}>${c.morningDone ? "Утро зафиксировано" : "Начать утро"}</button>
-          <button class="button secondary" data-scroll="memo">Открыть медитацию</button>
-        </div>
-        <p class="hero-note">${c.morningDone ? "Утро уже начато. Второй раз система не считает." : "Нажатие фиксирует сегодняшний утренний ритуал. Один день. Один выбор. Одна точка возвращения к себе."}</p>
-        <div class="hero-stats">
-          <div class="metric metric-skin">${signalGraphic("streak", Math.min(100, c.morningStreak * 12))}<span>Серия утра</span><strong>${c.morningStreak} дней</strong></div>
-          <div class="metric metric-skin">${signalGraphic("path", Math.min(100, (c.morningTotal / Math.max(1, c.totalDays)) * 100))}<span>С начала пути</span><strong>${c.morningTotal} из ${c.totalDays}</strong></div>
-          <div class="metric metric-skin">${signalGraphic("habit", Math.min(100, (c.habitsDone / Math.max(1, c.habitsTotal)) * 100))}<span>Привычки сегодня</span><strong>${c.habitsDone}/${c.habitsTotal}</strong></div>
-          <div class="metric metric-skin">${signalGraphic("money", Math.min(100, c.incomeProgress))}<span>Доход месяца</span><strong>${currency(c.incomeTotal)}</strong></div>
+      <div class="goal-content">
+        <h3>${escapeHtml(goal.title)}</h3>
+        ${goal.description ? `<p class="goal-description">${escapeHtml(goal.description)}</p>` : ""}
+        <div class="goal-meta">
+          <span class="goal-price"><small>Стоимость / ориентир</small><strong>${escapeHtml(formatGoalPrice(goal))}</strong></span>
+          <span class="goal-date"><small>Срок</small>${escapeHtml(formatTargetDate(goal.target_date))}</span>
         </div>
       </div>
-      <aside class="hero-command" aria-label="Состояние дня">
-        ${artPlate("morning", "Утренний артефакт", c.morningDone ? "состояние выбрано" : "ожидает запуска")}
-        <div class="command-card">
-          ${miniInfographic("state", c.morningDone ? 100 : 28)}
-          <span>Сегодня</span>
-          <strong>${c.morningDone ? "выполнено" : "ожидает"}</strong>
-        </div>
-        <div class="command-card">
-          ${miniInfographic("habits", Math.min(100, (c.habitsDone / Math.max(1, c.habitsTotal)) * 100))}
-          <span>Привычки</span>
-          <strong>${c.habitsDone}/${c.habitsTotal}</strong>
-        </div>
-        <div class="command-card">
-          ${miniInfographic("capital", Math.min(100, c.incomeProgress))}
-          <span>До 1 млн</span>
-          <strong>${currency(Math.max(0, Number(data.settings.monthly_income_target || 1000000) - c.incomeTotal))}</strong>
-        </div>
-      </aside>
-    </section>
-    <section class="section" id="memo">
-      <div class="visual-ledger memo-ledger">
-        ${artPlate("memo", "Меморандум", c.morningDone ? "открыт" : "после старта утра")}
-        <details class="accordion" ${c.morningDone ? "open" : ""}>
-          <summary>Меморандум утра</summary>
-          <div class="accordion-body memorandum-text">${morningText.map((p) => `<p>${escapeHtml(p)}</p>`).join("")}</div>
-        </details>
-      </div>
-    </section>
-  `;
+      <button class="goal-edit" data-action="editGoal" data-goal-id="${escapeHtml(goal.id)}" aria-label="Редактировать цель">${icon("edit")}</button>
+    </article>`;
 }
 
-function powerSection() {
-  return html`
-    <section class="section vault-section" id="power">
-      <div class="section-head">
-        <h2>Мои суперсилы</h2>
-        <p>Это не список приятных качеств для самоуспокоения. Это реальные рычаги, которые уже приносили результат.</p>
-      </div>
-      <div class="visual-ledger">
-        ${artPlate("power", "Ядро силы", "10 рычагов")}
-        <div class="visual-ledger-copy card">
-          <h3>Режим суперсил</h3>
-          <p>Сила здесь выглядит не как список, а как инвентарь реальных рычагов: каждый уже приносил результат и может быть включён сегодня.</p>
-        </div>
-      </div>
-      <div class="power-rail" aria-label="Карточки суперсил">
-        ${superpowers.map((power, index) => html`
-          <article class="card power-card parallax-card" style="--motion-index:${index};--tilt:${(index % 5) - 2}">
-            ${miniInfographic("power", 28 + ((index * 9) % 62))}
-            <h3>${escapeHtml(power.title)}</h3>
-            <p>${escapeHtml(power.evidence)}</p>
-            <p class="rule">${escapeHtml(power.today_rule)}</p>
-          </article>
-        `).join("")}
-      </div>
-    </section>
-    <section class="section" id="created">
-      <div class="section-head">
-        <h2>Уже создано</h2>
-        <p>Когда мозг говорит ты не двигаешься, я показываю ему факты.</p>
-      </div>
-      <div class="card achievement-vault">
-        ${artPlate("created", "Доказательства", `${achievements.length} фактов`)}
-        <ul class="done-list">${achievements.map((item) => `<li><span class="check">✓</span><span>${escapeHtml(item)}</span></li>`).join("")}</ul>
-        <p class="fine-print">Я уже умею создавать результат. Моя задача сейчас не искать доказательства собственной ценности. Моя задача превратить силу в систему.</p>
-      </div>
-    </section>
-  `;
-}
-
-function habitStats(data, habitId) {
-  const dates = [...new Set(data.habit_logs.filter((log) => log.habit_id === habitId).map((log) => log.date))];
-  return {
-    doneToday: dates.includes(data.today),
-    streak: currentStreak(dates, data.today),
-    total: dates.length,
-    days: dayDiff(data.settings.start_date, data.today)
-  };
-}
-
-function habitsSection(data, c) {
-  const allDone = c.habitsDone === c.habitsTotal;
-  return html`
-    <section class="section" id="habits">
-      <div class="section-head">
-        <h2>Привычки, которые держат систему</h2>
-        <p>Моя жизнь меняется от повторяемых действий, которые я фиксирую руками.</p>
-      </div>
-      <div class="metric-grid">
-        <div class="metric"><span>Сегодня выполнено</span><strong>${c.habitsDone} из ${c.habitsTotal}</strong></div>
-        <div class="metric"><span>Текущая серия</span><strong>${c.morningStreak} дней</strong></div>
-      </div>
-      <div class="visual-ledger visual-ledger-reverse">
-        <div class="visual-ledger-copy card">
-          <h3>Колесо системы</h3>
-          <p>Шесть привычек теперь собраны как один механизм: если закрывается маленький модуль, двигается вся система.</p>
-        </div>
-        ${artPlate("habits", "Контур привычек", `${c.habitsDone}/${c.habitsTotal} сегодня`)}
-      </div>
-      ${allDone ? `<p class="card fine-print">Система закрыта на сегодня. Теперь не обесценивай. Это и есть фундамент масштаба.</p>` : ""}
-      <div class="habit-board">
-        ${data.habits.filter((habit) => habit.is_active).map((habit, index) => {
-          const stats = habitStats(data, habit.id);
-          return html`
-            <article class="card habit-card parallax-card" style="--motion-index:${index};--habit:${stats.doneToday ? 100 : Math.min(100, stats.streak * 14)}">
-              ${signalGraphic(stats.doneToday ? "done" : "wait", stats.doneToday ? 100 : Math.min(100, stats.streak * 14))}
-              <div>
-                <h3>${escapeHtml(habit.title)}</h3>
-                <p>${escapeHtml(habit.description)}</p>
-                <p><strong>Минимум дня:</strong> ${escapeHtml(habit.minimum_action)}</p>
-              </div>
-              <div class="habit-meta">
-                <span class="tag ${stats.doneToday ? "success" : "warning"}">Сегодня: ${stats.doneToday ? "выполнено" : "ожидает"}</span>
-                <span class="tag">Серия: ${stats.streak}</span>
-                <span class="tag">С начала: ${stats.total} из ${stats.days}</span>
-              </div>
-              <button class="tap-card" data-action="completeHabit" data-habit="${habit.id}" ${stats.doneToday ? "disabled" : ""}>${stats.doneToday ? "Сегодня уже отмечено" : escapeHtml(habit.button || "Отметить сегодня")}</button>
-            </article>
-          `;
-        }).join("")}
-      </div>
-    </section>
-  `;
-}
-
-function focusSection(data) {
-  const focus = data.daily_focus;
-  const items = [
-    ["business", "Деньги / бизнес", "business_task", "business_trigger", "business_action", "business_limit"],
-    ["content", "Контент / медийность", "content_task", "content_trigger", "content_action", "content_limit"],
-    ["health", "Здоровье / энергия", "health_task", "health_trigger", "health_action", "health_limit"]
-  ];
-  return html`
-    <section class="section mission-board" id="focus">
-      <div class="section-head">
-        <h2>Фокус дня</h2>
-        <p>Сегодня не нужно делать всё. Сегодня нужно сделать то, что двигает деньги, контент и энергию.</p>
-      </div>
-      <div class="visual-ledger focus-ledger">
-        ${artPlate("focus", "Командный треугольник", "деньги · контент · энергия")}
-        <div class="visual-ledger-copy card">
-          <h3>Три действия</h3>
-          <p>Фокус дня собран как командная панель: одно действие для денег, одно для контента, одно для здоровья.</p>
-        </div>
-      </div>
-      <div class="focus-grid">
-        ${items.map(([type, title, task, trigger, action, limit]) => html`
-          <article class="focus-card parallax-card">
-            ${focusFigure(type)}
-            <h3>${title}</h3>
-            <div class="field-grid">
-              <label class="field">Задача<textarea data-focus="${task}">${escapeHtml(focus[task] || "")}</textarea></label>
-              <label class="field">Если<input data-focus="${trigger}" value="${escapeHtml(focus[trigger] || "")}" /></label>
-              <label class="field">То<input data-focus="${action}" value="${escapeHtml(focus[action] || "")}" /></label>
-              <label class="field">Лимит<input data-focus="${limit}" value="${escapeHtml(focus[limit] || "")}" /></label>
-              <div class="button-row">
-                <button class="button secondary" data-action="saveFocus">Сохранить</button>
-                <button class="button primary" data-action="completeFocus" data-type="${type}" ${focus[`${type}_done`] ? "disabled" : ""}>${focus[`${type}_done`] ? "Выполнено" : "Выполнено"}</button>
-              </div>
-            </div>
-          </article>
-        `).join("")}
-      </div>
-      <p class="fine-print">День считается сильным, если закрыты три направления: деньги, контент, здоровье. Масштаб держится на системе, а не на случайном вдохновении.</p>
-    </section>
-  `;
-}
-
-function goalsSection(data) {
-  const visibleGoals = data.goals.filter((goal) => goal.status !== "removed");
-  const activeGoals = visibleGoals.filter((goal) => goal.status === "active").slice(0, 4);
-  return html`
-    <section class="section atlas-map" id="goals">
-      <div class="section-head">
-        <h2>Цели</h2>
-        <p>Не бесконечный список мечтаний. Компактная карта того, что я строю.</p>
-      </div>
-      <div class="atlas-overview">
-        <article class="atlas-prime">
-          <span class="atlas-label">Главные активные маршруты</span>
-          ${artPlate("goals", "Карта целей", `${activeGoals.length} активных маршрута`)}
-          <div class="prime-goals">
-            ${activeGoals.map((goal, index) => html`
-              <div class="prime-goal motion-item ${categoryClass(goal.category)}" style="--motion-index:${index}">
-                ${miniInfographic("prime", goalProgress(goal.status))}
-                <span>${escapeHtml(goal.category)}</span>
-                <strong>${escapeHtml(goal.title)}</strong>
-              </div>
-            `).join("")}
-          </div>
-        </article>
-        <div class="territory-grid" aria-label="Карта направлений">
-          ${categories.map((category) => {
-            const goals = visibleGoals.filter((goal) => goal.category === category);
-            const completed = goals.filter((goal) => goal.status === "done").length;
-            const active = goals.filter((goal) => goal.status === "active").length;
-            const progress = goals.length ? Math.round((completed / goals.length) * 100) : 0;
-            return html`
-              <button class="territory-tile motion-item ${categoryClass(category)}" data-category-jump="${escapeHtml(category)}" style="--category-progress:${progress}%;--motion-index:${categories.indexOf(category)}">
-                ${miniInfographic("territory", progress || 18)}
-                <span>${escapeHtml(category)}</span>
-                <strong>${active} активных</strong>
-                <em>${goals.length} целей · ${progress}%</em>
-                <i aria-hidden="true"><b></b></i>
-              </button>
-            `;
-          }).join("")}
-        </div>
-      </div>
-      <div class="habit-meta">
-        <span class="tag">● Активная</span><span class="tag">○ Следующая</span><span class="tag">✓ Выполнена</span><span class="tag">⏸ На паузе</span><span class="tag">✕ Больше не моя</span>
-      </div>
-      ${categories.map((category, index) => {
-        const goals = data.goals.filter((goal) => goal.category === category && goal.status !== "removed");
-        const completed = goals.filter((goal) => goal.status === "done").length;
-        const progress = goals.length ? Math.round((completed / goals.length) * 100) : 0;
-        return html`
-          <details class="accordion category-section motion-item ${categoryClass(category)}" data-category="${escapeHtml(category)}" style="--category-progress:${progress}%;--motion-index:${index}" ${index < 2 ? "open" : ""}>
-            <summary>
-              <span class="category-title">${escapeHtml(category)}</span>
-              <span class="category-summary">${goals.length} целей · ${progress}%</span>
-              <span class="category-route" aria-hidden="true"><span></span></span>
-            </summary>
-            <div class="accordion-body stack">
-              ${goals.length ? goals.map((goal, goalIndex) => goalRow(goal, goalIndex)).join("") : `<p class="empty">Здесь пока пусто. Цель появится, когда будет настоящая причина.</p>`}
-              <button class="button secondary" data-modal="goal" data-category="${escapeHtml(category)}">Добавить цель</button>
-            </div>
-          </details>
-        `;
-      }).join("")}
-    </section>
-  `;
-}
-
-function goalRow(goal, index = 0) {
-  const doneClass = goal.status === "done" ? " done" : "";
-  const variant = goal.status === "active" ? "featured" : goal.status === "next" ? "future" : goal.status === "done" ? "completed" : "milestone";
-  return html`
-    <article class="goal-row motion-item goal-${variant} goal-status-${escapeHtml(goal.status)} ${categoryClass(goal.category)}${doneClass}" style="--goal-progress:${goalProgress(goal.status)}%;--motion-index:${index}">
-      <span class="goal-orbit" aria-hidden="true"></span>
-      ${miniInfographic("goal", goalProgress(goal.status))}
-      <div class="goal-title">
-        <strong>${statusSymbol(goal.status)} ${escapeHtml(goal.title)}</strong>
-        <span class="tag">${escapeHtml(goal.status)}</span>
-      </div>
-      <div class="goal-route" aria-hidden="true"><span></span></div>
-      ${goal.description ? `<p>${escapeHtml(goal.description)}</p>` : ""}
-      ${goal.deadline ? `<p>Срок: ${escapeHtml(goal.deadline)}</p>` : ""}
-      <div class="mini-actions">
-        <button data-modal="goal" data-goal="${goal.id}">Редактировать</button>
-        <button data-action="goalStatus" data-goal="${goal.id}" data-status="done">Выполнена</button>
-        <button data-action="goalStatus" data-goal="${goal.id}" data-status="paused">Пауза</button>
-        <button data-action="goalStatus" data-goal="${goal.id}" data-status="active">Активная</button>
-        <button data-action="goalStatus" data-goal="${goal.id}" data-status="removed">Больше не моя</button>
-      </div>
-    </article>
-  `;
-}
-
-function financeSection(data, c) {
-  const target = Number(data.settings.monthly_income_target || 1000000);
-  const byDay = c.monthIncome.reduce((acc, item) => {
-    const key = String(item.date).slice(8, 10);
-    acc[key] = (acc[key] || 0) + Number(item.amount || 0);
-    return acc;
-  }, {});
-  const maxDay = Math.max(1, ...Object.values(byDay), ...Object.values(c.bySource));
-
-  return html`
-    <section class="section" id="money">
-      <div class="section-head">
-        <h2>Финансы без тумана</h2>
-        <p>Деньги не оценивают меня как человека. Они показывают, где рынок уже сказал да.</p>
-      </div>
-      <div class="grid two">
-        <article class="finance-card card">
-          ${artPlate("finance", "Финансовое ядро", `${Math.round(c.incomeProgress)}% к цели`)}
-          <h3>Главный статус</h3>
-          <div class="metric-grid">
-            <div class="metric"><span>Доход месяца</span><strong>${currency(c.incomeTotal)}</strong></div>
-            <div class="metric"><span>Осталось до 1 млн</span><strong>${currency(Math.max(0, target - c.incomeTotal))}</strong></div>
-            <div class="metric"><span>База месяца</span><strong>${currency(data.settings.stable_base_min)}–${currency(data.settings.stable_base_max)}</strong></div>
-            <div class="metric"><span>Лучший источник</span><strong>${escapeHtml(c.bestSource)}</strong></div>
-          </div>
-          <p class="fine-print">Выполнение: ${Math.round(c.incomeProgress)}%</p>
-          <div class="progress" style="--progress: ${c.incomeProgress}%"><span></span></div>
-          <p class="fine-print">Последнее поступление: ${c.latestIncome ? `${currency(c.latestIncome.amount)} · ${escapeHtml(c.latestIncome.source)}` : "пока нет"}</p>
-        </article>
-        <article class="finance-card card">
-          <h3>Добавить доход</h3>
-          <div class="field-grid">
-            <label class="field">Дата<input id="income-date" type="date" value="${data.today}" /></label>
-            <label class="field">Сумма<input id="income-amount" inputmode="numeric" placeholder="10000" /></label>
-            <label class="field">Источник<select id="income-source">${incomeSources.map((s) => `<option>${escapeHtml(s)}</option>`).join("")}</select></label>
-            <label class="field">Проект / клиент<input id="income-project" placeholder="Клиент или проект" /></label>
-            <label class="field">Комментарий<textarea id="income-comment" placeholder="Что сработало"></textarea></label>
-            <button class="button primary" data-action="addIncome">Добавить доход</button>
-          </div>
-        </article>
-      </div>
-      <div class="grid two">
-        <article class="card">
-          <h3>Доход по дням</h3>
-          <div class="bars">${Object.keys(byDay).length ? Object.entries(byDay).map(([day, amount]) => barRow(day, amount, maxDay)).join("") : `<p class="empty">Доходы пока не добавлены. Первое поступление не обязано быть большим. Оно обязано быть зафиксированным.</p>`}</div>
-        </article>
-        <article class="card">
-          <h3>Доход по источникам</h3>
-          <div class="bars">${Object.keys(c.bySource).length ? Object.entries(c.bySource).map(([source, amount]) => barRow(source, amount, maxDay)).join("") : `<p class="empty">Пока нет источников за месяц.</p>`}</div>
-        </article>
-      </div>
-      <article class="card">
-        <h3>Последние поступления</h3>
-        <div class="stack">${c.monthIncome.length ? c.monthIncome.slice(-6).reverse().map((item) => `<div class="goal-row"><div class="goal-title"><strong>${currency(item.amount)}</strong><span class="tag">${escapeHtml(item.date)}</span></div><p>${escapeHtml(item.source)} ${item.project_or_client ? `· ${escapeHtml(item.project_or_client)}` : ""}</p></div>`).join("") : `<p class="empty">Доходы пока не добавлены.</p>`}</div>
-      </article>
-      <p class="fine-print">Я не прячусь от цифр. Цифры не враги. Цифры это приборная панель.</p>
-    </section>
-  `;
-}
-
-function barRow(label, amount, max) {
-  return `<div class="bar-row"><span>${escapeHtml(label)}</span><div class="bar-track"><span style="--bar:${Math.max(4, (amount / max) * 100)}%"></span></div><strong>${currency(amount)}</strong></div>`;
-}
-
-function modalMarkup() {
-  if (!state.modal) return `<div class="dialog-backdrop" id="dialog"></div>`;
+function mainMarkup() {
   const data = state.dashboard;
-  const goal = state.modal.goalId ? data.goals.find((item) => item.id === state.modal.goalId) : null;
-  const category = goal?.category || state.modal.category || categories[0];
-  return html`
-    <div class="dialog-backdrop show" id="dialog">
-      <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="goal-title">
-        <div class="sheet-head">
-          <h3 id="goal-title">${goal ? "Редактировать цель" : "Добавить цель"}</h3>
-          <button class="icon-button" data-close-modal aria-label="Закрыть">×</button>
+  const streak = currentStreak(data);
+  const morningDone = isMorningDone(data);
+  const goals = data.goals.filter((goal) => goal.status !== "removed");
+  const focus = data.daily_focus;
+
+  return `
+    <div class="site-shell">
+      <header class="topbar">
+        <div class="brand"><b>ME.</b><span>Roman Isaev</span></div>
+        <div class="top-meta">
+          <span class="today-label">${escapeHtml(formatToday())}</span>
+          <span class="sync-state ${API_URL ? "is-cloud" : ""}">${API_URL ? "Google" : "На устройстве"}</span>
         </div>
-        <div class="field-grid">
-          <label class="field">Категория<select id="goal-category">${categories.map((item) => `<option ${item === category ? "selected" : ""}>${escapeHtml(item)}</option>`).join("")}</select></label>
-          <label class="field">Название цели<input id="goal-title-input" value="${escapeHtml(goal?.title || "")}" /></label>
-          <label class="field">Описание<textarea id="goal-description">${escapeHtml(goal?.description || "")}</textarea></label>
-          <label class="field">Причина / зачем<textarea id="goal-reason">${escapeHtml(goal?.reason || "")}</textarea></label>
-          <fieldset class="quality-filter" aria-label="Проверка качества цели">
-            <legend>Проверка качества цели</legend>
-            <label><input type="checkbox" /> <span>цель завершённая</span></label>
-            <label><input type="checkbox" /> <span>цель измеримая</span></label>
-            <label><input type="checkbox" /> <span>цель конкретная</span></label>
-            <label><input type="checkbox" /> <span>цель доказуемая</span></label>
-          </fieldset>
-          <label class="field">Статус<select id="goal-status">${["active", "next", "done", "paused", "removed"].map((s) => `<option value="${s}" ${goal?.status === s ? "selected" : ""}>${s}</option>`).join("")}</select></label>
-          <label class="field">Срок<input id="goal-deadline" type="date" value="${escapeHtml(goal?.deadline || "")}" /></label>
-          <label class="field">Заметки<textarea id="goal-notes">${escapeHtml(goal?.notes || "")}</textarea></label>
-          <button class="button primary" data-action="saveGoal" data-goal="${goal?.id || ""}">Сохранить</button>
-        </div>
-      </div>
+      </header>
+
+      <main>
+        <section class="hero" id="morning">
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hero-sun"></div>
+            <img class="hero-person" src="/me/roman-hero.png" alt="" />
+            <span class="ribbon ribbon-a"></span>
+            <span class="ribbon ribbon-b"></span>
+          </div>
+          <div class="hero-copy">
+            <div class="eyebrow">Личная система · ${escapeHtml(formatToday())}</div>
+            <h1>${greeting()}, <span>Роман.</span></h1>
+            <p class="hero-lead">Сегодня достаточно трёх точных действий: для денег, контента и здоровья.</p>
+            <button class="morning-trigger ${morningDone ? "is-done" : ""}" data-action="startMeditation">
+              <span class="trigger-copy">
+                <strong>${morningDone ? "Утро выполнено" : "Начать утро"}</strong>
+                <span>${morningDone ? "Можно перечитать медитацию" : "14 мыслей · около 4 минут"}</span>
+              </span>
+              <span class="streak"><strong>${streak}</strong><small>${daysWord(streak)}</small></span>
+            </button>
+            <p class="hero-status"><i></i>${morningDone ? "Сегодня зафиксировано" : "Сегодня ещё не зафиксировано"}</p>
+          </div>
+        </section>
+
+        <section class="section strengths-section" id="strengths">
+          <div class="section-kicker">02 · На что я опираюсь</div>
+          <h2>Мои сильные<br>стороны.</h2>
+          <p class="section-intro">Не список приятных качеств, а реальные рычаги, которые уже давали результат.</p>
+          <div class="strength-list">
+            ${data.strengths.filter((item) => item.active !== false).sort((a, b) => Number(a.sort_order) - Number(b.sort_order)).map(strengthMarkup).join("")}
+          </div>
+          <div class="review-note">
+            <b>Черновик для совместной проверки</b>
+            <span>Следующим шагом пройдём по каждому пункту: оставим факты, уберём неточности и усилим формулировки.</span>
+          </div>
+        </section>
+
+        <section class="section goals-section" id="goals">
+          <div class="goals-head">
+            <div>
+              <div class="section-kicker">03 · Куда я иду</div>
+              <h2>Цели, которые<br>можно увидеть.</h2>
+              <p class="section-intro">Фотография, точное название, цена и дата — чтобы мечта перестала быть туманной.</p>
+            </div>
+            <button class="add-goal-button" data-action="addGoal"><span>Добавить цель</span><span>+</span></button>
+          </div>
+          <div class="goals-grid ${state.showAllGoals ? "is-expanded" : ""}">
+            ${goals.map(goalMarkup).join("") || '<p>Пока нет целей. Добавьте первую.</p>'}
+          </div>
+          ${goals.length > 5 ? `<div class="goals-more"><button class="text-button" data-action="toggleGoals">${state.showAllGoals ? "Свернуть" : `Показать все · ${goals.length}`}</button></div>` : ""}
+        </section>
+
+        <section class="section focus-section" id="focus">
+          <div class="section-kicker">04 · Только сегодня</div>
+          <h2>Фокус дня.</h2>
+          <p class="section-intro">Не победить всю жизнь. Сделать по одному честному действию в трёх направлениях.</p>
+          <div class="focus-list">
+            ${focusRow("money", "₽", "Деньги", focus.money_task, focus.money_done)}
+            ${focusRow("content", "●", "Контент", focus.content_task, focus.content_done)}
+            ${focusRow("health", "↗", "Здоровье", focus.health_task, focus.health_done)}
+          </div>
+          <div class="focus-footer">
+            <p>Данные сохраняются сразу на этом устройстве${API_URL ? " и синхронизируются с Google-таблицей" : ". Google-синхронизация подготовлена к подключению"}.</p>
+            <button class="save-focus" data-action="saveFocus">Сохранить фокус</button>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <p class="footer-word">ME.</p>
+        <small>Роман Исаев<br>личная система · 2026</small>
+      </footer>
     </div>
-  `;
+
+    <nav class="bottom-nav" aria-label="Навигация">
+      ${navButton("morning", "home", "Утро", true)}
+      ${navButton("strengths", "power", "Сила")}
+      ${navButton("goals", "target", "Цели")}
+      ${navButton("focus", "focus", "Фокус")}
+    </nav>
+    ${state.meditationStep !== null ? meditationMarkup() : ""}
+    ${state.modal ? goalModalMarkup() : ""}`;
+}
+
+function focusRow(type, symbol, label, value, done) {
+  return `
+    <div class="focus-row">
+      <span class="focus-icon" aria-hidden="true">${symbol}</span>
+      <span class="focus-copy">
+        <label for="focus-${type}">${label}</label>
+        <input class="focus-input" id="focus-${type}" data-focus-field="${type}_task" value="${escapeHtml(value || "")}" placeholder="Одно точное действие" />
+      </span>
+      <button class="focus-check ${done ? "is-done" : ""}" data-action="toggleFocus" data-focus-type="${type}" aria-label="${done ? "Снять отметку" : "Отметить выполненным"}">✓</button>
+    </div>`;
+}
+
+function navButton(target, iconName, label, active = false) {
+  return `<button class="nav-button ${active ? "is-active" : ""}" data-scroll="${target}">${icon(iconName)}<span>${label}</span></button>`;
+}
+
+function meditationMarkup() {
+  const index = state.meditationStep;
+  const last = index === MORNING_TEXT.length - 1;
+  return `
+    <section class="meditation" role="dialog" aria-modal="true" aria-label="Утренняя медитация">
+      <div class="meditation-top">
+        <button class="meditation-close" data-action="closeMeditation" aria-label="Закрыть">×</button>
+        <div class="meditation-progress" aria-label="Прогресс"><span style="--progress:${((index + 1) / MORNING_TEXT.length) * 100}%"></span></div>
+        <span class="meditation-count">${index + 1} / ${MORNING_TEXT.length}</span>
+      </div>
+      <div class="meditation-art" aria-hidden="true">
+        <div class="meditation-orb"></div>
+        <img class="meditation-person" src="/me/roman-hero.png" alt="" />
+      </div>
+      <div class="meditation-stage">
+        <div class="meditation-label">Утренний настрой</div>
+        <p class="meditation-text" key="${index}">${escapeHtml(MORNING_TEXT[index])}</p>
+      </div>
+      <div class="meditation-actions">
+        <button class="meditation-back" data-action="prevMeditation" ${index === 0 ? "disabled" : ""} aria-label="Назад">←</button>
+        <button class="meditation-next ${last ? "is-final" : ""}" data-action="nextMeditation">${last ? "Завершить и зафиксировать" : "Дальше →"}</button>
+      </div>
+    </section>`;
+}
+
+function emptyGoal() {
+  const goal = normalizeGoal({
+    id: "",
+    title: "",
+    description: "",
+    source_url: "",
+    image_url: "",
+    price_value: "",
+    currency: "RUB",
+    price_text: "",
+    target_date: "",
+    status: "active",
+    category: "Личное"
+  }, 0);
+  goal.id = "";
+  return goal;
+}
+
+function goalModalMarkup() {
+  const draft = state.modal.draft;
+  const editing = Boolean(draft.id);
+  return `
+    <div class="dialog-backdrop" data-action="closeModal">
+      <section class="goal-sheet" role="dialog" aria-modal="true" aria-labelledby="goal-sheet-title">
+        <div class="sheet-handle"></div>
+        <header class="sheet-head">
+          <div>
+            <h3 id="goal-sheet-title">${editing ? "Настроить цель" : "Новая цель"}</h3>
+            <p>Вставьте ссылку — название, фото и цена подтянутся при доступной синхронизации.</p>
+          </div>
+          <button class="sheet-close" data-action="closeModal" aria-label="Закрыть">×</button>
+        </header>
+
+        <div class="goal-resolver">
+          <label for="goal-query">Ссылка или свободное описание</label>
+          <div class="resolver-row">
+            <input id="goal-query" value="${escapeHtml(state.modal.query || draft.source_url || "")}" placeholder="Например: оранжевый Lamborghini Urus" />
+            <button class="resolver-button" data-action="resolveGoal">Заполнить</button>
+          </div>
+          <p class="resolver-hint">Ссылки разбираются по данным страницы. Свободный поиск фото и актуальной цены потребует отдельного поискового API.</p>
+        </div>
+
+        <div class="form-grid">
+          <label class="field is-wide">Название
+            <input id="goal-title" value="${escapeHtml(draft.title)}" placeholder="Что именно я хочу" />
+          </label>
+          <label class="field is-wide">Описание
+            <textarea id="goal-description" placeholder="Зачем это мне">${escapeHtml(draft.description)}</textarea>
+          </label>
+          <label class="field is-wide">Фотография — URL
+            <input id="goal-image" type="url" value="${escapeHtml(draft.image_url)}" placeholder="https://…" />
+          </label>
+          <label class="field is-wide">Источник — URL
+            <input id="goal-source" type="url" value="${escapeHtml(draft.source_url)}" placeholder="https://…" />
+          </label>
+          <label class="field">Цена числом
+            <input id="goal-price-value" inputmode="decimal" value="${escapeHtml(draft.price_value)}" placeholder="27500000" />
+          </label>
+          <label class="field">Валюта
+            <select id="goal-currency">${["RUB", "USD", "EUR", "AED", "GBP"].map((currency) => `<option ${draft.currency === currency ? "selected" : ""}>${currency}</option>`).join("")}</select>
+          </label>
+          <label class="field">Цена как показывать
+            <input id="goal-price-text" value="${escapeHtml(draft.price_text)}" placeholder="27–35 млн ₽" />
+          </label>
+          <label class="field">Желаемая дата
+            <input id="goal-target-date" type="date" value="${escapeHtml(String(draft.target_date || "").slice(0, 10))}" />
+          </label>
+          <label class="field">Категория
+            <input id="goal-category" value="${escapeHtml(draft.category)}" placeholder="Авто, здоровье, капитал…" />
+          </label>
+          <label class="field">Статус
+            <select id="goal-status">
+              <option value="active" ${draft.status === "active" ? "selected" : ""}>Активная</option>
+              <option value="next" ${draft.status === "next" ? "selected" : ""}>Следующая</option>
+              <option value="done" ${draft.status === "done" ? "selected" : ""}>Достигнута</option>
+              <option value="paused" ${draft.status === "paused" ? "selected" : ""}>Пауза</option>
+            </select>
+          </label>
+          <div class="form-actions">
+            ${editing ? '<button class="delete-button" data-action="deleteGoal">Удалить</button>' : ""}
+            <button class="save-goal-button" data-action="saveGoal">Сохранить цель</button>
+          </div>
+        </div>
+      </section>
+    </div>`;
+}
+
+function render(options = {}) {
+  const y = options.keepScroll ? window.scrollY : null;
+  document.getElementById("app").innerHTML = mainMarkup();
+  bindEvents();
+  document.body.classList.toggle("is-locked", state.meditationStep !== null || Boolean(state.modal));
+  if (y !== null) requestAnimationFrame(() => window.scrollTo({ top: y, behavior: "instant" }));
 }
 
 function bindEvents() {
-  document.querySelectorAll("[data-scroll]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const target = document.getElementById(button.dataset.scroll);
-      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  });
-
-  document.querySelectorAll("[data-category-jump]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const target = document.querySelector(`[data-category="${CSS.escape(button.dataset.categoryJump)}"]`);
-      if (!target) return;
-      target.open = true;
-      window.setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
-    });
-  });
-
   document.querySelectorAll("[data-action]").forEach((element) => {
-    element.addEventListener("click", () => handleAction(element));
+    element.addEventListener("click", (event) => handleAction(event, element));
   });
 
-  document.querySelectorAll("[data-modal='goal']").forEach((button) => {
-    button.addEventListener("click", () => {
-      state.modal = { category: button.dataset.category, goalId: button.dataset.goal };
-      document.body.classList.add("is-locked");
-      render();
-    });
-  });
-
-  document.querySelectorAll("[data-close-modal], #dialog").forEach((element) => {
-    element.addEventListener("click", (event) => {
-      if (event.target === element || element.hasAttribute("data-close-modal")) closeModal();
-    });
-  });
-
-  const motionTargets = document.querySelectorAll(".section, .motion-item, .parallax-card, .goal-route span, .category-route span, .progress span, .bar-track span");
-  if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    const motionObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          motionObserver.unobserve(entry.target);
-        }
-      });
-    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.12 });
-    motionTargets.forEach((target) => motionObserver.observe(target));
-  } else {
-    motionTargets.forEach((target) => target.classList.add("is-visible"));
-  }
-
-  const requestNavSync = () => syncActiveNavFromScroll();
-  window.addEventListener("scroll", requestNavSync, { passive: true });
-  document.addEventListener("scroll", requestNavSync, { passive: true, capture: true });
-  window.visualViewport?.addEventListener("resize", requestNavSync, { passive: true });
-  syncActiveNavFromScroll();
-
-  setupParallax();
-}
-
-function setupParallax() {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const targets = [...document.querySelectorAll(".parallax-item, .parallax-card")];
-  if (!targets.length) return;
-
-  let ticking = false;
-  const update = () => {
-    const height = window.innerHeight || 800;
-    targets.forEach((target, index) => {
-      const rect = target.getBoundingClientRect();
-      if (rect.bottom < -120 || rect.top > height + 120) return;
-      const strength = Number(target.dataset.parallax || (target.classList.contains("parallax-card") ? 0.035 : 0.08));
-      const centerOffset = (rect.top + rect.height / 2 - height / 2) * strength;
-      const rotate = target.classList.contains("parallax-card") ? ` rotate(${Number(target.style.getPropertyValue("--tilt") || 0) * 0.45}deg)` : "";
-      target.style.setProperty("--parallax-y", `${centerOffset.toFixed(2)}px`);
-      target.style.setProperty("--parallax-r", rotate);
-      target.style.setProperty("--parallax-index", index);
-    });
-    ticking = false;
-  };
-
-  const request = () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(update);
-  };
-
-  update();
-  window.addEventListener("scroll", request, { passive: true });
-  window.visualViewport?.addEventListener("resize", request, { passive: true });
-}
-
-function updateActiveNav() {
   document.querySelectorAll("[data-scroll]").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.scroll === state.activeNav);
+    button.addEventListener("click", () => {
+      document.getElementById(button.dataset.scroll)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   });
+
+  document.querySelectorAll(".goal-image").forEach((image) => {
+    image.addEventListener("error", () => {
+      image.outerHTML = '<div class="goal-fallback" aria-hidden="true"></div>';
+    }, { once: true });
+  });
+
+  document.onkeydown = handleKeydown;
+  setupNavObserver();
 }
 
-function syncActiveNavFromScroll() {
-  const navMap = [
-    ["morning", "morning"],
-    ["power", "power"],
-    ["created", "power"],
-    ["habits", "habits"],
-    ["focus", "habits"],
-    ["goals", "goals"],
-    ["money", "money"],
-  ];
-  const marker = window.scrollY + Math.max(160, window.innerHeight * 0.38);
-  let active = state.activeNav;
-  navMap.forEach(([sectionId, navId]) => {
-    const section = document.getElementById(sectionId);
-    if (section && section.offsetTop <= marker) active = navId;
-  });
-  if (active !== state.activeNav) {
-    state.activeNav = active;
-    updateActiveNav();
+function setupNavObserver() {
+  if (!("IntersectionObserver" in window)) return;
+  const sections = ["morning", "strengths", "goals", "focus"].map((id) => document.getElementById(id)).filter(Boolean);
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if (!visible) return;
+    document.querySelectorAll(".nav-button").forEach((button) => button.classList.toggle("is-active", button.dataset.scroll === visible.target.id));
+  }, { threshold: [0.2, 0.45], rootMargin: "-18% 0px -55%" });
+  sections.forEach((section) => observer.observe(section));
+}
+
+function handleKeydown(event) {
+  if (state.meditationStep !== null) {
+    if (event.key === "Escape") closeMeditation();
+    if (["ArrowRight", "Enter", " "].includes(event.key)) {
+      event.preventDefault();
+      nextMeditation();
+    }
+    if (event.key === "ArrowLeft") previousMeditation();
   }
+  if (state.modal && event.key === "Escape") closeModal();
+}
+
+function collectFocus() {
+  const result = { ...state.dashboard.daily_focus };
+  document.querySelectorAll("[data-focus-field]").forEach((input) => {
+    result[input.dataset.focusField] = input.value.trim();
+  });
+  return result;
+}
+
+function collectGoal() {
+  const draft = state.modal.draft;
+  return {
+    id: draft.id || undefined,
+    title: document.getElementById("goal-title").value.trim(),
+    description: document.getElementById("goal-description").value.trim(),
+    image_url: document.getElementById("goal-image").value.trim(),
+    source_url: document.getElementById("goal-source").value.trim(),
+    price_value: document.getElementById("goal-price-value").value.trim(),
+    currency: document.getElementById("goal-currency").value,
+    price_text: document.getElementById("goal-price-text").value.trim(),
+    target_date: document.getElementById("goal-target-date").value,
+    category: document.getElementById("goal-category").value.trim() || "Личное",
+    status: document.getElementById("goal-status").value,
+    updated_at: nowISO()
+  };
+}
+
+async function handleAction(event, element) {
+  const action = element.dataset.action;
+  if (action === "closeModal" && event.target !== element && element.classList.contains("dialog-backdrop")) return;
+
+  if (action === "startMeditation") {
+    state.returnScroll = window.scrollY;
+    state.meditationStep = 0;
+    render({ keepScroll: true });
+    return;
+  }
+  if (action === "closeMeditation") return closeMeditation();
+  if (action === "prevMeditation") return previousMeditation();
+  if (action === "nextMeditation") return nextMeditation();
+  if (action === "addGoal") return openGoal();
+  if (action === "editGoal") return openGoal(element.dataset.goalId);
+  if (action === "closeModal") return closeModal();
+
+  if (action === "toggleGoals") {
+    state.showAllGoals = !state.showAllGoals;
+    return render({ keepScroll: true });
+  }
+
+  if (action === "toggleFocus") {
+    const focus = collectFocus();
+    const key = `${element.dataset.focusType}_done`;
+    focus[key] = !focus[key];
+    await saveFocus(focus, true);
+    return;
+  }
+
+  if (action === "saveFocus") {
+    await saveFocus(collectFocus(), false);
+    return;
+  }
+
+  if (action === "saveGoal") return saveGoal();
+  if (action === "deleteGoal") return deleteGoal();
+  if (action === "resolveGoal") return resolveGoal(element);
+}
+
+function closeMeditation() {
+  state.meditationStep = null;
+  render();
+  requestAnimationFrame(() => window.scrollTo({ top: state.returnScroll, behavior: "instant" }));
+}
+
+function previousMeditation() {
+  if (state.meditationStep <= 0) return;
+  state.meditationStep -= 1;
+  render({ keepScroll: true });
+}
+
+async function nextMeditation() {
+  if (state.meditationStep < MORNING_TEXT.length - 1) {
+    state.meditationStep += 1;
+    render({ keepScroll: true });
+    return;
+  }
+
+  try {
+    const result = await api("completeMorning");
+    state.dashboard = normalizeDashboard(result.dashboard || state.dashboard);
+    saveLocal(state.dashboard);
+    state.meditationStep = null;
+    render();
+    window.scrollTo({ top: 0, behavior: "instant" });
+    showToast(result.existing ? "Сегодня уже было зафиксировано. Медитация перечитана." : "Утро зафиксировано. День начат.");
+  } catch (error) {
+    console.error(error);
+    showToast("Не удалось зафиксировать. Проверьте соединение.");
+  }
+}
+
+function openGoal(id = "") {
+  const existing = id ? state.dashboard.goals.find((goal) => goal.id === id) : null;
+  state.modal = { draft: existing ? { ...existing } : emptyGoal(), query: existing?.source_url || "" };
+  render({ keepScroll: true });
 }
 
 function closeModal() {
   state.modal = null;
-  document.body.classList.remove("is-locked");
-  render();
+  render({ keepScroll: true });
+}
+
+async function saveGoal() {
+  const payload = collectGoal();
+  if (!payload.title) return showToast("Добавьте название цели.");
+
+  try {
+    const result = await api(payload.id ? "updateGoal" : "addGoal", payload);
+    state.dashboard = normalizeDashboard(result.dashboard || state.dashboard);
+    saveLocal(state.dashboard);
+    state.modal = null;
+    render({ keepScroll: true });
+    showToast("Цель сохранена.");
+  } catch (error) {
+    console.error(error);
+    showToast("Цель не сохранилась. Проверьте соединение.");
+  }
+}
+
+async function deleteGoal() {
+  const id = state.modal?.draft?.id;
+  if (!id || !window.confirm("Удалить эту цель?")) return;
+  try {
+    const result = await api("deleteGoal", { id });
+    state.dashboard = normalizeDashboard(result.dashboard || state.dashboard);
+    saveLocal(state.dashboard);
+    state.modal = null;
+    render({ keepScroll: true });
+    showToast("Цель удалена.");
+  } catch (error) {
+    console.error(error);
+    showToast("Не удалось удалить цель.");
+  }
+}
+
+async function saveFocus(focus, silent) {
+  try {
+    const result = await api("saveFocus", focus);
+    state.dashboard = normalizeDashboard(result.dashboard || { ...state.dashboard, daily_focus: focus });
+    saveLocal(state.dashboard);
+    render({ keepScroll: true });
+    if (!silent) showToast("Фокус дня сохранён.");
+  } catch (error) {
+    console.error(error);
+    showToast("Фокус не сохранился. Проверьте соединение.");
+  }
+}
+
+function titleFromUrl(value) {
+  try {
+    const url = new URL(value);
+    const last = decodeURIComponent(url.pathname.split("/").filter(Boolean).pop() || url.hostname.replace(/^www\./, ""));
+    const title = last.replace(/\.(html?|php)$/i, "").replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim();
+    return title ? title.charAt(0).toUpperCase() + title.slice(1) : url.hostname;
+  } catch {
+    return value.trim();
+  }
+}
+
+async function resolveGoal(button) {
+  const query = document.getElementById("goal-query").value.trim();
+  if (!query) return showToast("Вставьте ссылку или опишите цель.");
+  state.modal.query = query;
+  const isUrl = /^https?:\/\//i.test(query);
+
+  if (!isUrl) {
+    state.modal.draft.title = query;
+    render({ keepScroll: true });
+    showToast("Название заполнено. Автопоиск потребует поискового API.");
+    return;
+  }
+
+  if (!API_URL) {
+    state.modal.draft.source_url = query;
+    if (!state.modal.draft.title) state.modal.draft.title = titleFromUrl(query);
+    render({ keepScroll: true });
+    showToast("Ссылка сохранена. Авторазбор заработает после подключения Google.");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Ищу…";
+  try {
+    const result = await api("resolveGoalUrl", { url: query });
+    state.modal.draft = normalizeGoal({ ...state.modal.draft, ...result.metadata, source_url: query }, 0);
+    render({ keepScroll: true });
+    showToast("Данные страницы подтянуты. Проверьте цену перед сохранением.");
+  } catch (error) {
+    console.error(error);
+    button.disabled = false;
+    button.textContent = "Заполнить";
+    showToast("Страница не отдала данные. Поля можно заполнить вручную.");
+  }
 }
 
 function showToast(message) {
-  state.toast = message;
-  render();
-  window.setTimeout(() => {
-    state.toast = "";
-    render();
-  }, 2600);
-}
-
-async function refreshFrom(result) {
-  if (result.dashboard) state.dashboard = result.dashboard;
-  else state.dashboard = await api("getDashboard");
-}
-
-async function handleAction(element) {
-  const action = element.dataset.action;
-  try {
-    if (action === "completeMorning") {
-      const result = await api("completeMorning");
-      await refreshFrom(result);
-      showToast(result.existing ? "Утро уже начато. Второй раз система не считает." : "Зафиксировано.");
-      window.setTimeout(() => document.getElementById("memo")?.scrollIntoView({ behavior: "smooth" }), 150);
-    }
-
-    if (action === "completeHabit") {
-      const result = await api("completeHabit", { habit_id: element.dataset.habit });
-      await refreshFrom(result);
-      showToast(result.existing ? "Сегодня уже отмечено. Один день, одна отметка." : "Зафиксировано.");
-    }
-
-    if (action === "saveFocus") {
-      const payload = {};
-      document.querySelectorAll("[data-focus]").forEach((input) => payload[input.dataset.focus] = input.value);
-      const result = await api("saveDailyFocus", payload);
-      await refreshFrom(result);
-      showToast("Зафиксировано.");
-    }
-
-    if (action === "completeFocus") {
-      const result = await api("completeFocusItem", { type: element.dataset.type });
-      await refreshFrom(result);
-      showToast("Зафиксировано.");
-    }
-
-    if (action === "goalStatus") {
-      const result = await api("updateGoal", { id: element.dataset.goal, status: element.dataset.status });
-      await refreshFrom(result);
-      showToast({
-        done: "Цель перенесена в достигнутые.",
-        paused: "Цель сохранена, но снята с активного фокуса.",
-        removed: "Цель перенесена в архив Больше не моя.",
-        active: "Цель возвращена в активные."
-      }[element.dataset.status] || "Зафиксировано.");
-    }
-
-    if (action === "saveGoal") {
-      const payload = {
-        id: element.dataset.goal || undefined,
-        category: document.getElementById("goal-category").value,
-        title: document.getElementById("goal-title-input").value.trim(),
-        description: document.getElementById("goal-description").value.trim(),
-        reason: document.getElementById("goal-reason").value.trim(),
-        status: document.getElementById("goal-status").value,
-        deadline: document.getElementById("goal-deadline").value,
-        notes: document.getElementById("goal-notes").value.trim()
-      };
-      if (!payload.title) return showToast("Добавьте название цели.");
-      const result = await api(payload.id ? "updateGoal" : "addGoal", payload);
-      await refreshFrom(result);
-      closeModal();
-      showToast("Зафиксировано.");
-    }
-
-    if (action === "addIncome") {
-      const amount = Number(document.getElementById("income-amount").value.replace(/\s/g, ""));
-      if (!amount) return showToast("Укажите сумму дохода.");
-      const result = await api("addIncome", {
-        date: document.getElementById("income-date").value || state.dashboard.today,
-        amount,
-        source: document.getElementById("income-source").value,
-        project_or_client: document.getElementById("income-project").value.trim(),
-        comment: document.getElementById("income-comment").value.trim()
-      });
-      await refreshFrom(result);
-      showToast("Доход добавлен. Рынок сказал да.");
-    }
-  } catch (error) {
-    console.error(error);
-    showToast("Не сохранилось. Проверь соединение и попробуй ещё раз.");
-  }
-}
-
-async function boot() {
-  enablePhoneLayout();
-  window.visualViewport?.addEventListener("resize", enablePhoneLayout);
-  window.addEventListener("orientationchange", enablePhoneLayout);
-  state.unlocked = hasRememberedAuth();
-  if (state.unlocked) await loadDashboard();
-  else renderLock();
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/me/sw.js")
-      .then((registration) => registration.update())
-      .catch(() => {});
-  }
+  window.clearTimeout(state.toastTimer);
+  document.querySelector(".toast")?.remove();
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  state.toastTimer = window.setTimeout(() => toast.remove(), 3100);
 }
 
 async function loadDashboard() {
   try {
-    state.dashboard = await api("getDashboard");
-    render();
+    const result = await api("getDashboard");
+    state.dashboard = normalizeDashboard(result.dashboard);
+    saveLocal(state.dashboard);
   } catch (error) {
     console.error(error);
     state.dashboard = loadLocal();
-    render();
-    showToast("API недоступен. Включён демо-режим на этом устройстве.");
+    showToast("Google недоступен. Данные сохраняются на этом устройстве.");
+  }
+  render();
+}
+
+async function boot() {
+  state.unlocked = localStorage.getItem(AUTH_KEY) === "yes";
+  if (!state.unlocked) renderLock();
+  else await loadDashboard();
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/me/sw.js").then((registration) => registration.update()).catch(() => {});
   }
 }
 
