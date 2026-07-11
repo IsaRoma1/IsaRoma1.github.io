@@ -6,6 +6,7 @@ const APP_SHELL = [
   "/me/app.js?v=3.0.0",
   "/me/manifest.json?v=3",
   "/me/icon.svg",
+  "/me/roman-cutout-v3.png",
   "/me/roman-hero.png"
 ];
 

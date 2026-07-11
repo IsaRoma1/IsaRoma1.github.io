@@ -401,7 +401,7 @@ function renderLock(error = "") {
       <div class="lock-brand">ME.</div>
       <div class="lock-art" aria-hidden="true">
         <div class="lock-orb"></div>
-        <img class="lock-person" src="/me/roman-hero.png" alt="" />
+        <img class="lock-person" src="/me/roman-cutout-v3.png" alt="" />
       </div>
       <section class="lock-panel">
         <h1>Личное<br>пространство.</h1>
@@ -478,7 +478,7 @@ function mainMarkup() {
         <section class="hero" id="morning">
           <div class="hero-visual" aria-hidden="true">
             <div class="hero-sun"></div>
-            <img class="hero-person" src="/me/roman-hero.png" alt="" />
+            <img class="hero-person" src="/me/roman-cutout-v3.png" alt="" />
             <span class="ribbon ribbon-a"></span>
             <span class="ribbon ribbon-b"></span>
           </div>
