@@ -511,10 +511,12 @@ function goalMarkup(goal) {
   const image = safeUrl(goal.image_url);
   return `
     <article class="goal-poster ${goal.target_date ? "has-timeline" : ""}" data-goal-card="${escapeHtml(goal.id)}">
-      ${image ? `<img class="goal-image" src="${image}" alt="${escapeHtml(goal.title)}" loading="lazy" />` : '<div class="goal-fallback" aria-hidden="true"></div>'}
-      <div class="goal-topline">
-        <span class="goal-category">${escapeHtml(goal.category || "Цель")}</span>
-        <button class="goal-edit" type="button" data-action="editGoal" data-goal-id="${escapeHtml(goal.id)}" aria-label="Редактировать цель ${escapeHtml(goal.title)}">${icon("edit")}</button>
+      <div class="goal-media">
+        ${image ? `<img class="goal-image" src="${image}" alt="${escapeHtml(goal.title)}" loading="lazy" />` : '<div class="goal-fallback" aria-hidden="true"></div>'}
+        <div class="goal-topline">
+          <span class="goal-category">${escapeHtml(goal.category || "Цель")}</span>
+          <button class="goal-edit" type="button" data-action="editGoal" data-goal-id="${escapeHtml(goal.id)}" aria-label="Редактировать цель ${escapeHtml(goal.title)}">${icon("edit")}</button>
+        </div>
       </div>
       <div class="goal-content">
         <h3>${escapeHtml(goal.title)}</h3>
@@ -592,7 +594,6 @@ function mainMarkup() {
             </div>
             <button class="add-goal-button" data-action="addGoal"><span>Добавить цель</span><span>+</span></button>
           </div>
-          <p class="goals-swipe-hint">Листайте цели →</p>
           <div class="goals-grid ${state.showAllGoals ? "is-expanded" : ""}">
             ${goals.map(goalMarkup).join("") || '<p>Пока нет целей. Добавьте первую.</p>'}
           </div>
@@ -1003,9 +1004,16 @@ async function resolveGoal(button) {
   button.textContent = "Ищу…";
   try {
     const result = await api("resolveGoalUrl", { url: query });
-    state.modal.draft = normalizeGoal({ ...state.modal.draft, ...result.metadata, source_url: query }, 0);
+    const draftId = state.modal.draft.id || "";
+    const metadata = Object.fromEntries(
+      Object.entries(result.metadata || {}).filter(([key, value]) => (
+        value !== "" && value !== null && value !== undefined && !(key === "price_value" && Number(value) === 0)
+      ))
+    );
+    state.modal.draft = normalizeGoal({ ...state.modal.draft, ...metadata, source_url: query }, 0);
+    state.modal.draft.id = draftId;
     render({ keepScroll: true });
-    showToast("Данные страницы подтянуты. Проверьте цену перед сохранением.");
+    showToast("Данные найдены. Проверьте поля и нажмите «Сохранить цель».");
   } catch (error) {
     console.error(error);
     button.disabled = false;

@@ -1,9 +1,9 @@
-const CACHE = "roman-me-v3.2";
+const CACHE = "roman-me-v3.3";
 const APP_SHELL = [
   "/me/",
   "/me/index.html",
-  "/me/styles.css?v=3.2.0",
-  "/me/app.js?v=3.2.0",
+  "/me/styles.css?v=3.3.0",
+  "/me/app.js?v=3.3.0",
   "/me/manifest.json?v=3",
   "/me/icon.svg",
   "/me/roman-cutout-v3.png",
@@ -14,7 +14,8 @@ const APP_SHELL = [
   "/me/assets/goals/debt.webp",
   "/me/assets/goals/lazar.webp",
   "/me/assets/goals/medical.webp",
-  "/me/assets/goals/health.webp"
+  "/me/assets/goals/health.webp",
+  "/me/assets/goals/mercedes-g450d.webp"
 ];
 
 self.addEventListener("install", (event) => {

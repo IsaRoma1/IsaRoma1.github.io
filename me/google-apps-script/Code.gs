@@ -194,11 +194,14 @@ function resolveGoalUrl_(value) {
   if (status < 200 || status >= 400) throw new Error('Страница вернула HTTP ' + status);
 
   const html = response.getContentText().slice(0, 1500000);
-  const title = firstMeta_(html, ['og:title', 'twitter:title']) || tagText_(html, 'title');
-  const description = firstMeta_(html, ['og:description', 'twitter:description', 'description']);
-  const image = firstMeta_(html, ['og:image:secure_url', 'og:image', 'twitter:image']);
-  const amount = firstMeta_(html, ['product:price:amount', 'og:price:amount', 'price']);
-  const currency = firstMeta_(html, ['product:price:currency', 'og:price:currency', 'priceCurrency']);
+  const product = productJsonLd_(html) || {};
+  const offers = Array.isArray(product.offers) ? product.offers[0] || {} : product.offers || {};
+  const structuredImage = Array.isArray(product.image) ? product.image[0] : product.image;
+  const title = firstMeta_(html, ['og:title', 'twitter:title']) || product.name || tagText_(html, 'title');
+  const description = firstMeta_(html, ['og:description', 'twitter:description', 'description']) || product.description;
+  const image = firstMeta_(html, ['og:image:secure_url', 'og:image', 'twitter:image']) || structuredImage;
+  const amount = firstMeta_(html, ['product:price:amount', 'og:price:amount', 'price']) || offers.price;
+  const currency = firstMeta_(html, ['product:price:currency', 'og:price:currency', 'priceCurrency']) || offers.priceCurrency;
 
   return {
     metadata: {
@@ -209,7 +212,7 @@ function resolveGoalUrl_(value) {
       price_value: numericValue_(amount),
       currency: cleanText_(currency) || 'RUB',
       source_checked_at: today_(),
-      source_note: 'Метаданные автоматически прочитаны со страницы. Цену необходимо проверить перед сохранением.'
+      source_note: 'Метаданные автоматически прочитаны из OpenGraph или JSON-LD страницы. Цену необходимо проверить перед сохранением.'
     }
   };
 }
@@ -347,6 +350,37 @@ function firstMeta_(html, names) {
     if (value) return value;
   }
   return '';
+}
+
+function productJsonLd_(html) {
+  const scripts = /<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  let match;
+  while ((match = scripts.exec(html))) {
+    try {
+      const parsed = JSON.parse(match[1].trim());
+      const product = findProduct_(parsed);
+      if (product) return product;
+    } catch (error) {
+      // Некоторые страницы содержат повреждённый JSON-LD. Продолжаем искать следующий блок.
+    }
+  }
+  return null;
+}
+
+function findProduct_(value) {
+  if (!value) return null;
+  if (Array.isArray(value)) {
+    for (let index = 0; index < value.length; index += 1) {
+      const found = findProduct_(value[index]);
+      if (found) return found;
+    }
+    return null;
+  }
+  if (typeof value !== 'object') return null;
+  const types = Array.isArray(value['@type']) ? value['@type'] : [value['@type']];
+  if (types.some(function (type) { return ['Product', 'Vehicle', 'Car'].indexOf(type) !== -1; })) return value;
+  if (value['@graph']) return findProduct_(value['@graph']);
+  return null;
 }
 
 function meta_(html, name) {
