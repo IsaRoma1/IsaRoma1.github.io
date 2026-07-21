@@ -6,42 +6,6 @@ import { trackEvent } from "./lib/analytics.js";
 
 const app = document.querySelector("#app");
 const letters = ["A", "B", "C", "D"];
-const robotCompanion = document.querySelector(".robot-companion");
-const robotExpression = document.querySelector("#robot-expression");
-const robotStatus = robotCompanion.querySelector(".robot-status b");
-const questionEmotions = [
-  ["surprised", "Ева удивлена"],
-  ["curious", "Ева размышляет"],
-  ["love", "Еве нравится идея"],
-  ["determined", "Ева настроена решительно"],
-  ["shy", "Ева понимает сомнения"],
-  ["laughing", "Ева ловит ваш ритм"],
-  ["sad", "Ева считает бюджет"],
-  ["angry", "Ева ищет опору"],
-];
-const resultEmotions = {
-  D: ["curious", "Ева нашла причину"],
-  S: ["laughing", "Ева выбрала вариант"],
-  C: ["surprised", "Ева закончила расчёт"],
-  R: ["determined", "Ева видит ваш маршрут"],
-};
-
-function setRobotEmotion(emotion, status, alt) {
-  robotCompanion.dataset.emotion = emotion;
-  robotStatus.textContent = status;
-  robotExpression.alt = alt || `${status}, белый робот-проводник`;
-  robotExpression.src = `./assets/robot-emotions/robot-${emotion}.png`;
-  robotCompanion.classList.remove("is-switching");
-  void robotCompanion.offsetWidth;
-  robotCompanion.classList.add("is-switching");
-}
-
-function preloadRobotEmotions() {
-  ["joy", "surprised", "curious", "love", "shy", "determined", "sad", "angry", "laughing", "sleepy"].forEach((emotion) => {
-    const image = new Image();
-    image.src = `./assets/robot-emotions/robot-${emotion}.png`;
-  });
-}
 
 const freshState = () => ({
   screen: "start",
@@ -109,8 +73,6 @@ function renderStart() {
       </div>
     </section>
   `);
-  setRobotEmotion("joy", "Ева радуется", "Радостный белый робот приветствует пользователя");
-
   document.querySelector("#start-quiz").addEventListener("click", () => {
     state.screen = "question";
     state.currentQuestion = 0;
@@ -154,8 +116,6 @@ function renderQuestion() {
       </div>
     </section>
   `);
-  setRobotEmotion(...questionEmotions[index]);
-
   document.querySelectorAll("[data-answer]").forEach((button) => {
     button.addEventListener("click", () => {
       if (button.disabled) return;
@@ -215,8 +175,6 @@ function renderAnalysis() {
       </div>
     </section>
   `);
-  setRobotEmotion("sleepy", "Ева обрабатывает ответы", "Задумчивый робот обрабатывает ответы");
-
   window.setTimeout(() => completeQuiz(), APP_CONFIG.analysisDurationMs);
 }
 
@@ -399,8 +357,6 @@ function showResult(code, calculated = null, options = {}) {
       </section>
     </section>
   `);
-  setRobotEmotion(...resultEmotions[code]);
-
   if (!options.skipViewedEvent) {
     trackEvent("result_viewed", {
       result_type: code,
@@ -503,5 +459,4 @@ document.querySelector(".brand").addEventListener("click", (event) => {
   restartQuiz();
 });
 
-preloadRobotEmotions();
 boot();
