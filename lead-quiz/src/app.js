@@ -71,17 +71,6 @@ function renderStart() {
           <p class="microcopy">Без регистрации. Результат появится сразу.</p>
         </div>
       </div>
-      <div class="preview-stack" aria-hidden="true">
-        <div class="preview-card preview-back"></div>
-        <div class="preview-card preview-main">
-          <div class="preview-top"><span>Lead system</span><span>01 / 08</span></div>
-          <div class="preview-title">Ваш формат<br />уже внутри</div>
-          <div class="preview-line"></div>
-          <div class="preview-line short"></div>
-          <div class="preview-choice">8 ответов → одна рабочая механика</div>
-          <div class="preview-tag">✦</div>
-        </div>
-      </div>
     </section>
   `);
 
