@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Короткий персональный квиз о самочувствии и состоянии сердца."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:title" content="Сердце в фокусе" />
+    <meta
+      property="og:description"
+      content="Ответьте на 8 вопросов и получите персональный ориентир по вашим ответам."
+    />
+    <meta property="og:url" content="https://ii41.ru/heart-quiz/" />
+    <meta
+      property="og:image"
+      content="https://ii41.ru/heart-quiz/assets/heart-visual.jpg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#f2f5f8" />
+    <title>Сердце в фокусе</title>
+    <link rel="preload" as="image" href="assets/heart-visual.jpg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="topbar" aria-label="Шапка">
+        <a class="brand" href="./" aria-label="Сердце в фокусе, на главную">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </span>
+          <span>Сердце в фокусе</span>
+        </a>
+
+        <div class="topbar-meta">
+          <span>8 вопросов</span>
+          <span>Около 2 минут</span>
+        </div>
+      </header>
+
+      <div class="experience">
+        <aside class="visual-panel" aria-label="Иллюстрация">
+          <div class="visual-copy">
+            <span class="visual-kicker">Персональный ориентир</span>
+            <h2>Спокойно.<br />По шагам.</h2>
+          </div>
+
+          <div class="heart-stage" aria-hidden="true">
+            <div class="orb orb-one"></div>
+            <div class="orb orb-two"></div>
+            <img
+              src="assets/heart-visual.jpg"
+              width="834"
+              height="1200"
+              alt=""
+            />
+            <div class="metric-card metric-primary">
+              <span>Результат</span>
+              <strong>сразу</strong>
+            </div>
+            <div class="metric-card metric-secondary">
+              <span>Формат</span>
+              <strong>коротко</strong>
+            </div>
+          </div>
+
+          <p class="visual-note">
+            Без сложных терминов и самодиагностики
+          </p>
+        </aside>
+
+        <section class="quiz-panel" aria-label="Квиз">
+          <div class="progress-wrap" id="progressWrap" hidden>
+            <div class="progress-heading">
+              <button class="back-button" id="backButton" type="button">
+                <span aria-hidden="true">←</span>
+                Назад
+              </button>
+              <span id="progressLabel">Вопрос 1 из 8</span>
+            </div>
+            <div class="progress-segments" id="progressSegments" aria-hidden="true"></div>
+          </div>
+
+          <div id="quizContent" class="quiz-content" aria-live="polite"></div>
+        </section>
+      </div>
+
+      <footer class="page-footer">
+        <p>Квиз не ставит диагноз и не заменяет медицинскую помощь.</p>
+        <p>Ответы остаются на этом устройстве.</p>
+      </footer>
+    </main>
+
+    <dialog class="booking-dialog" id="bookingDialog">
+      <form method="dialog" class="dialog-close-form">
+        <button class="dialog-close" value="cancel" aria-label="Закрыть">×</button>
+      </form>
+      <div id="bookingContent">
+        <span class="result-label">Запись</span>
+        <h2>Подберем удобное время</h2>
+        <p>Оставьте имя и телефон. Это демонстрационная форма, данные никуда не отправятся.</p>
+
+        <form id="bookingForm" class="booking-form">
+          <label>
+            <span>Ваше имя</span>
+            <input name="name" autocomplete="name" required placeholder="Как к вам обращаться" />
+          </label>
+          <label>
+            <span>Телефон</span>
+            <input
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              inputmode="tel"
+              required
+              placeholder="+7 900 000-00-00"
+            />
+          </label>
+          <button class="primary-button form-submit" type="submit">Отправить заявку</button>
+          <p class="form-note">Перед публикацией форму можно подключить к вашей системе записи.</p>
+        </form>
+      </div>
+    </dialog>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
