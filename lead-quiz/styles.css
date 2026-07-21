@@ -196,9 +196,17 @@ h3 { margin: 0; font-size: 21px; line-height: 1.25; }
 .lesson-cta-card .microcopy { text-align: center; }
 .restart-row { margin-top: 24px; text-align: center; }
 
-.robot-companion { position: fixed; z-index: 4; width: clamp(142px, 15vw, 210px); right: max(18px, calc((100vw - 1260px) / 2)); bottom: 28px; pointer-events: none; filter: drop-shadow(0 26px 30px rgba(0,0,0,.38)); animation: robot-drift 5s ease-in-out infinite; }
+.robot-companion { --blink-left: 33%; --blink-top: 29%; --blink-width: 34%; --blink-height: 12%; position: fixed; z-index: 4; width: clamp(152px, 17vw, 232px); right: max(18px, calc((100vw - 1260px) / 2)); bottom: 28px; pointer-events: none; filter: drop-shadow(0 26px 30px rgba(0,0,0,.38)); animation: robot-drift 5s ease-in-out infinite; }
 .robot-companion img { display: block; width: 100%; height: auto; }
+.robot-companion.is-switching img { animation: robot-expression-in 260ms ease both; }
 .robot-orbit { position: absolute; width: 82%; aspect-ratio: 1; left: 9%; top: 30%; border: 1px solid rgba(107,214,255,.28); border-radius: 50%; transform: rotateX(68deg); box-shadow: 0 0 40px rgba(107,214,255,.12); animation: orbit-pulse 2.5s ease-in-out infinite; }
+.robot-blink { position: absolute; z-index: 2; left: var(--blink-left); top: var(--blink-top); width: var(--blink-width); height: var(--blink-height); border-radius: 50%; background: #03070c; opacity: 0; transform: scaleY(.08); transform-origin: center; animation: robot-blink 4.6s ease-in-out infinite; }
+.robot-blink::before, .robot-blink::after { content: ""; position: absolute; top: 47%; width: 28%; height: 3px; border-radius: 999px; background: #54ccff; box-shadow: 0 0 7px rgba(84,204,255,.9); }
+.robot-blink::before { left: 16%; transform: rotate(5deg); }
+.robot-blink::after { right: 16%; transform: rotate(-5deg); }
+.robot-companion[data-emotion="love"] { --blink-top: 30%; }
+.robot-companion[data-emotion="sad"], .robot-companion[data-emotion="sleepy"] { --blink-top: 31%; }
+.robot-companion[data-emotion="determined"], .robot-companion[data-emotion="angry"] { --blink-top: 30%; }
 .robot-status { position: absolute; left: 50%; bottom: -4px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; min-width: max-content; padding: 7px 10px; border: 1px solid rgba(255,255,255,.16); border-radius: 999px; color: #dbe1ea; background: rgba(10,12,17,.75); backdrop-filter: blur(14px); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
 .robot-status i { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 10px var(--mint); }
 
@@ -207,6 +215,8 @@ h3 { margin: 0; font-size: 21px; line-height: 1.25; }
 
 @keyframes screen-in { from { opacity: 0; transform: translateY(8px); } }
 @keyframes robot-drift { 0%,100% { transform: translate3d(0,0,0) rotate(-1deg); } 38% { transform: translate3d(-9px,-17px,0) rotate(2deg); } 68% { transform: translate3d(5px,-8px,0) rotate(-2deg); } }
+@keyframes robot-expression-in { from { opacity: .35; transform: scale(.86) rotate(-3deg); } to { opacity: 1; transform: none; } }
+@keyframes robot-blink { 0%, 87%, 91%, 100% { opacity: 0; transform: scaleY(.08); } 88%, 90% { opacity: 1; transform: scaleY(1); } }
 @keyframes orbit-pulse { 50% { transform: rotateX(68deg) scale(1.08); opacity: .45; } }
 @keyframes ring-turn { 50% { transform: rotate(45deg) scale(.92); } }
 @keyframes line-in { to { opacity: 1; transform: none; } }
