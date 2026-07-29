@@ -1,6 +1,0 @@
-1:"$Sreact.fragment"
-2:I[19648,["/аннапрезентация/_next/static/chunks/3qnaz0-cit5fi.js","/аннапрезентация/_next/static/chunks/3t8ar1xfsl47d.js","/аннапрезентация/_next/static/chunks/33gi9qzwp4zth.js"],"Deck"]
-3:I[96196,["/аннапрезентация/_next/static/chunks/3qnaz0-cit5fi.js"],"OutletBoundary"]
-4:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{}],[["$","script","script-0",{"src":"/аннапрезентация/_next/static/chunks/3t8ar1xfsl47d.js","async":true}],["$","script","script-1",{"src":"/аннапрезентация/_next/static/chunks/33gi9qzwp4zth.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"mForxeki8yJ0iiJqKl5LR"}
-5:null
