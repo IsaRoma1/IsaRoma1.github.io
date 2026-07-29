@@ -1,3 +1,3 @@
 :HL["/anna-presentation/_next/static/css/134bdc2f419fcb3a.css","style"]
-:HL["/anna-presentation/_next/static/css/8d50ee74cbb1e831.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"et0JYNKL6RRMtjAMWUEoE"}
+:HL["/anna-presentation/_next/static/css/9c13891fe9ba3c6b.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"eNk6JT6f7uoy4jGGaJTBl"}
