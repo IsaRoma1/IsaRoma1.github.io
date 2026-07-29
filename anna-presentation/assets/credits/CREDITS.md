@@ -6,8 +6,8 @@ remain linked to their original source below.
 
 ## External animation backgrounds
 
-- Slide 1: [Particles 🌑 by Aurora](https://community.spline.design/file/3ff7b617-2fe9-46c7-8e06-b6d7c382f4db), Spline Community, CC0 1.0.
-- Slide 3: [DNA hologram by oxterium](https://sketchfab.com/3d-models/dna-hologram-c4a30768ac7044f182b4c4a36a7608ca), Sketchfab Free Standard License.
+- Slide 1: [DNA hologram by oxterium](https://sketchfab.com/3d-models/dna-hologram-c4a30768ac7044f182b4c4a36a7608ca), Sketchfab Free Standard License.
+- Slide 3: [Particles 🌑 by Aurora](https://community.spline.design/file/3ff7b617-2fe9-46c7-8e06-b6d7c382f4db), Spline Community, CC0 1.0.
 - Slide 5: [Holograming Man by foxyvfx7867](https://sketchfab.com/3d-models/holograming-man-e749bf773cd34e3f965ad23d01b3cf06), CC BY 4.0.
 - Slide 7: [Particle Animations and Hyperbola 4th dimension Animation by SideEye](https://www.cgtrader.com/free-3d-models/science/other/particle-animations-and-hyperbola-4th-dimension-animation), CGTrader Royalty Free License (no AI).
 - Slide 9: [DNA Particles](https://community.spline.design/file/77e031b6-bd51-4149-9fb7-0aaf2b5cddb7), Spline Community, CC0 1.0.
@@ -20,6 +20,16 @@ remain linked to their original source below.
 
 Slide 7 uses the public YouTube preview embedded by the CGTrader listing,
 so the original 655 MB Blender package is not redistributed by this site.
+Small local WebP posters are used as fast-loading fallbacks while the original
+external viewers initialize.
+
+## Brand and generated interface assets
+
+- The Nudelman crest was supplied by the project owner for use in the
+  presentation header and browser icon.
+- The nine medical 3D interface icons were generated specifically for this
+  presentation with OpenAI Imagegen on July 30, 2026. The production WebP
+  crops are stored in `public/assets/medical-icons/`.
 
 ## Bundled 3D models
 
