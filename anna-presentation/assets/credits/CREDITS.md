@@ -18,10 +18,10 @@ remain linked to their original source below.
 - Slide 19: [Particle Nebula](https://community.spline.design/file/cea96ce0-da30-46cc-bd5c-dc73a6497abd), Spline Community, CC0 1.0.
 - Slide 21: [ORB](https://community.spline.design/file/7ffaf321-83b9-473b-a02a-674c1417ff31), Spline Community, CC0 1.0.
 
-Slide 7 uses the public YouTube preview embedded by the CGTrader listing,
-so the original 655 MB Blender package is not redistributed by this site.
-Small local WebP posters are used as fast-loading fallbacks while the original
-external viewers initialize.
+Slide 7 uses a local poster captured from the public preview linked by the
+CGTrader listing, so neither its bot-check interface nor the original 655 MB
+Blender package is loaded by the site. Small local WebP posters are used as
+fast-loading fallbacks while permitted external viewers initialize.
 
 ## Brand and generated interface assets
 
@@ -30,6 +30,14 @@ external viewers initialize.
 - The nine medical 3D interface icons were generated specifically for this
   presentation with OpenAI Imagegen on July 30, 2026. The production WebP
   crops are stored in `public/assets/medical-icons/`.
+- `spline-sphere-clean.webp` is a text- and UI-free derivative of the credited
+  Spline Community sphere poster, cleaned with OpenAI Imagegen on July 30,
+  2026. It replaces the external viewer on slide 3 so embedded instructions
+  and controls can never appear.
+- `medical-data-flow.webp` is an original abstract clinical data background
+  generated with OpenAI Imagegen on July 30, 2026. It is used on slides 17
+  and 21 instead of third-party scenes whose embedded artwork interfered with
+  the presentation.
 
 ## Bundled 3D models
 
