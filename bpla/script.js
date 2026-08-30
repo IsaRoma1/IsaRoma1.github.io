@@ -140,7 +140,7 @@
   });
 
   const revealCandidates = document.querySelectorAll(
-    '.section-heading, .risk-card, .technical-scheme, .method-grid li, .industry-grid article, .principles article, .photo-story figure, .timeline li, .document-list > *, .layer-table article, .accordion details'
+    '.section-heading, .risk-card, .technical-scheme, .method-grid li, .industry-grid article, .principles article, .engineering-story, .timeline li, .document-list > *, .layer-table article, .accordion details'
   );
 
   if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

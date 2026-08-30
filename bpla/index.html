@@ -133,13 +133,17 @@
         </div>
 
         <figure class="technical-scheme technical-scheme--wide">
-          <div class="diagram-card__meta"><span>Схема 01</span><span>Принципиальная, не для строительства</span></div>
+          <div class="diagram-card__meta"><span>Схема 01</span><span>Независимый многоконтурный каркас</span></div>
           <div class="technical-scheme__canvas">
-            <img src="./assets/schemes/scheme-01-protective-contour-v2.jpg" alt="Изометрическая визуализация улавливающего контура над критическим оборудованием с независимыми опорами" width="1536" height="1024" loading="lazy">
-            <div class="technical-scheme__labels" aria-hidden="true"><span class="label-tl">Улавливающий контур</span><span class="label-tr">Расчётный зазор</span><span class="label-ml">Несущая стойка</span><span class="label-mr">Узлы натяжения</span><span class="label-bl">Критическое оборудование</span><span class="label-br">Независимое основание</span></div>
+            <img src="./assets/schemes/scheme-01-independent-contours-v3.jpg" alt="Принципиальная изометрическая схема независимой защитной конструкции: опоры на отдельных основаниях, внешние оттяжки и три разнесённых сеточных контура над оборудованием" width="1536" height="1024" loading="lazy">
+            <div class="scheme-pins" aria-hidden="true"><span class="pin pin--01">1</span><span class="pin pin--02">2</span><span class="pin pin--03">3</span><span class="pin pin--04">4</span><span class="pin pin--05">5</span></div>
           </div>
-          <figcaption><strong>Как работает контур</strong><span>Воздействие принимает улавливающая часть, а расчётный зазор отделяет её от защищаемого оборудования. Нагрузки передаются на самостоятельную несущую систему.</span></figcaption>
+          <figcaption>
+            <div><strong>Слои работают последовательно</strong><span>Силовой канатный каркас и сеточные контуры разнесены по высоте. Оборудование отделено расчётным зазором, а опоры вынесены на периферию.</span></div>
+            <ol class="scheme-key"><li><b>1</b><span>силовой канатный контур</span></li><li><b>2</b><span>крупноячеистая сетка</span></li><li><b>3</b><span>мелкоячеистая сетка</span></li><li><b>4</b><span>опора и внешняя оттяжка</span></li><li><b>5</b><span>расчётный зазор до оборудования</span></li></ol>
+          </figcaption>
         </figure>
+        <p class="scheme-source">Концептуальная визуализация, не рабочая документация. Принцип сверён с <a href="https://protect.gost.ru/sp/details/41e54183-7ee2-4e0f-abc3-dc110cf58263" target="_blank" rel="noopener noreferrer">СП 542.1325800.2024</a> и открытым описанием <a href="https://patents.google.com/patent/RU2859230C1/ru" target="_blank" rel="noopener noreferrer">трёхконтурной ЗОК</a>.</p>
 
         <ol class="method-grid">
           <li><span>01</span><h3>Выделяем критические узлы</h3><p>Сопоставляем сценарии отказа и возможный ущерб.</p></li>
@@ -183,42 +187,20 @@
           <p>Окончательные материалы, расстояния и состав решения фиксируются после обследования, расчёта и согласования технического задания.</p>
         </div>
         <div class="principles">
-          <article><span>01</span><h3>Независимая схема</h3><p>Без нерасчётных нагрузок на существующее оборудование.</p></article>
-          <article><span>02</span><h3>Расчёт под объект</h3><p>Геометрия и крепления определяются исходными данными.</p></article>
-          <article><span>03</span><h3>Доступ к оборудованию</h3><p>Проходы, проезды, открываемые и съёмные участки.</p></article>
-          <article><span>04</span><h3>Климатические нагрузки</h3><p>Ветер, снег, гололёд, температура и сейсмика.</p></article>
-          <article><span>05</span><h3>Ремонтопригодность</h3><p>Осмотр и локальная замена повреждённых элементов.</p></article>
-          <article><span>06</span><h3>Совместимость</h3><p>С наблюдением, оповещением и другими уровнями защиты.</p></article>
+          <article><span>01</span><h3>Независимая и расчётная</h3><p>Собственные опоры и основания; геометрия и крепления — по исходным данным объекта.</p></article>
+          <article><span>02</span><h3>Устойчивая и ремонтопригодная</h3><p>Учитывает климатические нагрузки, осмотр и локальную замену повреждённых элементов.</p></article>
+          <article><span>03</span><h3>Совместимая с эксплуатацией</h3><p>Сохраняет проходы, проезды, пожарный доступ и работу других уровней защиты.</p></article>
         </div>
 
-        <div class="scheme-gallery" aria-label="Принципиальные схемы конструкции и эксплуатации">
-          <figure class="technical-scheme">
-            <div class="diagram-card__meta"><span>Схема 02</span><span>Передача нагрузки</span></div>
-            <div class="technical-scheme__canvas">
-              <img src="./assets/schemes/scheme-02-load-path-v2.jpg" alt="Изометрическая визуализация передачи воздействия от сетки через узел и стойку на независимое основание" width="1536" height="1024" loading="lazy">
-              <div class="technical-scheme__labels technical-scheme__labels--compact" aria-hidden="true"><span class="label-tl">Узел крепления</span><span class="label-tr">Несущая балка</span><span class="label-mr">Путь нагрузки</span><span class="label-br">Отдельное основание</span></div>
-            </div>
-            <figcaption><strong>Независимая несущая схема</strong><span>Расчётное воздействие передаётся через контур и опоры на самостоятельные основания — оборудование не становится частью силовой схемы.</span></figcaption>
-          </figure>
-          <figure class="technical-scheme">
-            <div class="diagram-card__meta"><span>Схема 03</span><span>Эксплуатационный доступ</span></div>
-            <div class="technical-scheme__canvas">
-              <img src="./assets/schemes/scheme-03-service-access-v2.jpg" alt="Изометрическая визуализация защитного контура с открываемым участком и проходами к оборудованию" width="1536" height="1024" loading="lazy">
-              <div class="technical-scheme__labels technical-scheme__labels--compact" aria-hidden="true"><span class="label-tl">Улавливающий контур</span><span class="label-tr">Несущая рама</span><span class="label-bl">Независимые опоры</span><span class="label-br">Открываемый участок</span><span class="label-bc">Проход к оборудованию</span></div>
-            </div>
-            <figcaption><strong>Доступ сохраняется</strong><span>Проезды, проходы и съёмные участки закладываются в концепцию до расчёта. Их положение уточняется по результатам обследования.</span></figcaption>
-          </figure>
-        </div>
-
-        <div class="photo-story" aria-label="Инженерные визуализации конструкции и монтажа">
-          <figure class="photo-story__large">
-            <img src="./assets/images/installation-process.jpg" alt="Инженерная визуализация монтажа независимой защитной конструкции" width="1536" height="1024" loading="lazy">
-            <figcaption><span>04 / Визуализация</span><p>Монтаж с сохранением доступа к оборудованию</p></figcaption>
-          </figure>
-          <figure>
-            <img src="./assets/images/connection-node.jpg" alt="Инженерная визуализация узла крепления улавливающей сетки" width="1456" height="1092" loading="lazy">
-            <figcaption><span>05 / Визуализация</span><p>Ремонтопригодный узел крепления</p></figcaption>
-          </figure>
+        <div class="engineering-stories" aria-label="Принципиальные схемы конструкции и эксплуатации">
+          <article class="engineering-story">
+            <div class="engineering-story__visual"><div class="diagram-card__meta"><span>Схема 02</span><span>Передача усилий</span></div><img src="./assets/schemes/scheme-02-structural-node-v3.jpg" alt="Узловая схема передачи усилий: канаты закреплены снаружи к оголовку, внешняя оттяжка идёт через талреп к отдельному анкеру, опора закреплена к фундаменту анкерными болтами" width="1536" height="1024" loading="lazy"><span class="story-badge story-badge--node" aria-hidden="true">1</span><span class="story-badge story-badge--guy" aria-hidden="true">2</span><span class="story-badge story-badge--base" aria-hidden="true">3</span></div>
+            <div class="engineering-story__copy"><p class="eyebrow">Узел без двусмысленности</p><h3>Канат не проходит внутри стойки</h3><p>Сеточные контуры крепятся к оголовку снаружи. Оттяжка уходит к отдельному анкеру, а стойка передаёт усилия через фланец и анкерные болты в фундамент.</p><ol class="scheme-key scheme-key--stack"><li><b>1</b><span>такелажный узел и канатный контур</span></li><li><b>2</b><span>внешняя оттяжка с талрепом</span></li><li><b>3</b><span>фланец, анкеры и фундамент</span></li></ol><p class="story-note">Сечение опоры, тип основания и такелаж назначаются расчётом.</p></div>
+          </article>
+          <article class="engineering-story engineering-story--reverse">
+            <div class="engineering-story__visual"><div class="diagram-card__meta"><span>Схема 03</span><span>Эксплуатационный доступ</span></div><img src="./assets/schemes/scheme-03-service-access-v3.jpg" alt="Принципиальная схема защитного контура с открытым сервисным проёмом, свободным проездом и зоной обслуживания вокруг оборудования" width="1536" height="1024" loading="lazy"><span class="story-badge story-badge--route" aria-hidden="true">1</span><span class="story-badge story-badge--gate" aria-hidden="true">2</span><span class="story-badge story-badge--clearance" aria-hidden="true">3</span></div>
+            <div class="engineering-story__copy"><p class="eyebrow">Доступ проектируется сразу</p><h3>Защита не перекрывает обслуживание</h3><p>Проезд, проходы и зоны ремонта определяются до расчёта каркаса. Открываемый или съёмный участок размещают там, где он не мешает технологическому и пожарному доступу.</p><ol class="scheme-key scheme-key--stack"><li><b>1</b><span>свободный сервисный маршрут</span></li><li><b>2</b><span>проектируемый открываемый участок</span></li><li><b>3</b><span>зона обслуживания оборудования</span></li></ol><p class="story-note">Положение и конструкция проёма всегда уточняются по результатам обследования.</p></div>
+          </article>
         </div>
       </div>
     </section>
