@@ -73,7 +73,25 @@
     if (invalid) field.addEventListener('input', () => markInvalid(field, false), { once: true });
   };
 
-  form?.addEventListener('submit', (event) => {
+  const copyText = async (text) => {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+
+    const buffer = document.createElement('textarea');
+    buffer.value = text;
+    buffer.setAttribute('readonly', '');
+    buffer.style.position = 'fixed';
+    buffer.style.opacity = '0';
+    document.body.appendChild(buffer);
+    buffer.select();
+    const copied = document.execCommand('copy');
+    buffer.remove();
+    if (!copied) throw new Error('Copy command is unavailable');
+  };
+
+  form?.addEventListener('submit', async (event) => {
     event.preventDefault();
     formError.textContent = '';
 
@@ -100,7 +118,6 @@
     }
 
     const data = new FormData(form);
-    const subject = `Предварительная оценка защиты от БПЛА — ${data.get('company')}`;
     const bodyText = [
       'Запрос на предварительную инженерную оценку защиты объекта от БПЛА',
       '',
@@ -113,14 +130,17 @@
       'Точный адрес и сведения ограниченного доступа в письмо не включены.'
     ].join('\n');
 
-    const mailto = `mailto:info@i41.ru?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
     track('assessment_form_submit', { object_type: data.get('objectType') });
-    showToast('Открываем почтовую программу. Проверьте письмо перед отправкой.');
-    window.setTimeout(() => { window.location.href = mailto; }, 180);
+    try {
+      await copyText(bodyText);
+      showToast('Текст запроса скопирован. Передайте его инженеру после проверки.');
+    } catch {
+      showToast('Не удалось скопировать текст. Вы можете обсудить задачу по телефону.');
+    }
   });
 
   const revealCandidates = document.querySelectorAll(
-    '.section-heading, .risk-card, .diagram-card, .method-grid li, .industry-grid article, .principles article, .photo-story figure, .timeline li, .document-list > *, .layer-table article, .accordion details'
+    '.section-heading, .risk-card, .technical-scheme, .method-grid li, .industry-grid article, .principles article, .photo-story figure, .timeline li, .document-list > *, .layer-table article, .accordion details'
   );
 
   if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

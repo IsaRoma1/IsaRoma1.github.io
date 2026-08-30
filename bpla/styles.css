@@ -139,24 +139,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
   text-decoration: none;
 }
 
-.brand__mark {
-  font-size: 31px;
-  font-weight: 900;
-  letter-spacing: -.08em;
-  line-height: .9;
-}
-
-.brand__mark span { color: var(--orange); }
-
-.brand__text {
-  padding-left: 11px;
-  border-left: 1px solid rgba(255,255,255,.32);
-  font-size: 9px;
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: .11em;
-  text-transform: uppercase;
-}
+.brand__symbol { width: 40px; height: 40px; flex: none; }
+.brand__name { color: var(--white); font-size: 22px; font-weight: 850; line-height: 1; letter-spacing: -.045em; }
+.brand__name span { color: var(--orange); }
 
 .site-nav {
   display: flex;
@@ -341,6 +326,24 @@ h3 { line-height: 1.15; }
 .risk-card p { margin: 0; color: rgba(255,255,255,.56); font-size: 14px; }
 
 .solution { background: var(--white); }
+.technical-scheme { margin: 0; overflow: hidden; border: 1px solid var(--line); background: #edf1ef; }
+.technical-scheme__canvas { position: relative; overflow: hidden; background: #edf1ef; }
+.technical-scheme__canvas img { width: 100%; height: auto; }
+.technical-scheme__labels { position: absolute; inset: 0; pointer-events: none; }
+.technical-scheme__labels span { position: absolute; max-width: 180px; padding: 6px 9px; background: rgba(244,246,245,.9); color: #354045; box-shadow: 0 0 0 1px rgba(16,24,28,.12); font-size: clamp(8px, .78vw, 11px); line-height: 1.15; font-weight: 850; letter-spacing: .04em; text-transform: uppercase; backdrop-filter: blur(4px); }
+.technical-scheme__labels .label-tl { top: 9.5%; left: 2.2%; }
+.technical-scheme__labels .label-tr { top: 7%; right: 2.2%; }
+.technical-scheme__labels .label-ml { top: 43%; left: 1.2%; }
+.technical-scheme__labels .label-mr { top: 50%; right: 1.2%; }
+.technical-scheme__labels .label-bl { bottom: 8%; left: 2.2%; }
+.technical-scheme__labels .label-br { right: 2.2%; bottom: 8%; }
+.technical-scheme__labels .label-bc { left: 50%; bottom: 3%; transform: translateX(-50%); }
+.technical-scheme__labels--compact span { font-size: clamp(7px, .66vw, 10px); }
+.technical-scheme figcaption { min-height: 112px; display: grid; grid-template-columns: minmax(180px, .38fr) minmax(0, 1fr); gap: 34px; align-items: start; padding: 24px 26px; border-top: 1px solid var(--line); background: var(--white); }
+.technical-scheme figcaption strong { font-size: 16px; letter-spacing: -.02em; }
+.technical-scheme figcaption span { color: var(--muted); font-size: 13px; line-height: 1.55; }
+.scheme-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+.scheme-gallery .technical-scheme figcaption { grid-template-columns: 1fr; gap: 9px; }
 .diagram-card { border: 1px solid var(--line); background: #eef1f0; }
 .diagram-card__meta { min-height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 10px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
 .diagram { position: relative; height: clamp(420px, 48vw, 620px); overflow: hidden; background: linear-gradient(#e9eeed 0 31%, #dde3e1 31% 100%); }
@@ -555,6 +558,7 @@ h3 { line-height: 1.15; }
   .method-grid { grid-template-columns: repeat(2, 1fr); }
   .principles { grid-template-columns: repeat(2, 1fr); }
   .photo-story { grid-template-columns: 1fr; }
+  .scheme-gallery { grid-template-columns: 1fr; }
   .photo-story figure { min-height: 390px; }
   .estimate__copy > p:not(.eyebrow) { max-width: 600px; }
   .timeline li { grid-template-columns: 56px 1fr; }
@@ -573,7 +577,8 @@ h3 { line-height: 1.15; }
 
 @media (max-width: 600px) {
   :root { --pad: 18px; --section: 78px; }
-  .brand__text { display: none; }
+  .brand__symbol { width: 36px; height: 36px; }
+  .brand__name { font-size: 20px; }
   .legal-ribbon__inner { gap: 10px; }
   .legal-ribbon p { font-size: 10px; line-height: 1.35; }
   .hero h1 { font-size: clamp(40px, 11.5vw, 48px); line-height: .98; }
@@ -592,6 +597,9 @@ h3 { line-height: 1.15; }
   .risk-card { min-height: 225px; }
   .risk-card h3 { margin-top: 50px; }
   .diagram { height: 400px; }
+  .technical-scheme figcaption { min-height: 0; grid-template-columns: 1fr; gap: 9px; padding: 18px; }
+  .technical-scheme__labels { display: none; }
+  .diagram-card__meta { min-height: 42px; padding-inline: 12px; font-size: 8px; letter-spacing: .07em; }
   .diagram__mesh { left: 7%; right: 7%; }
   .diagram__supports { left: 7%; right: 7%; }
   .diagram__object { width: 47%; }

@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#11181c">
   <meta name="description" content="Обследование, проектирование, поставка и монтаж защитных ограждающих конструкций от БПЛА для промышленных, энергетических и логистических объектов.">
-  <title>Защита промышленных объектов от БПЛА | Индустрия 4.1</title>
+  <title>Защита промышленных объектов от БПЛА | Anti-BPLA</title>
   <link rel="canonical" href="https://ii41.ru/bpla/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ru_RU">
-  <meta property="og:title" content="Защита промышленных объектов от БПЛА | Индустрия 4.1">
+  <meta property="og:title" content="Защита промышленных объектов от БПЛА | Anti-BPLA">
   <meta property="og:description" content="Обследование, проектирование, поставка и монтаж защитных ограждающих конструкций от БПЛА.">
   <meta property="og:url" content="https://ii41.ru/bpla/">
   <meta property="og:image" content="https://ii41.ru/bpla/assets/images/hero-protective-contour.jpg">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2311181c'/%3E%3Cpath d='M16 14h8v36h-8zm14 0h8v14h10v8H38v14h-8V36H20v-8h10z' fill='%23ff5a1f'/%3E%3C/svg%3E">
+  <link rel="icon" href="./assets/anti-bpla-mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
   <script src="./script.js" defer></script>
 </head>
@@ -30,9 +30,9 @@
 
   <header class="site-header" data-header>
     <div class="container header__inner">
-      <a class="brand" href="https://ii41.ru/" aria-label="Индустрия 4.1 — главная">
-        <span class="brand__mark">i<span>4</span>1</span>
-        <span class="brand__text">Индустрия<br>4.1</span>
+      <a class="brand" href="/bpla/" aria-label="Anti-BPLA — главная">
+        <img class="brand__symbol" src="./assets/anti-bpla-mark.svg" alt="" width="44" height="44">
+        <span class="brand__name">Anti<span>-BPLA</span></span>
       </a>
 
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
@@ -132,16 +132,14 @@
           <p>Его задача — не обещать абсолютную защиту, а отнести точку воздействия от критического оборудования и снизить тяжесть последствий в пределах расчётных параметров.</p>
         </div>
 
-        <div class="diagram-card" role="img" aria-label="Схема защитного контура: несущая система, улавливающая конструкция, расчётный зазор и защищаемое оборудование">
+        <figure class="technical-scheme technical-scheme--wide">
           <div class="diagram-card__meta"><span>Схема 01</span><span>Принципиальная, не для строительства</span></div>
-          <div class="diagram">
-            <div class="diagram__sky"><span>Расчётное воздействие</span><i aria-hidden="true">↓</i></div>
-            <div class="diagram__mesh"><span>Улавливающий контур</span></div>
-            <div class="diagram__gap"><span>Расчётный зазор</span><b aria-hidden="true"></b></div>
-            <div class="diagram__object"><span>Критическое оборудование</span><i></i><i></i><i></i></div>
-            <div class="diagram__supports"><span>Независимая несущая система</span></div>
+          <div class="technical-scheme__canvas">
+            <img src="./assets/schemes/scheme-01-protective-contour-v2.jpg" alt="Изометрическая визуализация улавливающего контура над критическим оборудованием с независимыми опорами" width="1536" height="1024" loading="lazy">
+            <div class="technical-scheme__labels" aria-hidden="true"><span class="label-tl">Улавливающий контур</span><span class="label-tr">Расчётный зазор</span><span class="label-ml">Несущая стойка</span><span class="label-mr">Узлы натяжения</span><span class="label-bl">Критическое оборудование</span><span class="label-br">Независимое основание</span></div>
           </div>
-        </div>
+          <figcaption><strong>Как работает контур</strong><span>Воздействие принимает улавливающая часть, а расчётный зазор отделяет её от защищаемого оборудования. Нагрузки передаются на самостоятельную несущую систему.</span></figcaption>
+        </figure>
 
         <ol class="method-grid">
           <li><span>01</span><h3>Выделяем критические узлы</h3><p>Сопоставляем сценарии отказа и возможный ущерб.</p></li>
@@ -193,14 +191,33 @@
           <article><span>06</span><h3>Совместимость</h3><p>С наблюдением, оповещением и другими уровнями защиты.</p></article>
         </div>
 
+        <div class="scheme-gallery" aria-label="Принципиальные схемы конструкции и эксплуатации">
+          <figure class="technical-scheme">
+            <div class="diagram-card__meta"><span>Схема 02</span><span>Передача нагрузки</span></div>
+            <div class="technical-scheme__canvas">
+              <img src="./assets/schemes/scheme-02-load-path-v2.jpg" alt="Изометрическая визуализация передачи воздействия от сетки через узел и стойку на независимое основание" width="1536" height="1024" loading="lazy">
+              <div class="technical-scheme__labels technical-scheme__labels--compact" aria-hidden="true"><span class="label-tl">Узел крепления</span><span class="label-tr">Несущая балка</span><span class="label-mr">Путь нагрузки</span><span class="label-br">Отдельное основание</span></div>
+            </div>
+            <figcaption><strong>Независимая несущая схема</strong><span>Расчётное воздействие передаётся через контур и опоры на самостоятельные основания — оборудование не становится частью силовой схемы.</span></figcaption>
+          </figure>
+          <figure class="technical-scheme">
+            <div class="diagram-card__meta"><span>Схема 03</span><span>Эксплуатационный доступ</span></div>
+            <div class="technical-scheme__canvas">
+              <img src="./assets/schemes/scheme-03-service-access-v2.jpg" alt="Изометрическая визуализация защитного контура с открываемым участком и проходами к оборудованию" width="1536" height="1024" loading="lazy">
+              <div class="technical-scheme__labels technical-scheme__labels--compact" aria-hidden="true"><span class="label-tl">Улавливающий контур</span><span class="label-tr">Несущая рама</span><span class="label-bl">Независимые опоры</span><span class="label-br">Открываемый участок</span><span class="label-bc">Проход к оборудованию</span></div>
+            </div>
+            <figcaption><strong>Доступ сохраняется</strong><span>Проезды, проходы и съёмные участки закладываются в концепцию до расчёта. Их положение уточняется по результатам обследования.</span></figcaption>
+          </figure>
+        </div>
+
         <div class="photo-story" aria-label="Инженерные визуализации конструкции и монтажа">
           <figure class="photo-story__large">
             <img src="./assets/images/installation-process.jpg" alt="Инженерная визуализация монтажа независимой защитной конструкции" width="1536" height="1024" loading="lazy">
-            <figcaption><span>02 / Визуализация</span><p>Монтаж с сохранением доступа к оборудованию</p></figcaption>
+            <figcaption><span>04 / Визуализация</span><p>Монтаж с сохранением доступа к оборудованию</p></figcaption>
           </figure>
           <figure>
             <img src="./assets/images/connection-node.jpg" alt="Инженерная визуализация узла крепления улавливающей сетки" width="1456" height="1092" loading="lazy">
-            <figcaption><span>03 / Визуализация</span><p>Ремонтопригодный узел крепления</p></figcaption>
+            <figcaption><span>05 / Визуализация</span><p>Ремонтопригодный узел крепления</p></figcaption>
           </figure>
         </div>
       </div>
@@ -225,7 +242,7 @@
         </div>
 
         <form class="assessment-form" data-assessment-form novalidate>
-          <div class="form__header"><span>Запрос 01</span><p>Откроем готовое письмо в вашей почтовой программе. Данные не отправятся автоматически.</p></div>
+          <div class="form__header"><span>Запрос 01</span><p>Сформируем текст запроса и скопируем его. Данные не отправятся автоматически.</p></div>
           <div class="field-grid">
             <label class="field"><span>Имя *</span><input name="name" autocomplete="name" required placeholder="Как к вам обращаться"></label>
             <label class="field"><span>Компания и должность *</span><input name="company" autocomplete="organization-title" required placeholder="Организация, роль"></label>
@@ -233,10 +250,10 @@
             <label class="field"><span>Тип объекта *</span><select name="objectType" required><option value="">Выберите тип</option><option>ТЭК</option><option>Промышленность</option><option>Энергетика</option><option>Логистика или склад</option><option>Транспорт</option><option>Связь или ЦОД</option><option>Коммунальная инфраструктура</option><option>Другое</option></select></label>
             <label class="field field--wide"><span>Что требуется защитить</span><textarea name="equipment" rows="3" placeholder="Например: трансформаторное оборудование. Без адреса и режимных сведений."></textarea></label>
           </div>
-          <label class="consent"><input type="checkbox" name="consent" required><span>Согласен подготовить письмо с указанными контактами. Данные будут отправлены только после моего подтверждения в почтовой программе.</span></label>
+          <label class="consent"><input type="checkbox" name="consent" required><span>Согласен сформировать текст запроса с указанными контактами. Данные останутся в браузере и будут скопированы только по моей команде.</span></label>
           <p class="form__warning"><strong>Не передавайте</strong> точный адрес, режимные, секретные или иные сведения ограниченного доступа.</p>
           <p class="form__error" role="alert" data-form-error></p>
-          <button class="button button--form" type="submit" data-event="assessment_form_submit">Подготовить письмо инженеру <span aria-hidden="true">↗</span></button>
+          <button class="button button--form" type="submit" data-event="assessment_form_submit">Скопировать запрос инженеру <span aria-hidden="true">↗</span></button>
         </form>
       </div>
     </section>
@@ -264,7 +281,7 @@
           <p class="eyebrow eyebrow--light">Проверяемые основания</p>
           <h2 id="standards-title">Не обещания, а расчёты и документы</h2>
           <p>Нормативная база зависит от категории, назначения и ведомственной принадлежности объекта. Финальный состав фиксируется в техническом задании и проекте.</p>
-          <a class="button button--light" href="mailto:info@i41.ru?subject=%D0%97%D0%B0%D0%BF%D1%80%D0%BE%D1%81%20%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D0%BE%D0%B2%20%D0%BF%D0%BE%20%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B5%20%D0%BE%D1%82%20%D0%91%D0%9F%D0%9B%D0%90" data-event="documents_request_submit">Запросить открытый комплект</a>
+          <a class="button button--light" href="tel:+74951089987" data-event="documents_request_submit">Запросить открытый комплект</a>
         </div>
         <div class="document-list">
           <a href="https://publication.pravo.gov.ru/document/0001202608240009" target="_blank" rel="noopener"><span>01</span><div><small>24.08.2026</small><h3>Указ Президента РФ № 604</h3><p>Меры безопасности критической инфраструктуры и временное управление активами.</p></div><i aria-hidden="true">↗</i></a>
@@ -317,11 +334,11 @@
 
   <footer class="site-footer">
     <div class="container footer__top">
-      <div><a class="brand brand--footer" href="https://ii41.ru/"><span class="brand__mark">i<span>4</span>1</span><span class="brand__text">Индустрия<br>4.1</span></a><p>Инженерные решения для безопасности и непрерывности промышленности.</p></div>
+      <div><a class="brand brand--footer" href="/bpla/" aria-label="Anti-BPLA — главная"><img class="brand__symbol" src="./assets/anti-bpla-mark.svg" alt="" width="44" height="44"><span class="brand__name">Anti<span>-BPLA</span></span></a><p>Инженерные решения для безопасности и непрерывности промышленности.</p></div>
       <div><h2>Навигация</h2><a href="#solution">Решение</a><a href="#objects">Объекты</a><a href="#process">Этапы</a><a href="#standards">Нормативы</a><a href="#faq">FAQ</a></div>
-      <div><h2>Контакты</h2><a href="tel:+74951089987">+7 (495) 108-99-87</a><a href="mailto:info@i41.ru">info@i41.ru</a><p>Москва, ул. Горбунова, д. 2, стр. 3, помещение 192</p></div>
+      <div><h2>Контакты</h2><a href="tel:+74951089987">+7 (495) 108-99-87</a><p>Первичный разговор — без передачи точного адреса и режимных материалов.</p></div>
     </div>
-    <div class="container footer__bottom"><span>© 2026 ООО «Индустрия 4.1»</span><span>ИНН 7717802970 · ОГРН 5147746477412</span><p>Информация носит справочный характер и не является юридическим заключением или гарантией эффективности для конкретного объекта.</p></div>
+    <div class="container footer__bottom"><span>© 2026 Anti-BPLA</span><span>Инженерная защита объектов</span><p>Информация носит справочный характер и не является юридическим заключением или гарантией эффективности для конкретного объекта.</p></div>
   </footer>
 
   <div class="mobile-action" aria-label="Быстрые действия">
