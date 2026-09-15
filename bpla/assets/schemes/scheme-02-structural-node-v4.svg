@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 1024" role="img" aria-labelledby="title desc">
+  <title id="title">Расчётная схема передачи усилий в опоре защитного контура</title>
+  <desc id="desc">Сеточный контур и внешняя оттяжка создают реакции в оголовке. Опора передаёт продольную силу, поперечную реакцию и изгибающий момент через фланец, анкеры и бетонный фундамент.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e64a19"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#11181c" flood-opacity=".2"/>
+    </filter>
+    <style>
+      .force{fill:none;stroke:#e64a19;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrow)}
+      .force-thin{fill:none;stroke:#e64a19;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrow)}
+      .leader{fill:none;stroke:#11181c;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+      .label{font:700 24px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;letter-spacing:.02em;fill:#fff}
+      .sub{font:600 18px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;fill:#dbe1e3}
+      .tag{fill:#11181c;rx:8;filter:url(#shadow)}
+    </style>
+  </defs>
+
+  <image href="scheme-02-structural-node-base-v4.png" width="1536" height="1024" preserveAspectRatio="xMidYMid slice"/>
+
+  <!-- Force from the horizontal capture cable into the head node. -->
+  <path class="force" d="M 1125 86 L 760 128"/>
+  <g transform="translate(1010 112)">
+    <rect class="tag" x="0" y="0" width="400" height="68"/>
+    <text class="label" x="20" y="30">T₁ · сеточный контур</text>
+    <text class="sub" x="20" y="54">горизонтальная реакция в оголовке</text>
+  </g>
+
+  <!-- Guy tension acts away from the head and down to its own anchor. -->
+  <path class="force" d="M 630 195 L 358 560"/>
+  <g transform="translate(70 310)">
+    <rect class="tag" x="0" y="0" width="390" height="68"/>
+    <text class="label" x="20" y="30">T₂ · внешняя оттяжка</text>
+    <text class="sub" x="20" y="54">тяга к отдельному анкеру</text>
+  </g>
+
+  <!-- Resultant axial force in the mast. -->
+  <path class="force" d="M 686 270 L 686 550"/>
+  <g transform="translate(735 340)">
+    <rect class="tag" x="0" y="0" width="300" height="68"/>
+    <text class="label" x="20" y="30">N · сжатие опоры</text>
+    <text class="sub" x="20" y="54">результат равновесия узла</text>
+  </g>
+
+  <!-- Base shear and overturning moment are intentionally shown separately. -->
+  <path class="force-thin" d="M 585 636 L 755 636"/>
+  <path class="force-thin" d="M 820 668 C 882 630 904 690 853 726"/>
+  <g transform="translate(965 595)">
+    <rect class="tag" x="0" y="0" width="430" height="72"/>
+    <text class="label" x="20" y="31">V + M · сдвиг и момент</text>
+    <text class="sub" x="20" y="57">воспринимаются базой и анкерами</text>
+  </g>
+  <path class="leader" d="M 965 635 L 900 635 L 842 682"/>
+
+  <!-- Opposite actions in the anchor group; never imply that all anchors work downward. -->
+  <path class="force-thin" d="M 620 890 L 620 735"/>
+  <path class="force-thin" d="M 780 735 L 780 890"/>
+  <g transform="translate(365 920)">
+    <rect class="tag" x="0" y="0" width="360" height="70"/>
+    <text class="label" x="20" y="30">растяжение анкеров</text>
+    <text class="sub" x="20" y="55">на одной стороне базы</text>
+  </g>
+  <g transform="translate(800 920)">
+    <rect class="tag" x="0" y="0" width="390" height="70"/>
+    <text class="label" x="20" y="30">сжатие опорной зоны</text>
+    <text class="sub" x="20" y="55">на противоположной стороне</text>
+  </g>
+</svg>

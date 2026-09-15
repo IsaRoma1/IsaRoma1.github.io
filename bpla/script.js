@@ -3,22 +3,9 @@
   const header = document.querySelector('[data-header]');
   const nav = document.querySelector('[data-nav]');
   const navToggle = document.querySelector('[data-nav-toggle]');
-  const form = document.querySelector('[data-assessment-form]');
-  const formError = document.querySelector('[data-form-error]');
-  const toast = document.querySelector('[data-toast]');
-  let toastTimer;
-
-  const track = (eventName, details = {}) => {
+  const track = (eventName) => {
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event: eventName, ...details });
-  };
-
-  const showToast = (message) => {
-    if (!toast) return;
-    toast.textContent = message;
-    toast.classList.add('is-visible');
-    window.clearTimeout(toastTimer);
-    toastTimer = window.setTimeout(() => toast.classList.remove('is-visible'), 5200);
+    window.dataLayer.push({ event: eventName });
   };
 
   const closeNav = () => {
@@ -49,13 +36,6 @@
     element.addEventListener('click', () => track(element.dataset.event));
   });
 
-  document.querySelectorAll('a[href="#assessment"]').forEach((link) => {
-    link.addEventListener('click', () => {
-      closeNav();
-      window.setTimeout(() => form?.querySelector('input')?.focus({ preventScroll: true }), 700);
-    });
-  });
-
   const accordionItems = document.querySelectorAll('[data-accordion] details');
   accordionItems.forEach((item) => {
     item.addEventListener('toggle', () => {
@@ -66,92 +46,4 @@
     });
   });
 
-  const normalizePhone = (value) => value.replace(/[^+\d]/g, '');
-
-  const markInvalid = (field, invalid) => {
-    field.setAttribute('aria-invalid', String(invalid));
-    if (invalid) field.addEventListener('input', () => markInvalid(field, false), { once: true });
-  };
-
-  const copyText = async (text) => {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(text);
-      return;
-    }
-
-    const buffer = document.createElement('textarea');
-    buffer.value = text;
-    buffer.setAttribute('readonly', '');
-    buffer.style.position = 'fixed';
-    buffer.style.opacity = '0';
-    document.body.appendChild(buffer);
-    buffer.select();
-    const copied = document.execCommand('copy');
-    buffer.remove();
-    if (!copied) throw new Error('Copy command is unavailable');
-  };
-
-  form?.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    formError.textContent = '';
-
-    const requiredFields = [...form.querySelectorAll('[required]')];
-    let firstInvalid = null;
-
-    requiredFields.forEach((field) => {
-      const invalid = field.type === 'checkbox' ? !field.checked : !field.value.trim();
-      markInvalid(field, invalid);
-      if (invalid && !firstInvalid) firstInvalid = field;
-    });
-
-    const phoneField = form.elements.phone;
-    if (phoneField && normalizePhone(phoneField.value).length < 10) {
-      markInvalid(phoneField, true);
-      firstInvalid ||= phoneField;
-    }
-
-    if (firstInvalid) {
-      formError.textContent = 'Заполните обязательные поля и подтвердите согласие.';
-      firstInvalid.focus();
-      track('assessment_form_validation_error');
-      return;
-    }
-
-    const data = new FormData(form);
-    const bodyText = [
-      'Запрос на предварительную инженерную оценку защиты объекта от БПЛА',
-      '',
-      `Имя: ${data.get('name')}`,
-      `Компания и должность: ${data.get('company')}`,
-      `Рабочий телефон: ${data.get('phone')}`,
-      `Тип объекта: ${data.get('objectType')}`,
-      `Что требуется защитить: ${data.get('equipment') || 'Уточню в разговоре'}`,
-      '',
-      'Точный адрес и сведения ограниченного доступа в письмо не включены.'
-    ].join('\n');
-
-    track('assessment_form_submit', { object_type: data.get('objectType') });
-    try {
-      await copyText(bodyText);
-      showToast('Текст запроса скопирован. Передайте его инженеру после проверки.');
-    } catch {
-      showToast('Не удалось скопировать текст. Вы можете обсудить задачу по телефону.');
-    }
-  });
-
-  const revealCandidates = document.querySelectorAll(
-    '.section-heading, .risk-card, .technical-scheme, .method-grid li, .industry-grid article, .principles article, .engineering-story, .timeline li, .document-list > *, .layer-table article, .accordion details'
-  );
-
-  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    revealCandidates.forEach((element) => element.setAttribute('data-reveal', ''));
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-revealed');
-        observer.unobserve(entry.target);
-      });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-    revealCandidates.forEach((element) => revealObserver.observe(element));
-  }
 })();
