@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ii41.ru/sitemap-index.xml
