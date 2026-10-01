@@ -1,0 +1,31 @@
+/* Applies only to the new sales article; existing articles retain their styling. */
+body:has(.sales-article) .article-page-hero {padding-bottom:28px;}
+body:has(.sales-article) .article-heading h1 {font-size:clamp(1.9rem,1.2rem + 2.2vw,3rem);font-weight:600;line-height:1.22;letter-spacing:-.04em;max-width:24ch;}
+body:has(.sales-article) .article-cover {padding:0;border-radius:14px;overflow:hidden;box-shadow:0 12px 38px #27214410;}
+body:has(.sales-article) .article-cover img {border-radius:0;}
+body:has(.sales-article) .article-cover figcaption {padding:16px 22px;font-size:14px;line-height:1.6;}
+body:has(.sales-article) .article-shell {display:block;max-width:1080px;}
+body:has(.sales-article) .article-toc {margin-bottom:26px;box-shadow:none;border-color:#e3e2ee;}
+.sales-article {padding:44px 48px;border-color:#e9e8f0;box-shadow:0 12px 38px #27214408;font-size:18px;line-height:1.85;border-radius:14px;}
+.sales-article > p,.sales-article > ul,.sales-article > ol,.sales-article > h2,.sales-article > h3 {max-width:72ch;margin-left:auto;margin-right:auto;}
+.sales-article h2 {font-size:clamp(1.4rem,1.1rem + .7vw,1.9rem);font-weight:600;line-height:1.35;letter-spacing:-.035em;margin-top:56px;margin-bottom:22px;}
+.sales-article h3 {font-size:21px;font-weight:600;line-height:1.45;}
+.sales-article strong {font-weight:600;}
+.sales-article li {margin-bottom:12px;}
+.sales-infographic {margin:38px 0 42px;}
+.sales-article .sales-infographic img {width:100%;height:auto;border-radius:10px;margin:0;}
+.sales-infographic figcaption {display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:16px;font-size:14px;line-height:1.65;color:var(--muted);}
+.sales-infographic figcaption span {flex:1 1 36ch;}
+.sales-infographic figcaption a {display:inline-flex;align-items:center;min-height:44px;flex:0 0 auto;font-size:13px;}
+body:has(.sales-article) .article-aside {margin-top:28px;padding:26px;box-shadow:none;border-color:#e3e2ee;}
+body:has(.sales-article) .article-aside .tag-list {margin-top:16px;}
+@media(max-width:700px){
+ .sales-article {padding:24px 16px;font-size:16px;line-height:1.8;}
+ .sales-article h2 {margin-top:40px;margin-bottom:18px;}
+ .sales-article h3 {font-size:19px;}
+ .sales-infographic {margin:28px -8px 32px;}
+ .sales-infographic figcaption {padding-inline:8px;font-size:13px;}
+ body:has(.sales-article) .article-cover figcaption {padding:14px 16px;font-size:13px;}
+ body:has(.sales-article) .article-toc {margin-bottom:20px;padding-inline:18px;}
+ body:has(.sales-article) .article-aside {padding:22px;}
+}
