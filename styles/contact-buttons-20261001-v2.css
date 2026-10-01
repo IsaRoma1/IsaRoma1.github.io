@@ -1,0 +1,38 @@
+@font-face { font-family:Montserrat; font-style:normal; font-weight:600; font-display:swap; src:url('/fonts/montserrat-button-cyrillic-600.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:Montserrat; font-style:normal; font-weight:600; font-display:swap; src:url('/fonts/montserrat-button-latin-600.woff2') format('woff2'); unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+/* Adapted from Uiverse.io by marcelodolza. Scoped to the requested contact links. */
+.contact-button { --primary:#7055cb; --neutral-1:#f7f8f7; --neutral-2:#e7e7e7; --radius:14px; position:relative; isolation:isolate; display:inline-flex; align-items:center; justify-content:center; min-height:58px; max-width:100%; padding:16px 22px; border:0; border-radius:var(--radius); background:var(--neutral-2); color:#3d385f; font:600 18px/1.45 "Galano Grotesque",Poppins,Montserrat,sans-serif; text-align:center; text-decoration:none; text-shadow:0 1px 1px #ffffff80; box-shadow:0 .5px .5px 1px #ffffff33,0 10px 20px #24203126,0 4px 5px #0000000d; cursor:pointer; touch-action:manipulation; transition:transform .3s ease,box-shadow .3s ease; }
+.contact-button::after { content:""; pointer-events:none; position:absolute; inset:0; border-radius:var(--radius); border:2.5px solid transparent; background:linear-gradient(var(--neutral-1),var(--neutral-2)) padding-box,linear-gradient(to bottom,#0000001a,#00000073) border-box; z-index:0; transition:transform .4s ease,box-shadow .4s ease; }
+.contact-button::before { content:""; pointer-events:none; position:absolute; inset:7px 6px 6px; border-radius:30px; background:linear-gradient(to top,var(--neutral-1),var(--neutral-2)); z-index:2; }
+.contact-state { position:relative; z-index:3; display:flex; align-items:center; gap:10px; min-width:0; }
+.contact-plane { display:flex; flex:none; align-items:center; justify-content:center; transform:scale(1.15); transition:transform .3s ease; }
+.contact-plane svg { overflow:visible; }
+.contact-label { display:flex; flex-wrap:wrap; justify-content:center; column-gap:.3em; }
+.contact-word { display:inline-flex; white-space:nowrap; }
+.contact-letter { display:inline-block; }
+.contact-outline { position:absolute; pointer-events:none; inset:-2px -3.5px; overflow:hidden; border-radius:inherit; z-index:1; opacity:0; transition:opacity .4s ease; }
+.contact-outline::before { content:""; position:absolute; inset:-100%; background:conic-gradient(from 180deg,transparent 60%,white 80%,transparent 100%); }
+.contact-button-accent { --neutral-1:#8a70dd; --neutral-2:#6244b8; color:#fff; text-shadow:0 1px 1px #00000030; box-shadow:0 .5px .5px 1px #ffffff33,0 10px 20px #7055cb40,0 4px 5px #0000000d; }
+.contact-button-accent .contact-letter { --primary:#fff; }
+.contact-button:focus-visible { outline:3px solid #7055cb; outline-offset:6px; }
+.contact-button:active { transform:scale(.98); }
+@media(hover:hover) and (pointer:fine) {
+ .contact-button:hover { transform:scale(1.02); box-shadow:0 0 1px 2px #ffffff4d,0 15px 30px #24203133,0 10px 3px -3px #0000000a; }
+ .contact-button:hover::after { transform:scale(1.03,1.07); box-shadow:inset 0 -1px 3px #fff; }
+ .contact-button:hover .contact-outline { opacity:1; }
+ .contact-button:hover .contact-outline::before { animation:contact-spin 2s linear 2; }
+ .contact-button:hover .contact-letter { animation:contact-wave .5s ease both; animation-delay:calc(var(--i) * .015s); }
+ .contact-button:hover .contact-plane { transform:rotate(45deg) scale(1.25); }
+}
+@keyframes contact-spin { to { transform:rotate(360deg); } }
+@keyframes contact-wave { 30% { transform:translateY(4px); } 50% { transform:translateY(-3px); color:var(--primary); } 100% { transform:translateY(0); } }
+.hero-actions .contact-button { flex-shrink:0; }
+.offer-card .contact-button { margin-top:12px; font-size:14px; padding:14px 12px; }
+@media(max-width:1100px) { .hero-actions .contact-button { font-size:12px; padding:12px; min-height:48px; } }
+@media(max-width:700px) { .hero-actions .contact-button { flex-shrink:1; padding:10px 8px; } .hero-actions .contact-state { gap:6px; } .hero-actions .contact-plane { display:flex; font-size:16px; transform:none; } .offer-card .contact-button { font-size:13px; } }
+.motion-paused .contact-button *, .motion-paused .contact-button::after { animation:none!important; transition:none!important; }
+@media(prefers-reduced-motion:reduce) { .contact-button,.contact-button::after,.contact-button * { animation:none!important; transition:none!important; } .contact-button:hover,.contact-button:hover::after,.contact-button:active,.contact-button:hover .contact-plane { transform:none; } }
+
+.contact-plane-shadow { filter:drop-shadow(0 1px .6px #00000080); }
+.final-contact .contact-button-wide { width:320px; max-width:100%; }
+@media(max-width:700px) { .hero-actions .contact-state { gap:5px; } .hero-actions .contact-label { flex:1; } .hero-actions .contact-word { white-space:normal; } .final-contact .contact-button-wide { width:320px; font-size:16px; } }
