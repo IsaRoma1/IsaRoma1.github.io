@@ -1,0 +1,16 @@
+/* Keep the full recommendation readable in every form of the site navigation. */
+.desktop-nav a[href="/partners/"] > span { line-height: 1.25; text-align: center; text-wrap: balance; overflow-wrap: normal; word-break: normal; }
+@media (min-width: 1101px) {
+  .desktop-nav a[href="/partners/"] { min-height: 78px; gap: 5px; padding: 5px 0; }
+  .desktop-nav a[href="/partners/"] > span { max-width: 100%; font-size: 11px; }
+  .nav-partner-label > span { display: block; white-space: nowrap; }
+}
+@media (min-width: 901px) and (max-width: 1100px) {
+  .site-header .desktop-nav { gap: 8px; }
+  .desktop-nav a[href="/partners/"] > span { max-width: 118px; }
+}
+@media (min-width: 1101px) and (max-height: 760px) {
+  .desktop-nav a[href="/partners/"] { min-height: 68px; gap: 4px; padding: 2px 0; }
+}
+.mobile-menu nav { max-height: calc(100dvh - 100px); overflow-y: auto; overscroll-behavior: contain; }
+.mobile-menu a[href="/partners/"] { line-height: 1.45; overflow-wrap: normal; }
