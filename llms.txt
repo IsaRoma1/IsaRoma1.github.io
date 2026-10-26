@@ -39,3 +39,7 @@
 - [Сервисы, проверенные мной](https://ii41.ru/partners/): личный выбор Романа Исаева — нейросети, карты для оплаты, обмен и международные переводы.
 
 - [SYNTX AI: модели и использование](https://ii41.ru/articles/syntx-obzor/): обзор со скриншотами, выбор моделей и настройки расхода токенов.
+
+- [Altyn для оплаты нейросетей](https://ii41.ru/articles/altyn-obzor/): личный опыт оплаты ChatGPT, Claude, DeepSeek, OpenRouter и fal.ai, рублёвое пополнение и ограничения карты.
+- [Hermes Exchange: USDT и зарубежные расчёты](https://ii41.ru/articles/hermes-exchange-obzor/): личная рекомендация, покупка USDT, перевод за границу и подготовка оплаты инвойса.
+- [WantToPay: карта для нейросетей](https://ii41.ru/articles/wanttopay-obzor/): выбор Prepaid, Easy или Smart, биллинг-адрес, оплата подписок и комиссии.
