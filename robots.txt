@@ -1,4 +1,39 @@
 User-agent: *
 Allow: /
 
+# AI search and discovery.
+User-agent: OAI-SearchBot
+User-agent: Claude-SearchBot
+User-agent: PerplexityBot
+Allow: /
+
+# Training preferences for the main II41 site. Other projects share this host.
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: __usage_ai-training
+Disallow: /$
+Disallow: /?
+Disallow: /index.html
+Disallow: /about/
+Disallow: /articles/
+Disallow: /cases/
+Disallow: /economy/
+Disallow: /partners/
+Disallow: /photos/
+Disallow: /podcasts/
+Disallow: /services/
+Disallow: /sitemap/
+Disallow: /privacy/
+Disallow: /privacy.html
+Disallow: /personal-data.html
+Disallow: /test/
+Disallow: /sites.json
+Disallow: /rss.xml
+Disallow: /llms.txt
+Disallow: /assets/design-prompts/
+Disallow: /downloads/ii-pilot-measurement-log.csv
+Disallow: /downloads/ii-client-meeting-prep-template.txt
+
 Sitemap: https://ii41.ru/sitemap-index.xml
