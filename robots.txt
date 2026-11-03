@@ -19,6 +19,7 @@ Disallow: /index.html
 Disallow: /about/
 Disallow: /articles/
 Disallow: /cases/
+Disallow: /contacts/
 Disallow: /economy/
 Disallow: /partners/
 Disallow: /photos/
