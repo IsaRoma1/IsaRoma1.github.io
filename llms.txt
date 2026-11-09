@@ -44,3 +44,4 @@
 - [Hermes Exchange: USDT и зарубежные расчёты](https://ii41.ru/articles/hermes-exchange-obzor/): личная рекомендация, покупка USDT, перевод за границу и подготовка оплаты инвойса.
 - [WantToPay: карта для нейросетей](https://ii41.ru/articles/wanttopay-obzor/): выбор Prepaid, Easy или Smart, биллинг-адрес, оплата подписок и комиссии.
 - [Какой ИИ-редактор фото выбрать](https://ii41.ru/articles/ii-redaktory-foto/): пять моделей, примеры и сохранение деталей.
+- [Какую нейросеть выбрать для работы](https://ii41.ru/articles/kakuyu-neyroset-vybrat/): подбор по задачам, 12 сервисов, сравнение и калькулятор стоимости результата.
