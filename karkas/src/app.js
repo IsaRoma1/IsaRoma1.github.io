@@ -3857,7 +3857,7 @@ async function main() {
      две молчаливые 403 в консоли на каждой загрузке страницы: запрос
      уходил заведомо в отказ. Спрашиваем то же право, что открывает сам
      раздел. */
-  if (typeof initObjects === "function"
+  if (!window.KARKAS_DEMO && typeof initObjects === "function"
       && (isTV() || AUTH.can(AUTH.current(), "obj"))) {
     initObjects();
   }
