@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<script src="src/static-demo.js?v=1"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Успеваемость · Каркас</title>
+<link rel="icon" type="image/png" href="src/favicon.png?v=2026-10-26-01">
+<link rel="apple-touch-icon" href="src/icon-180.png?v=2026-10-26-01">
+<link rel="stylesheet" href="src/onest.css?v=2026-08-25-01">
+<link rel="stylesheet" href="src/fonts.css?v=2026-08-25-01">
+<link rel="stylesheet" href="src/styles.css?v=2026-08-28-13">
+<link rel="stylesheet" href="src/glass.css?v=2026-10-26-01">
+<link rel="stylesheet" href="src/demo.css?v=2026-10-26-01">
+<!-- Демо-сборка: витрина — тёмное стекло всегда, переключателя темы здесь нет. -->
+<script>document.documentElement.dataset.skin = "glass"; document.documentElement.dataset.theme = "dark";</script>
+</head>
+<!-- Витрина: отдельная страница без входа и без единого элемента
+     управления. Класс tv стоит сразу — app.js по нему понимает, что
+     рисовать крупно и не показывать матрицу пунктов. -->
+<body class="tv">
+
+<header class="tv-head">
+  <img src="src/brand-mark.svg?v=2026-10-26-01" alt="" width="64" height="64">
+  <div class="brand-title">
+    <h1>Успеваемость сотрудников</h1>
+    <span>Каркас</span>
+  </div>
+  <span class="top-gap"></span>
+  <div class="fresh" id="fresh" aria-hidden="true">
+    <svg class="fresh-ic" viewBox="0 0 24 24">
+      <path d="M3.8 12a8.2 8.2 0 0 1 13.9-5.9"/><path d="M18.2 2.9v3.9h-3.9"/>
+      <path d="M20.2 12a8.2 8.2 0 0 1-13.9 5.9"/><path d="M5.8 21.1v-3.9h3.9"/>
+    </svg>
+    <div class="fresh-pop" id="fresh-pop"></div>
+  </div>
+  <!-- Какая страница из скольких, со стрелками ручного перехода. Мыши у
+       телевизора обычно нет, но если её подключат — листать вручную
+       быстрее, чем ждать. Пусто, когда всё влезло и листать нечего. -->
+  <div class="tv-nav" id="tvNav" hidden>
+    <button type="button" id="tvPrev" aria-label="Предыдущая страница" title="Предыдущая">
+      <svg viewBox="0 0 24 24"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
+    </button>
+    <div class="tv-page" id="tvPage"></div>
+    <button type="button" id="tvNext" aria-label="Следующая страница" title="Следующая">
+      <svg viewBox="0 0 24 24"><path d="M9.5 5.5 16 12l-6.5 6.5"/></svg>
+    </button>
+  </div>
+  <div class="live" id="live"></div>
+</header>
+
+<main class="content">
+  <div id="error" class="error" hidden></div>
+  <div id="offline" class="offline" hidden></div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <!-- Тот же состав, что в разделе «Сотрудники»: мастера и остальные.
+       «Горит сейчас» отсюда убрано — экран про людей, а не про список
+       просроченных дел. -->
+  <section class="card" id="masters">
+    <h2><span class="h-title">Мастера и их объекты</span></h2>
+    <div class="placeholder" id="masters-body">загрузка…</div>
+  </section>
+
+  <section class="card" id="others">
+    <h2>Остальные сотрудники <span class="h-note">выполнение задач</span></h2>
+    <div class="placeholder" id="others-body">загрузка…</div>
+  </section>
+</main>
+
+<!-- Полоса внизу: докуда долистали. Заодно признак, что экран живой —
+     с трёх метров движение полосы заметнее, чем смена строк. -->
+<div class="tv-bar"><i id="tvBar"></i></div>
+
+<script src="src/awards.js?v=2026-08-28-13"></script>
+<script src="src/app.js?v=2026-08-28-13"></script>
+</body>
+</html>

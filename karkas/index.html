@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<script src="src/static-demo.js?v=1"></script>
+<meta charset="utf-8">
+<!-- maximum-scale=1: iPhone увеличивает страницу при нажатии на поле со
+     шрифтом мельче 16px и не возвращает обратно. Поля у нас мельче —
+     поиск в 11px, как во всей платформе (23.09.2026). -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Каркас — интерактивная демоверсия</title>
+<meta name="description" content="Каркас — платформа для строительно-монтажной компании: объекты, тендеры, снабжение, финансы и команда в едином контуре.">
+<!-- Превью ссылки в мессенджерах (Open Graph). Без этих строк Telegram брал
+     первый попавшийся текст страницы — подзаголовок из рейтинга (30.09.2026). -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Каркас">
+<meta property="og:title" content="Каркас">
+<meta property="og:description" content="Каркас — платформа для строительно-монтажной компании: объекты, тендеры, снабжение, финансы и команда в едином контуре.">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<!-- Тема и раздел — до первого кадра. Скрипты платформы стоят в конце
+     страницы, и пока они не отработали, браузер успевал нарисовать
+     светлую тему и «Сотрудников»: при каждом обновлении экран мигал
+     светлым и прыгал в другой раздел. -->
+<script>
+  (function () {
+    var root = document.documentElement;
+    /* Демо-сборка: стеклянный слой (src/glass.css). Тёмное стекло — вид
+       по умолчанию, светлое — по кнопке темы. */
+    root.dataset.skin = "glass";
+    root.dataset.theme = "dark";
+    try {
+      var t = localStorage.getItem("karkas-theme");
+      if (t) root.dataset.theme = t;
+    } catch (e) { /* приватный режим — тема по умолчанию */ }
+    try {
+      var s = new URLSearchParams(location.search).get("s");
+      if (s) root.dataset.sec = s;
+    } catch (e) { /* старый браузер — раздел поставит app.js */ }
+  })();
+</script>
+<link rel="icon" type="image/svg+xml" href="src/brand-mark.svg?v=2026-10-26-01">
+<link rel="apple-touch-icon" href="src/icon-180.png?v=2026-10-26-01">
+<!-- Приложение на телефоне (23.09.2026): «На экран Домой» в Safari и
+     «Установить приложение» в Chrome открывают платформу без адресной
+     строки, со своим значком. -->
+<link rel="manifest" href="src/manifest.json?v=2026-10-26-01">
+<meta name="theme-color" content="#060814">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Каркас">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="src/onest.css?v=2026-08-25-01">
+<link rel="stylesheet" href="src/fonts.css?v=2026-08-25-01">
+<link rel="stylesheet" href="src/styles.css?v=2026-10-23-01">
+<link rel="stylesheet" href="src/profile.css?v=2026-09-10-01">
+<link rel="stylesheet" href="src/assistant.css?v=2026-10-26-01">
+<!-- Общий шаблон разделов-справочников. Идёт последним: он задаёт сетку
+     и таблицу, а файлы выше — частности поверх неё. -->
+<link rel="stylesheet" href="src/page.css?v=2026-10-23-08">
+<link rel="stylesheet" href="src/snab.css?v=2026-10-26-06">
+<link rel="stylesheet" href="src/suppliers.css?v=2026-10-14-02">
+<link rel="stylesheet" href="src/nexus.css?v=2026-10-20-03">
+<link rel="stylesheet" href="src/trace.css?v=2026-10-20-03">
+<link rel="stylesheet" href="src/customers.css?v=2026-10-13-01">
+<link rel="stylesheet" href="src/crews.css?v=2026-10-26-03">
+<link rel="stylesheet" href="src/finance.css?v=2026-10-09-02">
+<link rel="stylesheet" href="src/pto.css?v=2026-10-23-07">
+<link rel="stylesheet" href="src/letters.css?v=2026-10-12-01">
+<link rel="stylesheet" href="src/registry.css?v=2026-10-15-01">
+<link rel="stylesheet" href="src/contract.css?v=2026-09-24-04">
+<link rel="stylesheet" href="src/ratingdata.css?v=2026-09-30-04">
+<link rel="stylesheet" href="src/learn.css?v=2026-10-02-07">
+<link rel="stylesheet" href="src/messenger.css?v=2026-10-23-08">
+<link rel="stylesheet" href="src/issues.css?v=2026-10-26-05">
+<link rel="stylesheet" href="src/faq.css?v=2026-10-23-06">
+<link rel="stylesheet" href="src/tasks.css?v=2026-10-23-02">
+<link rel="stylesheet" href="src/wg.css?v=2026-10-22-33">
+<link rel="stylesheet" href="src/req.css?v=2026-10-23-02">
+<!-- Стеклянный слой — последним: он перебивает токены и раскладку всех
+     файлов выше, но только при data-skin="glass" на <html>. -->
+<link rel="stylesheet" href="src/demo-ai.css?v=2026-10-27-01">
+<link rel="stylesheet" href="src/glass.css?v=2026-10-26-01">
+<!-- Демо-сборка: обезличивание — свой знак вместо логотипа, без персонажей
+     заказчика. -->
+<link rel="stylesheet" href="src/demo.css?v=2026-10-26-01">
+</head>
+<body>
+
+<!-- Боковая панель: разделы и оформление. Раздел «Витрина» ведёт на
+     отдельный адрес tv.html — он открывается без входа, и в этом весь
+     смысл: на экран в столовой не может попасть лишнее. -->
+<aside class="side">
+  <div class="brand">
+    <img src="src/brand-mark.svg?v=2026-10-26-01" alt="" width="64" height="64">
+    <span><b>Каркас</b></span>
+    <button type="button" class="side-btn" id="side-btn" title="Свернуть меню" aria-expanded="true">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M9.5 4.5v15"/></svg>
+    </button>
+  </div>
+
+  <!-- Каждый пункт объявляет своё право сам, в data-perm. Это
+       единственное, что решает его видимость: applyAccess в app.js
+       больше ничего про разделы не знает, а список галочек в карточке
+       пользователя строится из PERMS на сервере. Поэтому новый раздел —
+       это строка здесь плюс право в PERMS, и после выкатки он сразу
+       выдаётся галочкой, без правок кода в третьем месте.
+
+       data-role вместо data-perm — только у «Пользователей»: правом на
+       управление доступами нельзя распоряжаться через само это право.
+       Все пункты скрыты до ответа сервера: показывать раздел, а через
+       миг прятать — хуже, чем показать его чуть позже. -->
+  <nav class="nav" id="nav">
+    <a data-s="msg" hidden><svg viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-8 8H5l-3 2v-10a9 9 0 0 1 18 0Z"/><path d="M7 9h8M7 13h5"/></svg>Мессенджер<i class="msg-nav-badge" id="msgBadge" hidden></i></a>
+    <!-- Задачи (правка № 6, 21.10.2026): у каждого свои — без data-perm;
+         связаны с мессенджером (src/tasks.js). Счётчик — новые мне и просроченные. -->
+    <a data-s="tsk" hidden><svg viewBox="0 0 24 24"><rect x="4" y="4.5" width="16" height="16" rx="2.5"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg>Задачи<i class="msg-nav-badge" id="tskBadge" hidden></i></a>
+    <!-- class="on" стоит с первого кадра намеренно: applyAccess по нему
+         понимает, какой раздел открыт, и уводит в другой, только если
+         этот закрыт. Без отметки он уводил бы всегда — и затирал бы
+         раздел, названный в адресе ссылки. -->
+    <a data-s="emp" data-perm="emp" class="on" hidden><svg viewBox="0 0 24 24"><path d="M16 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.5" cy="7.5" r="3.5"/><path d="M21 20v-1.6a3.4 3.4 0 0 0-2.6-3.3M15.5 4.2a3.4 3.4 0 0 1 0 6.6"/></svg>Эффективность</a>
+    <!-- «Объекты» и «Спецификации» ходят за одним правом: это две стороны
+         одного — папка стройки и разобранные позиции по ней. Разводить их
+         отдельными галочками значило бы выдать человеку документы, но
+         спрятать от него же спеку по этим самым документам. -->
+    <!-- «Файлы» с 28.09.2026 — в «Объектах» (вкладка объекта и кнопка
+         «Общие файлы»). data-tuck прячет пункт у тех, у кого «Объекты»
+         есть; раздел открыт, и без «Объектов» пункт остаётся. -->
+    <a data-s="fil" data-perm="files" data-tuck="obj" data-home="sit" hidden><svg viewBox="0 0 24 24"><path d="M3.5 7A1.5 1.5 0 0 1 5 5.5h4.3l2 2.2H19a1.5 1.5 0 0 1 1.5 1.5v8.3A1.5 1.5 0 0 1 19 19H5a1.5 1.5 0 0 1-1.5-1.5z"/></svg>Файлы</a>
+    <!-- Письма — ради мастеров: проект и переписка по объекту с
+         телефона. Стоит выше «Объектов», потому что у мастера это
+         главный раздел, а объекты с расчётом ему не нужны. -->
+    <a data-s="let" data-perm="letters" hidden><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg>Письма</a>
+    <!-- Тендер (заказчик, 07.10.2026): объекты, которые ещё считают, — свой
+         список со своим статусом (в работе, завершён, выигран), и данные для
+         расчёта — прайс работ и настройки. Выигранный объект встаёт в
+         «Объекты». Право — как у «Объектов»: расчёт живёт в тех же
+         документах; прайс работ и настройки открываются и своими галочками. -->
+    <a data-s="tnd" data-perm="tnd" hidden><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7M8.5 11h.01M12 11h.01M15.5 11h.01M8.5 14.5h.01M12 14.5h.01M8.5 18h.01M12 18h.01M15.5 14.5V18"/></svg>Тендер</a>
+    <!-- Снабжение (заказчик, 07.10.2026): проработка калькуляций — цены
+         поставщиков и счета, минимальная цена и от кого она. Калькуляцию
+         передают сюда из «Тендера»; дальше здесь будут заявки. Право — как
+         у «Объектов»: проработка — копия той же калькуляции. -->
+    <a data-s="snb" data-perm="snb" hidden><svg viewBox="0 0 24 24"><path d="M3 6.5h11v9H3z"/><path d="M14 9.5h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>Снабжение</a>
+    <!-- Демо (27.10.2026): витрина на моках, src/demo-ai.js. Без data-perm — видны всем. -->
+    <a data-s="drw" hidden><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 12h7V3.5M10.5 12v8.5M14 8h3.5M14 15.5h3.5"/></svg>Обработка чертежей</a>
+    <a data-s="tkp" hidden><svg viewBox="0 0 24 24"><path d="M6 3.5h8.5L19 8v12.5H6z"/><path d="M14 3.5V8h5M9 12h6M9 15.5h6M9 19h3.5"/></svg>Шаблонное ТКП</a>
+    <a data-s="fin" data-perm="fin" hidden><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M15.5 14.5h2.5"/><path d="M6 6V4.8A1.3 1.3 0 0 1 7.3 3.5h9.4A1.3 1.3 0 0 1 18 4.8V6"/></svg>Финансы</a>
+    <a data-s="sit" data-perm="obj" hidden><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V5.5A1.5 1.5 0 0 1 6.5 4h7A1.5 1.5 0 0 1 15 5.5V21M15 10h2.5A1.5 1.5 0 0 1 19 11.5V21"/><path d="M8 8h4M8 12h4M8 16h4"/></svg>Объекты</a>
+    <!-- Заявки на материалы (22.10.2026), src/req.js: мастер подаёт с объекта,
+         согласующие согласуют, снабжение складывает, заказывает, выдаёт.
+         Счётчик — ждут моего согласования и (у снабжения) не заказанные. -->
+    <a data-s="req" data-perm="req snb_req" hidden><svg viewBox="0 0 24 24"><rect x="5" y="4.5" width="14" height="16" rx="2"/><path d="M9 4.5V3.5h6v1M8.5 10h7M8.5 13.5h7M8.5 17h4"/></svg>Заявки<i class="msg-nav-badge" id="reqBadge" hidden></i></a>
+    <!-- Спецификации выключены целиком: позиции теперь живут в разделе
+         «Тендер», и отдельный раздел с тем же содержимым
+         только сбивает. data-off гасит его для всех, минуя права; код и
+         разметка целы — вернуть можно снятием одного слова. -->
+    <a data-s="obj" data-perm="obj" data-off hidden><svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H15l5 5v9.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5z"/><path d="M14 4v5h5M8 13h8M8 17h5"/></svg>Спецификации</a>
+    <a data-s="ref" data-perm="ref" data-all hidden><svg viewBox="0 0 24 24"><path d="M16 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.5" cy="7.5" r="3.5"/><path d="M21 20v-1.6a3.4 3.4 0 0 0-2.6-3.3"/></svg>Справочники</a>
+    <!-- Контрагенты и расценки живут во вкладках «Справочников».
+         Ссылки остаются: по ним проверяется право доступа. -->
+    <a data-s="cnt" data-perm="ref" data-hidenav hidden><svg viewBox="0 0 24 24"><path d="M3 21h18M6 21V8l6-4 6 4v13"/><path d="M10 21v-5h4v5"/></svg>Контрагенты</a>
+    <!-- Расценки убраны из меню и живут в «Тендере» («Данные»): это
+         справочник, которым пользуются при расчёте, а не место, куда
+         ходят сами по себе. Ссылка остаётся в разметке, потому что по
+         ней же проверяется право доступа и открывается раздел из кода.
+         Права через пробел — «любое из»: из объекта расценки смотрят, в
+         справочниках их правят. -->
+    <a data-s="wrk" data-perm="ref_wrk" data-hidenav hidden><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/><path d="M18 15.5v5M15.5 18h5"/></svg>Расценки</a>
+    <!-- Обучение (02.10.2026): у мастера — свои программы и библиотека
+         материалов, у составителя — ещё конструктор программ, прогресс
+         сотрудников и проверка фото-подтверждений (src/learn.js). -->
+    <a data-s="lrn" data-perm="learn" hidden><svg viewBox="0 0 24 24"><path d="M2.5 9 12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11v4.6c1.4 1.5 3.4 2.4 5.5 2.4s4.1-.9 5.5-2.4V11"/><path d="M21.5 9v5"/></svg>Обучение</a>
+    <!-- Правки и ошибки (заказчик, 21.10.2026): с кнопки «Сообщить об
+         ошибке» и из чатов правок мессенджера. Без data-perm — у каждого:
+         свои правки и правки своих разделов; разбирают администраторы. -->
+    <a data-s="iss" hidden><svg viewBox="0 0 24 24"><path d="M9 7.5V6a3 3 0 0 1 6 0v1.5"/><rect x="7" y="7.5" width="10" height="12" rx="5"/><path d="M12 11v8.5M3.5 13H7M17 13h3.5M4.5 8.5 7 10M19.5 8.5 17 10M4.5 18.5 7 17M19.5 18.5 17 17"/></svg>Правки и ошибки<i class="msg-nav-badge" id="issBadge" hidden></i></a>
+    <!-- Вектор — совет разработки платформы (ТЗ заказчика, 22.10.2026;
+         до него — «Рабочая группа»), src/wg.js. Виден всем (data-all):
+         метрики, даты встреч, обращение в совет; члены совета — у кого право
+         wg, им всё. Счётчик — свои решения в работе. -->
+    <a data-s="wg" data-perm="wg" data-all hidden><svg viewBox="0 0 24 24"><circle cx="6.5" cy="17.5" r="2.2"/><path d="M8.2 15.8 17.5 6.5M11.5 6.5h6v6"/></svg>Вектор<i class="msg-nav-badge" id="wgBadge" hidden></i></a>
+    <a data-s="tv" data-perm="tv" hidden><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Витрина</a>
+    <div class="sep" data-adm hidden></div>
+    <div class="lab" data-adm hidden>Администрирование</div>
+    <a data-s="usr" data-role="dev_admin" hidden><svg viewBox="0 0 24 24"><path d="M12 3l7.5 3v5.2c0 4.4-3 8.4-7.5 9.8-4.5-1.4-7.5-5.4-7.5-9.8V6z"/><path d="M9.4 12.2l1.9 1.9 3.5-3.7"/></svg>Пользователи</a>
+  </nav>
+
+  <div class="grow"></div>
+
+  <!-- Свой профиль — внизу, вплотную к блоку с именем: это одно и то же
+       место в голове у человека, и настройки везде живут в подвале меню,
+       а не среди рабочих разделов. -->
+  <nav class="nav nav-foot">
+    <a data-s="me"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></svg>Мой профиль</a>
+  </nav>
+
+  <!-- Кто вошёл. Заполняется из сессии; кнопка — выход. Класс wait снимает
+       wireUser, когда сервер подтвердил токен. -->
+  <div class="who wait" id="who">
+    <span class="av" id="whoAv"></span>
+    <span class="who-t"><b id="whoName"></b><span id="whoRole"></span></span>
+    <button type="button" class="out" id="logout-btn" title="Выйти">
+      <svg viewBox="0 0 24 24"><path d="M9 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+    </button>
+  </div>
+</aside>
+
+<div class="main">
+
+  <header class="top">
+    <h1 id="secTitle">Эффективность</h1>
+    <span class="top-sub" id="secSub">рейтинг и успеваемость</span>
+    <span class="top-gap"></span>
+    <!-- «Сообщить об ошибке» (заказчик, 21.10.2026): снимок экрана
+         прикладывается сам, сотрудник пишет, что не так (src/issues.js). -->
+    <!-- Справка по разделу (правка № 32, 23.10.2026): как работать, частые
+         вопросы и решённые правки того раздела, что на экране (src/faq.js). -->
+    <button type="button" class="faq-btn" id="faqBtn" title="Справка по разделу: как работать, частые вопросы"
+      aria-label="Справка по разделу" hidden>?</button>
+    <button type="button" class="bug-btn" id="bugBtn" title="Сообщить об ошибке — снимок экрана приложится сам" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7.5V6a3 3 0 0 1 6 0v1.5"/><rect x="7" y="7.5" width="10" height="12" rx="5"/><path d="M12 11v8.5M3.5 13H7M17 13h3.5M4.5 8.5 7 10M19.5 8.5 17 10M4.5 18.5 7 17M19.5 18.5 17 17"/></svg><span>Сообщить об ошибке</span>
+    </button>
+    <!-- Nexus и Трейс — экран пары (src/nexus.js). Кнопка — знак «N» с груди
+         андроида, без подписи (заказчик, 20.10.2026). -->
+    <button type="button" class="nx-btn" id="nexusBtn" title="Nexus и Трейс" aria-label="Nexus и Трейс" hidden>
+      <svg class="nx-ic" viewBox="0 0 32 32" aria-hidden="true"><defs><radialGradient id="nxBtnCore" cx=".5" cy=".42" r=".62"><stop offset="0" stop-color="#FFF1E2"/><stop offset=".38" stop-color="#FF8A3D"/><stop offset="1" stop-color="#C83A00"/></radialGradient></defs><polygon class="nx-ic-ring" points="16,-1 30.7,7.5 30.7,24.5 16,33 1.3,24.5 1.3,7.5"/><polygon points="16,1.6 28.6,8.8 28.6,23.2 16,30.4 3.4,23.2 3.4,8.8" fill="#262A31" stroke="#FE5000" stroke-width=".8" stroke-opacity=".7"/><polygon points="16,4.8 25.8,10.4 25.8,21.6 16,27.2 6.2,21.6 6.2,10.4" fill="url(#nxBtnCore)"/><path d="M11.6 20.6v-9.2l8.8 9.2v-9.2" fill="none" stroke="#3A1400" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <!-- Вход в ассистента. Живёт в шапке, а не отдельным разделом:
+         вопрос возникает там, где человек уже работает, и уводить его
+         из контекста, чтобы он там заново объяснил контекст словами,
+         незачем. -->
+    <button type="button" class="ask-btn" id="askBtn" title="Спросить · Ctrl+K">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="11" cy="11" r="6.5"/><path d="M20.5 20.5 16 16"/>
+      </svg>
+      <span>Спросить</span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <!-- Свежесть источников. Живёт отдельно от #live: тот перерисовывается
+         каждую секунду и утаскивал бы за собой наведённую подсказку. -->
+    <div class="fresh" id="fresh" tabindex="0" role="button" aria-label="Когда обновлялись данные">
+      <svg class="fresh-ic" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3.8 12a8.2 8.2 0 0 1 13.9-5.9"/><path d="M18.2 2.9v3.9h-3.9"/>
+        <path d="M20.2 12a8.2 8.2 0 0 1-13.9 5.9"/><path d="M5.8 21.1v-3.9h3.9"/>
+      </svg>
+      <div class="fresh-pop" id="fresh-pop"></div>
+    </div>
+    <div class="live" id="live"></div>
+    <button type="button" class="theme-pill" id="theme-btn" aria-pressed="false" title="Светлая / тёмная тема">
+      <span class="tp-knob"></span>
+      <span class="tp-ic tp-sun"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.4v2.2M12 19.4v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.4 12h2.2M19.4 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg></span>
+      <span class="tp-ic tp-moon"><svg viewBox="0 0 24 24"><path d="M20.5 14.8A8.6 8.6 0 0 1 9.2 3.5a8.6 8.6 0 1 0 11.3 11.3z"/></svg></span>
+    </button>
+  </header>
+
+  <div id="offline" class="offline" hidden></div>
+
+  <!-- ── Эффективность ─────────────────────────────────── -->
+  <!-- Переделано 30.09.2026 (заказчик: «с кнопкой „мало данных“ всё
+       рушится, сделать максимально понятно и без мусора»):
+         одна липкая панель на всю страницу — вкладки, поиск, период,
+           отдел/участок, порядок, «Данные». Раньше фильтры сидели в шапке
+           «Мастеров», а действовали на всю страницу;
+         итоги строкой — всегда на виду, без отдельного выключателя;
+         «Сотрудники» — мастера и офис, у каждого списка «вне рейтинга»
+           свёрнуто последней строкой, а не отдельной кнопкой между
+           карточками;
+         «Отделы» — отделы и участки деревом: строка отдела с итогом
+           руководителя раскрывается до людей. -->
+  <section id="sec-emp" data-tab="people">
+    <div class="eff-bar" id="effBar">
+      <div class="eff-tabs" role="tablist" aria-label="Что смотреть">
+        <button type="button" role="tab" data-eff="people" aria-selected="true">Сотрудники</button>
+        <button type="button" role="tab" data-eff="depts" aria-selected="false">Отделы</button>
+      </div>
+      <div class="mx-tools filters" id="filters"></div>
+      <!-- Из чего собран рейтинг: таблицы задач, месяцы цикла, смены
+           ведущих (src/ratingdata.js). -->
+      <button type="button" class="rt-open" id="rtOpen" hidden
+              title="Данные рейтинга: таблицы задач, месяцы цикла, смены ведущих">
+        <svg viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M3.5 9h17M3.5 14h8M9.5 9v11"/><path d="M17 20v-6.5M14.2 16.2 17 13.4l2.8 2.8"/></svg>
+        <span>Данные</span>
+      </button>
+    </div>
+
+    <!-- Из чего сложен выбранный период: пусто, пока смотрят текущий
+         месяц и оба источника на месте. -->
+    <div class="period-note" id="periodNote" hidden></div>
+
+    <!-- Итоги — строкой, заполняет renderStats. -->
+    <div class="eff-stats" id="effStats" aria-live="polite">
+      <div class="eff-st"><span class="st-l"><span class="skel skel-t">Успеваемость</span></span>
+        <span class="st-v"><span class="skel skel-t">00%</span></span></div>
+      <div class="eff-st"><span class="st-l"><span class="skel skel-t">Цикл производства</span></span>
+        <span class="st-v"><span class="skel skel-t">00%</span></span></div>
+      <div class="eff-st"><span class="st-l"><span class="skel skel-t">Задачи</span></span>
+        <span class="st-v"><span class="skel skel-t">00%</span></span></div>
+      <div class="eff-st"><span class="st-l"><span class="skel skel-t">Не в срок</span></span>
+        <span class="st-v"><span class="skel skel-t">00</span></span></div>
+    </div>
+
+    <!-- «Данных пока мало»: почему списки пусты и когда заполнятся
+         (renderRateHint). Пусто, пока в обоих списках есть места. -->
+    <div class="rate-hint" id="rateHint" hidden></div>
+
+    <div class="eff-view" id="effPeople">
+      <section class="card eff-card" id="masters">
+        <div class="eff-head">
+          <h2>Мастера <span class="eff-cnt num" id="mastersCnt"></span></h2>
+          <span class="eff-sub">цикл производства и задачи</span>
+          <span class="grow"></span>
+          <!-- Таблица пунктов: объекты мастеров и галочки по пунктам цикла. -->
+          <button type="button" class="eff-tgl" id="mxToggle" aria-pressed="false"
+                  title="Объекты мастеров и отметки по пунктам цикла">
+            <svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M9 9.5v10"/><path d="M12 14.4l1.6 1.6 3-3.2"/></svg>
+            <span>Таблица пунктов</span>
+          </button>
+        </div>
+        <div class="skel-list" id="masters-body">
+        <div class="skel-row"><span class="skel s-rank"></span><span class="skel s-av"></span>
+          <span><span class="skel s-name" style="display:block;width:58%"></span>
+                <span class="skel s-pos" style="display:block;width:34%"></span></span>
+          <span class="skel s-pct"></span><span class="skel s-bar"></span></div>
+        <div class="skel-row"><span class="skel s-rank"></span><span class="skel s-av"></span>
+          <span><span class="skel s-name" style="display:block;width:46%"></span>
+                <span class="skel s-pos" style="display:block;width:40%"></span></span>
+          <span class="skel s-pct"></span><span class="skel s-bar"></span></div>
+        <div class="skel-row"><span class="skel s-rank"></span><span class="skel s-av"></span>
+          <span><span class="skel s-name" style="display:block;width:62%"></span>
+                <span class="skel s-pos" style="display:block;width:30%"></span></span>
+          <span class="skel s-pct"></span><span class="skel s-bar"></span></div>
+        <div class="skel-row"><span class="skel s-rank"></span><span class="skel s-av"></span>
+          <span><span class="skel s-name" style="display:block;width:52%"></span>
+                <span class="skel s-pos" style="display:block;width:36%"></span></span>
+          <span class="skel s-pct"></span><span class="skel s-bar"></span></div>
+        <div class="skel-row"><span class="skel s-rank"></span><span class="skel s-av"></span>
+          <span><span class="skel s-name" style="display:block;width:44%"></span>
+                <span class="skel s-pos" style="display:block;width:32%"></span></span>
+          <span class="skel s-pct"></span><span class="skel s-bar"></span></div>
+        </div>
+      </section>
+
+      <section class="card eff-card" id="others">
+        <div class="eff-head">
+          <h2>Офис и ИТР <span class="eff-cnt num" id="othersCnt"></span></h2>
+          <span class="eff-sub">задачи · руководители — во вкладке «Отделы»</span>
+        </div>
+        <div class="skel-lines" id="others-body">
+          <div class="skel"></div><div class="skel"></div>
+          <div class="skel"></div><div class="skel"></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="eff-view" id="effDepts" hidden>
+      <section class="card eff-card" id="depts">
+        <div class="eff-head">
+          <h2>Отделы <span class="eff-cnt num" id="deptsCnt"></span></h2>
+          <span class="eff-sub">отдел — все дела его людей · руководитель — половина свои
+            дела, половина дела отдела</span>
+          <span class="grow"></span>
+          <button type="button" class="eff-link" id="deptsAll">Развернуть все</button>
+        </div>
+        <div class="skel-lines" id="depts-body">
+          <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ── Объекты ────────────────────────────────────────── -->
+  <section id="sec-obj" hidden>
+    <div class="two">
+      <div class="card tree" id="objTree"></div>
+      <div class="card spec" id="objSpec"></div>
+    </div>
+  </section>
+
+  <!-- Добавление позиции или щита. Живёт снаружи разделов: секции
+       гасятся через hidden, и окно погасло бы вместе с ними. -->
+  <div class="modal" id="addModal" hidden>
+    <div class="modal-card">
+      <h4 id="adTitle">Новая позиция</h4>
+      <div class="modal-sub" id="adWhere"></div>
+      <label id="adCodeW" hidden>Код щита<input id="adCode" autocomplete="off"
+        placeholder="ВРУ5"></label>
+      <label>Наименование<input id="adName" autocomplete="off"
+        placeholder="Автоматический выключатель 380В, 63А"></label>
+      <div class="modal-row">
+        <label>Марка<input id="adBrand" autocomplete="off" placeholder="IEK"></label>
+        <label>Ед. изм.<input id="adUnit" autocomplete="off"></label>
+      </div>
+      <div class="modal-row">
+        <label>Количество<input id="adQty" autocomplete="off" inputmode="decimal"></label>
+        <label>Цена за единицу<input id="adPrice" autocomplete="off" inputmode="decimal"></label>
+      </div>
+      <label>Зачем<input id="adReason" autocomplete="off"
+        placeholder="не было в смете, требование заказчика по акту от 12.08"></label>
+      <div class="login-err" id="adErr" hidden></div>
+      <div class="modal-btns">
+        <button type="button" class="btn-ghost" id="adCancel">Отмена</button>
+        <button type="button" class="btn-brand" id="adOk">Добавить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Витрина ────────────────────────────────────────── -->
+  <section id="sec-tv" hidden>
+    <div class="tv-wrap">
+      <div class="card tv-prev">
+        <h2>Что сейчас на экране
+          <span class="h-note">живой предпросмотр страницы витрины</span></h2>
+        <!-- Сам экран — кнопка: клик открывает витрину в новой вкладке.
+             Накладка поверх нужна, потому что клики внутри iframe до
+             родителя не доходят. -->
+        <a class="frame" id="tvOpen" href="tv.html" target="_blank" rel="noopener"
+           title="Открыть витрину в новой вкладке">
+          <span class="screen"><iframe id="tvFrame" src="tv.html" title="Витрина" tabindex="-1"></iframe></span>
+          <span class="scr-hit"></span>
+          <span class="scr-hint">
+            <svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-8.5 8.5"/><path d="M18 14v4.5A1.5 1.5 0 0 1 16.5 20h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"/></svg>
+            Открыть витрину</span>
+        </a>
+        <div class="tv-cap">так страница выглядит на экране · обновляется вместе с данными</div>
+      </div>
+
+      <div class="tv-side">
+        <!-- Что выводить на экран. Выбор живёт в самой ссылке: витрина
+             открывается без входа и своих настроек не помнит. -->
+        <div class="card pad">
+          <div class="field">Что показывать</div>
+          <label class="tv-opt">
+            <input type="checkbox" id="tvKpi" checked>
+            <span><b>Общие показатели</b>
+              <i>четыре цифры по компании крупно</i></span>
+          </label>
+          <label class="tv-opt">
+            <input type="checkbox" id="tvMx">
+            <span><b>Таблица пунктов</b>
+              <i>галочки по каждому объекту · мелко, с трёх метров не разобрать</i></span>
+          </label>
+        </div>
+
+        <div class="card pad">
+          <div class="field">Ссылка для экрана</div>
+          <div class="link">
+            <input id="tvLink" readonly>
+            <button type="button" id="tvCopy">Копировать</button>
+          </div>
+          <div class="h-note" style="display:block;margin:9px 0 0;line-height:1.5">
+            Выбранное выше уже вшито в адрес — откройте его на телевизоре.</div>
+        </div>
+
+        <div class="card pad">
+          <div class="field">Состояние экрана</div>
+          <div class="alive"><span class="a-dot"></span><span id="tvAlive">предпросмотр загружен</span></div>
+          <div class="h-note" style="display:block;margin:8px 0 0;line-height:1.5">
+            Список листается сам: страница стоит 12 секунд, потом плавно
+            уезжает к следующей. Дойдя до низа — начинает заново.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Пользователи (только Dev Admin) ────────────────── -->
+  <!-- ── Мой профиль ─────────────────────────────────────
+       Содержимое целиком рисует src/profile.js: раздел зависит от
+       того, кто вошёл, и половина его вкладок появляется только
+       после ответа сервера. Держать в разметке пустые заготовки,
+       которые всё равно будут переписаны, незачем. -->
+  <section id="sec-me" hidden></section>
+
+  <section id="sec-usr" hidden>
+    <div class="card spec">
+      <div class="spec-top usr-top">
+        <h3>Пользователи
+          <div class="note" style="font-weight:400;margin-top:3px" id="usrCount"></div></h3>
+        <input class="usr-search" id="usrSearch" placeholder="Поиск по имени или email…">
+        <select class="role-sel" id="usrFilter">
+          <option value="">Все роли</option>
+          <option value="dev_admin">Dev Admin</option>
+          <option value="admin">Admin</option>
+          <option value="user">User</option>
+        </select>
+        <!-- Отчёт по пользователям и правам (правка № 53, 26.10.2026). -->
+        <button type="button" class="btn-ghost" id="usrReport"
+          title="Книга Excel: кто, роль, статус, вход, объекты и таблица «человек × право»">Сформировать отчёт</button>
+        <button type="button" class="btn-brand" id="usrCreate">＋ Создать</button>
+      </div>
+      <!-- Прокрутка вокруг одной таблицы, а не вокруг всей карточки:
+           overflow на карточке уводил бы вместе с таблицей и её шапку
+           с поиском, а первая строка пряталась бы под неё. -->
+      <div class="usr-scroll">
+        <table>
+          <thead><tr><th>Пользователь</th><th>Email</th><th>Роль</th>
+            <th title="Когда человек последний раз работал в платформе">Активность</th>
+            <th title="Последний вход с паролем">Вход</th><th>Статус</th></tr></thead>
+          <tbody id="usrRows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Одна модалка на три дела: новый человек, его доступ и новый
+         пароль. Для первых двух окно широкое: слева кто это и шаблон,
+         справа разделы карточками — всё на одном экране, без прокрутки
+         (пользователь, 02.10.2026: «сплошной текст, ничего непонятно»). -->
+    <div class="modal" id="usrModal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="umTitle" tabindex="-1">
+        <div class="um-top">
+          <span class="um-av" id="umAv" hidden></span>
+          <div class="um-hd">
+            <h4 id="umTitle">Новый пользователь</h4>
+            <div class="um-sub" id="umSub"></div>
+          </div>
+          <button type="button" class="um-close" id="umClose" title="Закрыть" aria-label="Закрыть">
+            <svg viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></button>
+        </div>
+        <div class="um-body">
+          <div class="um-side">
+            <label id="umNameW">Имя<input id="umName" autocomplete="off"></label>
+            <label id="umEmailW">Email<input id="umEmail" type="email" autocomplete="off"
+              placeholder="имя@company.ru"></label>
+            <label id="umPassW">Пароль<input id="umPass" autocomplete="off"></label>
+            <!-- Роль — три кнопки рядом и строка о выбранной: в выпадающем
+                 списке не было видно, чем роли отличаются. -->
+            <div id="umRoleW" class="um-roles">
+              <div class="um-lab">Роль</div>
+              <div class="um-seg" role="radiogroup" aria-label="Роль">
+                <label><input type="radio" name="umRole" value="user"><span>User</span></label>
+                <label><input type="radio" name="umRole" value="admin"><span>Admin</span></label>
+                <label><input type="radio" name="umRole" value="dev_admin"><span>Dev Admin</span></label>
+              </div>
+              <div class="um-role-n" id="umRoleN"></div>
+            </div>
+            <div id="umPreW" class="um-pres" hidden>
+              <div class="um-lab">Шаблон по должности</div>
+              <div class="um-pre" id="umPre"></div>
+              <div class="um-pre-n" id="umPreN"></div>
+            </div>
+          </div>
+          <!-- Разделы. Заполняет renderPermBoxes из словаря, который
+               отдаёт сервер: свой список в разметке разъехался бы с тем,
+               что сервер согласен принять. -->
+          <div id="umPermsW" class="um-perms">
+            <div id="umPerms"></div>
+          </div>
+        </div>
+        <div class="login-err" id="umErr" hidden></div>
+        <div class="modal-btns">
+          <span class="um-sum" id="umSum"></span>
+          <button type="button" class="btn-ghost" id="umCancel">Отмена</button>
+          <button type="button" class="btn-brand" id="umOk">Создать</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Справочники ────────────────────────────────────────
+       Пять справочников под одной крышей. Раньше контрагенты и расценки
+       были отдельными пунктами меню, и человек искал их по всему меню,
+       хотя это одно и то же по сути: то, чем пользуются при расчёте, а
+       не то, что считают.
+
+       Прежние разделы не переписаны, а вложены как есть: у каждого свой
+       модуль, свой запрос и своя отрисовка. Вкладка только показывает
+       нужный и прячет остальные. -->
+  <section id="sec-ref" hidden>
+    <div class="ref">
+      <div class="pg-tabs" id="refTabs"></div>
+      <div class="ref-panes">
+        <section id="sec-stf" hidden></section>
+        <section id="sec-org" hidden></section>
+        <section id="sec-cnt" hidden></section>
+        <section id="sec-cus" hidden></section>
+        <section id="sec-crw" hidden></section>
+        <section id="sec-mnt" hidden></section>
+        <section id="sec-cwk" hidden></section>
+        <section id="sec-mat" hidden></section>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Тендер: объекты в тендере и параметры для расчёта (src/tender.js) ───
+       Объекты рисует sites.js в режиме тендера (#tndObj); прайс работ и
+       настройки расчёта — прежние модули, переехавшие из «Справочников». -->
+  <section id="sec-tnd" hidden>
+    <div class="ref tnd">
+      <div class="pg-tabs tnd-tabs" id="tndTabs"></div>
+      <div class="ref-panes">
+        <section id="tndObj" hidden></section>
+        <section id="sec-wrk" hidden></section>
+        <section id="sec-set" hidden></section>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Снабжение: проработка калькуляций (src/snab.js) ─── -->
+  <section id="sec-snb" hidden>
+    <div class="ref snb">
+      <div class="pg-tabs" id="snbTabs"></div>
+      <div class="ref-panes"><section id="snbMain"></section></div>
+    </div>
+  </section>
+
+  <!-- ── Финансы: бюджет объектов (src/finance.js) ─── -->
+  <section id="sec-fin" hidden>
+    <div class="ref fin">
+      <div class="pg-tabs" id="finTabs"></div>
+      <div class="ref-panes"><section id="finMain"></section></div>
+    </div>
+  </section>
+
+  <!-- ── Объекты: папка стройки, её договоры, проекты и бумаги ─── -->
+  <section id="sec-sit" hidden></section>
+  <!-- ── Заявки на материалы (src/req.js) ─────────────────── -->
+  <section id="sec-req" hidden></section>
+
+  <!-- ── Письма: проект и переписка по объектам (src/letters.js) ─── -->
+  <section id="sec-let" hidden></section>
+  <section id="sec-msg" hidden></section>
+
+  <!-- ── Обучение: программы и учебные материалы (src/learn.js) ─── -->
+  <section id="sec-lrn" hidden></section>
+  <section id="sec-iss" hidden></section>
+  <section id="sec-tsk" hidden></section>
+  <!-- ── Вектор: метрики, встречи, решения (src/wg.js) ─── -->
+  <section id="sec-wg" hidden></section>
+  <section id="sec-drw" hidden></section>
+  <section id="sec-tkp" hidden></section>
+
+  <!-- ── Файлы: личная папка и общие ─── -->
+  <section id="sec-fil" hidden></section>
+
+</div>
+
+<!-- Версия выкладки. Файл переписывает update.sh при публикации; в
+     рабочей копии в нём «dev», и обновление вкладки само себя выключает.
+     Идёт первым: fresh.js читает BUILD_ID при загрузке. -->
+<script src="src/build.js?v=2026-09-10-01"></script>
+<script src="src/fresh.js?v=2026-09-10-01"></script>
+<!-- До profile.js: тот зовёт PwEye.scan на каждой перерисовке. -->
+<script src="src/pweye.js?v=2026-09-07-07"></script>
+<script src="src/auth.js?v=2026-10-21-01"></script>
+<!-- Свои окна вместо браузерных confirm / alert / prompt — до всех модулей. -->
+<script src="src/ask.js?v=2026-10-02-01"></script>
+<script src="src/dl.js?v=2026-09-22-01"></script>
+<script src="src/tips.js?v=2026-09-30-01"></script>
+<script src="src/trace.js?v=2026-10-20-02"></script>
+<script src="src/ledger.js?v=2026-09-07-07"></script>
+<script src="src/additions.js?v=2026-09-07-07"></script>
+<script src="src/objects.js?v=2026-09-07-07"></script>
+<script src="src/awards.js?v=2026-09-07-07"></script>
+<!-- До app.js: тот при старте зовёт PROFILE.init. -->
+<script src="src/profile.js?v=2026-10-09-01"></script>
+<!-- Считает сервер (/api/ask); панели нужен только AUTH. -->
+<script src="src/assistant.js?v=2026-09-30-01"></script>
+<script src="src/counterparties.js?v=2026-10-14-01"></script>
+<script src="src/customers.js?v=2026-10-13-01"></script>
+<script src="src/crews.js?v=2026-10-23-01"></script>
+<script src="src/cusworks.js?v=2026-10-23-02"></script>
+<script src="src/installers.js?v=2026-10-26-03"></script>
+<script src="src/refs.js?v=2026-10-23-01"></script>
+<script src="src/orgs.js?v=2026-10-02-02"></script>
+<script src="src/grid.js?v=2026-09-16-01"></script>
+<script src="src/materials.js?v=2026-10-22-11"></script>
+<script src="src/settings.js?v=2026-10-22-11"></script>
+<script src="src/staff.js?v=2026-10-26-03"></script>
+<script src="src/works.js?v=2026-10-22-11"></script>
+<script src="src/pto.js?v=2026-10-23-07"></script>
+<script src="src/contract.js?v=2026-10-20-01"></script>
+<script src="src/sites.js?v=2026-10-26-06"></script>
+<script src="src/tender.js?v=2026-10-09-01"></script>
+<script src="src/suppliers.js?v=2026-10-14-02"></script>
+<script src="src/snab.js?v=2026-10-26-06"></script>
+<script src="src/finance.js?v=2026-10-12-01"></script>
+<script src="src/files.js?v=2026-10-23-09"></script>
+<script src="src/registry.js?v=2026-10-15-01"></script>
+<script src="src/letters.js?v=2026-10-15-01"></script>
+<script src="src/ratingdata.js?v=2026-10-22-11"></script>
+<script src="src/learn.js?v=2026-10-03-01"></script>
+<script src="src/messenger-view.js?v=2026-10-15-01"></script>
+<script src="src/messenger.js?v=2026-10-23-08"></script>
+<script src="src/nexus.js?v=2026-10-20-03"></script>
+<script src="src/issues.js?v=2026-10-26-05"></script>
+<script src="src/faq.js?v=2026-10-23-06"></script>
+<script src="src/tasks.js?v=2026-10-23-01"></script>
+<script src="src/wg.js?v=2026-10-22-51"></script>
+<script src="src/req.js?v=2026-10-23-02"></script>
+<script src="src/demo-ai.js?v=2026-10-27-01"></script>
+<script src="src/app.js?v=2026-10-26-03"></script>
+</body>
+</html>

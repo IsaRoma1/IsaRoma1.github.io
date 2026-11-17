@@ -1,0 +1,133 @@
+/* Условия договора (src/contract.js). Поверх общего шаблона раздела
+   (page.css): полоса сверху, прокрутка одного тела. Условия — строками:
+   слева что, в середине ответ, справа пункт-источник и карандаш. */
+
+/* Шапка в одну полосу: слева объект мелко и над ним условия договора,
+   справа кнопки. Общее правило полосы (.pg-head.strip .pg-h1) не даёт
+   заголовку расти, и кнопки прилипали к нему вплотную — поэтому
+   селектор той же силы и кнопки у правого края. Имя файла — в подсказке
+   кнопки «Договор» и в строке под шапкой, третьей строкой шапку не
+   раздуваем. */
+.pg-head.strip.ct-head .ct-h1 {
+  flex: 1 1 auto; flex-direction: column; flex-wrap: nowrap; align-items: flex-start;
+  gap: 2px; padding-right: 14px;
+}
+.pg-head.strip.ct-head .ct-h1 > * { max-width: 100%; }
+.pg-head.strip.ct-head .ct-h1 h2 { font-size: 15.5px; line-height: 1.3; }
+.ct-crumb {
+  font-style: normal; font-size: 11px; line-height: 1.3; color: var(--ink3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ct-intro .ct-file { color: var(--ink); overflow-wrap: anywhere; }
+.ct-acts { flex: none; display: flex; align-items: center; gap: 8px; margin-left: auto;
+  align-self: center; }
+.ct-acts .btn-ghost.sm { height: 30px; }
+.ct-acts svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; }
+
+.ct-body { padding-bottom: 28px; }
+.ct-intro {
+  padding: 12px var(--gut); border-bottom: 1px solid var(--line2); background: var(--raise);
+  font-size: 11.5px; line-height: 1.55; color: var(--ink2);
+}
+.ct-intro b { color: var(--ink); }
+.ct-intro .dim { color: var(--ink3); }
+
+.ct-group h3 {
+  margin: 0; padding: 16px var(--gut) 8px;
+  font: 600 9.5px var(--sans); letter-spacing: .07em; text-transform: uppercase; color: var(--ink3);
+}
+.ct-list { border-top: 1px solid var(--line2); }
+.ct-row {
+  display: grid; grid-template-columns: 220px minmax(0, 1fr) auto; gap: 6px 18px;
+  padding: 11px var(--gut); border-bottom: 1px solid var(--line2);
+}
+.ct-row.edited { background: color-mix(in srgb, var(--info-soft) 45%, transparent); }
+.ct-label { font-size: 11.5px; color: var(--ink2); padding-top: 1px; }
+.ct-main { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.ct-val { font-size: 12.5px; line-height: 1.5; color: var(--ink); font-weight: 500; overflow-wrap: anywhere; }
+.ct-none { color: var(--ink3); font-weight: 400; font-style: normal; font-size: 12px; }
+.ct-pad { padding: 10px var(--gut); }
+.ct-note { font-size: 11px; line-height: 1.45; color: var(--ink2); }
+.ct-edited { font-size: 10.5px; color: var(--info); }
+.ct-side { display: flex; align-items: flex-start; gap: 4px; }
+.ct-src-b {
+  display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 8px;
+  border: 1px solid var(--line2); border-radius: 7px; background: var(--card); color: var(--ink2);
+  font: inherit; font-size: 10.5px; cursor: pointer; white-space: nowrap;
+}
+.ct-src-b svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round; }
+.ct-src-b svg:last-child { width: 11px; height: 11px; transition: transform .15s var(--ease); }
+.ct-src-b.on svg:last-child { transform: rotate(180deg); }
+.ct-src-b:hover, .ct-src-b.on { border-color: var(--brand); color: var(--brand-deep); }
+.ct-pen { width: 26px; height: 26px; }
+.ct-src { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.ct-page blockquote {
+  margin: 0; padding: 8px 11px; border-left: 3px solid var(--line); border-radius: 0 7px 7px 0;
+  background: var(--raise); font-size: 11.5px; line-height: 1.5; color: var(--ink2);
+}
+.ct-page blockquote b { display: block; margin-bottom: 2px; font-size: 10.5px; color: var(--ink3); font-weight: 600; }
+.ct-edit {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--brand); border-radius: 9px;
+  background: var(--card); color: var(--ink); font: 400 12.5px/1.45 var(--sans); resize: vertical;
+  outline: none; box-shadow: 0 0 0 3px var(--brand-soft);
+}
+.ct-edit-acts { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+/* Штрафы: строка раскрывается — под ней сам пункт договора. Цвет полосы
+   слева — кто платит: с нас — красный, нам — зелёный. */
+.ct-fines-note { padding: 0 var(--gut) 8px; }
+.ct-seg { margin: 0 var(--gut) 10px; }
+.ct-seg .seg-b i { font-style: normal; margin-left: 5px; color: var(--ink3); font-weight: 500; }
+.ct-fine-list { border-top: 1px solid var(--line2); }
+.ct-fine { border-bottom: 1px solid var(--line2); }
+.ct-fine summary {
+  display: grid; grid-template-columns: 62px minmax(0, 1fr) minmax(120px, 34%); gap: 12px;
+  align-items: baseline; padding: 10px var(--gut); cursor: pointer; list-style: none;
+  position: relative;
+}
+.ct-fine summary::-webkit-details-marker { display: none; }
+.ct-fine summary::before {
+  content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0;
+}
+.ct-fine.us summary::before { background: var(--bad); }
+.ct-fine.them summary::before { background: var(--ok); }
+.ct-fine summary:hover { background: var(--raise); }
+.ct-fine-n { font-size: 11px; color: var(--ink3); font-variant-numeric: tabular-nums; }
+.ct-fine-what { font-size: 12px; color: var(--ink); line-height: 1.45; }
+.ct-fine-amt { font-size: 12px; font-weight: 600; color: var(--ink); text-align: right; }
+.ct-fine.us .ct-fine-amt { color: var(--bad); }
+.ct-fine.them .ct-fine-amt { color: var(--ok); }
+.ct-fine blockquote { margin: 0 var(--gut) 12px calc(var(--gut) + 74px); }
+
+/* Строки документа во вкладке «Договор»: «Условия договора» под файлом. */
+.fi.fi-terms {
+  display: inline-grid; place-items: center;
+  background: var(--info-soft); color: var(--info); border-color: transparent;
+}
+.fi.fi-terms svg {
+  width: 15.5px; height: 15.5px; fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+}
+
+@media (max-width: 684px) {
+  .ct-page { --gut: 14px; }
+  /* Правило раздела «Объекты» для телефона стоит с id — перебиваем тем же. */
+  #sec-sit .pg-head.strip.ct-head, .ct-page .pg-head.strip.ct-head { padding-top: 8px; padding-bottom: 8px; }
+  .pg-head.strip.ct-head .ct-h1 h2 {
+    white-space: normal; line-height: 1.3; font-size: 14.5px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .ct-acts span { display: none; }
+  .ct-acts .btn-ghost.sm { width: 32px; padding: 0; }
+  .ct-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .ct-label { grid-column: 1; grid-row: 1; font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: .05em; color: var(--ink3); }
+  .ct-side { grid-column: 2; grid-row: 1 / span 2; }
+  .ct-main { grid-column: 1; grid-row: 2; }
+  .ct-fine summary { grid-template-columns: minmax(0, 1fr); gap: 3px; }
+  .ct-fine-n { order: 0; }
+  .ct-fine-amt { text-align: left; }
+  .ct-fine blockquote { margin: 0 var(--gut) 12px; }
+}

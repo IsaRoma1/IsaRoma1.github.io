@@ -1,0 +1,1720 @@
+/* Общий шаблон раздела-справочника: «Контрагенты» и «Объекты».
+
+   Оба раздела устроены одинаково — полоса управления сверху, под ней
+   таблица во всю ширину, — поэтому и вид у них общий, а не собранный в
+   каждом заново. Раньше каждый брал куски откуда придётся: сетку из
+   «Спецификаций» (плитки со скруглениями), линии из своих правил, — и
+   две системы спорили друг с другом в одной таблице.
+
+   Всё горизонтальное меряется от одного поля --gut. Левый край полосы
+   управления, заголовок первой колонки, первая ячейка строки и левый
+   край пустого места стоят на одной вертикали; правый край — на другой.
+   До этого отступ приезжал из трёх мест сразу (карточка 24, шапка 22,
+   таблица 16 плюс 12 в ячейке), и ни одна линия не совпадала с
+   соседней.
+
+   Раздел занимает всю высоту окна, прокручивается только тело. Прежде
+   страница обрывалась под последней строкой, и ниже до самого низа
+   лежала серая полоса фона — она читалась как незагруженный кусок. */
+
+.pg {
+  /* Поле раздела и высота строки — два числа, из которых собрано всё
+     остальное. Меняются здесь, а не в каждом правиле по отдельности. */
+  --gut: 25px;
+  --row: 47px;
+
+  display: flex;
+  flex-direction: column;
+  /* --stick считает app.js: это высота верхней полосы. Угаданное число
+     разъехалось бы при другой длине названия раздела. */
+  height: calc(100vh - var(--stick, 50.5px));
+  background: var(--card);
+}
+
+/* Полосы прокрутки внутри раздела — тонкие, как в «Спецификациях». */
+.pg ::-webkit-scrollbar { width: 8px; height: 8px; }
+.pg ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; }
+.pg ::-webkit-scrollbar-track { background: transparent; }
+
+/* ── полоса управления ───────────────────────────────────────
+   Названия раздела здесь нет намеренно: оно уже стоит в верхней полосе,
+   и второе «Контрагенты» на том же экране — это не заголовок, а шум.
+   Вместо него слева то, чего в полосе нет: сколько всего записей. */
+.pg-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 54px;
+  padding: 11px var(--gut);
+  border-bottom: 1px solid var(--line2);
+}
+.pg-count { font-size: 11.5px; color: var(--ink3); white-space: nowrap; }
+.pg-count b { color: var(--ink); font-weight: 600; }
+.pg-tools {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* Все органы управления в полосе одной высоты и с одним скруглением.
+   Раньше поиск был прямоугольником со скруглением 10, список рядом —
+   таблеткой, а кнопка — третьим радиусом: три соседних элемента трёх
+   разных форм.
+
+   Целимся в .sel-btn, а не в сам select: списки одевает dressSelect в
+   app.js, родной select после этого спрятан, и видно только кнопку
+   поверх него.
+
+   Правило одно на весь раздел, а не по месту. Пока размер значка был
+   расписан отдельно для полосы инструментов, кнопка «Редактировать» в
+   шапке карточки получила svg без размеров — и карандаш растянулся во
+   всю кнопку. Кнопка есть кнопка, где бы она ни стояла. */
+.pg .sel-btn,
+.pg .btn-brand,
+.pg .btn-ghost,
+.pg-find input {
+  height: 30.5px;
+  border-radius: 8px;
+}
+.pg .sel-btn { padding: 0 9px 0 11.5px; }
+.pg .btn-brand,
+.pg .btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5.5px;
+  padding: 0 12.5px;
+}
+.pg .btn-brand svg,
+.pg .btn-ghost svg {
+  width: 13.5px; height: 13.5px; flex: none;
+  fill: none; stroke: currentColor;
+  stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* Поиск со значком внутри: без него поле в общем ряду не отличить от
+   выпадающего списка, пока не прочитаешь подсказку. */
+.pg-find { position: relative; display: flex; align-items: center; }
+.pg-find svg {
+  position: absolute; left: 10px; width: 13.5px; height: 13.5px;
+  pointer-events: none;
+  fill: none; stroke: var(--ink3);
+  stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round;
+}
+.pg-find input {
+  width: 225px;
+  padding: 0 11px 0 29px;
+  font: inherit; font-size: 11px; color: var(--ink);
+  background: var(--raise);
+  border: 1px solid transparent;
+  outline: none;
+  transition: border-color .18s var(--ease), background .18s var(--ease);
+}
+.pg-find input::placeholder { color: var(--ink3); }
+.pg-find input:focus { border-color: var(--brand); background: var(--card); }
+@media (max-width: 1062px) { .pg-find input { width: 153px; } }
+
+/* ── шапка карточки ──────────────────────────────────────────
+   Три яруса вместо строки: путь назад, название с состоянием, приметы.
+   Действие справа и по центру всей стопки — так оно не спорит с
+   названием за первую строку. */
+/* Шапка карточки — три яруса, каждый со своим делом: путь назад,
+   название с действием, приметы объекта.
+
+   Раньше все три жались в семьдесят пикселей: возврат к списку
+   прилипал к названию, а заказчик, адрес и стадия шли одной строкой
+   через точки — и занимали треть ширины, оставляя две трети пустыми.
+   Теперь ярусы разведены воздухом, а приметы разложены по всей ширине
+   подписанными столбцами, как в остальных таблицах. */
+.pg-head.tall {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 0 14.5px;
+  padding: 12.5px var(--gut) 0;
+}
+.pg-back {
+  grid-column: 1 / -1;
+  display: inline-flex; align-items: center; gap: 4.5px; width: fit-content;
+  margin-bottom: 11px;
+  padding: 3.5px 8px 3.5px 4.5px; margin-left: -5px;
+  border: 0; border-radius: 7px; background: none; cursor: pointer;
+  color: var(--ink3); font: inherit; font-size: 11px;
+  transition: .15s var(--ease);
+}
+/* Возврат к списку — не подпись, а кнопка: под курсором она
+   подсвечивается целиком, и по ней видно, куда нажимать. */
+.pg-back:hover { color: var(--brand-deep); background: var(--brand-tint); }
+.pg-back svg {
+  width: 13.5px; height: 13.5px; flex: none;
+  fill: none; stroke: currentColor;
+  stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+}
+.pg-h1 {
+  grid-column: 1; display: flex; align-items: center;
+  gap: 11px; flex-wrap: wrap; min-width: 0;
+}
+.pg-h1 h2, .pg-h1 h3 {
+  margin: 0; font-size: 19px; font-weight: 600; letter-spacing: -.02em;
+}
+.pg-act { grid-column: 2; grid-row: 2; align-self: center; }
+/* Строка-описание — там, где приметы не разложить столбцами: у таблицы
+   позиций это пояснение, что правится, а что нет. */
+.pg-meta {
+  grid-column: 1 / -1;
+  margin-top: 5.5px; font-size: 11px; color: var(--ink3);
+}
+
+/* ── шапка карточки одной полосой ────────────────────────────
+   Всё в один ряд: возврат, название, приметы, действие. Три яруса
+   занимали сто шестьдесят пикселей высоты ради четырёх коротких
+   значений — это треть первого экрана, отданная под то, что читают раз
+   при входе.
+
+   Возврат — только стрелка. Подпись «Все объекты» съедала девяносто
+   пикселей в ряду, где место нужно адресу; куда ведёт стрелка влево из
+   карточки, вопросов не вызывает, а подсказка при наведении есть. */
+/* Фон задаём явно. Прежний модификатор назывался «bar», и на него
+   налезал одноимённый класс полосы прогресса из styles.css — шапка
+   объекта приезжала серой не по замыслу, а по совпадению имён. */
+.pg-head.strip {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  min-height: 59.5px;
+  padding: 0 var(--gut);
+  background: var(--card);
+  border-bottom: 1px solid var(--line2);
+}
+.pg-head.strip .pg-back {
+  grid-column: auto;
+  flex: none;
+  align-self: center;
+  width: 27px; height: 27px;
+  margin: 0 11px 0 -4px; padding: 0;
+  justify-content: center;
+  border-radius: 999px;
+}
+.pg-head.strip .pg-h1 {
+  flex: 0 1 auto; align-self: center; min-width: 0;
+  gap: 8px; padding-right: 18px;
+}
+.pg-head.strip .pg-h1 h2 {
+  font-size: 15.5px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.pg-head.strip .pg-act { flex: none; align-self: center; margin-left: 14.5px; }
+
+/* Приметы — не строка через запятую, а колонки равной ширины,
+   разделённые линиями: так их читают взглядом сверху вниз, как в
+   таблице, а не выискивают в потоке текста. Ужимаются все разом,
+   длинное режется многоточием — целиком видно в подсказке. */
+.pg-head.strip .pg-facts {
+  flex: 1; min-width: 0;
+  /* template гасим намеренно: в общем правиле .pg-facts колонки заданы
+     через repeat(auto-fit, minmax(190px, 1fr)), и они бьют auto-columns —
+     все приметы получали по 190 пикселей, а последней доставался
+     остаток. minmax(0,…) вместо 1fr нужен там же: иначе длинный адрес
+     раздвигает свою колонку за счёт соседней. */
+  display: grid; grid-template-columns: none;
+  grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr);
+  gap: 0; margin: 0; padding: 0;
+  border-top: 0;
+}
+.pg-head.strip .pg-facts > div {
+  display: flex; flex-direction: column; justify-content: center;
+  min-width: 0; padding: 10px 0 10px 16px;
+  border-left: 1px solid var(--line2);
+}
+.pg-head.strip .pg-facts dt { font-size: 8.5px; }
+.pg-head.strip .pg-facts dd {
+  margin-top: 2px; font-size: 11.5px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Приметы объекта: заказчик, адрес, стадия. Подписанными столбцами —
+   так их читают взглядом, а не выискивают в строке между точками. */
+.pg-facts {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(171px, 1fr));
+  gap: 2px 25px;
+  margin: 14.5px 0 0;
+  padding: 11.5px 0 0;
+  border-top: 1px solid var(--line2);
+}
+.pg-facts > div { min-width: 0; padding-bottom: 11.5px; }
+.pg-facts dt {
+  font: 600 9.5px var(--sans);
+  letter-spacing: .07em; text-transform: uppercase; color: var(--ink3);
+}
+.pg-facts dd {
+  margin: 2.5px 0 0; font-size: 12px; color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.pg-facts dd.dim { color: var(--ink3); }
+/* Заказчик — ссылкой на карточку в «Справочниках». */
+.fact-lnk {
+  max-width: 100%; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px;
+}
+.fact-lnk:hover { color: var(--brand-deep); text-decoration-color: currentColor; }
+/* Нижний отступ шапке даёт последний ярус примет. Там, где примет нет —
+   в таблице позиций, — его надо вернуть, иначе заголовок упирается в
+   строку итогов. */
+.pg-head.tall:not(:has(.pg-facts)) { padding-bottom: 12.5px; }
+
+/* ── вкладки ─────────────────────────────────────────────────
+   Подчёркиванием, а не таблетками: таблетки в один ряд с кнопками
+   раздела читались как ещё один набор действий. Подчёркнутая вкладка —
+   это про «где я сейчас», и она стоит на той же вертикали, что и первая
+   колонка таблицы под ней. */
+.pg-tabs {
+  flex: none;
+  display: flex;
+  gap: 20px;
+  padding: 0 var(--gut);
+  border-bottom: 1px solid var(--line2);
+}
+.pg-tab {
+  position: relative;
+  padding: 10px 1px 11px;
+  border: 0; background: none; cursor: pointer;
+  color: var(--ink3); font: inherit; font-size: 11.5px;
+  transition: color .15s var(--ease);
+}
+.pg-tab i {
+  font-style: normal; margin-left: 4.5px; font-size: 10.5px; color: var(--ink4);
+}
+.pg-tab:hover { color: var(--ink); }
+.pg-tab.on { color: var(--ink); font-weight: 600; }
+.pg-tab.on i { color: var(--ink3); }
+.pg-tab.on::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -1px;
+  height: 2px; background: var(--brand); border-radius: 2px 2px 0 0;
+}
+/* «Документы» прижаты к правому краю и отбиты от прочих. Слева идёт
+   работа по объекту в том порядке, в котором её делают, а бумаги — не
+   шаг работы, а общий склад, куда заходят из любого места. Так их и
+   нарисовал заказчик. */
+.pg-tab.far { margin-left: auto; }
+
+/* ── тело ────────────────────────────────────────────────────
+   Прокручивается только оно: полоса управления и вкладки остаются на
+   месте, а заголовки колонок прилипают к верху тела. Так не нужно
+   считать лесенку отступов — прилипшее меряется от нуля. */
+.pg-body { flex: 1; min-height: 0; overflow: auto; }
+
+/* Полоса действий внутри тела — загрузка файла, «＋ Договор». Те же
+   поля, что и у шапки, и отбита линией снизу, чтобы не сливаться со
+   списком под ней. */
+.pg-bar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 11px var(--gut);
+  border-bottom: 1px solid var(--line2);
+}
+
+/* ── таблица ─────────────────────────────────────────────────
+   border-collapse, а не раздельные ячейки: линия под строкой идёт от
+   края до края одним отрезком. В разделённых ячейках она обрывалась на
+   границе колонки — под узкой последней колонкой линии не было вовсе, и
+   строка выглядела надломленной. */
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  /* Ниже этой ширины таблица не ужимается, а уезжает под прокрутку:
+     сжимать дальше значит резать названия до «НАРТ…» и «Свет…», а
+     список, в котором не прочитать первую колонку, бесполезен. Число
+     задаёт сама таблица рядом со своим colgroup — там же, где расписаны
+     доли колонок. */
+  min-width: var(--tbl-min, 630px);
+}
+.tbl th, .tbl td { padding: 0 12.5px; text-align: left; }
+/* Крайние ячейки добирают поле раздела: первая колонка встаёт ровно под
+   левым краем шапки, последняя — под правым. */
+.tbl th:first-child, .tbl td:first-child { padding-left: var(--gut); }
+.tbl th:last-child, .tbl td:last-child { padding-right: var(--gut); }
+
+.tbl thead th {
+  position: sticky; top: 0; z-index: 2;
+  height: 32.5px;
+  background: var(--raise);
+  border-bottom: 1px solid var(--line);
+  font: 600 9.5px var(--sans);
+  letter-spacing: .07em; text-transform: uppercase; color: var(--ink3);
+  white-space: nowrap;
+}
+.tbl tbody td {
+  height: var(--row);
+  padding-top: 8px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--line2);
+  font-size: 11.5px; color: var(--ink2);
+  vertical-align: middle;
+}
+/* Таблица, которую правят на месте, — позиции спеки, прайс работ.
+   Строк в ней сотни, и с обычной высотой список не влезает на экран:
+   ужимаем до сорока пикселей.
+
+   Поле правки отбито изнутри само, поэтому ячейке хватает семи
+   пикселей вместо общих четырнадцати — иначе число в поле стоит правее
+   заголовка своей колонки. Крайние ячейки при этом обязаны сохранить
+   поле раздела, только уменьшенное на те же семь. */
+.tbl:has(.pos-in) tbody td {
+  height: 36px; padding-top: 2.5px; padding-bottom: 2.5px;
+}
+.tbl td:has(.pos-in) { padding-left: 6.5px; padding-right: 6.5px; }
+.tbl td:first-child:has(.pos-in) { padding-left: calc(var(--gut) - 6.5px); }
+.tbl td:last-child:has(.pos-in) { padding-right: calc(var(--gut) - 6.5px); }
+
+.tbl .num { text-align: right; font-variant-numeric: tabular-nums; }
+/* Номер, а не количество: ИНН и номер договора выравниваем по левому
+   краю вместе с их заголовком — вправо гонят величины, которые
+   сравнивают разрядами. Цифры при этом всё равно одной ширины, иначе
+   столбец ИНН выглядит рваным. */
+.tbl .t-id { font-variant-numeric: tabular-nums; }
+.tbl .dim { color: var(--ink3); }
+
+/* Название записи — единственное, что читают глазами; остальные колонки
+   сверяют. Поэтому оно темнее и тяжелее соседей. */
+.t-name {
+  display: block;
+  color: var(--ink); font-weight: 600; font-size: 12px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  transition: color .15s var(--ease);
+}
+.t-sub {
+  display: block; margin-top: 1px;
+  font-style: normal; font-size: 10.5px; color: var(--ink3);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* Строка, которая открывается. Нажимается вся целиком, а не одна
+   кнопка в конце: раньше «Открыть» проявлялась только при наведении на
+   строку — то есть её не было видно, пока не догадаешься навести. */
+.tbl tr.go { cursor: pointer; }
+.tbl tr.go:hover td { background: var(--raise); }
+.tbl tr.go:hover .t-name { color: var(--brand-deep); }
+/* nowrap обязателен: карандаш и стрелка — два отдельных значка, и без
+   запрета переноса они вставали друг под друга, растягивая строку. */
+.tbl td.go-c { text-align: right; white-space: nowrap; }
+/* Стрелка видна всегда — она и есть обещание, что строка открывается.
+   Под курсором заливается фирменным: понятно, куда именно нажимаешь. */
+.t-go {
+  display: inline-grid; place-items: center;
+  width: 25px; height: 25px; padding: 0;
+  border: 1px solid var(--line2); border-radius: 999px;
+  background: var(--card); color: var(--ink3);
+  cursor: pointer;
+  transition: .18s var(--ease);
+}
+.t-go svg {
+  width: 13.5px; height: 13.5px;
+  fill: none; stroke: currentColor;
+  stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+}
+.tbl tr.go:hover .t-go {
+  border-color: var(--brand); background: var(--brand); color: #FFF7F2;
+}
+/* Карандаш рядом со стрелкой: поправить адрес или мастера, не заходя
+   внутрь. Оформлен как стрелка, но заливкой не спорит с ней — открыть
+   объект остаётся главным действием строки. */
+.t-ed {
+  display: inline-grid; place-items: center;
+  width: 25px; height: 25px; margin-right: 5.5px; padding: 0;
+  border: 1px solid transparent; border-radius: 999px;
+  background: none; color: var(--ink4);
+  cursor: pointer; transition: .18s var(--ease);
+}
+.t-ed svg {
+  width: 13.5px; height: 13.5px;
+  fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.tbl tr.go:hover .t-ed { color: var(--ink2); border-color: var(--line2);
+                         background: var(--card); }
+.t-ed:hover { color: var(--brand-deep) !important;
+              border-color: var(--brand) !important; }
+
+/* Действия в строке — «Позиции», «Разобрать», «Скачать». Словами и
+   всегда видны: значок здесь не годится, действий у документа четыре и
+   они разные.
+
+   display и opacity возвращаем силой. Общее правило .acts из styles.css
+   писалось под «Пользователей», где этот класс висит на span внутри
+   ячейки: оно делает элемент inline-flex и прячет до наведения. Попав
+   на сам td, оно отнимало у него роль table-cell — ячейка выпадала из
+   строки, и линия под строкой обрывалась там, где начиналась последняя
+   колонка. Это и были те обрубленные линии, из-за которых таблица
+   выглядела сломанной. */
+.tbl td.acts {
+  display: table-cell;
+  opacity: 1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Действие словом. Оформлено один раз на всё приложение: до этого
+   правила были расписаны через «#sec-sit td» и «#sec-cnt td», и те же
+   кнопки в окнах — «Править» у редакции, «Убрать» — до правил не
+   доставали и показывались серыми коробками браузера по умолчанию. */
+.lnk {
+  padding: 3.5px 7px;
+  border: 0; border-radius: 6.5px; background: none; cursor: pointer;
+  color: var(--ink3); font: inherit; font-size: 11px;
+  transition: background .15s var(--ease), color .15s var(--ease);
+}
+.lnk:hover { background: var(--brand-tint); color: var(--brand-deep); }
+.lnk.warn:hover { background: var(--bad-soft); color: var(--bad); }
+.tbl td.acts .lnk { margin-left: 2px; }
+.tbl tr:hover td.acts .lnk { color: var(--ink2); }
+
+/* Метка: стадия объекта, состояние комплекта, число позиций. Одна
+   форма на все случаи — цветом отличается только смысл. */
+.tag {
+  display: inline-block; padding: 0 8px;
+  border: 1px solid var(--line2); border-radius: 999px;
+  background: var(--raise); color: var(--ink2);
+  font-size: 10.5px; line-height: 17px; white-space: nowrap;
+}
+.tag.ok { color: var(--ok); background: var(--ok-soft); border-color: transparent; }
+.tag.warn { color: var(--warn); background: var(--warn-soft); border-color: transparent; }
+.tag.bad { color: var(--bad); background: var(--bad-soft); border-color: transparent; }
+.tag.dim { color: var(--ink3); background: transparent; }
+
+/* Итог действия внизу раздела — «добавлено 12, обновлено 3». Живёт под
+   таблицей, а не всплывашкой у курсора: числа хочется перечитать, а
+   всплывашка исчезает раньше, чем дочитаешь. */
+.pg-note {
+  flex: none;
+  padding: 10px var(--gut);
+  border-top: 1px solid var(--line2);
+  background: var(--raise);
+  font-size: 11px; color: var(--ink2);
+}
+.pg-note[hidden] { display: none; }
+.pg-note.bad { background: var(--bad-soft); color: var(--bad); }
+
+/* ── пустое место ────────────────────────────────────────────
+   Не «ничего нет», а что сделать, чтобы появилось. */
+.pg-empty {
+  padding: 47px var(--gut);
+  max-width: 54ch;
+  font-size: 11.5px; line-height: 1.55; color: var(--ink3);
+}
+.pg-empty b {
+  display: block; margin-bottom: 4.5px;
+  color: var(--ink2); font-size: 12.5px; font-weight: 600;
+}
+
+/* Подзаголовок группы внутри тела — «Проект», «Договор», «Прочее». */
+.pg-group { padding-bottom: 5.5px; }
+.pg-group h4 {
+  margin: 0;
+  padding: 14.5px var(--gut) 6.5px;
+  font: 600 9.5px var(--sans);
+  letter-spacing: .07em; text-transform: uppercase; color: var(--ink3);
+}
+
+/* ── итоги ───────────────────────────────────────────────────
+   Ряд чисел под шапкой: ради них таблицу позиций и открывают, поэтому
+   они стоят до строк, а не под сотней строк. */
+.pg-sums {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(144px, 1fr));
+  gap: 1px;
+  padding: 0;
+  background: var(--line2);
+  border-bottom: 1px solid var(--line2);
+}
+.pg-sums > div { padding: 10px 16px; background: var(--card); }
+.pg-sums > div:first-child { padding-left: var(--gut); }
+.pg-sums > div:last-child { padding-right: var(--gut); }
+.pg-sums span {
+  display: block;
+  font: 600 9.5px var(--sans);
+  letter-spacing: .07em; text-transform: uppercase; color: var(--ink3);
+}
+.pg-sums b {
+  display: block; margin-top: 2px;
+  font-size: 14.5px; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.pg-sums .good b { color: var(--ok); }
+.pg-sums .bad b { color: var(--bad); }
+
+/* ── рамка справочников ──────────────────────────────────────
+   Пять справочников под одной крышей: полоса вкладок сверху, под ней
+   тот, что выбран. Каждый внутри — обычный раздел со своей шапкой и
+   таблицей, поэтому рамка только раскладывает их по высоте и ничего не
+   навязывает. */
+.ref {
+  /* Высота окна за вычетом верхней полосы, а не 100%: у раздела над рамкой
+     своей высоты нет, и от «100%» рамка росла на всю длину таблицы — окно
+     прокручивалось целиком, и шапка с фильтрами уезжала вверх вместе со
+     строками. */
+  display: flex; flex-direction: column; height: calc(100vh - var(--stick, 50.5px));
+  /* Поле раздела объявлено внутри .pg, а полоса вкладок стоит снаружи —
+     без своего объявления var(--gut) там пустой, и padding схлопывался в
+     ноль: вкладки липли к самому краю, а таблица под ними начиналась с
+     отступа. Одно число на всю рамку, как и в разделе. */
+  --gut: 25px;
+}
+.ref > .pg-tabs { background: var(--card); padding: 0 var(--gut); }
+/* Вкладок в «Справочниках» стало девять (монтажники и расценки заказчиков,
+   23.10.2026): на неширом экране они листаются в своей полосе, а не
+   раздвигают страницу и не ломают подписи в две строки. */
+#refTabs { overflow-x: auto; scrollbar-width: none; }
+#refTabs::-webkit-scrollbar { display: none; }
+#refTabs .pg-tab { flex: none; white-space: nowrap; }
+.ref-panes { flex: 1; min-height: 0; }
+.ref-panes > section { height: 100%; overflow: auto; }
+.ref-panes > section[hidden] { display: none; }
+/* Внутри рамки раздел занимает остаток, а не весь экран: над ним уже
+   стоит полоса вкладок, и вычитать её высоту дважды не нужно. */
+.ref-panes .pg { height: 100%; }
+
+/* ── компания объекта ────────────────────────────────────────
+   Метка своей компании — короткое имя её цветом плюс полоска того же
+   цвета у левого края строки. Цвет приходит из справочника переменной
+   --org на самой строке: в коде цветов нет, третья компания получит свой
+   там же, где заведена. Фон — тот же цвет, разбавленный фоном карточки,
+   поэтому в тёмной теме он темнеет сам. */
+.org-chip {
+  display: inline-block; max-width: 100%; padding: 0 8px;
+  border-radius: 999px; border: 1px solid transparent;
+  background: color-mix(in srgb, var(--org) 14%, var(--card));
+  color: var(--org);
+  font-size: 10.5px; font-weight: 600; line-height: 17px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  vertical-align: middle;
+}
+[data-theme="dark"] .org-chip {
+  color: color-mix(in srgb, var(--org) 72%, #fff);
+  background: color-mix(in srgb, var(--org) 22%, var(--card));
+}
+.pg-h1 .org-chip { margin-left: 2px; }
+.tbl tr.has-org td:first-child { box-shadow: inset 4px 0 0 var(--org); }
+
+/* Значение записано словами, а не выбрано из справочника. Пунктир, а не
+   красный: заказчик, которого ещё нет в контрагентах, — рабочий этап. */
+.pg-facts dd.free {
+  text-decoration: underline dotted var(--warn);
+  text-underline-offset: 2.5px; cursor: help;
+}
+/* ── шапка расчёта ───────────────────────────────────────────
+   Сверху имя документа и то, что нажимают, — наценка и две кнопки;
+   ниже числа таблицей во всю ширину: столбцы равной ширины, между ними
+   линия. Раньше числа стояли в один ряд через отступ, и суммы читались
+   сплошной лентой цифр — «1 424 957,72 779 524,10» не разобрать. Здесь
+   у каждого числа своя клетка, и взгляд идёт по столбцам.
+   Правило только для расчёта: у шапки объекта свои приметы и размеры. */
+.pg-head.strip.calc-head {
+  display: flex; flex-wrap: wrap; align-items: center;
+  column-gap: 11px; row-gap: 7px; min-height: 50.5px; padding: 7px 12.5px 9px;
+}
+.pg-head.strip.calc-head .pg-back {
+  flex: none; margin: 0; width: 25px; height: 25px; border-radius: 7px;
+}
+/* Имя документа — под названием объекта: сверху мельче, чей это расчёт,
+   ниже сам документ. Та же пара «подпись над значением», что у чисел по
+   соседству, поэтому высота полосы не растёт. */
+.pg-head.strip.calc-head .pg-h1 {
+  flex: 0 1 auto; min-width: 0; padding: 0; flex-wrap: nowrap;
+  flex-direction: column; align-items: flex-start; gap: 1px;
+}
+.pg-head.strip.calc-head .pg-h1 > * { max-width: 100%; }
+.pg-head.strip.calc-head .calc-obj {
+  padding: 0; border: 0; background: none; cursor: pointer;
+  font: inherit; font-size: 10.5px; font-weight: 500; line-height: 1.3;
+  color: var(--ink2); text-align: left;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pg-head.strip.calc-head .calc-obj:hover {
+  color: var(--brand-deep); text-decoration: underline; text-underline-offset: 2px;
+}
+.pg-head.strip.calc-head .calc-obj:focus-visible {
+  outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 3px;
+}
+/* Длинное имя файла режется многоточием, целиком — в подсказке. */
+.pg-head.strip.calc-head .pg-h1 h2 {
+  font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* Наценка и кнопки — у правого края одной группой: это то, что делают,
+   а не читают. Свободное место копится перед наценкой. */
+.pg-head.strip.calc-head .mk {
+  flex: none; margin: 0 0 0 auto; height: 25px; padding: 0 9px; gap: 5.5px;
+  border-radius: 7px;
+}
+.pg-head.strip.calc-head .mk span { font-size: 8px; letter-spacing: .04em; }
+.pg-head.strip.calc-head .mk input { width: 27px; font-size: 11px; }
+.pg-head.strip.calc-head .pg-act { flex: none; margin-left: 0; padding: 0; }
+.pg-head.strip.calc-head .pg-acts { display: flex; gap: 9px; }
+.pg-head.strip.calc-head .btn-ghost.sm,
+.pg-head.strip.calc-head .btn-brand.sm {
+  height: 25px; padding: 0 9px; border-radius: 7px; font-size: 10px; gap: 4.5px;
+}
+.pg-head.strip.calc-head .btn-ghost.sm svg { width: 11.5px; height: 11.5px; }
+/* Таблица чисел: своя строка, столбцы поровну, линии между ними и линия
+   сверху — она отделяет числа от имени и кнопок. Цифры табличные, тогда
+   разряды стоят столбиком. */
+.pg-head.strip.calc-head .pg-facts {
+  order: 9; flex: 1 0 100%; display: flex; gap: 0; min-width: 0;
+  padding-top: 6.5px; border-top: 1px solid var(--line2);
+}
+.pg-head.strip.calc-head .pg-facts > div {
+  flex: 1 1 0; min-width: 0; padding: 0 11px;
+  border-left: 1px solid var(--line2);
+}
+.pg-head.strip.calc-head .pg-facts > div:first-child {
+  padding-left: 0; border-left: 0;
+}
+.pg-head.strip.calc-head .pg-facts dt {
+  font-size: 7.5px; letter-spacing: .04em; white-space: nowrap;
+  /* На узком окне столбцы сжимаются, и подписи налезали друг на друга:
+     пусть лучше обрежется хвост подписи, чем сложится каша. */
+  overflow: hidden; text-overflow: ellipsis;
+}
+.pg-head.strip.calc-head .pg-facts dd {
+  margin-top: 2px; font-size: 10.5px; font-variant-numeric: tabular-nums;
+  overflow: hidden; text-overflow: ellipsis;
+}
+/* «Без цены» жёлтым — это недоделка, а не просто число. Итог с НДС —
+   цветом фирменной кнопки: ради него сюда и приходят. */
+.pg-head.strip.calc-head .pg-facts dd.warn { color: var(--warn); font-weight: 600; }
+.pg-head.strip.calc-head .pg-facts > div:last-child dd {
+  color: var(--brand-deep); font-weight: 600;
+}
+/* Широкий экран: всё помещается в одну строку — тогда столбцы по ширине
+   содержимого, и таблица встаёт между именем и кнопками. Порог — та
+   ширина, при которой на название объекта и имя документа остаётся не
+   меньше двухсот тридцати точек: уже этого одна строка резала объект до
+   «Многоэтажный паркинг …», и терялся как раз номер корпуса. */
+/* Но порог по ширине экрана промахивался: кнопок и столбцов бывает
+   разное число (версии, «Не учтено», две кнопки подбора с 05.10.2026), и
+   на 1440 точках имя документа сжималось в ноль. Поэтому шапка меряет
+   себя сама (sites.js, fitCalcHead): не помещается — класс two, и числа
+   уходят второй строкой, как на узком экране. */
+@media (min-width: 1440px) {
+  .pg-head.strip.calc-head:not(.two) { flex-wrap: nowrap; row-gap: 0; padding-bottom: 7px; }
+  .pg-head.strip.calc-head:not(.two) .pg-facts {
+    order: 0; flex: none; padding-top: 0; border-top: 0;
+  }
+  .pg-head.strip.calc-head:not(.two) .pg-facts > div { flex: none; padding: 3.5px 11px; }
+}
+
+/* ── шапка карточки объекта — так же компактно, как у расчёта ──
+   Приметы объекта — слова, а не числа, и длинный заказчик по-прежнему
+   режется многоточием с подсказкой. Подписи — в одну строку: «Начальник
+   участка» в две строки раздувал всю шапку. */
+.pg-head.strip.card-head { min-height: 50.5px; padding-left: 12.5px; padding-right: 12.5px; }
+.pg-head.strip.card-head .pg-back { width: 23.5px; height: 23.5px; margin: 0 5.5px 0 -4px; }
+.pg-head.strip.card-head .pg-h1 { gap: 5.5px; padding-right: 11px; }
+.pg-head.strip.card-head .pg-h1 h2 { font-size: 13.5px; }
+.pg-head.strip.card-head .org-chip { padding: 0 6.5px; font-size: 9.5px; line-height: 15.5px; }
+.pg-head.strip.card-head .pg-facts > div { padding: 5.5px 9px; }
+.pg-head.strip.card-head .pg-facts dt {
+  font-size: 7.5px; letter-spacing: .04em; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.pg-head.strip.card-head .pg-facts dd { margin-top: 1px; font-size: 11px; }
+.pg-head.strip.card-head .fact-st .st { font-size: 9.5px; line-height: 14.5px; }
+.pg-head.strip.card-head .pg-act { margin-left: 9px; }
+.pg-head.strip.card-head .btn-ghost.sm { height: 25px; padding: 0 8px; font-size: 10.5px; }
+.pg-head.strip.card-head .btn-ghost.sm svg { width: 11.5px; height: 11.5px; }
+
+/* ── свёрнутая шапка карточки объекта (заказчик, 08.10.2026) ──
+   Уходит всё выше черты под вкладками: полоса раздела, шапка, показатели
+   и сами вкладки. Остаётся строка в 30 пикселей: назад, объект, вкладка,
+   «Развернуть». */
+.card-mini { display: none; }
+.pg.card-min > .card-head, .pg.card-min > .sit-kpi, .pg.card-min > .pg-tabs,
+.pg.card-auto > .card-head, .pg.card-auto > .sit-kpi, .pg.card-auto > .pg-tabs { display: none; }
+/* Шапка ушла сама при прокрутке вниз (21.10.2026) — та же тонкая строка. */
+.pg.card-min > .card-mini, .pg.card-auto > .card-mini {
+  flex: none; display: flex; align-items: center; gap: 7px; min-height: 30px;
+  padding: 0 12.5px; border-bottom: 1px solid var(--line2); background: var(--card);
+  font-size: 11px; white-space: nowrap;
+}
+.card-mini .pg-back { width: 21px; height: 21px; margin-left: -4px; }
+.card-mini b { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--ink); font-weight: 600; }
+.card-mini span { flex: none; color: var(--ink3); }
+.card-mini span::before { content: "·"; margin-right: 7px; }
+.card-mini .btn-ghost.sm { margin-left: auto; height: 22px; padding: 0 8px; font-size: 10.5px; }
+.card-mini svg, .pg-tab-min svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; }
+html[data-sec="sit"] .main:has(> #sec-sit .pg.card-min) > header.top,
+html[data-sec="sit"] .main:has(> #sec-sit .pg.card-auto) > header.top { display: none; }
+#sec-sit .pg.card-min, #sec-sit .pg.card-auto { height: 100vh; }
+/* Кнопка «свернуть» — в конце строки вкладок. */
+.pg-tab-min {
+  align-self: center; flex: none; width: 24px; height: 24px; margin-right: -6px;
+  display: grid; place-items: center; padding: 0; border: 0; border-radius: 6px;
+  background: none; color: var(--ink3); cursor: pointer;
+}
+.pg-tab-min svg { transform: rotate(180deg); }
+.pg-tab-min:hover { background: var(--raise); color: var(--ink); }
+
+/* ── мини-дашборд объекта ────────────────────────────────────
+   Полоса главных чисел под шапкой, над вкладками — видна на любой
+   вкладке. Выстроена по шапке: левый край первой плитки на одной
+   вертикали с названием объекта (поле полосы 14 + стрелка назад), подписи
+   тем же мелким капителем, что приметы в шапке. Плитки делят ширину
+   поровну, первая — сумма расчёта с НДС — шире и выделена цветом: ради
+   неё полосу и смотрят. Каждая не у́же своего содержимого, так что числа
+   не режутся; не влезли — полоса переносится на вторую строку. */
+.sit-kpi {
+  flex: none; display: flex; flex-wrap: wrap; align-items: stretch;
+  margin: 0; padding: 0 0 0 25px;
+  background: var(--raise); border-bottom: 1px solid var(--line2);
+}
+.sit-kpi .kpi {
+  flex: 1 1 0; min-width: max-content;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 6.5px 12.5px; border-left: 1px solid var(--line2);
+}
+/* Поле плитки одинаковое у всех, и у первой тоже: подписи стоят на
+   вертикали названия и в перенесённой строке. У первой только линия не
+   видна — перед ней ничего нет. */
+.sit-kpi .kpi:first-child { border-left-color: transparent; }
+.sit-kpi .kpi.kpi-main { flex-grow: 1.6; }
+.sit-kpi dt {
+  font: 600 7.5px var(--sans); letter-spacing: .05em; text-transform: uppercase;
+  color: var(--ink3); white-space: nowrap;
+}
+.sit-kpi dd {
+  display: flex; align-items: baseline; gap: 5.5px;
+  margin: 2px 0 0; font-size: 11px; font-weight: 600; color: var(--ink);
+  white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.sit-kpi dd i {
+  display: inline-flex; align-items: center; gap: 5.5px; align-self: center;
+  font-style: normal; font-size: 9.5px; font-weight: 400; color: var(--ink3);
+}
+.sit-kpi .kpi.kpi-main dd { font-size: 12.5px; color: var(--brand-deep); }
+.sit-kpi .kpi.kpi-warn dd { color: var(--warn); }
+.kpi-bar {
+  display: inline-block; width: 36px; height: 3.5px; border-radius: 2px;
+  background: var(--line2); overflow: hidden;
+}
+.kpi-bar b { display: block; height: 100%; background: var(--ok); border-radius: 2px; }
+
+/* Статус в колонке характеристик — та же плашка, но пониже, чтобы ряд
+   примет не прыгал по высоте: у соседей в dd одна строка текста. */
+.pg-facts .fact-st dd { overflow: visible; }
+.pg-facts .fact-st .st { padding: 0 7px; line-height: 16px; font-size: 10.5px; }
+
+/* ── свои компании ───────────────────────────────────────────
+   Компания — строка с главным (название с реквизитами, руководитель,
+   контакты, основной счёт) и подробности под ней: полей полтора десятка,
+   правятся на месте и сохраняются, как только из них ушли. Строка одна и
+   та же в кратком и подробном виде — раскрытие только дописывает поля
+   ниже, ничего не сдвигая (22.09.2026). */
+.org { border-bottom: 1px solid var(--line2); }
+.org.off > .org-row, .org.off > .org-more { opacity: .55; }
+.org-dot {
+  flex: none; width: 12.5px; height: 12.5px; border-radius: 50%;
+  background: var(--org);
+}
+.org-check {
+  display: inline-flex; align-items: center; gap: 6.5px;
+  font-size: 11px; color: var(--ink2); white-space: nowrap; cursor: pointer;
+}
+.org-check input { width: 13.5px; height: 13.5px; accent-color: var(--brand); }
+.org-more .cnt-group { margin-top: 11px; }
+.org-more .cnt-group:first-child { margin-top: 0; }
+.org-list-set { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; margin-top: 7px; }
+.org-list-set .org-sw { margin-top: 0; }
+.org-sw { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 7px; }
+.org-sw button {
+  width: 23.5px; height: 23.5px; padding: 0; border-radius: 50%;
+  border: 2px solid transparent; background: var(--c); cursor: pointer;
+  box-shadow: inset 0 0 0 2px var(--card);
+}
+.org-sw button.on { border-color: var(--ink); }
+.org-sw button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.org-sw button:disabled { cursor: default; }
+.fld input.bad { border-color: var(--bad); }
+
+/* Строка: столбцы у всех компаний одни — сравнивать глазом удобно. */
+.org-row {
+  display: grid; align-items: center; gap: 0 20px;
+  grid-template-columns: 12.5px minmax(200px, 1.35fr) minmax(150px, 1fr)
+                         minmax(140px, .9fr) minmax(200px, 1.3fr) auto;
+  padding: 11px var(--gut);
+}
+.org-cell { min-width: 0; }
+.org-cell b, .org-cell i {
+  display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.org-cell b { font-size: 11.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.org-cell b.dim { color: var(--ink4); font-weight: 400; }
+.org-cell i { font-style: normal; font-size: 10.5px; color: var(--ink3); }
+.org-main b { font-size: 12.5px; }
+.org-acts { display: inline-flex; align-items: center; justify-content: flex-end; gap: 7px; }
+.org-acts .ico { margin-left: 0; }
+/* «Подробно» и «Свернуть» одной ширины: кнопка не прыгает, и соседи тоже. */
+.org-toggle { min-width: 106px; }
+/* Место под полосу прокрутки — всегда: раскрыли компанию, появилась
+   полоса — и кнопки строк не съезжают влево на её ширину. */
+#orgBody { scrollbar-gutter: stable; }
+.org-docs-n {
+  display: inline-flex; align-items: center; gap: 4.5px;
+  font-size: 11px; color: var(--ink3); white-space: nowrap;
+}
+.org-docs-n svg { width: 12.5px; height: 12.5px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+/* Подробности — с отступом под название: читаются как продолжение строки. */
+.org-more { padding: 3.5px var(--gut) 20px calc(var(--gut) + 32.5px); }
+.org.open > .org-row { padding-bottom: 12.5px; }
+@media (max-width: 1180px) {
+  .org-row { display: flex; flex-wrap: wrap; gap: 7px 18px; }
+  .org-row .org-cell { flex: 1 1 170px; }
+  .org-row .org-main { flex-basis: 220px; }
+  .org-acts { margin-left: auto; }
+  .org-more { padding-left: var(--gut); }
+}
+
+/* Счета компании: карточка на счёт, основной помечен. */
+.org-accs { display: flex; flex-direction: column; gap: 9px; margin-top: 7px; }
+.org-acc { border: 1px solid var(--line2); border-radius: var(--r-sm); padding: 7px 9px 9px; }
+.org-acc.main { border-color: var(--brand); background: var(--brand-tint); }
+.org-acc-top { display: flex; align-items: center; gap: 9px; min-height: 20px; font-size: 11px; }
+.org-acc-top .grow { flex: 1; }
+.org-acc-tag {
+  padding: 1px 7px; border-radius: 999px; font-size: 10px; font-weight: 600;
+  background: var(--brand); color: #fff;
+}
+.org-acc-add { margin-top: 9px; }
+
+/* Учредительные документы: строка на документ, открыть — по названию. */
+.org-docs { display: flex; flex-direction: column; gap: 5.5px; margin-top: 7px; }
+.org-doc {
+  display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+  padding: 6.5px 9px; border: 1px solid var(--line2); border-radius: var(--r-sm);
+}
+.org-doc .grow { flex: 1; }
+.org-doc-open { display: inline-flex; align-items: center; gap: 6.5px; font-weight: 600; }
+.org-doc-open svg { width: 13.5px; height: 13.5px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.org-doc i { font-size: 10.5px; }
+.org-doc-add { margin-top: 9px; cursor: pointer; }
+/* Логотип для шапки карточки предприятия: как он встанет на бланк —
+   на белом, в тёмной теме тоже. */
+.org-logo { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 7px; }
+.org-logo img {
+  max-width: 220px; max-height: 76px; padding: 7px 11px; border-radius: 8px;
+  background: #fff; border: 1px solid var(--line2); object-fit: contain;
+}
+.org-logo .mat-form-hint { margin: 0; }
+.org-logo-acts { display: flex; align-items: center; gap: 11px; }
+.org-logo-acts label { cursor: pointer; }
+/* Факсимиле подписи — тем же белым листом, что логотип: так подпись ляжет
+   в документ. Заголовок с ⓘ — в строку. */
+.org-fax-h { display: flex; align-items: center; gap: 4px; }
+.org-fax-img img { min-width: 120px; min-height: 44px; }
+
+/* Окно выгрузки карточки предприятия. */
+.org-card-out { width: min(558px, 96vw); }
+.org-card-out h3 { margin: 0 0 3.5px; }
+.org-out-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px 16px; margin: 11px 0 3.5px; }
+.org-out-grid .role-sel { width: 100%; max-width: none; }
+.org-out-blocks { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5px 14.5px; margin-top: 5.5px; }
+.org-out-blocks .mat-up-sure { margin: 0; font-weight: 500; }
+/* Что из бланка карточки у компании не заполнено — перед выгрузкой. */
+.org-out-miss {
+  margin: 9px 0 3.5px; padding: 7px 11px; border-radius: var(--r-sm);
+  background: var(--warn-soft); color: var(--warn); font-size: 11px; line-height: 1.45;
+}
+@media (max-width: 684px) { .org-out-grid, .org-out-blocks { grid-template-columns: 1fr; } }
+
+/* ── выбор из справочника и подсказка адреса ─────────────────
+   Поле с крестиком и списком под ним. Список лежит в body с
+   фиксированным положением: внутри окна его обрезал бы overflow. */
+.pk { position: relative; }
+.pk input:not([type=hidden]) { padding-right: 27px !important; }
+.pk .pk-x {
+  position: absolute; right: 5.5px; top: 50%; transform: translateY(-50%);
+  width: 20px; height: 20px; border: 0; border-radius: 5.5px;
+  background: none; color: var(--ink3); font-size: 14.5px; line-height: 1;
+  cursor: pointer;
+}
+.pk .pk-x:hover { background: var(--raise); color: var(--ink); }
+.pk .pk-x[hidden] { display: none; }
+.pk-list {
+  position: fixed; z-index: 90;
+  max-height: 270px; overflow-y: auto; padding: 4.5px;
+  background: var(--card); border: 1px solid var(--line2);
+  border-radius: 11px; box-shadow: var(--shadow-float);
+}
+.pk-list[hidden] { display: none; }
+.pk-opt {
+  display: block; width: 100%; padding: 6.5px 10px;
+  border: 0; border-radius: 7px; background: transparent;
+  text-align: left; font: inherit; font-size: 11px; color: var(--ink);
+  cursor: pointer;
+}
+.pk-opt b {
+  display: block; font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pk-opt i {
+  display: block; font-style: normal; font-size: 10px; color: var(--ink3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pk-opt:hover, .pk-opt.on { background: var(--raise); }
+.pk-opt.act { color: var(--brand-deep); }
+.pk-foot {
+  margin-top: 3.5px; padding: 5.5px 10px 2.5px;
+  border-top: 1px solid var(--line2);
+  font-size: 10px; color: var(--ink3);
+}
+.pk-foot:first-child { margin-top: 0; border-top: 0; }
+.pk-foot.bad { color: var(--bad); }
+
+/* ── файлы ───────────────────────────────────────────────────
+   Раздел «Файлы»: сверху корень («Мои файлы» или «Общие»), путь до
+   папки и действия; ниже таблица, как в остальных разделах. Файлы
+   бросают мышью прямо в список — страница подсвечивается рамкой. */
+.fl-head { flex-wrap: wrap; row-gap: 7px; }
+/* «← Объекты»: раздел открывают кнопкой из «Объектов», пункта в меню нет. */
+.fl-back { display: inline-flex; align-items: center; gap: 4px; padding-left: 8px; }
+.fl-back svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 684px) {
+  .fl-head:has(.fl-back) .fl-roots { flex: 1 1 0; min-width: 0; }
+}
+/* Файлы объекта — вкладка карточки (28.09.2026): та же страница файлов,
+   только во всю высоту тела карточки, и полоса сверху — как у вкладок. */
+.fl-host { height: 100%; }
+.pg.fl-page.fl-embed { height: 100%; background: none; }
+.fl-embed .pg-head.fl-head { min-height: 0; padding-top: 9px; padding-bottom: 9px; }
+.fl-tbl .fl-pin .fl-cell svg { color: var(--brand-deep); }
+.fl-tbl .fl-pin .t-name { font-weight: 600; }
+.fl-proj-hint {
+  padding: 10px var(--gut); border-bottom: 1px solid var(--line2); background: var(--raise);
+  font-size: 11.5px; line-height: 1.5; color: var(--ink2);
+}
+.fl-ppick { display: inline-flex; align-items: center; gap: 7px; width: fit-content; cursor: pointer; }
+.fl-ppick svg, .sit-files svg { width: 14px; height: 14px; fill: none; stroke: currentColor;
+  stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.sit-files { display: inline-flex; align-items: center; gap: 6px; }
+/* Кнопки, которые прячет поиск, и выбор файла внутри «Загрузить»: у
+   .btn-brand свой display, и без этого правила hidden его не перебил бы. */
+.fl-page [hidden] { display: none !important; }
+.fl-where { min-width: 0; }
+.fl-tbl .fl-path {
+  display: block; max-width: 100%; padding: 0; border-radius: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 11px; color: var(--ink3); text-align: left;
+}
+.fl-tbl .fl-path:hover { background: none; color: var(--brand-deep); }
+.fl-more { padding: 11px var(--gut); font-size: 11px; color: var(--ink3); }
+.fl-crumbs {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 5.5px; min-width: 0;
+  font-size: 11.5px; color: var(--ink2);
+}
+.fl-crumbs i { font-style: normal; color: var(--ink4); }
+.fl-crumbs b { color: var(--ink); font-weight: 600; }
+.fl-crumbs .lnk { font-size: 11.5px; }
+.fl-pick { cursor: pointer; }
+/* Значок, имя и подпись — одна строка внутри ячейки. Сама ячейка
+   остаётся ячейкой: flex на td ломает таблицу, поэтому обёртка. */
+.fl-tbl .fl-cell { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.fl-tbl .fl-cell svg {
+  flex: none; width: 16px; height: 16px;
+  fill: none; stroke: var(--ink3); stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.fl-tbl tr.fl-dir .fl-cell svg { stroke: var(--warn); fill: var(--warn-soft); }
+/* Тесно — первой уступает подпись «2 объекта», имя папки держится до
+   последнего: по имени ищут, по подписи только уточняют. */
+.fl-tbl .fl-cell .t-name { flex: 0 1 auto; min-width: 3em; }
+.fl-tbl .fl-cell i {
+  flex: 0 1000 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; font-style: normal; font-size: 10.5px;
+}
+/* Имя файла — кнопка, но стоит ровно по левому краю, как имя папки:
+   поля у .lnk сдвигали его на восемь пикселей вправо. */
+.fl-tbl .fl-open {
+  min-width: 0; padding: 0; border-radius: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 12px; font-weight: 500; color: var(--ink); text-align: left;
+}
+.fl-tbl .fl-open:hover { background: none; color: var(--brand-deep); }
+/* Размеры — тем же шрифтом, что и текст: моноширинные цифры в таблице
+   расчёта читались как приклеенные поверх колонки. */
+.fl-tbl .num { font-family: var(--sans); }
+/* Кнопки строки — плотной группой у правого края. Пробелы между ними из
+   разметки съедали место, и у файла с четырьмя кнопками группа вылезала
+   на поле раздела, вставая правее, чем у папки с двумя. */
+.fl-tbl td.acts { text-align: right; }
+.fl-tbl .fl-acts { display: inline-flex; gap: 3.5px; vertical-align: middle; }
+.fl-tbl .fl-acts .ico { margin-left: 0; }
+.fl-use .kpi-bar { width: 72px; }
+.fl-page.fl-drop .fl-body {
+  outline: 2px dashed var(--brand); outline-offset: -8px; background: var(--brand-tint);
+}
+.fl-foot {
+  flex: none; display: flex; flex-wrap: wrap; gap: 5.5px 20px; align-items: center;
+  padding: 8px var(--gut); border-top: 1px solid var(--line2);
+  font-size: 11px; color: var(--ink2);
+}
+.fl-use { display: inline-flex; align-items: center; gap: 7px; }
+.fl-use.bad { color: var(--bad); }
+.fl-queue {
+  flex: none; display: flex; flex-direction: column; gap: 5.5px;
+  padding: 8px var(--gut); border-bottom: 1px solid var(--line2); background: var(--raise);
+}
+.fl-q {
+  display: grid; grid-template-columns: minmax(0, 1fr) 144px 153px; gap: 11px;
+  align-items: center; font-size: 11px;
+}
+.fl-q-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink); }
+.fl-q-bar { height: 4.5px; border-radius: 2.5px; background: var(--line2); overflow: hidden; }
+.fl-q-bar i { display: block; height: 100%; background: var(--brand); }
+.fl-q-st {
+  color: var(--ink3); text-align: right; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.fl-q.bad .fl-q-st, .fl-q.bad .fl-q-name { color: var(--bad); }
+.fl-q-err { grid-column: 2 / -1; color: var(--bad); text-align: right; }
+/* Сорвавшийся файл мог дойти до конца полосы — тогда полная оранжевая
+   полоса читалась бы как успех. */
+.fl-q.bad .fl-q-bar i { background: var(--bad); }
+.fl-queue #flQClear { align-self: flex-start; margin-left: -8px; }
+.fl-ask h3 { margin: 0 0 11px; font-size: 13.5px; }
+.fl-tree {
+  display: flex; flex-direction: column; max-height: 50vh; overflow: auto;
+  margin: 3.5px 0 7px; border: 1px solid var(--line2); border-radius: 8px;
+}
+.fl-tree-b {
+  display: flex; align-items: center; gap: 7px; padding: 6.5px 9px;
+  border: 0; border-bottom: 1px solid var(--line2); background: none; cursor: pointer;
+  font: inherit; font-size: 11.5px; color: var(--ink); text-align: left;
+}
+.fl-tree-b:last-child { border-bottom: 0; }
+.fl-tree-b:hover { background: var(--brand-tint); }
+.fl-tree-b.on { font-weight: 600; background: var(--raise); }
+.fl-tree-b svg {
+  width: 14.5px; height: 14.5px; flex: none; fill: var(--warn-soft);
+  stroke: var(--warn); stroke-width: 1.7;
+}
+/* На узком экране причина ошибки уходит строкой ниже, а не пропадает:
+   без неё непонятно, что делать с файлом. */
+@media (max-width: 630px) {
+  .fl-q { grid-template-columns: minmax(0, 1fr) 81px; row-gap: 2px; }
+  .fl-q-st, .fl-q-err { grid-column: 1 / -1; text-align: left; }
+}
+
+/* ── «Файлы» на телефоне (23.09.2026) ─────────────────────────
+   Поиск и три кнопки-значка в одну строку, файлы и папки — строками во
+   всю ширину: имя и главное; подробности и действия — в окне снизу. */
+.fl-m { display: flex; flex-direction: column; }
+.fl-mrow {
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 6px 0 0; border-bottom: 1px solid var(--line2);
+}
+.fl-mmain {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 11px;
+  padding: 11px 6px 11px var(--gut);
+  border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer;
+}
+button.fl-mmain:active { background: var(--raise); }
+.fl-mmain > svg {
+  flex: none; width: 22px; height: 22px;
+  fill: none; stroke: var(--ink3); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+}
+.fl-mrow.dir .fl-mmain > svg { stroke: var(--warn); fill: var(--warn-soft); }
+.fl-mtext { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.fl-mtext b {
+  font-size: 13px; font-weight: 600; color: var(--ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.fl-mtext i {
+  font-style: normal; font-size: 11px; color: var(--ink3);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.fl-mdots, .fl-mgo {
+  flex: none; display: grid; place-items: center; width: 36px; height: 36px;
+  border: 0; border-radius: 9px; background: none; color: var(--ink3); cursor: pointer;
+}
+.fl-mdots svg { width: 18px; height: 18px; fill: currentColor; }
+.fl-mgo svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; }
+.fl-mdots:active { background: var(--raise); }
+.fl-mrestore { flex: none; margin-right: 6px; }
+
+.fl-sheet { align-items: flex-end; padding: 0; }
+.fl-sheet-card {
+  width: 100%; max-width: 520px; border-radius: 18px 18px 0 0;
+  padding: 18px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+  display: flex; flex-direction: column; gap: 12px;
+}
+.fl-sheet-card h3 { margin: 0; font-size: 14.5px; overflow-wrap: anywhere; }
+.fl-sheet-facts { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 5px 14px; }
+.fl-sheet-facts > div { display: contents; }
+.fl-sheet-facts dt { font-size: 12px; color: var(--ink3); }
+.fl-sheet-facts dd { margin: 0; font-size: 12.5px; color: var(--ink); overflow-wrap: anywhere; }
+.fl-sheet-acts { display: flex; flex-direction: column; border-top: 1px solid var(--line2); }
+.fl-sheet-b {
+  display: flex; align-items: center; gap: 12px; padding: 13px 4px;
+  border: 0; border-bottom: 1px solid var(--line2); background: none; cursor: pointer;
+  font: inherit; font-size: 14px; color: var(--ink); text-align: left;
+}
+.fl-sheet-b svg { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--ink2);
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.fl-sheet-b.warn, .fl-sheet-b.warn svg { color: var(--bad); stroke: var(--bad); }
+.fl-sheet-no { height: 42px; }
+
+@media (max-width: 684px) {
+  .fl-page { --gut: 14px; }
+  .fl-head { padding: 10px var(--gut); gap: 8px; }
+  .fl-head .fl-roots { flex: 1 1 100%; display: flex; }
+  .fl-head .fl-roots .seg-b { flex: 1; padding: 7px 10px; }
+  .fl-head .fl-where { flex: 1 1 100%; order: 3; }
+  .fl-head .pg-tools { flex: 1 1 100%; margin-left: 0; gap: 6px; }
+  .fl-head .pg-find { flex: 1; min-width: 0; }
+  .fl-head .pg-find input { width: 100%; }
+  .fl-head .fl-lbl { display: none; }
+  .pg .fl-head .btn-ghost, .pg .fl-head .btn-brand { width: 36px; padding: 0; flex: none; }
+  .pg .fl-head .btn-ghost svg, .pg .fl-head .btn-brand svg { width: 16px; height: 16px; }
+  .fl-foot { flex-wrap: wrap; }
+}
+
+/* ── «Объекты» на телефоне (23.09.2026) ───────────────────────
+   Фильтры — одной кнопкой, окно снизу; объект — строкой во всю ширину. */
+.sit-m { --gut: 14px; }
+.sit-m-head { gap: 8px; padding: 10px var(--gut); }
+.sit-m-head .pg-tools { gap: 6px; }
+.pg .sit-m-f { gap: 6px; }
+.pg .sit-m-f i {
+  font-style: normal; min-width: 17px; height: 17px; padding: 0 5px; border-radius: 999px;
+  background: var(--brand); color: #fff; font-size: 10.5px; font-weight: 600;
+  display: inline-grid; place-items: center;
+}
+.pg .sit-m-f.on { border-color: var(--brand); color: var(--brand-deep); }
+.pg .btn-brand.sit-m-new { width: 36px; padding: 0; }
+.pg .btn-brand.sit-m-new svg { width: 16px; height: 16px; }
+.pg .btn-ghost.sit-m-files { width: 36px; padding: 0; justify-content: center; }
+.pg .btn-ghost.sit-m-files span { display: none; }
+.pg .btn-ghost.sit-m-files svg { width: 16px; height: 16px; }
+.sit-m-list { display: flex; flex-direction: column; }
+.sit-m-row {
+  position: relative; display: flex; align-items: center; gap: 10px;
+  width: 100%; min-height: 56px; padding: 10px 10px 10px var(--gut);
+  border: 0; border-bottom: 1px solid var(--line2);
+  background: none; color: inherit; font: inherit; text-align: left; cursor: pointer;
+}
+.sit-m-row:active { background: var(--raise); }
+/* Полоса цвета компании слева — как в списке на компьютере. */
+.sit-m-row.has-org::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--org);
+}
+.sit-m-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.sit-m-main b { font-size: 13.5px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+.sit-m-main i {
+  font-style: normal; font-size: 11px; color: var(--ink3);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.sit-m-go { flex: none; color: var(--ink4); display: grid; place-items: center; }
+.sit-m-go svg, .pg .sit-m-f svg { width: 16px; height: 16px; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.sit-sheet { align-items: flex-end; padding: 0; }
+.sit-sheet-card {
+  width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto;
+  border-radius: 18px 18px 0 0;
+  padding: 18px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+  display: flex; flex-direction: column; gap: 12px;
+}
+.sit-sheet-card h3 { margin: 0; font-size: 14.5px; }
+.sit-sheet-card select { width: 100%; height: 40px; font-size: 13.5px; }
+.sit-sheet-seg { display: flex; width: 100%; }
+.sit-sheet-seg .seg-b { flex: 1; padding: 8px 4px; font-size: 12px; }
+.sit-sheet-card .pf-modal-foot .btn { height: 42px; padding: 0 18px; }
+@media (max-width: 684px) {
+  /* Карточка объекта: вкладки листаются пальцем внутри своей полосы, а не
+     раздвигают страницу; «Редактировать» — значком. */
+  :is(#sec-sit, #sec-ref, #sec-tnd) .pg-tabs {
+    --gut: 14px; gap: 16px; overflow-x: auto; scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  :is(#sec-sit, #sec-ref, #sec-tnd) .pg-tabs::-webkit-scrollbar { display: none; }
+  :is(#sec-sit, #sec-ref, #sec-tnd) .pg-tab { flex: none; white-space: nowrap; }
+  :is(#sec-sit, #sec-ref, #sec-tnd) .pg-tab.far { margin-left: 0; }
+  :is(#sec-sit, #tndObj) .pg-head.strip { padding: 0 10px 0 14px; }
+  .pg #sitEdit { font-size: 0; gap: 0; width: 32px; padding: 0; }
+}
+
+/* ── «Справочники → Сотрудники»: лицо слева от имени (09.10.2026) ──
+   Директору важно знать людей в лицо: фото у каждого, крупнее —
+   наведением и в карточке по нажатию. Строки чуть выше общих сорока
+   пикселей: кружок в тридцать два должен стоять с воздухом. */
+.tbl.stf-tbl tbody td { height: 44px; }
+.stf-who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.stf-who > .pos-in, .stf-who > .t-name { flex: 1; min-width: 0; }
+.stf-av {
+  position: relative; flex: none;
+  display: inline-grid; place-items: center;
+  width: 32px; height: 32px; padding: 0; overflow: hidden;
+  border: 0; border-radius: 999px;
+  background: var(--brand-tint); color: var(--brand-deep);
+  font: 600 10.5px var(--sans); letter-spacing: .02em;
+}
+/* Поле имени отбито внутрь на 6.5px — кружок встаёт на поле раздела. */
+.tbl td:first-child:has(.pos-in) .stf-av { margin-left: 6.5px; }
+.stf-av img { display: block; width: 100%; height: 100%; object-fit: cover; }
+button.stf-av { cursor: pointer; transition: box-shadow .15s var(--ease); }
+button.stf-av:hover, button.stf-av:focus-visible { box-shadow: 0 0 0 2px var(--brand); outline: 0; }
+/* Без фото у полного доступа — буквы, под курсором фотоаппарат. */
+.stf-av.add svg {
+  position: absolute; inset: 0; margin: auto; width: 16px; height: 16px;
+  fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  opacity: 0; transition: opacity .15s var(--ease);
+}
+.stf-av.add:hover span { opacity: 0; }
+.stf-av.add:hover svg { opacity: 1; }
+/* Дни — тем же шрифтом, что и строка: моноширинные цифры здесь читались
+   бы приклеенными поверх таблицы (как в «Файлах»). */
+.stf-tbl .num { font-family: var(--sans); }
+.stf-tbl .s-days i { font-style: normal; font-size: 10.5px; color: var(--ink3); }
+.stf-lnk { color: inherit; text-decoration: none; }
+.stf-lnk:hover { color: var(--brand-deep); text-decoration: underline; }
+.stf-open td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Участок сотрудника производства (правка № 4, 22.10.2026) — выбором в
+   своей колонке, «не выбран» тише; у всех — после отдела. Уволенный
+   (правка № 2) — строка приглушена. */
+.stf-tbl td.s-band .sel-btn {
+  height: 26px; padding: 0 6.5px; border-radius: var(--r-sm); background: transparent;
+}
+.stf-tbl td.s-band .sel-btn:hover { border-color: var(--line2); background: transparent; }
+.stf-tbl td.s-band .sel:has(option[value=""]:checked) .sel-cur { color: var(--ink3); }
+.stf-band-t { color: var(--ink3); }
+.stf-tbl tr.stf-gone :is(input.pos-in, .t-name) { color: var(--ink3); }
+/* ФИО примерзает слева, ширины колонок тянут за край подписи (правка № 23,
+   22.10.2026; grid.js). Подложка у примёрзшей ячейки обязательна — иначе
+   сквозь неё видно уехавшую строку; тень — когда под ней что-то уехало. */
+.stf-tbl td.s-name, .stf-tbl thead th.s-name {
+  position: sticky; left: 0; z-index: 1; background: var(--card); box-shadow: 1px 0 0 var(--line2);
+}
+.stf-tbl thead th.s-name { z-index: 3; background: var(--raise); }
+.x-scrolled .stf-tbl td.s-name, .x-scrolled .stf-tbl thead th.s-name {
+  box-shadow: 1px 0 0 var(--line2), 10px 0 12px -8px rgba(0, 0, 0, .28);
+}
+.stf-tbl thead th { position: sticky; }
+.stf-tbl thead tr:hover .col-grip::after { background: var(--line); }
+/* Уволенные — свёрнутой группой внизу (правка № 3). */
+.tbl.stf-tbl tbody tr.stf-gone-head td { height: 40px; background: var(--raise); }
+.stf-gone-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px;
+  border: 0; background: none; color: var(--ink2); font: 600 12px var(--sans); cursor: pointer;
+}
+.stf-gone-btn b { font-weight: 600; color: var(--ink3); }
+.stf-gone-btn svg {
+  width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round; transition: transform .15s var(--ease);
+}
+.stf-gone-btn[aria-expanded="true"] svg { transform: rotate(90deg); }
+.stf-gone-btn:hover { color: var(--brand-deep); }
+
+.stf-peek {
+  position: fixed; z-index: 70; width: 176px; height: 176px; overflow: hidden;
+  border-radius: 18px; background: var(--card); box-shadow: var(--shadow-float);
+  pointer-events: none;
+}
+.stf-peek[hidden] { display: none; }
+.stf-peek img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.pf-crop.stf-card { width: 304px; text-align: center; }
+.stf-big {
+  display: grid; place-items: center; width: 208px; height: 208px; margin: 4px auto 14px;
+  overflow: hidden; border-radius: 999px;
+  background: var(--brand-tint); color: var(--brand-deep); font: 600 54px var(--sans);
+}
+.stf-big img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.stf-card-name { display: block; color: var(--ink); font-size: 15px; font-weight: 600; }
+.stf-card-sub { display: block; margin-top: 3px; color: var(--ink3); font-size: 11.5px; }
+.stf-card-dl {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px;
+  margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--line2);
+  text-align: left; font-size: 11.5px;
+}
+.stf-card-dl:empty { display: none; }
+.stf-card-dl dt { color: var(--ink3); }
+.stf-card-dl dd { margin: 0; color: var(--ink); overflow-wrap: anywhere; }
+.stf-card .pf-modal-foot { justify-content: center; flex-wrap: wrap; }
+
+/* ── «Справочники» на телефоне (23.09.2026) ───────────────────
+   Полоса сверху переносится: поиск во всю строку, списки и кнопки под
+   ним. Сотрудники, контрагенты и прайс работ — строками: главное крупно,
+   остальное мелко под ним; второстепенные колонки (даты, реквизиты,
+   характеристики) — на компьютере. Прайс материалов с колонками цен
+   поставщиков в телефон не уложить — он листается внутри своей таблицы. */
+@media (max-width: 684px) {
+  :is(#sec-ref, #sec-wrk, #sec-set) .pg { --gut: 14px; }
+  :is(#sec-ref, #sec-wrk, #sec-set) .pg-head { flex-wrap: wrap; gap: 8px; padding: 10px var(--gut); min-height: 0; }
+  :is(#sec-ref, #sec-wrk, #sec-set) .pg-head .pg-tools { flex: 1 1 100%; flex-wrap: wrap; margin-left: 0; gap: 6px; }
+  :is(#sec-ref, #sec-wrk, #sec-set) .pg-find { flex: 1 1 100%; }
+  :is(#sec-ref, #sec-wrk, #sec-set) .pg-find input { width: 100%; }
+  :is(#sec-ref, #sec-wrk, #sec-set) .pg-tools .sel { flex: 1 1 calc(50% - 3px); min-width: 0; }
+  :is(#sec-ref, #sec-wrk, #sec-set) .pg-tools .sel-btn { width: 100%; }
+  :is(#sec-ref, #sec-wrk, #sec-set) .pg-tools .sel-cur { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  :is(#sec-ref, #sec-wrk, #sec-set) .pg-tools .btn-ghost, :is(#sec-ref, #sec-wrk, #sec-set) .pg-tools .btn-brand { flex: 1 1 auto; }
+
+  :is(#sec-ref, #sec-wrk, #sec-set) .tbl.stf-tbl, :is(#sec-ref, #sec-wrk, #sec-set) .tbl.cnt-tbl, :is(#sec-ref, #sec-wrk, #sec-set) .tbl.wrk-tbl {
+    display: block; min-width: 0 !important; width: 100% !important;
+  }
+  :is(#sec-ref, #sec-wrk, #sec-set) :is(.stf-tbl, .cnt-tbl, .wrk-tbl) :is(colgroup, thead) { display: none; }
+  :is(#sec-ref, #sec-wrk, #sec-set) :is(.stf-tbl, .cnt-tbl, .wrk-tbl) tbody { display: block; }
+  :is(#sec-ref, #sec-wrk, #sec-set) :is(.stf-tbl, .cnt-tbl, .wrk-tbl) tbody tr {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px;
+    padding: 10px var(--gut); border-bottom: 1px solid var(--line2);
+  }
+  :is(#sec-ref, #sec-wrk, #sec-set) :is(.stf-tbl, .cnt-tbl, .wrk-tbl) tbody td {
+    display: block; height: auto; padding: 0 !important; border: 0;
+    order: 3; font-size: 11px; color: var(--ink3); min-width: 0;
+  }
+  /* Первая строка — главное и действия справа; остальное переносится ниже. */
+  :is(#sec-ref, #sec-wrk, #sec-set) .stf-tbl tbody td:nth-child(1),
+  :is(#sec-ref, #sec-wrk, #sec-set) .cnt-tbl tbody td:nth-child(1),
+  :is(#sec-ref, #sec-wrk, #sec-set) .wrk-tbl tbody td:nth-child(2) {
+    order: 0; flex: 1 0 calc(100% - 48px); font-size: 13px; font-weight: 600; color: var(--ink);
+  }
+  :is(#sec-ref, #sec-wrk, #sec-set) :is(.stf-tbl, .cnt-tbl, .wrk-tbl) tbody td:is(.acts, .go-c) { order: 1; flex: none; margin-left: auto; }
+  :is(#sec-ref, #sec-wrk, #sec-set) .stf-tbl tbody td:is(.s-born, .s-hired, .s-fired, .s-days, :empty),
+  :is(#sec-ref, #sec-wrk, #sec-set) .cnt-tbl tbody td:nth-child(4),
+  :is(#sec-ref, #sec-wrk, #sec-set) .cnt-tbl tbody td:nth-child(6) { display: none; }
+  :is(#sec-ref, #sec-wrk, #sec-set) .wrk-tbl tbody td:nth-child(1) { order: 2; }
+  :is(#sec-ref, #sec-wrk, #sec-set) .wrk-tbl tbody td:nth-child(4) { order: 3; }
+  :is(#sec-ref, #sec-wrk, #sec-set) .wrk-tbl tbody td:nth-child(5) { order: 4; margin-left: auto; font-size: 12.5px;
+    font-weight: 600; color: var(--ink); }
+  :is(#sec-ref, #sec-wrk, #sec-set) .wrk-tbl tbody td:nth-child(3) { order: 5; flex: 1 1 100%; }
+  :is(#sec-ref, #sec-wrk, #sec-set) .wrk-tbl tbody td.wrk-none { flex: 1 1 100%; font-size: 12px; }
+  /* Ячейки правятся на месте, в них поля. Поле — по длине текста, а не во
+     всю строку, иначе каждое значение вставало отдельной строкой; пустые
+     на телефоне не показываем. */
+  :is(#sec-ref, #sec-wrk, #sec-set) :is(.stf-tbl, .cnt-tbl, .wrk-tbl) tbody td .pos-in {
+    field-sizing: content; width: auto; min-width: 2.5em; max-width: 100%;
+    height: 22px; padding: 0 8px 0 3px; margin-left: -3px; box-sizing: content-box;
+    border-color: transparent; background: none; font: inherit; color: inherit;
+  }
+  :is(#sec-ref, #sec-wrk, #sec-set) :is(.stf-tbl, .cnt-tbl, .wrk-tbl) tbody td:first-child .pos-in,
+  :is(#sec-ref, #sec-wrk, #sec-set) .wrk-tbl tbody td:nth-child(2) .pos-in,
+  :is(#sec-ref, #sec-wrk, #sec-set) .wrk-tbl tbody td:nth-child(3) .pos-in { width: 100%; }
+  :is(#sec-ref, #sec-wrk, #sec-set) :is(.stf-tbl, .cnt-tbl, .wrk-tbl) tbody td:not(:first-child):has(.pos-in[value=""]) { display: none; }
+  /* Сотрудники: лицо висит слева во всю высоту записи, должность, отдел и
+     связь — под именем, а не под фото. */
+  #sec-ref .stf-tbl tbody tr { position: relative; min-height: 58px; padding-left: calc(var(--gut) + 44px); }
+  #sec-ref .stf-tbl .stf-av { position: absolute; left: var(--gut); top: 10px; width: 36px; height: 36px; margin: 0; }
+  #sec-ref .stf-tbl tbody td:is(.s-post, .s-dept) { font-size: 11.5px; }
+  #sec-ref .stf-open tbody td { overflow: visible; white-space: normal; }
+}
+
+/* Высота раздела — по видимой части экрана (см. конец styles.css):
+   на iPhone 100vh длиннее видимого, и раздел уезжал вверх целиком. */
+@supports (height: 100dvh) {
+  .pg, .ref { height: calc(100dvh - var(--stick, 50.5px)); }
+}
+@media (max-width: 684px) { .pg-body { overscroll-behavior: contain; } }
+
+/* ── подсказки ⓘ (src/tips.js, 30.09.2026) ────────────────────
+   Пояснение, нужное один раз, — в значке рядом с тем, что поясняет,
+   а не абзацем на экране. Подсказка тёмная на светлом и светлая на
+   тёмном: читается поверх любой строки. */
+.i-tip {
+  display: inline-grid; place-items: center; flex: none;
+  width: 20px; height: 20px; margin: -3px 0 -3px 2px; padding: 0;
+  border: 0; border-radius: 50%; background: none;
+  color: var(--ink4, var(--ink3)); vertical-align: middle; cursor: help;
+}
+.i-tip svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.i-tip:hover, .i-tip[aria-describedby] { background: var(--brand-tint); color: var(--brand-deep); }
+.i-tip:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+.g-tip {
+  position: fixed; z-index: 120;
+  width: max-content; max-width: min(300px, calc(100vw - 16px));
+  padding: 9px 12px; border-radius: 10px;
+  background: var(--ink); color: var(--card);
+  font: 400 11px/1.5 var(--sans); white-space: pre-line; text-transform: none; letter-spacing: 0;
+  box-shadow: 0 12px 30px -12px rgba(0, 0, 0, .5);
+  pointer-events: none;
+  animation: g-tip .12s var(--ease);
+}
+.g-tip::before {
+  content: ""; position: absolute; top: -4px; left: var(--ax, 50%);
+  width: 9px; height: 9px; margin-left: -4.5px;
+  background: inherit; border-radius: 2px; transform: rotate(45deg);
+}
+.g-tip.up::before { top: auto; bottom: -4px; }
+@keyframes g-tip { from { opacity: 0; transform: translateY(3px); } }
+@media (prefers-reduced-motion: reduce) { .g-tip { animation: none; } }
+
+/* ── список объектов (30.09.2026) ─────────────────────────────
+   Пользователь: «удобно управлять и контролировать объекты». Сверху —
+   поиск, статусы со счётчиками, компании цветными кнопками, люди
+   таблетками и «требуют внимания» красным. В строке — состояние:
+   статусы спецификаций, есть ли проект и договор, письма, команда и
+   последнее движение. Правка и корзина — по наведению на строку. */
+.pg-head.sx-head { gap: 10px; }
+/* Поиск — слева, статусы и кнопки — к правому краю. */
+.sx-head > .grow { flex: 1; }
+.sx-q { flex: 0 1 300px; min-width: 170px; }
+.sx-q input { width: 100%; }
+.sx-seg .seg-b i {
+  margin-left: 6px; font-style: normal; font-size: 10px; font-weight: 500; color: var(--ink4, var(--ink3));
+  font-variant-numeric: tabular-nums;
+}
+.sx-seg .seg-b.on i { color: inherit; opacity: .7; }
+
+.sx-fbar {
+  flex: none; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px;
+  padding: 9px var(--gut); border-bottom: 1px solid var(--line2);
+  background: color-mix(in srgb, var(--raise) 55%, var(--card));
+}
+.sx-fbar .grow { flex: 1; }
+.sx-orgs, .sx-sels { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.sx-orgb {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 11px 0 9px;
+  border: 1px solid var(--line2); border-radius: 999px; background: var(--card);
+  color: var(--ink2); font: 500 11px var(--sans); cursor: pointer; white-space: nowrap;
+  transition: border-color .15s var(--ease), background .15s var(--ease), color .15s var(--ease);
+}
+.sx-orgb i { width: 8px; height: 8px; border-radius: 50%; background: var(--org); }
+.sx-orgb:hover { border-color: var(--org); color: var(--ink); }
+.sx-orgb.on {
+  border-color: var(--org); background: color-mix(in srgb, var(--org) 14%, var(--card));
+  color: var(--org); font-weight: 600;
+}
+[data-theme="dark"] .sx-orgb.on { color: color-mix(in srgb, var(--org) 72%, #fff); }
+.pg .sx-sels .sel-btn {
+  height: 28px; padding: 0 10px 0 12px; border: 1px solid var(--line2); border-radius: 999px;
+  background: var(--card); font-size: 11px;
+}
+.pg .sx-sels .sel:has(select.on) .sel-btn {
+  border-color: var(--brand); background: var(--brand-tint); color: var(--brand-deep); font-weight: 600;
+}
+.sx-reset { font-size: 11px; }
+.sx-reset[hidden] { display: none; }
+.sx-attns { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 5px 4px; }
+.sx-attns[hidden] { display: none; }
+.sx-fl {
+  display: inline-flex; align-items: center; gap: 5px; margin-right: 4px;
+  font: 600 9.5px var(--sans); letter-spacing: .07em; text-transform: uppercase; color: var(--ink3);
+}
+.sx-fl svg, .sx-doc svg {
+  width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.sx-attn {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 5px 0 11px;
+  border: 1px solid color-mix(in srgb, var(--bad) 30%, var(--line2)); border-radius: 999px;
+  background: var(--card); color: var(--bad); font: 600 11px var(--sans); cursor: pointer; white-space: nowrap;
+  transition: background .15s var(--ease);
+}
+.sx-attn i {
+  min-width: 19px; height: 19px; padding: 0 5px; display: inline-grid; place-items: center;
+  border-radius: 999px; background: var(--bad-soft); font-style: normal; font-size: 10.5px;
+}
+.sx-attn:hover { background: var(--bad-soft); }
+.sx-attn.on { background: var(--bad); border-color: var(--bad); color: #fff; }
+.sx-attn.on i { background: rgba(255, 255, 255, .22); color: #fff; }
+.sx-attns .i-tip { margin: 0 6px 0 -1px; }
+
+.sx-tbl col.c-cust { width: 15%; }
+.sx-tbl col.c-st { width: 150px; }
+.sx-tbl col.c-docs { width: 172px; }
+.sx-tbl col.c-let { width: 112px; }
+.sx-tbl col.c-team { width: 150px; }
+.sx-tbl col.c-last { width: 104px; }
+.sx-tbl col.c-go { width: 96px; }
+/* Название — в две строки, а не обрезком: по нему объект и узнают. */
+.sx-tbl .t-name {
+  white-space: normal; line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.sx-tbl td.go-c .t-ed { margin-right: 2px; }
+.sx-tbl thead th .i-tip { margin-left: 3px; }
+.sx-sort {
+  display: inline-flex; align-items: center; gap: 4px; padding: 0; border: 0; background: none;
+  font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; cursor: pointer;
+}
+.sx-sort span { font-size: 10.5px; letter-spacing: 0; color: var(--ink4, var(--ink3)); }
+.sx-sort:hover, .sx-sort.on { color: var(--ink); }
+.sx-sort.on span { color: var(--brand-deep); }
+.sx-tbl tbody td { height: 58px; }
+.sx-tbl .t-sub { display: flex; gap: 6px; min-width: 0; }
+.sx-org { flex: none; font-weight: 600; color: var(--org); }
+[data-theme="dark"] .sx-org { color: color-mix(in srgb, var(--org) 72%, #fff); }
+.sx-note { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sx-org + .sx-note::before { content: "· "; color: var(--ink4, var(--ink3)); }
+.sx-cust { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink); }
+.sx-none { color: var(--ink4, var(--ink3)); font-size: 11px; }
+.sx-sts { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.sx-docs { display: inline-flex; flex-wrap: nowrap; gap: 3px; }
+.sx-sts .st b { font-weight: 700; }
+.sx-doc {
+  display: inline-flex; align-items: center; gap: 3px; height: 21px; padding: 0 7px 0 5px;
+  border: 1px solid transparent; border-radius: 999px; font-size: 10.5px; font-weight: 600; white-space: nowrap;
+}
+.sx-doc svg { width: 11px; height: 11px; stroke-width: 3; }
+.sx-doc i { font-style: normal; font-weight: 500; opacity: .75; }
+.sx-doc.ok { background: var(--ok-soft); color: var(--ok); }
+.sx-doc.no { border-style: dashed; border-color: var(--line); color: var(--ink4, var(--ink3)); font-weight: 500; }
+.sx-doc.bad { background: var(--bad-soft); color: var(--bad); }
+.sx-doc.warn { background: var(--warn-soft); color: var(--warn); }
+.sx-let {
+  display: inline-flex; align-items: center; gap: 4px; margin: -3px -6px; padding: 3px 6px;
+  border: 0; border-radius: 999px; background: none; cursor: pointer;
+}
+.sx-let:hover { background: var(--card); box-shadow: 0 0 0 1px var(--line); }
+.sx-bdg {
+  min-width: 20px; height: 20px; padding: 0 6px; display: inline-grid; place-items: center;
+  border-radius: 999px; font: 600 10.5px var(--sans); font-variant-numeric: tabular-nums;
+}
+.sx-bdg.need { background: var(--brand); color: var(--on-brand); }
+.sx-bdg.wait { background: var(--info-soft); color: var(--info); }
+.sx-age { margin-left: 2px; font-size: 10.5px; font-weight: 600; color: var(--ink3); white-space: nowrap; }
+.sx-age.s1 { color: var(--warn); }
+.sx-age.s2 { color: var(--bad); }
+.sx-team { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 11px; color: var(--ink2); }
+.sx-team span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sx-team em {
+  display: inline-block; min-width: 22px; margin-right: 3px;
+  font-style: normal; font-size: 9px; font-weight: 700; letter-spacing: .04em; color: var(--ink4, var(--ink3));
+}
+.sx-last { font-size: 11px; color: var(--ink3); white-space: nowrap; }
+@media (hover: hover) {
+  .sx-tbl tr.go:not(:hover) .t-ed { opacity: 0; }
+}
+@media (max-width: 1400px) { .sx-tbl .c-team { display: none; } }
+@media (max-width: 1200px) { .sx-tbl .c-last { display: none; } }
+
+/* ── раздел «Тендер» (07.10.2026) ────────────────────────────
+   Полоса «Объекты · Параметры для расчёта»; у «Параметров» рядом — переключатель
+   прайса работ и настроек. Список тендера — та же таблица, что у
+   «Объектов», со статусом тендера и суммой расчёта. */
+.tnd-tabs { align-items: center; }
+.tnd-tabs[hidden] { display: none; }
+.tnd-sub { margin-left: 4px; }
+.tnd-sub .seg-b { height: 26px; }
+#tndObj[hidden] { display: none; }
+.tnd-tbl col.c-tst { width: 116px; }
+/* Кто считает объект (правка № 10) — под статусом. */
+.tnd-tbl .t-sub.tnd-est { display: block; margin-top: 3px; }
+.tnd-tbl col.c-sum { width: 178px; }
+.tnd-tbl col.c-pr { width: 158px; }
+.tnd-tbl th.num, .tnd-tbl td.num { text-align: right; }
+.tnd-tbl th.num .sx-sort { flex-direction: row-reverse; }
+.tnd-sum { display: block; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink); }
+.tnd-tbl .tnd-what { display: block; font-style: normal; font-size: 10.5px; color: var(--ink3); }
+.tnd-pr { font-size: 11px; color: var(--ink3); white-space: nowrap; }
+.tnd-pr b { font-weight: 600; color: var(--ink2); font-variant-numeric: tabular-nums; }
+.tnd-sum-m { font-size: 11px; font-weight: 600; color: var(--ink2); font-variant-numeric: tabular-nums; }
+/* Статус тендера в шапке карточки — тремя кнопками: шире соседних примет. */
+.pg-head.strip .pg-facts > .fact-st:has(.tnd-seg) { grid-column: span 2; }
+.tnd-seg { display: inline-flex; border-radius: 7px; }
+.tnd-seg .seg-b { height: 22px; padding: 0 9px; font-size: 10.5px; }
+
+/* Телефон: поиск в шапке, под названием — метки состояния. */
+.sit-m-head .sx-q-m { flex: 1; min-width: 0; }
+.sit-m-head .sx-q-m input { width: 100%; }
+.sx-m-count { padding: 9px var(--gut) 3px; font-size: 11px; color: var(--ink3); }
+.sx-m-sig { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 5px; }
+.sx-m-sig .sx-let { margin: 0; padding: 0; }
+.sx-attns-m { display: flex; }
+
+/* ── Справочники → Настройки расчёта (30.09.2026) ─────────────
+   Две карточки вместо абзаца и голых полей у самого края: название с
+   пояснением в ⓘ, крупное число с «−/+» и знаком %, пример в деньгах,
+   своя отметка «Сохранено». */
+.stp { overflow-y: auto; }
+.stp-wrap { max-width: 860px; padding: 22px var(--gut) 32px; display: flex; flex-direction: column; gap: 18px; }
+.stp-head { display: flex; align-items: flex-start; gap: 14px; flex-wrap: wrap; }
+.stp-head > div { flex: 1; min-width: 0; }
+.stp-head h2 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -.015em; color: var(--ink); }
+.stp-head p { margin: 4px 0 0; font-size: 12px; color: var(--ink3); }
+.stp-lock {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 11px;
+  border: 1px solid var(--line2); border-radius: 999px; background: var(--raise);
+  font-size: 11px; color: var(--ink2); white-space: nowrap;
+}
+.stp-lock svg { width: 13px; height: 13px; }
+.stp-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+/* Одна карточка (% ВКЛ в «Финансах») — не во всю ширину. */
+.stp-cards.one { grid-template-columns: minmax(0, 430px); }
+.stc {
+  min-width: 0; display: flex; flex-direction: column; gap: 14px; padding: 16px 18px 12px;
+  border: 1px solid var(--line2); border-radius: 14px; background: var(--card);
+  box-shadow: 0 1px 2px rgba(29, 28, 25, .04);
+}
+.stp svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.stc-h { display: flex; align-items: center; gap: 12px; }
+.stc-ic {
+  flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px;
+  background: var(--brand-tint); color: var(--brand-deep);
+}
+.stc-ic svg { width: 19px; height: 19px; stroke-width: 1.9; }
+.stc[data-card="vat"] .stc-ic { background: var(--info-soft); color: var(--info); }
+.stc-t { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.stc-t b { display: flex; align-items: center; font-size: 13px; font-weight: 650; color: var(--ink); }
+.stc-t i { font-style: normal; font-size: 11px; color: var(--ink3); }
+.stc-val { display: flex; align-items: center; gap: 8px; }
+.stc-step {
+  flex: none; display: grid; place-items: center; width: 40px; height: 40px; padding: 0;
+  border: 1px solid var(--line); border-radius: 11px; background: var(--card); color: var(--ink2); cursor: pointer;
+  transition: border-color .15s var(--ease), color .15s var(--ease), background .15s var(--ease);
+}
+.stc-step:hover { border-color: var(--brand); color: var(--brand-deep); background: var(--brand-tint); }
+.stc-step svg { width: 16px; height: 16px; stroke-width: 2.2; }
+.stc-in {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 4px; height: 52px; padding: 0 14px;
+  border: 1px solid var(--line); border-radius: 12px; background: var(--raise); cursor: text;
+  transition: border-color .15s var(--ease), box-shadow .15s var(--ease), background .15s var(--ease);
+}
+.stc-in:focus-within { border-color: var(--brand); background: var(--card); box-shadow: 0 0 0 3px var(--brand-soft); }
+.stc-in input {
+  flex: 1; width: 0; min-width: 0; align-self: stretch; padding: 0; border: 0; outline: 0; background: none;
+  font: 650 26px var(--sans); letter-spacing: -.02em; color: var(--ink); text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.stc-in span { font-size: 17px; font-weight: 600; color: var(--ink3); }
+.stc-in:has(input.bad) { border-color: var(--bad); box-shadow: 0 0 0 3px var(--bad-soft); }
+.stc-in input[readonly] { cursor: default; }
+.stc-ex {
+  padding: 9px 12px; border-radius: 10px; background: var(--raise);
+  font-size: 11.5px; line-height: 1.45; color: var(--ink2);
+}
+.stc-ex b { font-weight: 650; color: var(--ink); font-variant-numeric: tabular-nums; }
+.stc-foot { display: flex; align-items: center; gap: 8px; min-height: 24px; }
+.stc-foot .grow { flex: 1; }
+.stc-st { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink3); }
+.stc-st svg { width: 13px; height: 13px; stroke-width: 2.6; }
+.stc-st.ok { color: var(--ok); }
+.stc-st.bad { color: var(--bad); }
+.stc-def { font-size: 11px; }
+.stc-def[hidden] { display: none; }
+.stc-std { font-size: 11px; color: var(--ink3); }
+/* Переключатель из двух значений (цены Элкома, 13.10.2026). */
+.stc-seg { display: flex; width: 100%; }
+.stc-seg .seg-b { flex: 1; height: 44px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.stc-seg .seg-b.on { color: var(--brand-deep); background: var(--brand-tint); }
+.stc-seg .seg-b:disabled { cursor: default; }
+.stc[data-card="elcom_vat"] .stc-ic { background: var(--viol-soft); color: var(--viol); }
+@media (max-width: 684px) {
+  .stp-wrap { padding: 16px 14px 24px; }
+  .stp-cards { grid-template-columns: 1fr; }
+  .stc-in input { font-size: 24px; }
+}
+
+/* Перетащить файл в папку (правка № 38) и дата изменения проекта (№ 41), 23.10.2026. */
+.fl-tbl tr.fl-drag { cursor: grab; }
+.fl-tbl tr.fl-dragging { opacity: .45; }
+.fl-moving tr.fl-dir:not(.fl-pin) td { transition: background .12s; }
+.fl-tbl tr.fl-dir.fl-dropto td { background: var(--brand-tint) !important; }
+.fl-tbl tr.fl-dir.fl-dropto td:first-child { box-shadow: inset 3px 0 0 var(--brand); }
+.fl-crumbs .fl-dropto { background: var(--brand-tint); border-radius: 6px; outline: 2px dashed var(--brand); outline-offset: 1px; }
+.fl-tbl .fl-date { width: 128px; }
+.fl-req { font-style: normal; font-size: 10.5px; color: var(--bad); margin-left: 4px; }
+#flPD.bad { border-color: var(--bad); }

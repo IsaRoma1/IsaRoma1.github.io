@@ -1,0 +1,316 @@
+/* ── Nexus и Трейс: экран пары (20.10.2026) ─────────────────────────
+   Сцена всегда тёмная, как экран выбора персонажа в игре, — в светлой
+   теме тоже. Посередине пара: маг Nexus впереди, андроид Трейс за ним, за
+   обоими — знак Платформы; по краям — их карточки, внизу — разговор.
+   Влезает в 1366×768 без прокрутки; на телефоне — одной колонкой. */
+
+/* Кнопка в шапке — знак «N» с груди андроида, без подписи (заказчик,
+   20.10.2026: «не называть её Нексус, а просто N в таком же стиле»).
+   Светящийся шестигранник дышит; новый пакет обновлений — точка. */
+.nx-btn {
+  position: relative; flex: none; width: 34px; height: 34px; display: grid; place-items: center; padding: 0;
+  border: 0; border-radius: 10px; background: none; cursor: pointer;
+  transition: transform .15s var(--ease);
+}
+.nx-btn .nx-ic { width: 32px; height: 32px; overflow: visible; animation: nxBreath 3.2s ease-in-out infinite; }
+.nx-btn .nx-ic-ring { fill: none; stroke: #FE5000; stroke-width: 1.2; stroke-dasharray: 4 3; opacity: 0;
+  transform-box: fill-box; transform-origin: center; transition: opacity .2s var(--ease); }
+.nx-btn:hover { transform: translateY(-1px) scale(1.06); }
+.nx-btn:hover .nx-ic-ring, .nx-btn:focus-visible .nx-ic-ring { opacity: .9; animation: nxSpin 6s linear infinite; }
+.nx-btn:focus-visible { outline: 2px solid color-mix(in srgb, var(--brand) 55%, transparent); outline-offset: 2px; }
+.nx-btn.has-news::after {
+  content: ""; position: absolute; top: 0; right: 0; width: 9px; height: 9px; border-radius: 50%;
+  background: #FE5000; box-shadow: 0 0 0 2px var(--card, #fff), 0 0 8px rgba(254, 80, 0, .8);
+}
+@keyframes nxBreath {
+  0%, 100% { filter: drop-shadow(0 0 2px rgba(254, 80, 0, .45)); }
+  50% { filter: drop-shadow(0 0 7px rgba(254, 80, 0, .8)); }
+}
+@keyframes nxSpin { to { transform: rotate(360deg); } }
+
+body.nx-lock { overflow: hidden; }
+
+.nx-wrap { position: fixed; inset: 0; z-index: 200; }
+.nx-scene {
+  position: absolute; inset: 0; overflow: hidden; color: #E9ECF1;
+  background: radial-gradient(ellipse at 50% 42%, #2C1A10 0%, #14100E 38%, #0A0B0E 70%, #060709 100%);
+  font-family: var(--sans);
+  animation: nxFade .35s ease-out both;
+}
+/* Пол — сетка в перспективе, уходит к горизонту. */
+.nx-grid {
+  position: absolute; left: -20%; right: -20%; bottom: -10%; height: 46%;
+  background-image: linear-gradient(rgba(254, 80, 0, .18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(254, 80, 0, .18) 1px, transparent 1px);
+  background-size: 48px 48px;
+  transform: perspective(520px) rotateX(62deg); transform-origin: 50% 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%);
+  mask-image: linear-gradient(to bottom, transparent, #000 40%);
+  animation: nxGrid 6s linear infinite;
+}
+.nx-glyphs { position: absolute; inset: 0; pointer-events: none; }
+.nx-glyph {
+  position: absolute; left: var(--x); bottom: -30px; font: 600 12px ui-monospace, Consolas, monospace;
+  color: rgba(255, 160, 100, .32); animation: nxRise var(--t) linear var(--d) infinite;
+}
+
+.nx-close {
+  position: absolute; top: 16px; right: 18px; z-index: 5; width: 38px; height: 38px; display: grid; place-items: center;
+  border: 1px solid #3A3F48; border-radius: 10px; background: rgba(20, 22, 26, .7); color: #C9CED6; cursor: pointer;
+}
+.nx-close:hover, .nx-close:focus-visible { border-color: #FE5000; color: #fff; outline: none; }
+.nx-close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+/* Высота фигур — от окна: и 1366×768, и большой монитор. */
+.nx-stage {
+  --fh: min(calc(100vh - 150px), calc((100vw - 700px) / 1.16), 820px);
+  position: relative; z-index: 2; height: 100%; max-width: 1400px; margin: 0 auto; padding: 22px 30px 74px;
+  display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr) minmax(0, 300px); align-items: center; gap: 18px;
+}
+
+/* ── пара ── */
+.nx-duo { position: relative; height: 100%; min-height: 0; display: flex; align-items: flex-end; justify-content: center; }
+/* Знак стоит за грудью пары при любой высоте фигур. */
+.nx-sigil-wrap {
+  position: absolute; left: 50%; bottom: calc(var(--fh) * .1); width: calc(var(--fh) * .98); aspect-ratio: 1;
+  transform: translateX(-50%); pointer-events: none; animation: nxSigilIn 1.2s ease-out .2s both;
+}
+.nx-sigil { width: 100%; height: 100%; overflow: visible; }
+.nx-sg { fill: none; stroke: rgba(254, 106, 26, .34); stroke-width: 1.4; }
+.nx-sg.thin { stroke-width: .8; stroke: rgba(254, 106, 26, .22); }
+.nx-sg.dots { stroke-width: 2.4; stroke-dasharray: 1 11; stroke-linecap: round; stroke: rgba(255, 160, 100, .4); }
+.nx-sg.eye { fill: rgba(254, 80, 0, .25); stroke: rgba(255, 160, 100, .55); animation: nxEye 3.4s ease-in-out infinite; }
+.nx-sigil .nm-rune { stroke: rgba(255, 160, 100, .38); stroke-width: 1.4; }
+.nx-sg-spin { transform-box: view-box; transform-origin: 300px 300px; animation: nxSpin 90s linear infinite; }
+
+.nx-fig {
+  position: relative; flex: none; height: var(--fh); aspect-ratio: 360 / 560; padding: 0; border: 0; background: none;
+  cursor: pointer; transition: filter .3s var(--ease);
+}
+.nx-fig:focus-visible { outline: 2px dashed rgba(254, 80, 0, .6); outline-offset: 6px; border-radius: 12px; }
+.nx-fig > svg { width: 100%; height: 100%; overflow: visible; }
+/* Трейс выше и стоит позади, Nexus — впереди и левее, как на плакате. */
+.nx-droid { order: 2; z-index: 1; margin-left: calc(var(--fh) * -.3); transform: translateY(-1.5%); }
+.nx-mage { order: 1; z-index: 2; height: calc(var(--fh) * .96); }
+.nx-droid > svg { animation: nxFloat 4.2s ease-in-out 2.2s infinite; }
+.nx-mage > svg { animation: nxHover 5.2s ease-in-out 1.6s infinite; }
+.nx-fig.talk { filter: drop-shadow(0 0 18px rgba(254, 106, 26, .28)); }
+.nx-fig.nod > svg { animation: nxNod .6s ease-in-out, nxFloat 4.2s ease-in-out .6s infinite; }
+.nx-fig:hover { filter: drop-shadow(0 0 22px rgba(254, 106, 26, .35)); }
+
+/* Сборка Трейса по частям, как в заставке. */
+.nx-droid .tf-part { transform-box: view-box; animation: .7s cubic-bezier(.2, .8, .25, 1.15) both; }
+.nx-droid .tf-back { animation-name: nxFromBelow; animation-delay: .35s; }
+.nx-droid .tf-legs { animation-name: nxFromBelow; animation-delay: .5s; }
+.nx-droid .tf-body { animation-name: nxFromBelow; animation-delay: .7s; }
+.nx-droid .tf-arm-l { animation-name: nxFromLeft; animation-delay: .9s; }
+.nx-droid .tf-arm-r { animation-name: nxFromRight; animation-delay: .9s; }
+.nx-droid .tf-pauld { animation-name: nxFromAbove; animation-delay: 1.1s; }
+.nx-droid .tf-head { animation-name: nxFromAbove; animation-delay: 1.3s; }
+.nx-droid .tf-holo { animation-name: nxHolo; animation-duration: .9s; animation-delay: 1.8s; }
+
+/* ── Nexus: маг ── */
+.nm-mage { width: 100%; height: 100%; overflow: visible; }
+.nm-shadow { fill: rgba(0, 0, 0, .55); }
+.nm-ring { fill: none; stroke: rgba(255, 122, 42, .7); stroke-width: 1.6; filter: drop-shadow(0 0 4px #FF5A0A); }
+.nm-ring.thin { stroke-width: .9; stroke: rgba(255, 160, 100, .5); }
+.nm-ring.dots { stroke-width: 3; stroke-dasharray: 2 14; stroke-linecap: round; animation: nmDots 8s linear infinite; }
+.nm-ring.spin { stroke-dasharray: 3 4; transform-box: fill-box; transform-origin: center; animation: nxSpin 4s linear infinite; }
+.nm-fold { fill: none; stroke: rgba(255, 255, 255, .055); stroke-width: 2.4; stroke-linecap: round; }
+.nm-rim { fill: none; stroke: rgba(255, 255, 255, .2); stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.nm-trim { fill: none; stroke: #FF7A2A; stroke-width: 1.7; stroke-linejoin: round; stroke-linecap: round;
+  filter: drop-shadow(0 0 3px #FF5A0A); }
+/* Обводка у залитой детали — заливку не трогает. */
+.nm-edge { stroke: #FF7A2A; stroke-width: 1.5; stroke-linejoin: round; filter: drop-shadow(0 0 3px #FF5A0A); }
+.nm-trim.thin { stroke-width: 1; opacity: .8; }
+.nm-rune { fill: none; stroke: #FFB27F; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round;
+  filter: drop-shadow(0 0 2px #FF6A1A); animation: tfEnergy 3s ease-in-out infinite; }
+.nm-chain { fill: none; stroke: #9A7A60; stroke-width: 1.3; stroke-dasharray: 2 2; }
+.nm-spark { fill: #FFD2A8; filter: drop-shadow(0 0 4px #FF6A1A); animation: tfBlink 2.4s infinite; }
+.nm-finger { fill: none; stroke: #4F555F; stroke-width: 4; stroke-linecap: round; }
+.nm-sig { fill: none; stroke: #FF8A3D; stroke-width: 1.8; stroke-linejoin: round; }
+.nm-sigil { transform-box: fill-box; transform-origin: center; animation: nmSigil 7s ease-in-out infinite; }
+.nm-amulet { transform-box: fill-box; transform-origin: 50% 0; animation: nmSwing 4.6s ease-in-out infinite; }
+.nm-orb { transform-box: fill-box; transform-origin: center; animation: nmOrb 3.2s ease-in-out infinite; }
+/* Ноутбук — голограмма: полупрозрачный, светится, чуть покачивается. */
+.nm-holo { fill: rgba(255, 138, 61, .12); stroke: #FFB27F; stroke-width: 1.4; stroke-linejoin: round;
+  filter: drop-shadow(0 0 5px #FF6A1A); }
+.nm-holo-line { fill: none; stroke: #FFB27F; stroke-width: 1; opacity: .85; }
+.nm-holo-line.dash { stroke-dasharray: 4 3; opacity: .55; }
+.nm-code { fill: none; stroke: #FFD2A8; stroke-width: 2; stroke-linecap: round; opacity: .75;
+  stroke-dasharray: 60; animation: nmType 3.6s ease-in-out infinite; }
+.nm-code:nth-of-type(2) { animation-delay: .3s; }
+.nm-code:nth-of-type(3) { animation-delay: .6s; }
+.nm-code:nth-of-type(4) { animation-delay: .9s; }
+.nm-pc { transform-box: fill-box; transform-origin: center; animation: nmPc 4.4s ease-in-out infinite; }
+.nm-pcsig { transform-box: fill-box; transform-origin: center; animation: nxSpin 14s linear infinite; }
+
+/* Маг проявляется из круга: круг, мантия, капюшон, ноутбук. */
+.nx-mage .nm-part { transform-box: view-box; animation: .9s ease-out both; }
+.nx-mage .nm-circle { animation-name: nmCircleIn; animation-delay: .1s; transform-origin: 180px 516px; }
+.nx-mage .nm-robe { animation-name: nmRise; animation-delay: .35s; }
+.nx-mage .nm-arms { animation-name: nmRise; animation-delay: .55s; }
+.nx-mage .nm-top { animation-name: nmRise; animation-delay: .7s; }
+.nx-mage .nm-laptop { animation-name: nxHolo; animation-delay: 1.4s; }
+
+/* Реплика по щелчку — облачко над персонажем. */
+.nx-say {
+  position: absolute; z-index: 4; left: 4%; top: 2%; max-width: 250px; padding: 10px 13px;
+  border: 1px solid rgba(254, 80, 0, .6); border-radius: 12px 12px 3px 12px; background: rgba(18, 20, 24, .94);
+  color: #FFE3CF; font-size: 13px; line-height: 1.4; box-shadow: 0 8px 30px rgba(0, 0, 0, .45);
+}
+.nx-say.r { left: auto; right: 2%; top: 0; border-radius: 12px 12px 12px 3px; }
+.nx-say.on { animation: nxPop .35s cubic-bezier(.2, .8, .25, 1.2) both; }
+
+/* ── карточки по краям ── */
+.nx-side {
+  position: relative; align-self: start; margin-top: max(10px, 3vh); max-height: calc(100% - max(10px, 3vh)); overflow: auto; padding: 18px 18px 16px; border: 1px solid #2E333B;
+  border-radius: 16px; scrollbar-width: thin;
+  background: linear-gradient(160deg, rgba(34, 37, 44, .86), rgba(14, 15, 19, .88));
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .04);
+  transition: border-color .4s var(--ease), box-shadow .4s var(--ease);
+}
+.nx-l { animation: nxFromLeft .6s ease-out .3s both; }
+.nx-r { animation: nxFromRight .6s ease-out .3s both; }
+.nx-side.talk { border-color: rgba(254, 106, 26, .55); box-shadow: 0 20px 60px rgba(0, 0, 0, .45), 0 0 26px rgba(254, 80, 0, .12); }
+.nx-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 26px; }
+.nx-tag { font: 700 9.5px var(--sans); letter-spacing: .16em; text-transform: uppercase; color: #FE7A3D; }
+.nx-news {
+  display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 9px; border-radius: 999px;
+  border: 1px solid #3A3F48; background: rgba(255, 255, 255, .04); color: #D9DEE5; font: 600 11px var(--sans); cursor: pointer;
+}
+.nx-news svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+.nx-news i { font-style: normal; font-weight: 500; color: #8E96A3; }
+.nx-news b { min-width: 17px; height: 17px; padding: 0 5px; border-radius: 999px; background: #FE5000; color: #fff;
+  font-size: 10px; line-height: 17px; text-align: center; }
+.nx-news:hover, .nx-news.on { border-color: #FE5000; color: #FFD2B3; }
+.nx-live { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #8BE0B4; }
+.nx-live i { width: 7px; height: 7px; border-radius: 50%; background: #3CCB84; box-shadow: 0 0 8px #3CCB84;
+  animation: tfBlink 2s infinite; }
+.nx-name { margin: 4px 0 2px; font-size: 40px; font-weight: 800; letter-spacing: .08em; line-height: 1.02; }
+.nx-name span {
+  background: linear-gradient(90deg, #FF6A1A, #FFC08A, #FF6A1A); background-size: 200% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent; animation: nxShine 4s linear infinite;
+}
+.nx-motto { margin: 6px 0 8px; font: 600 11px/1.6 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: #E4B595; }
+.nx-orn { display: block; width: 120px; height: 10px; margin: 0 0 10px; fill: none; stroke: rgba(254, 106, 26, .7); stroke-width: 1; }
+.nx-lvl { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-size: 11px; line-height: 1.35; color: #8D95A1; }
+.nx-lvl b {
+  flex: none; padding: 3px 10px; border-radius: 999px; background: #FE5000; color: #fff; font-size: 12px; letter-spacing: .04em;
+  box-shadow: 0 0 16px rgba(254, 80, 0, .45);
+}
+.nx-lvl.t b { background: transparent; color: #FFB27F; border: 1px solid rgba(254, 106, 26, .6); box-shadow: none; }
+.nx-stats { display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 12px; }
+.nx-stat { display: grid; grid-template-columns: 92px 1fr 24px; align-items: center; gap: 8px; font-size: 11.5px; color: #C9CED6; }
+.nx-stat i { height: 6px; border-radius: 4px; background: #262A31; overflow: hidden; }
+.nx-stat b {
+  display: block; height: 100%; width: var(--v); border-radius: 4px; background: linear-gradient(90deg, #C83A00, #FF8A3D);
+  transform-origin: left; animation: nxBar 1s cubic-bezier(.2, .8, .25, 1) calc(1.2s + var(--i) * .12s) both;
+}
+.nx-stat em { font-style: normal; font-weight: 700; color: #FFB27F; text-align: right; }
+.nx-h { display: block; margin: 0 0 6px; font: 700 9.5px var(--sans); letter-spacing: .14em; text-transform: uppercase; color: #8D95A1; }
+.nx-abil { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; }
+.nx-abil div {
+  display: flex; align-items: center; gap: 7px; padding: 7px 8px; border: 1px solid #2E333B; border-radius: 9px;
+  background: rgba(255, 255, 255, .02); font-size: 11.5px; line-height: 1.25; color: #DDE1E7;
+}
+.nx-abil svg, .nx-code svg, .nx-ask svg, .nx-demo svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.nx-abil svg { color: #FF8A3D; }
+.nx-code { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.nx-code li { display: flex; align-items: flex-start; gap: 7px; font-size: 11.5px; line-height: 1.35; color: #C9CED6; }
+.nx-code li.ok svg { color: #4CC38A; }
+.nx-code li.no svg { color: #8D95A1; }
+.nx-ask {
+  width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 12px;
+  border: 0; border-radius: 9px; background: #FE5000; color: #fff; font: 600 12.5px var(--sans); cursor: pointer;
+}
+.nx-ask:hover { filter: brightness(1.08); }
+.nx-demo {
+  width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 6px; margin-top: 6px; height: 30px;
+  padding: 0 10px; border: 0; border-radius: 8px; background: none; color: #FFB27F; font: 600 11.5px var(--sans); cursor: pointer;
+}
+.nx-demo svg { fill: currentColor; stroke: none; width: 12px; height: 12px; }
+.nx-demo:hover, .nx-demo:focus-visible { background: rgba(254, 106, 26, .1); color: #FFD2B3; outline: none; }
+
+/* Разговор пары — строка внизу. */
+.nx-talk {
+  position: absolute; left: 50%; bottom: 18px; z-index: 3; width: min(760px, calc(100% - 40px)); transform: translateX(-50%);
+  display: flex; align-items: center; gap: 12px; min-height: 42px; padding: 9px 16px;
+  border: 1px solid rgba(254, 106, 26, .35); border-radius: 12px; background: rgba(10, 11, 14, .82);
+  font: 500 13px ui-monospace, Consolas, monospace; color: #FFDCC4; letter-spacing: .01em;
+}
+.nx-talk b { flex: none; padding: 2px 8px; border-radius: 6px; font: 800 10.5px var(--sans); letter-spacing: .14em;
+  background: #FE5000; color: #fff; }
+.nx-talk b.trace { background: #2E333B; color: #FFB27F; box-shadow: inset 0 0 0 1px rgba(254, 106, 26, .55); }
+.nx-talk span::after { content: "▌"; margin-left: 2px; animation: tfBlink 1s steps(1) infinite; color: #FE5000; }
+
+/* ── движение ── */
+@keyframes nxFade { from { opacity: 0; } }
+@keyframes nxGrid { to { background-position: 0 48px, 0 0; } }
+@keyframes nxRise { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(-105vh); opacity: 0; } }
+@keyframes nxFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes nxHover { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes nxNod { 0%, 100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-4px) rotate(-1.5deg); }
+  65% { transform: translateY(2px) rotate(1deg); } }
+@keyframes nxEye { 0%, 100% { opacity: .6; } 50% { opacity: 1; } }
+@keyframes nxSigilIn { from { opacity: 0; transform: translateX(-50%) scale(.85) rotate(-20deg); } }
+@keyframes nxHolo { from { opacity: 0; transform: scale(.6); } }
+@keyframes nxFromBelow { from { transform: translateY(70px); opacity: 0; } }
+@keyframes nxFromAbove { from { transform: translateY(-70px); opacity: 0; } }
+@keyframes nxFromLeft { from { transform: translateX(-50px); opacity: 0; } }
+@keyframes nxFromRight { from { transform: translateX(50px); opacity: 0; } }
+@keyframes nxPop { from { transform: translateY(8px) scale(.94); opacity: 0; } }
+@keyframes nxShine { to { background-position: 200% 0; } }
+@keyframes nxBar { from { transform: scaleX(0); } }
+@keyframes nmDots { to { stroke-dashoffset: -160; } }
+@keyframes nmSigil { 0%, 100% { transform: rotate(0) scale(1); opacity: .9; } 50% { transform: rotate(30deg) scale(1.08); opacity: 1; } }
+@keyframes nmSwing { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes nmOrb { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-7px) scale(1.12); } }
+@keyframes nmType { 0% { stroke-dashoffset: 60; } 45%, 80% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -60; } }
+@keyframes nmPc { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes nmCircleIn { from { opacity: 0; transform: scale(.2, .2); } }
+@keyframes nmRise { from { opacity: 0; transform: translateY(26px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .nx-scene *, .nx-scene, .nx-btn, .nx-btn * { animation: none !important; }
+}
+
+/* Ноутбук пониже — карточки плотнее. */
+@media (max-height: 800px) {
+  .nx-stage { padding: 18px 26px 68px; }
+  .nx-side { padding: 14px 15px 13px; }
+  .nx-name { font-size: 34px; }
+  .nx-motto { margin: 4px 0 6px; font-size: 10.5px; line-height: 1.5; }
+  .nx-orn { margin-bottom: 8px; }
+  .nx-lvl, .nx-stats, .nx-abil { margin-bottom: 9px; }
+  .nx-abil div { padding: 6px 7px; }
+  .nx-talk { bottom: 14px; min-height: 38px; padding: 7px 14px; }
+}
+
+/* Узкий ноутбук: карточки уже. */
+@media (max-width: 1280px) {
+  .nx-stage { grid-template-columns: minmax(0, 270px) minmax(0, 1fr) minmax(0, 270px); --fh: min(calc(100vh - 150px), calc((100vw - 640px) / 1.16), 660px); }
+  .nx-abil div { font-size: 11px; }
+}
+
+/* Планшет: карточки ещё уже, фигуры крупнее. */
+@media (max-width: 1100px) {
+  .nx-stage { grid-template-columns: minmax(0, 236px) minmax(0, 1fr) minmax(0, 236px); padding-left: 18px; padding-right: 18px;
+    gap: 12px; --fh: min(calc(100vh - 150px), calc((100vw - 540px) / 1.16), 660px); }
+  .nx-stat { grid-template-columns: 80px 1fr 22px; }
+  .nx-abil { grid-template-columns: 1fr; }
+}
+
+/* Телефон: пара сверху, карточки под ней, сцена прокручивается. */
+@media (max-width: 860px) {
+  .nx-scene { overflow-x: hidden; overflow-y: auto; }
+  .nx-stage { --fh: 330px; height: auto; min-height: 100%; grid-template-columns: minmax(0, 1fr); padding: 56px 14px 20px; gap: 14px; }
+  .nx-duo { order: -1; height: 350px; }
+  .nx-side { max-height: none; overflow: visible; margin-top: 0; }
+  .nx-abil { grid-template-columns: 1fr 1fr; }
+  .nx-stat { grid-template-columns: 92px 1fr 24px; }
+  .nx-name { font-size: 30px; }
+  .nx-say { max-width: 190px; font-size: 12px; }
+  .nx-talk { position: relative; left: auto; bottom: auto; transform: none; width: auto; margin: 0 14px 20px; }
+}

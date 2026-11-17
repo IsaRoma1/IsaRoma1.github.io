@@ -1,0 +1,63 @@
+/* ── Финансы (08.10.2026) ─────────────────────────────────────
+   Рамка — как «Снабжение» (.ref): вкладки сверху, список бюджетов или
+   таблица бюджета. Таблица — та же сетка проработки (.snb-tbl). */
+#finTabs[hidden] { display: none; }
+#finMain { height: 100%; }
+/* У бюджета шапка групп в одну строку (27px, как у расчёта), а второй ряд
+   у проработки липнет ниже — под двухстрочные группы поставщиков. Здесь
+   его место — сразу под первым, иначе между рядами зазор и второй
+   наезжает на первую строку таблицы. */
+.fin-tbl thead tr:nth-child(2) th { top: 27px; }
+.fin-tbl col.f-q { width: 86px; }
+.fin-tbl col.f-s { width: 112px; }
+.fin-tbl thead th.fin-gq { color: var(--info); }
+.fin-tbl thead th.fin-gf { color: var(--brand-deep); }
+.fin-tbl td.fin-pto.has { color: var(--info); font-weight: 600; background: color-mix(in srgb, var(--info) 6%, var(--card)); }
+.fin-tbl td.fin-qb { font-weight: 600; color: var(--ink); }
+.fin-tbl td.fin-qb.less { color: var(--ok); }
+.fin-tbl td.fin-fact { color: var(--ink2); }
+.fin-tbl td.fin-fact.has { color: var(--brand-deep); font-weight: 600; background: color-mix(in srgb, var(--brand) 6%, var(--card)); }
+.fin-n { font-style: normal; font-size: 10px; color: var(--ink3); }
+.fin-bud .snb-bar .sit-hint { font-size: 10.5px; }
+.fin-bud .snb-bar .grow { flex: 1; }
+
+/* ── версии бюджета и колонки (09.10.2026) ─────────────────────
+   Версия — замороженный бюджет на дату фиксации; «Сейчас» сверяет её с
+   живым. Колонки прячутся галочками, выбор помнит браузер. */
+.fin-ver { display: inline-flex; align-items: center; gap: 6px; color: var(--ink3); }
+.fin-ver svg, .fin-verbar > svg, .fin-cols-w .btn-ghost svg { width: 13px; height: 13px; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.fin-ver .role-sel { max-width: 220px; }
+.fin-verbar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 8px var(--gut); border-bottom: 1px solid var(--line2);
+  background: color-mix(in srgb, var(--info) 7%, var(--card)); color: var(--ink2); font-size: 11.5px;
+}
+.fin-verbar > svg { color: var(--info); }
+.fin-verbar b { color: var(--ink); }
+.fin-verbar .grow { flex: 1; }
+.fin-now { font-style: normal; font-size: 10.5px; font-weight: 600; color: var(--info); margin-left: 4px; }
+.fin-flash { color: var(--ok); font-weight: 500; }
+.fin-tbl thead th.fin-gnow { color: var(--info); }
+.fin-tbl td.fin-nowc { background: color-mix(in srgb, var(--info) 5%, var(--card)); }
+
+.fin-cols-w { position: relative; display: inline-flex; }
+.fin-cols-w .btn-ghost.on { color: var(--brand-deep); border-color: color-mix(in srgb, var(--brand) 45%, var(--line2)); }
+.fin-cols-n { font-style: normal; font-size: 10px; font-weight: 600; margin-left: 4px; }
+.fin-cols-pop {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 30;
+  display: grid; grid-template-columns: repeat(3, minmax(118px, auto)); gap: 10px 20px;
+  padding: 12px 14px 10px; border: 1px solid var(--line2); border-radius: 12px;
+  background: var(--card); box-shadow: var(--shadow-float);
+}
+.fin-cols-g b { display: block; margin-bottom: 4px; font: 600 9.5px var(--sans); letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ink3); white-space: nowrap; }
+.fin-cols-g label { display: flex; align-items: center; gap: 7px; padding: 3px 0; font-size: 11.5px; color: var(--ink);
+  white-space: nowrap; cursor: pointer; }
+.fin-cols-g input { accent-color: var(--brand); margin: 0; }
+.fin-cols-foot { grid-column: 1 / -1; display: flex; justify-content: flex-end; padding-top: 6px;
+  border-top: 1px solid var(--line2); }
+
+/* «Параметры для расчёта» (09.10.2026): обёртка вкладки не должна ломать
+   высоту — страница настроек ведёт себя как прямой ребёнок #finMain. */
+.fin-set { display: contents; }

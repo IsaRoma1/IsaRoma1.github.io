@@ -1,0 +1,166 @@
+/* ── Трейс: фигура и карточка разбора (20.10.2026) ──────────────────
+   Фигура — для экрана пары (nexus.css ставит её на сцену). Карточка
+   разбора всегда тёмная, как сцена пары, — и в светлой теме: это
+   персонаж, а не строка состояния. Стоит в правом нижнем углу поверх
+   окон, ничего не загораживает в середине; на телефоне — по ширине. */
+
+/* Фигура. */
+.tf-bot { width: 100%; height: 100%; overflow: visible; }
+.tf-shadow { fill: rgba(0, 0, 0, .55); }
+.tf-seam { fill: none; stroke: rgba(170, 182, 198, .35); stroke-width: 1.3; stroke-linecap: round; }
+.tf-seam.dark { stroke: rgba(30, 12, 2, .45); }
+.tf-node { fill: #FF8A3D; filter: drop-shadow(0 0 4px #FF6A1A); }
+.tf-energy { fill: none; stroke: #FF7A2A; stroke-width: 2; stroke-linecap: round; filter: drop-shadow(0 0 3px #FF5A0A);
+  animation: tfEnergy 2.4s ease-in-out infinite; }
+.tf-rim { fill: none; stroke: rgba(255, 255, 255, .3); stroke-width: 1.2; stroke-linecap: round; }
+.tf-glowfill { filter: drop-shadow(0 0 5px #FF5A0A); }
+.tf-wire { fill: rgba(255, 140, 70, .1); stroke: #FFB27F; stroke-width: 1.4; stroke-linejoin: round;
+  filter: drop-shadow(0 0 4px #FF6A1A); }
+.tf-wire.thin { fill: none; stroke-width: .9; opacity: .75; }
+.tf-beam { fill: none; stroke: rgba(255, 160, 100, .45); stroke-width: 1; stroke-dasharray: 3 3;
+  animation: tfDash 1.2s linear infinite; }
+.tf-sheet { transform-box: fill-box; transform-origin: center; animation: tfSheet 5s ease-in-out infinite; }
+.tf-sheetscan { fill: #FFE1C7; filter: drop-shadow(0 0 4px #FF6A1A); animation: tfSheetScan 2.2s ease-in-out infinite; }
+.tf-blink { animation: tfBlink 2.4s infinite; }
+.tf-core { transform-box: fill-box; transform-origin: center; animation: tfCore 2.2s ease-in-out infinite; }
+.tf-visor { animation: tfVisor 3s ease-in-out infinite; }
+.tf-scan { animation: tfScan 2.6s ease-in-out infinite; }
+
+@keyframes tfEnergy { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+@keyframes tfDash { to { stroke-dashoffset: -14; } }
+@keyframes tfBlink { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+@keyframes tfCore { 0%, 100% { transform: scale(1); opacity: .95; } 50% { transform: scale(1.06); opacity: 1; } }
+@keyframes tfVisor { 0%, 100% { opacity: .85; } 50% { opacity: 1; } }
+@keyframes tfScan { 0% { transform: translateX(0); } 50% { transform: translateX(60px); } 100% { transform: translateX(0); } }
+@keyframes tfSheet { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-7px) rotate(-3deg); } }
+@keyframes tfSheetScan { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(62px); } }
+
+/* ── карточка разбора ── */
+.tr-dock {
+  position: fixed; right: 18px; bottom: 18px; z-index: 150; display: flex; flex-direction: column; gap: 8px;
+  align-items: flex-end; pointer-events: none;
+}
+.tr-card {
+  position: relative; width: 396px; max-width: calc(100vw - 24px); display: grid;
+  grid-template-columns: 124px minmax(0, 1fr); align-items: center; gap: 12px; padding: 12px 14px 15px 10px;
+  border: 1px solid #3A3F48; border-radius: 14px; overflow: hidden; pointer-events: auto;
+  background: radial-gradient(ellipse at 18% 40%, #2A1B14 0%, #15171C 55%, #0E1013 100%);
+  color: #E9ECF1; font-family: var(--sans);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .38), 0 0 0 1px rgba(254, 80, 0, .08) inset;
+  opacity: 0; transform: translateY(14px) scale(.98);
+  transition: opacity .22s var(--ease), transform .26s cubic-bezier(.2, .8, .25, 1.15), border-color .2s var(--ease);
+}
+.tr-card.in { opacity: 1; transform: none; }
+.tr-card.out { opacity: 0; transform: translateY(10px) scale(.98); }
+.tr-card.ok { border-color: rgba(76, 195, 138, .6); }
+.tr-card.bad { border-color: rgba(240, 90, 90, .7); }
+
+/* Голова Трейса смотрит в лист, луч визора бежит по строкам. */
+.tr-art { position: relative; height: 74px; }
+.tr-head { position: absolute; left: 0; top: 0; width: 66px; height: 74px; overflow: visible;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .45)); animation: trBob 2.6s ease-in-out infinite; }
+.tr-ray {
+  position: absolute; left: 50px; top: 27px; width: 34px; height: 30px;
+  background: linear-gradient(90deg, rgba(255, 138, 61, .55), rgba(255, 138, 61, .06));
+  clip-path: polygon(0 38%, 100% 0, 100% 100%, 0 62%); animation: trRay 1.6s ease-in-out infinite;
+}
+.tr-doc {
+  position: absolute; left: 80px; top: 8px; width: 40px; height: 54px; padding: 9px 6px 0; border-radius: 4px;
+  background: #F4F1EC; box-shadow: 0 6px 16px rgba(0, 0, 0, .4); overflow: hidden;
+  display: flex; flex-direction: column; gap: 5px; transform: rotate(4deg);
+}
+.tr-doc::before { content: ""; position: absolute; right: 0; top: 0; border-style: solid; border-width: 0 9px 9px 0;
+  border-color: transparent #C9C2B8 transparent transparent; }
+.tr-doc i { display: block; height: 3px; border-radius: 2px; background: #C4BDB2; }
+.tr-doc i:nth-child(2) { width: 70%; }
+.tr-doc i:nth-child(4) { width: 82%; }
+.tr-doc i:nth-child(5) { width: 55%; }
+.tr-docscan {
+  position: absolute; left: 0; right: 0; top: 0; height: 9px;
+  background: linear-gradient(180deg, transparent, rgba(255, 106, 26, .55) 60%, #FF6A1A 100%);
+  animation: trDocScan 1.6s ease-in-out infinite;
+}
+.tr-mark { position: absolute; inset: 0; display: none; place-items: center; }
+.tr-mark svg { width: 24px; height: 24px; padding: 3px; border-radius: 50%; fill: none; stroke: #fff; stroke-width: 3;
+  stroke-linecap: round; stroke-linejoin: round; }
+.tr-card.ok .tr-mark, .tr-card.bad .tr-mark { display: grid; }
+.tr-card.ok .tr-mark svg { background: #2FA36B; }
+.tr-card.bad .tr-mark svg { background: #D84B4B; }
+.tr-card:not(.busy) .tr-docscan, .tr-card:not(.busy) .tr-ray, .tr-card:not(.busy) .tr-bits { display: none; }
+/* Извлечённое поднимается из листа. */
+.tr-bits { position: absolute; left: 94px; top: 16px; width: 1px; height: 1px; }
+.tr-bits i {
+  position: absolute; left: 0; top: 0; font: 700 9px ui-monospace, Consolas, monospace; color: #FFB27F; white-space: nowrap;
+  text-shadow: 0 0 6px rgba(255, 106, 26, .8); opacity: 0; animation: trBit 2.5s ease-out calc(var(--n) * .5s) infinite;
+}
+.tr-bits i:nth-child(2n) { --dx: 16px; }
+.tr-bits i:nth-child(3n) { --dx: -8px; }
+
+.tr-txt { min-width: 0; }
+.tr-who, .tr-file { padding-right: 22px; }
+.tr-who { display: flex; align-items: baseline; gap: 6px; font-size: 11.5px; color: #A7AEB9; }
+.tr-who b { font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #FF8A3D; }
+.tr-who span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tr-time { flex: none; margin-left: auto; padding-left: 8px; font: 600 11px ui-monospace, Consolas, monospace; color: #8D95A1;
+  font-variant-numeric: tabular-nums; }
+.tr-file { margin-top: 3px; font-size: 13px; font-weight: 700; color: #F3F5F8; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; }
+.tr-card.nofile .tr-file { display: none; }
+.tr-step { display: flex; align-items: center; gap: 6px; margin-top: 4px; min-height: 18px; font-size: 12px; color: #FFD9BF; }
+.tr-say { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tr-card.busy .tr-say::after { content: "…"; display: inline-block; animation: trDots 1.2s steps(4) infinite; width: 1.2em;
+  overflow: hidden; vertical-align: bottom; }
+.tr-say.on { animation: trIn .3s ease-out both; }
+.tr-ic { flex: none; display: none; }
+.tr-ic svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round;
+  stroke-linejoin: round; }
+.tr-card.ok .tr-ic, .tr-card.bad .tr-ic { display: inline-flex; }
+.tr-card.ok .tr-step { color: #8BE0B4; }
+.tr-card.bad .tr-step { color: #FFB0A8; }
+/* Итог — до двух строк: «Готово · поставщик: 24 строки, узнал 21». */
+.tr-card:not(.busy) .tr-say { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  line-height: 1.35; }
+.tr-card:not(.busy) .tr-step { align-items: flex-start; }
+.tr-card:not(.busy) .tr-ic { margin-top: 1px; }
+.tr-card:not(.busy) .tr-time { display: none; }
+
+.tr-x {
+  position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; display: grid; place-items: center; padding: 0;
+  border: 0; border-radius: 6px; background: transparent; color: #8D95A1; cursor: pointer; opacity: .7;
+}
+.tr-x:hover, .tr-x:focus-visible { background: rgba(255, 255, 255, .08); color: #fff; opacity: 1; outline: none; }
+.tr-x svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+
+/* Полоса: пока срок не известен — бегущий отблеск, с процентом — доля. */
+.tr-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255, 255, 255, .06); overflow: hidden; }
+.tr-bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 34%;
+  background: linear-gradient(90deg, transparent, #FF6A1A 40%, #FFB27F 60%, transparent);
+  animation: trSweep 1.4s ease-in-out infinite; }
+.tr-bar.known i { background: linear-gradient(90deg, #C83A00, #FF8A3D); animation: none; }
+.tr-card.ok .tr-bar i { background: #2FA36B; }
+.tr-card.bad .tr-bar i { background: #D84B4B; }
+
+@keyframes trBob { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-2px) rotate(-2deg); } }
+@keyframes trRay { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+@keyframes trDocScan { 0% { transform: translateY(-9px); } 100% { transform: translateY(54px); } }
+@keyframes trBit {
+  0% { opacity: 0; transform: translate(0, 10px) scale(.7); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx, 6px), -24px) scale(1.05); }
+}
+@keyframes trSweep { 0% { transform: translateX(-110%); } 100% { transform: translateX(310%); } }
+@keyframes trDots { from { width: 0; } to { width: 1.2em; } }
+@keyframes trIn { from { opacity: 0; transform: translateY(4px); } }
+
+@media (max-width: 560px) {
+  .tr-dock { left: 8px; right: 8px; bottom: max(8px, env(safe-area-inset-bottom)); align-items: stretch; }
+  .tr-card { width: auto; max-width: none; grid-template-columns: 104px minmax(0, 1fr); }
+  .tr-doc { left: 66px; }
+  .tr-ray { left: 46px; width: 22px; }
+  .tr-bits { left: 80px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tr-card, .tr-card *, .tf-bot, .tf-bot * { animation: none !important; transition: none !important; }
+  .tr-card { opacity: 1; transform: none; }
+}

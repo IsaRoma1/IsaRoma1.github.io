@@ -1,0 +1,915 @@
+/* ── Снабжение (07.10.2026) ─────────────────────────────────────
+   Раздел — та же рамка, что «Справочники» и «Тендер» (.ref): вкладки
+   сверху, под ними список проработок или сама проработка. Таблица
+   проработки — плотная сетка расчёта (.calc-tbl): слева спецификация и
+   цены по договору, справа цены поставщиков и счетов, в конце — итог. */
+#snbTabs[hidden] { display: none; }
+#snbMain { height: 100%; }
+
+/* ── список ── */
+.snb-ltbl col.c-obj { width: 22%; }
+.snb-ltbl col.c-calc { width: 22%; }
+.snb-ltbl col.c-at { width: 104px; }
+.snb-ltbl col.c-cov { width: 128px; }
+.snb-ltbl col.c-inv { width: 64px; }
+.snb-ltbl col.c-sum { width: 148px; }
+.snb-ltbl col.c-st { width: 118px; }
+.snb-ltbl col.c-go { width: 56px; }
+.snb-ltbl th.num, .snb-ltbl td.num { text-align: right; }
+.snb-calc { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink); }
+.snb-ltbl .t-sub { display: flex; align-items: center; gap: 4px; font-style: normal; font-size: 10.5px;
+  color: var(--ink3); white-space: nowrap; }
+.snb-ltbl .t-sub svg { width: 11px; height: 11px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; }
+.snb-ltbl td.num .t-sub { justify-content: flex-end; }
+.snb-cov { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink3); white-space: nowrap; }
+.snb-cov b { color: var(--ink); font-weight: 600; }
+.snb-d.good { color: var(--ok); }
+.snb-d.bad { color: var(--bad); }
+.st.snb-st-work { background: var(--info-soft); color: var(--info); }
+.st.snb-st-done { background: var(--ok-soft); color: var(--ok); }
+
+/* ── шапка проработки ── */
+.snb-ver {
+  display: inline-flex; align-items: center; gap: 4px; height: 21px; padding: 0 8px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--raise);
+  font-size: 10.5px; color: var(--ink2); white-space: nowrap; flex: none;
+}
+.snb-ver svg { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 2; }
+.pg-head.strip.calc-head .snb-seg { flex: none; margin-left: auto; }
+.pg-head.strip.calc-head .snb-seg .seg-b { height: 25px; padding: 0 9px; font-size: 10.5px; }
+.snb-seg .seg-b.on:first-child { color: var(--info); }
+.snb-seg .seg-b.on:last-child { color: var(--ok); }
+/* Загрузка счёта — подписью-кнопкой, файл выбирается скрытым полем. */
+.snb-upl { cursor: pointer; display: inline-flex; align-items: center; flex: none; }
+.snb-upl svg { width: 11.5px; height: 11.5px; }
+.pg-head.strip.calc-head .pg-facts dd.snb-d.good { color: var(--ok); font-weight: 600; }
+.pg-head.strip.calc-head .pg-facts dd.snb-d.bad { color: var(--bad); font-weight: 600; }
+
+/* ── полоса: поиск, отбор, счета ── */
+.snb-bar {
+  flex: none; display: flex; align-items: center; gap: 10px; min-height: 44px;
+  padding: 6px 12.5px; border-bottom: 1px solid var(--line2); background: var(--card);
+}
+.snb-bar .pg-find input { width: 210px; }
+.snb-bar .seg-b { height: 27px; }
+.snb-bar .seg-b i { margin-left: 5px; font-style: normal; color: var(--ink3); font-size: 10px; }
+.snb-invs {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px;
+  overflow-x: auto; scrollbar-width: thin;
+}
+/* Прижаты вправо полем слева, не justify-content: при flex-end левые
+   счета уезжали за край и до них не докрутить. */
+.snb-invs > :first-child { margin-left: auto; }
+.snb-inv {
+  flex: none; display: inline-flex; align-items: stretch; height: 30px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--card); overflow: hidden;
+}
+.snb-inv.new { border-style: dashed; border-color: var(--warn); }
+.snb-inv button { border: 0; background: none; font: inherit; cursor: pointer; color: var(--ink2); }
+.snb-inv-t { display: flex; align-items: center; gap: 6px; padding: 0 9px 0 7px; max-width: 300px; }
+.snb-inv-t svg { width: 13px; height: 13px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.snb-inv-t b { font-size: 11px; font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.snb-inv-t i { font-style: normal; font-size: 10px; color: var(--ink3); white-space: nowrap; }
+.snb-inv-t:hover { background: var(--raise); }
+.snb-inv-x { width: 26px; display: grid; place-items: center; border-left: 1px solid var(--line2) !important; }
+.snb-inv-x svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; }
+.snb-inv-x:hover { background: var(--raise); color: var(--ink); }
+.snb-inv-x.warn:hover { color: var(--bad); }
+
+/* ── таблица проработки ── */
+.snb-tbl col.s-no { width: 72px; }
+.snb-tbl col.s-name { width: 300px; }
+.snb-tbl col.s-brand { width: 150px; }
+.snb-tbl col.s-code { width: 96px; }
+.snb-tbl col.s-unit { width: 54px; }
+.snb-tbl col.s-qty { width: 74px; }
+.snb-tbl col.s-con { width: 96px; }
+.snb-tbl col.s-cons { width: 110px; }
+.snb-tbl col.s-best { width: 98px; }
+.snb-tbl col.s-who { width: 160px; }
+.snb-tbl col.s-term { width: 96px; }
+.snb-tbl col.s-sum { width: 112px; }
+.snb-tbl col.s-src { width: 96px; }
+.snb-tbl col.s-sp { width: 96px; }
+.snb-tbl col.s-st { width: 90px; }
+/* Выбор по приведённой стоимости (08.10.2026): «нужно за», приведённая,
+   отсрочка — и у каждого поставщика своя отсрочка. */
+.snb-tbl col.s-due { width: 70px; }
+.snb-tbl col.s-pv { width: 98px; }
+.snb-tbl col.s-def { width: 60px; }
+.snb-tbl col.s-sd { width: 64px; }
+.snb-tbl col.s-fact { width: 96px; }
+.snb-tbl col.s-comment { width: 160px; }
+.snb-tbl .snb-position, .snb-tbl .snb-comment button { border: 0; padding: 0; background: none;
+  color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.snb-tbl .snb-position { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; color: var(--ink); }
+.snb-tbl .snb-position:hover, .snb-tbl .snb-comment button:hover { color: var(--brand); text-decoration: underline; }
+.snb-tbl .snb-comment { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.snb-position-card { width: min(720px, calc(100vw - 24px)); max-height: min(90vh, 900px); overflow: auto; }
+.snb-position-card > p { color: var(--ink3); margin: 4px 0 18px; }
+.snb-position-offers { display: grid; gap: 7px; margin-bottom: 16px; }
+.snb-position-offer { display: flex; gap: 14px; align-items: center; padding: 10px 12px;
+  border: 1px solid var(--line); border-radius: 8px; }
+.snb-position-offer.picked { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 8%, var(--card)); }
+.snb-position-offer span { flex: 1; min-width: 0; }
+.snb-position-offer small { display: block; color: var(--ink3); margin-top: 3px; }
+.snb-position-offer > b { white-space: nowrap; }
+/* Факт закупки — цена, по которой купили (08.10.2026): вписывают щелчком. */
+.snb-tbl thead th.snb-gfact { color: var(--brand-deep); }
+.snb-tbl td.snb-fact { border-left: 1px solid var(--line2); color: var(--brand-deep); font-weight: 600; }
+.snb-tbl td.snb-fact.has { background: color-mix(in srgb, var(--brand) 7%, var(--card)); }
+.snb-tbl td.snb-fact.over { color: var(--bad); }
+.snb-tbl td.snb-fact.ed { cursor: text; }
+.snb-tbl td.snb-fact.ed:hover { box-shadow: inset 0 0 0 1px var(--line); }
+.snb-tbl td.snb-fact.ed:empty:hover::after { content: "＋"; color: var(--ink4, var(--ink3)); font-weight: 400; }
+.snb-tbl td.snb-fact .pos-in { width: 100%; }
+/* Номер и наименование примерзают слева: цены уезжают под них. */
+.snb-tbl td.s-no, .snb-tbl thead th.s-no { position: sticky; left: 0; z-index: 1; background: var(--card); }
+/* Номер позиции бывает длинным («ЩС-Кладовые-1») — многоточием, целиком в подсказке. */
+.snb-tbl td.s-no { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.snb-tbl td.s-name, .snb-tbl thead th.s-name {
+  position: sticky; left: 72px; z-index: 1; background: var(--card); box-shadow: 1px 0 0 var(--line2);
+}
+.snb-tbl thead th.s-no, .snb-tbl thead th.s-name { z-index: 3; background: var(--raise); }
+.snb-tbl thead th.s-froze { position: sticky; left: 0; z-index: 4; background: var(--card); }
+.snb-tbl td.s-name .nm { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink); }
+.snb-sub { display: block; font-style: normal; font-size: 9.5px; color: var(--ink3);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.snb-sub.warn { color: var(--warn); }
+.snb-tbl td.snb-tx { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Цены по договору — зафиксированы: серая подложка, как у замка. */
+.snb-tbl td.snb-fix { background: color-mix(in srgb, var(--raise) 70%, var(--card)); color: var(--ink2); }
+.snb-tbl thead th.snb-gfix { color: var(--ink2); }
+.snb-tbl thead th.snb-gfix svg { width: 10px; height: 10px; vertical-align: -1px; fill: none; stroke: currentColor; stroke-width: 2; }
+.snb-tbl thead th.snb-gbest { color: var(--ok); }
+.snb-tbl thead tr:nth-child(2) th.snb-src i {
+  display: block; font-style: normal; font-size: 8.5px; color: var(--ink3);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.snb-tbl thead th.snb-k-invoice { color: var(--viol); }
+.snb-tbl td.snb-p { color: var(--ink2); }
+.snb-tbl td.snb-p.best { color: var(--ok); font-weight: 600; background: color-mix(in srgb, var(--ok) 8%, var(--card)); }
+.snb-tbl td.snb-p.maybe { color: var(--ink3); font-style: italic; }
+.snb-tbl td.snb-p.clash { color: var(--ink4, var(--ink3)); text-decoration: line-through; }
+.snb-tbl .q { margin-left: 2px; color: var(--warn); font-style: normal; font-weight: 600; }
+.snb-tbl td.snb-best { color: var(--ok); font-weight: 600; background: color-mix(in srgb, var(--ok) 6%, var(--card)); }
+.snb-tbl td.snb-best.maybe { color: var(--warn); }
+.snb-tbl td.snb-best.none { color: var(--ink4, var(--ink3)); font-weight: 400; background: none; }
+.snb-tbl td.snb-who, .snb-tbl td.snb-term { color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.snb-tbl td.snb-term { color: var(--ink2); }
+.snb-tbl td.snb-who.has, .snb-tbl td.snb-term.has, .snb-tbl td.snb-bsum.has {
+  background: color-mix(in srgb, var(--ok) 6%, var(--card));
+}
+/* Минимальная выше договорной — закупка в убыток: красным. */
+.snb-tbl td.snb-best.over { color: var(--bad); background: color-mix(in srgb, var(--bad) 7%, var(--card)); }
+/* «Не в договоре» — строка «Не учитывать» калькуляции: её покупают, но
+   договорной цены у неё нет. */
+.snb-nc { font-weight: 600; color: var(--warn); margin-right: 5px; }
+.snb-tbl td.snb-ncc { text-align: center; font-size: 10px; color: var(--warn); }
+.snb-oc { font-style: normal; font-size: 9.5px; color: var(--warn); }
+/* Поставщик — группа «Цена · Срок · Отсрочка»: имя, откуда цены и его
+   условия; свернуть до цены, условия поставщика, убрать пустую ручную. */
+.snb-tbl thead th.snb-gsup {
+  color: var(--viol); text-transform: none; letter-spacing: 0; font-size: 10px;
+  white-space: nowrap; overflow: hidden; padding: 4px 6px; border-left: 1px solid var(--line2);
+}
+.snb-gh { display: flex; align-items: center; gap: 3px; min-width: 0; }
+/* У группы поставщика две строки — имя и его условия: первая строка шапки
+   выше, вторая прилипает ниже неё. */
+.snb-tbl thead tr:first-child th { height: 40px; }
+.snb-tbl thead tr:nth-child(2) th { top: 40px; }
+.snb-gsup-n { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.snb-tbl thead th.snb-gsup .snb-gsub {
+  display: block; margin: 1px 0 0 21px; font-style: normal; font-size: 9px; font-weight: 400; color: var(--ink3);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.snb-gbtn {
+  flex: none; width: 18px; height: 18px; display: grid; place-items: center; padding: 0; border: 0;
+  border-radius: 5px; background: none; color: var(--ink3); cursor: pointer;
+}
+.snb-gbtn svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; }
+.snb-gbtn:hover { background: var(--raise); color: var(--ink); }
+.snb-gbtn.warn:hover { background: var(--bad-soft); color: var(--bad); }
+.snb-tbl thead th.snb-gsup.fold { padding: 4px 3px; }
+/* Счёт в шапке колонки поставщика — щелчком (16.10.2026). */
+.snb-ginv { padding: 0; border: 0; background: none; font: inherit; color: var(--viol); cursor: pointer;
+  text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--viol) 40%, transparent);
+  text-underline-offset: 2px; }
+.snb-ginv:hover { color: var(--ink); text-decoration-color: currentColor; }
+.snb-gbtn.snb-ginv-ico { color: var(--viol); }
+/* Аналог — буквой у цены. */
+.snb-an { display: inline-block; margin-left: 3px; padding: 0 3px; border-radius: 3px; font-size: 8.5px; font-weight: 700;
+  line-height: 12px; vertical-align: 1px; background: var(--warn-soft); color: var(--warn); }
+.snb-tbl thead th.snb-sp, .snb-tbl thead th.snb-st, .snb-tbl thead th.snb-sd { color: var(--viol); }
+.snb-tbl thead tr:nth-child(2) th.snb-sp { border-left: 1px solid var(--line2); }
+.snb-tbl td.snb-sp { border-left: 1px solid var(--line2); }
+.snb-price-edit { display: block; width: 100%; min-height: 22px; padding: 2px 3px; border: 0;
+  border-radius: 4px; background: transparent; color: inherit; font: inherit; text-align: right; cursor: text; }
+.snb-price-edit.empty { color: var(--ink4, var(--ink3)); opacity: .6; }
+.snb-price-edit:hover, .snb-price-edit:focus-visible { background: var(--raise); outline: 1px solid var(--line); }
+.snb-price-edit.empty:hover, .snb-price-edit.empty:focus-visible { opacity: 1; }
+.snb-tbl td.snb-p .snb-price-in { width: 100%; min-width: 0; }
+/* Срок поставки по позиции — щелчком, как цена. */
+.snb-term-edit { display: block; width: 100%; min-height: 22px; padding: 2px 3px; border: 0; border-radius: 4px;
+  background: transparent; color: inherit; font: inherit; text-align: left; cursor: text;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.snb-term-edit.empty { color: var(--ink4, var(--ink3)); opacity: .6; }
+.snb-term-edit:hover, .snb-term-edit:focus-visible { background: var(--raise); outline: 1px solid var(--line); }
+.snb-term-edit.empty:hover, .snb-term-edit.empty:focus-visible { opacity: 1; }
+.snb-tbl td.snb-st .snb-term-in { width: 100%; min-width: 0; }
+.snb-tbl td.snb-st { font-size: 10.5px; color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.snb-tbl td.snb-st.best, .snb-tbl td.snb-sd.best { color: var(--ok); font-weight: 600;
+  background: color-mix(in srgb, var(--ok) 8%, var(--card)); }
+.snb-tbl td.snb-sd { font-size: 10.5px; color: var(--ink2); }
+/* Взятое из условий поставщика, а не из строки счёта, — бледным. */
+.snb-tbl td.inh { color: var(--ink3); font-style: italic; }
+/* Отсечён по сроку — к нужному сроку не успевает: зачёркнут. */
+.snb-tbl td.snb-p.cut { color: var(--ink4, var(--ink3)); text-decoration: line-through; }
+.snb-tbl td.snb-st.cut { color: var(--bad); }
+
+/* «Нужно за» — срок позиции: щелчок — вписать; пусто — не ограничен. */
+.snb-tbl thead th.snb-gdue { color: var(--info); }
+.snb-tbl td.snb-due { color: var(--info); font-weight: 600; }
+.snb-tbl td.snb-due.has { background: color-mix(in srgb, var(--info) 7%, var(--card)); }
+.snb-tbl td.snb-due.ed { cursor: text; }
+.snb-tbl td.snb-due.ed:hover { box-shadow: inset 0 0 0 1px var(--line); }
+.snb-tbl td.snb-due.ed:empty:hover::after { content: "＋"; color: var(--ink4, var(--ink3)); font-weight: 400; }
+.snb-tbl td.snb-due .pos-in { width: 100%; }
+/* Выбор: цена — щелчком разбор; приведённая и отсрочка рядом. */
+.snb-tbl td.snb-best.why { cursor: pointer; }
+/* Цена объекта к сроку не подтверждена — выбрана, но с пометкой. */
+.snb-tbl td.snb-best.dl { box-shadow: inset 3px 0 0 var(--warn); }
+.snb-tbl td.snb-best.why:hover { box-shadow: inset 0 0 0 1px var(--ok); }
+.snb-tbl td.snb-best.late { color: var(--bad); font-weight: 600; font-size: 10.5px; background: color-mix(in srgb, var(--bad) 6%, var(--card)); }
+.snb-tbl td.snb-pv { color: var(--ink2); }
+.snb-tbl td.snb-pv.has, .snb-tbl td.snb-def.has { background: color-mix(in srgb, var(--ok) 6%, var(--card)); }
+.snb-tbl td.snb-pv.has { color: var(--ok); }
+.snb-tbl td.snb-def { color: var(--ink2); font-size: 10.5px; }
+.snb-tbl tr.snb-off td { color: var(--ink4, var(--ink3)); }
+.snb-tbl tr.snb-off td.s-name .nm { color: var(--ink3); }
+.snb-tbl tr.snb-nop td.s-name { box-shadow: inset 3px 0 0 var(--warn), 1px 0 0 var(--line2); }
+.snb-tbl tr.sec td { background: var(--raise); font-weight: 600; color: var(--ink); }
+.snb-tbl tr.sec td .sec-in { position: sticky; left: 12.5px; display: inline-block; }
+.snb-tbl td.snb-none { height: 60px; text-align: center; color: var(--ink3); }
+
+/* Полоса: «нужно за» всем на экране, свернуть поставщиков; к сроку нет. */
+.snb-tb { flex: none; }
+.snb-tb svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.snb-bar .seg-b.snb-rf-late { color: var(--bad); }
+.snb-late-n { font-style: normal; font-size: 9.5px; color: var(--bad); }
+.pg-head.strip.calc-head .pg-facts dt .i-tip { margin-left: 3px; }
+.snb-rate { font: inherit; font-weight: 600; color: var(--brand-deep); }
+
+/* ── всплывающее у клетки: разбор выбора и условия поставщика ── */
+.snb-pop {
+  position: fixed; z-index: 60; max-width: min(720px, calc(100vw - 16px)); padding: 12px 14px;
+  border: 1px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .18); font-size: 11.5px;
+}
+.snb-why-h { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+.snb-why-h b { font-size: 12.5px; }
+.snb-why-h i { min-width: 0; font-style: normal; color: var(--ink3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.snb-why-rule { color: var(--ink2); line-height: 1.45; }
+.snb-why-f { margin: 6px 0 8px; padding: 5px 8px; border-radius: 7px; background: var(--raise); color: var(--ink2);
+  font-family: ui-monospace, Consolas, monospace; font-size: 10.5px; }
+.snb-why-t { width: 100%; border-collapse: collapse; }
+.snb-why-t th { padding: 4px 6px; text-align: left; font-size: 9.5px; font-weight: 600; color: var(--ink3);
+  text-transform: uppercase; letter-spacing: .03em; border-bottom: 1px solid var(--line2); }
+.snb-why-t td { padding: 4px 6px; border-bottom: 1px solid var(--line2); white-space: nowrap; }
+.snb-why-t .num { text-align: right; }
+.snb-why-t td i { font-style: normal; color: var(--ink3); font-size: 10px; }
+.snb-why-t td.inh { color: var(--ink3); font-style: italic; }
+.snb-why-t tr.ok td { color: var(--ok); background: color-mix(in srgb, var(--ok) 8%, var(--card)); }
+.snb-why-t tr.cut td { color: var(--ink3); }
+.snb-why-t tr.cut td.snb-why-r { color: var(--bad); }
+.snb-why-r { white-space: normal !important; color: var(--ink2); }
+.snb-why-n { margin-top: 6px; color: var(--ink3); font-size: 10px; }
+.snb-terms { width: 300px; }
+.snb-terms .fld { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.snb-terms .fld span { font-size: 10.5px; color: var(--ink3); }
+.snb-terms .pos-in { width: 100%; }
+.snb-pop-foot { display: flex; justify-content: flex-end; gap: 6px; margin-top: 10px; }
+
+/* ── сверка счёта ── */
+.pf-crop.snb-rv {
+  width: min(1180px, calc(100vw - 32px)); max-height: 92vh;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.snb-rv-head { display: flex; align-items: flex-end; gap: 18px; margin-bottom: 9px; }
+.snb-rv-head > div:first-child { flex: 1; min-width: 0; }
+.snb-rv-head h3 { margin-bottom: 2px; }
+.snb-rv-sup { width: 320px; flex: none; }
+.snb-rv-term { width: 190px; flex: none; }
+.snb-rv-def { width: 96px; flex: none; }
+.snb-rv-tbl td .pos-in:not(.num) { width: 100%; }
+.snb-rv-vat { margin-bottom: 8px; }
+.snb-rv-warn { margin-bottom: 8px; font-size: 11px; }
+.snb-rv-body { flex: 1; min-height: 0; overflow: auto; border: 1px solid var(--line2); border-radius: 10px; }
+.snb-rv-tbl { --gut: 10px; min-width: 1000px; }
+.snb-rv-an { display: flex; }
+.snb-rv-an .seg-b { flex: 1; height: 26px; padding: 0 6px; font-size: 10.5px; }
+.snb-rv-an .seg-b.on.an { color: var(--warn); background: var(--warn-soft); }
+.snb-rv-tbl tbody td { height: 44px; padding-top: 4px; padding-bottom: 4px; }
+.snb-rv-tbl tr.off td { opacity: .55; }
+.snb-rv-tbl .num .pos-in { width: 96px; }
+.snb-rv-nm { display: block; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.snb-rv-tbl td { position: relative; }
+.snb-rv-row {
+  display: flex; flex-direction: column; align-items: flex-start; width: 100%; padding: 4px 7px;
+  border: 1px solid var(--line2); border-radius: 7px; background: var(--card);
+  font: inherit; text-align: left; cursor: pointer; min-width: 0;
+}
+.snb-rv-row:hover { border-color: var(--line); background: var(--raise); }
+.snb-rv-row b { display: block; max-width: 100%; font-size: 11px; font-weight: 500; color: var(--ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.snb-rv-row i, .snb-rv-row em { font-style: normal; font-size: 9.5px; color: var(--ink3); }
+.snb-rv-row em { color: var(--viol); }
+.snb-rv-none { font-size: 11px; color: var(--warn); }
+.snb-rv-st { font-size: 10px; font-weight: 600; white-space: nowrap; }
+.snb-rv-st.sure { color: var(--ok); }
+.snb-rv-st.maybe { color: var(--warn); }
+.snb-rv-st.done { color: var(--viol); }
+.snb-rv-remove { display: inline-flex; align-items: center; justify-content: center;
+  width: 25px; height: 25px; border: 0; border-radius: 6px; background: transparent;
+  color: var(--warn); cursor: pointer; }
+.snb-rv-remove:hover { background: var(--raise); }
+.snb-rv-remove svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.snb-pick {
+  position: fixed; z-index: 90; padding: 8px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--card); box-shadow: var(--shadow-float);
+}
+.snb-pick-h { margin: 0 2px 6px; font-size: 10.5px; color: var(--ink3); }
+.snb-pick-h b { color: var(--ink); }
+.snb-pick-list button.near b { color: var(--ok); }
+.snb-pick-list button.taken { opacity: .6; }
+.snb-pick-list em { font-style: normal; color: var(--viol); }
+.snb-pick input { width: 100%; height: 30px; padding: 0 9px; border: 1px solid var(--line); border-radius: 7px;
+  background: var(--card); color: var(--ink); font: inherit; font-size: 12px; }
+.snb-pick-list { max-height: 260px; overflow: auto; margin: 6px 0; }
+.snb-pick-list button {
+  display: block; width: 100%; padding: 5px 7px; border: 0; border-radius: 6px; background: none;
+  font: inherit; text-align: left; cursor: pointer;
+}
+.snb-pick-list button:hover { background: var(--raise); }
+.snb-pick-list b { display: block; font-size: 11px; font-weight: 500; color: var(--ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.snb-pick-list i { font-style: normal; font-size: 9.5px; color: var(--ink3); }
+.snb-rv .pf-modal-foot { margin-top: 12px; flex-wrap: wrap; }
+.snb-rv #rvAdd { display: inline-flex; align-items: center; gap: 5px; }
+.snb-rv #rvAdd svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+/* ── в «Тендере» и в карточке объекта ── */
+.btn-ghost.on-supply { color: var(--viol); border-color: color-mix(in srgb, var(--viol) 35%, var(--line)); }
+.sit-supply { display: inline-flex; align-items: center; gap: 3px; color: var(--viol); font-weight: 600; }
+.sit-supply svg { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 2; }
+.sup-procs { padding: 12px var(--gut, 25px) 4px; }
+.sup-procs h4 { margin: 0 0 6px; font: 600 9.5px var(--sans); letter-spacing: .07em; text-transform: uppercase;
+  color: var(--ink3); }
+.sup-proc {
+  display: flex; align-items: center; gap: 12px; padding: 9px 12px; margin-bottom: 6px;
+  border: 1px solid var(--line2); border-radius: 10px; background: color-mix(in srgb, var(--viol) 4%, var(--card));
+}
+.sup-proc .fi { flex: none; }
+.sup-proc-t { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.sup-proc-t b { font-size: 12px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sup-proc-t i, .sup-proc-s i { font-style: normal; font-size: 10.5px; color: var(--ink3); }
+.sup-proc-s { display: flex; flex-direction: column; align-items: flex-end; font-weight: 600;
+  font-variant-numeric: tabular-nums; color: var(--ink); }
+
+@media (max-width: 684px) {
+  .snb-bar { flex-wrap: wrap; }
+  .snb-bar .pg-find { flex: 1 1 100%; }
+  .snb-bar .pg-find input { width: 100%; }
+  .snb-invs { flex: 1 1 100%; justify-content: flex-start; }
+  .snb-rv-head { flex-direction: column; align-items: stretch; }
+  .snb-rv-sup { width: auto; }
+}
+
+/* Конкурентная проработка (заказчик, 13.10.2026) — сразу за позицией: лучшая
+   цена, лучшая приведённая и до пяти предложений «цена — поставщик».
+   Выбранный — зелёным, вручную — с булавкой, кого взяло бы правило — рамкой. */
+.snb-tbl col.s-lp, .snb-tbl col.s-lv { width: 92px; }
+.snb-tbl col.s-op { width: 84px; }
+.snb-tbl col.s-ow { width: 112px; }
+.snb-tbl col.s-ref { width: 26px; }
+.snb-tbl thead th.snb-gcomp { color: var(--brand-deep); border-left: 1px solid var(--line2); text-align: left; padding-left: 10px; }
+.snb-tbl thead th.snb-lph { border-left: 1px solid var(--line2); }
+.snb-tbl thead th.snb-oph { border-left: 1px solid var(--line2); }
+.snb-tbl td.snb-c0 { border-left: 1px solid var(--line2); }
+.snb-tbl td.snb-lp { border-left: 1px solid var(--line2); color: var(--ink); font-weight: 600; }
+.snb-tbl td.snb-lv { color: var(--ok); font-weight: 600; }
+.snb-tbl td.snb-lp.has, .snb-tbl td.snb-lv.has { background: color-mix(in srgb, var(--brand) 5%, var(--card)); }
+.snb-tbl td.snb-lp.late { color: var(--bad); font-size: 10.5px; }
+.snb-tbl td.snb-op { border-left: 1px solid var(--line2); color: var(--ink); }
+.snb-tbl td.snb-ow { color: var(--ink2); font-size: 10.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.snb-tbl td.snb-op.best, .snb-tbl td.snb-ow.best {
+  color: var(--ok); font-weight: 600; background: color-mix(in srgb, var(--ok) 10%, var(--card));
+}
+.snb-tbl td.snb-op.auto { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ok) 55%, transparent); }
+.snb-tbl td.snb-op.cut { color: var(--ink4, var(--ink3)); text-decoration: line-through; }
+.snb-tbl td.snb-ow.cut { color: var(--ink4, var(--ink3)); }
+.snb-tbl td.snb-op.maybe { font-style: italic; }
+.snb-tbl td.snb-ow.snb-refo { font-style: italic; }
+.snb-tbl td.snb-op.ed, .snb-tbl td.snb-ow.ed { cursor: pointer; }
+.snb-tbl td.snb-op.ed:hover, .snb-tbl td.snb-ow.ed:hover { box-shadow: inset 0 0 0 1px var(--ok); }
+.snb-tbl td.snb-op svg, .snb-tbl td.snb-ow svg, .snb-tbl td.snb-best svg {
+  width: 11px; height: 11px; margin-right: 3px; vertical-align: -1px;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.snb-more { margin-right: 4px; font-style: normal; font-size: 9px; font-weight: 600; color: var(--ink3); }
+.snb-hand { margin-left: 5px; font-style: normal; font-size: 9px; font-weight: 600; color: var(--ok);
+  text-transform: uppercase; letter-spacing: .03em; }
+.snb-hand-n { font-style: normal; font-size: 9.5px; color: var(--ok); }
+/* Ручной выбор не действует — у того поставщика цены больше нет. */
+.snb-tbl td.snb-best.lost { box-shadow: inset 3px 0 0 var(--warn); }
+.snb-why-hand { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; margin: 6px 0 2px; padding: 6px 8px;
+  border-radius: 8px; background: color-mix(in srgb, var(--ok) 9%, var(--card)); color: var(--ink); font-size: 11px; }
+.snb-why-hand.lost { background: color-mix(in srgb, var(--warn) 10%, var(--card)); }
+.snb-why-hand svg { width: 12px; height: 12px; flex: none; fill: none; stroke: var(--ok); stroke-width: 2; }
+.snb-why-hand span { flex: 1; min-width: 0; }
+
+/* Справочные колонки (каталоги, прайс материалов) — узкая полоса со
+   стрелкой в конце таблицы: «свернуть бесследно, но видно, что там что-то
+   есть» (заказчик, 13.10.2026). */
+.snb-tbl thead th.snb-refh {
+  padding: 3px 0; vertical-align: top; text-align: center; cursor: pointer;
+  border-left: 1px solid var(--line2); background: var(--raise);
+}
+.snb-refb {
+  width: 20px; height: 20px; display: inline-grid; place-items: center; padding: 0; border: 0;
+  border-radius: 5px; background: none; color: var(--ink3); cursor: pointer;
+}
+.snb-refb svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round; }
+.snb-tbl thead th.snb-refh:hover .snb-refb { background: var(--card); color: var(--ink); }
+.snb-refl { display: block; margin: 4px auto 0; writing-mode: vertical-rl; transform: rotate(180deg);
+  font-size: 9px; font-weight: 500; letter-spacing: .04em; color: var(--ink3); text-transform: none; }
+.snb-tbl td.snb-refc { padding: 0; cursor: pointer; border-left: 1px solid var(--line2);
+  background: color-mix(in srgb, var(--raise) 60%, var(--card)); }
+.snb-tbl td.snb-refc:hover { background: var(--raise); }
+
+/* ── три вкладки (заказчик, 20.10.2026): Тендер · Проработка · Рабочая ──
+   Вкладки — крупными кнопками слева в шапке списка: вид проработки виден
+   сразу, у каждой — сколько в ней и сколько просрочено по сроку. */
+.snb-lhead { flex-wrap: wrap; row-gap: 8px; }
+.snb-lhead .sx-q { flex: 1 1 200px; min-width: 150px; max-width: 320px; }
+.snb-kinds { display: inline-flex; gap: 6px; flex: none; }
+.snb-kind {
+  position: relative; display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 13px 0 11px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink2);
+  font: 500 12px var(--sans); cursor: pointer; white-space: nowrap;
+  transition: border-color .15s var(--ease), background .15s var(--ease), color .15s var(--ease);
+}
+.snb-kind svg { width: 15px; height: 15px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round; }
+.snb-kind b { font-weight: 600; }
+.snb-kind i { min-width: 18px; padding: 0 5px; border-radius: 999px; background: var(--raise); font-style: normal;
+  font-size: 10.5px; line-height: 17px; text-align: center; color: var(--ink3); font-variant-numeric: tabular-nums; }
+.snb-kind em { position: absolute; top: -6px; right: -6px; min-width: 16px; padding: 0 4px; border-radius: 999px;
+  background: var(--bad); color: #fff; font-style: normal; font-size: 9.5px; font-weight: 700; line-height: 16px; text-align: center; }
+.snb-kind:hover { border-color: var(--brand); color: var(--ink); }
+.snb-kind.on { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 10%, var(--card)); color: var(--brand-deep); }
+.snb-kind.on i { background: color-mix(in srgb, var(--brand) 18%, var(--card)); color: var(--brand-deep); }
+.snb-ltbl col.c-due { width: 150px; }
+.snb-wltbl col.c-cov { width: 150px; }
+.snb-wltbl col.c-n { width: 92px; }
+.snb-due-l { font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+.snb-due-l.warn, .snb-due-t.warn { color: var(--warn); font-weight: 600; }
+.snb-due-l.bad, .snb-due-t.bad { color: var(--bad); font-weight: 600; }
+.snb-due-l.done, .snb-due-t.done { color: var(--ink3); }
+.snb-who-l { display: inline-flex; align-items: center; gap: 3px; }
+.snb-who-l svg { width: 10px; height: 10px; }
+.st.snb-st-won { background: color-mix(in srgb, var(--brand) 14%, var(--card)); color: var(--brand-deep); }
+.st.snb-st-inwork { background: color-mix(in srgb, var(--viol) 13%, var(--card)); color: var(--viol); }
+
+/* ── шапка: срок и ответственный, проработка ↔ рабочая, что дальше ── */
+.snb-duec {
+  flex: none; display: inline-flex; align-items: center; gap: 5px; height: 25px; padding: 0 9px;
+  border: 1px solid var(--line); border-radius: 7px; background: var(--card); color: var(--ink2);
+  font: 500 10.5px var(--sans); cursor: pointer; white-space: nowrap; max-width: 300px;
+}
+.snb-duec svg { width: 12px; height: 12px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; }
+.snb-duec span { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
+.snb-duec em { font-style: normal; font-weight: 600; }
+.snb-duec i { font-style: normal; color: var(--ink3); overflow: hidden; text-overflow: ellipsis; }
+.snb-duec.none span { color: var(--ink3); font-weight: 500; }
+.snb-duec.warn { border-color: color-mix(in srgb, var(--warn) 55%, var(--line)); background: var(--warn-soft); }
+.snb-duec.warn em, .snb-duec.warn svg { color: var(--warn); }
+.snb-duec.bad { border-color: color-mix(in srgb, var(--bad) 55%, var(--line)); background: var(--bad-soft); }
+.snb-duec.bad em, .snb-duec.bad svg { color: var(--bad); }
+.snb-duec:not(:disabled):hover { border-color: var(--brand); }
+.snb-duec:disabled { cursor: default; }
+.pg-head.strip.calc-head .snb-view { flex: none; }
+.pg-head.strip.calc-head .snb-view .seg-b { height: 25px; padding: 0 10px; font-size: 10.5px; gap: 4px;
+  display: inline-flex; align-items: center; }
+.snb-view .seg-b svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.9;
+  stroke-linecap: round; stroke-linejoin: round; }
+.snb-view .seg-b.on { color: var(--brand-deep); }
+.pg-head.strip.calc-head .snb-stc { flex: none; margin-left: auto; display: inline-flex; align-items: center; gap: 4px; }
+.snb-stc svg { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 2; }
+.pg-head.strip.calc-head .btn-brand.sm svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; }
+.pg-head.strip.calc-head .pg-acts .ico { width: 25px; height: 25px; }
+.snb-work .pg-head.strip.calc-head .pg-acts { margin-left: auto; }
+
+/* ── основной блок — спецификация и договорная цена (20.10.2026): «на него
+   все ориентируются — выделить рамкой или своим фоном». Свой фон у всех
+   его клеток (у примёрзших — непрозрачный) и жирная линия справа. ── */
+.snb-tbl td.snb-mb { background: color-mix(in srgb, var(--info) 10%, var(--card)); }
+.snb-tbl td.snb-mb.snb-fix { background: color-mix(in srgb, var(--info) 15%, var(--card)); color: var(--ink); font-weight: 500; }
+.snb-tbl thead th.snb-mb { background: color-mix(in srgb, var(--info) 18%, var(--card)); color: var(--ink); }
+.snb-tbl td.snb-mbe, .snb-tbl thead th.snb-mbe { border-right: 2px solid color-mix(in srgb, var(--info) 55%, var(--ink3)); }
+.snb-tbl td.s-name.snb-mb { box-shadow: 1px 0 0 color-mix(in srgb, var(--info) 30%, var(--line2)); }
+.snb-tbl td.s-name.snb-mb .snb-position { font-weight: 500; }
+.snb-tbl td.snb-qty { font-weight: 600; color: var(--ink); }
+.snb-tbl tr.snb-off td.snb-mb { background: color-mix(in srgb, var(--info) 5%, var(--card)); }
+
+/* Цена выбранного поставщика — первая пара конкурентной проработки в
+   рамке (20.10.2026: «эти два столбика жирными границами по краям»). */
+.snb-tbl td.snb-o1, .snb-tbl thead th.snb-o1 { border-left: 2px solid var(--ok) !important; }
+.snb-tbl td.snb-w1, .snb-tbl thead th.snb-w1 { border-right: 2px solid var(--ok); }
+.snb-tbl thead th.snb-o1, .snb-tbl thead th.snb-w1 {
+  color: var(--ok); font-weight: 700; box-shadow: inset 0 2px 0 var(--ok);
+  background: color-mix(in srgb, var(--ok) 9%, var(--card));
+}
+.snb-tbl td.snb-op.snb-o1.best, .snb-tbl td.snb-ow.snb-w1.best { background: color-mix(in srgb, var(--ok) 14%, var(--card)); }
+.snb-tbl td.snb-op.snb-o1.best { font-size: 12px; }
+.snb-tbl tbody tr:last-child td.snb-o1, .snb-tbl tbody tr:last-child td.snb-w1 { box-shadow: inset 0 -2px 0 var(--ok); }
+
+/* Средняя закупки из «Рабочей» в колонке «Факт» — щелчком карточка. */
+.snb-tbl td.snb-fact.auto { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
+
+/* ── рабочая: закупка и поставки ── */
+/* Название — всё, что осталось от ширины: на ноутбуке закупка видна целиком. */
+.snb-wtbl col.s-no { width: 60px; }
+.snb-wtbl td.s-name, .snb-wtbl thead th.s-name { left: 60px; }
+.snb-wtbl col.w-pick { width: 92px; }
+.snb-wtbl col.w-who { width: 120px; }
+.snb-wtbl col.w-n { width: 78px; }
+.snb-wtbl col.w-avg { width: 96px; }
+.snb-wtbl col.w-sup { width: 160px; }
+.snb-wtbl col.w-add { width: 34px; }
+.snb-tbl thead th.snb-gbuy { color: var(--viol); border-left: 1px solid var(--line2); }
+.snb-wtbl td.snb-wpick { border-left: 1px solid var(--line2); color: var(--ok); font-weight: 600; }
+.snb-wtbl td.snb-wpick.has, .snb-wtbl td.snb-wwho { background: color-mix(in srgb, var(--ok) 5%, var(--card)); }
+.snb-wtbl td.snb-wwho { color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.snb-wtbl td.snb-wpick svg { width: 11px; height: 11px; margin-right: 3px; vertical-align: -1px; fill: none;
+  stroke: currentColor; stroke-width: 2; }
+.snb-wtbl td.snb-wb { border-left: 1px solid var(--line2); font-weight: 600; cursor: pointer; }
+.snb-wtbl td.snb-wb:hover { box-shadow: inset 0 0 0 1px var(--viol); }
+.snb-wtbl td.snb-wb.none { color: var(--ink4, var(--ink3)); font-weight: 400; }
+.snb-wtbl td.snb-wb.part, .snb-wtbl td.snb-wl.part { color: var(--warn); }
+.snb-wtbl td.snb-wb.full, .snb-wtbl td.snb-wl.full { color: var(--ok); }
+.snb-wtbl td.snb-wb.over, .snb-wtbl td.snb-wl.over { color: var(--bad); }
+.snb-wtbl td.snb-wl { font-weight: 600; }
+.snb-wtbl td.snb-wl.none { color: var(--ink2); font-weight: 400; }
+.snb-wtbl td.snb-wavg.has { color: var(--viol); font-weight: 600; background: color-mix(in srgb, var(--viol) 6%, var(--card)); }
+.snb-wtbl td.snb-wavg.over { color: var(--bad); background: color-mix(in srgb, var(--bad) 7%, var(--card)); }
+.snb-wtbl td.snb-wsum { color: var(--ink); }
+.snb-wtbl td.snb-wsup { color: var(--ink2); font-size: 10.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.snb-wtbl td.snb-wsup > span { display: block; overflow: hidden; text-overflow: ellipsis; color: var(--ink); }
+.snb-wtbl td.snb-wlast { color: var(--ink2); font-size: 10.5px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.snb-wtbl td.snb-wlast i { font-style: normal; color: var(--ink3); }
+.snb-wtbl td.snb-wnot { color: var(--ink3); font-size: 10.5px; border-left: 1px solid var(--line2); }
+.snb-wtbl tr.snb-w-full td.s-name { box-shadow: inset 3px 0 0 var(--ok), 1px 0 0 var(--line2); }
+.snb-wtbl tr.snb-w-part td.s-name { box-shadow: inset 3px 0 0 var(--warn), 1px 0 0 var(--line2); }
+.snb-wtbl tr.snb-w-over td.s-name { box-shadow: inset 3px 0 0 var(--bad), 1px 0 0 var(--line2); }
+.snb-wtbl td.snb-wadd { padding: 0; text-align: center; }
+.snb-wtbl td.snb-wadd .snb-gbtn { margin: 0 auto; }
+
+/* Карточка поставок позиции. */
+.pf-crop.snb-dc { width: min(940px, calc(100vw - 24px)); max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; }
+.snb-dc-h h3 { margin: 0; }
+.snb-dc-h p { margin: 3px 0 0; color: var(--ink3); font-size: 11.5px; }
+.snb-dc-k { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.7fr); margin: 12px 0;
+  border: 1px solid var(--line2); border-radius: 10px; overflow: hidden; }
+.snb-dc-k > div { padding: 7px 11px; border-left: 1px solid var(--line2); min-width: 0; }
+.snb-dc-k > div:first-child { border-left: 0; }
+.snb-dc-k span { display: block; font-size: 9px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink3); white-space: nowrap; }
+.snb-dc-k b { display: block; margin-top: 2px; font-size: 13px; color: var(--ink); font-variant-numeric: tabular-nums;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.snb-dc-k .warn b { color: var(--warn); }
+.snb-dc-k .bad b { color: var(--bad); }
+.snb-dc-k .ok b { color: var(--ok); }
+.snb-dc-k .pick { background: color-mix(in srgb, var(--ok) 6%, var(--card)); }
+.snb-dc-k .pick b { color: var(--ok); }
+.snb-dc-body { flex: 1; min-height: 60px; overflow: auto; border: 1px solid var(--line2); border-radius: 10px; }
+.snb-dc-t { --gut: 10px; }
+.snb-dc-t td { white-space: nowrap; }
+.snb-dc-t tr.on td { background: color-mix(in srgb, var(--brand) 8%, var(--card)); }
+.snb-dc-s { overflow: hidden; text-overflow: ellipsis; }
+.snb-dc-src { color: var(--ink3); font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; }
+.snb-dc-src svg { width: 11px; height: 11px; margin-right: 3px; vertical-align: -1px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.snb-dc-a { text-align: right; }
+.snb-dc-a .snb-gbtn { display: inline-grid; }
+.snb-dc-empty { padding: 18px; color: var(--ink3); text-align: center; font-size: 12px; }
+.snb-dc-f { margin-top: 12px; padding: 10px 12px; border: 1px solid var(--line2); border-radius: 10px;
+  background: color-mix(in srgb, var(--raise) 45%, var(--card)); }
+.snb-dc-f h4 { margin: 0 0 8px; font-size: 11.5px; font-weight: 600; color: var(--ink); }
+.snb-dc-f h4 i { margin-left: 8px; font-style: normal; font-weight: 400; color: var(--warn); font-size: 10.5px; }
+.snb-dc-fr { display: grid; grid-template-columns: 140px minmax(0, 1fr) 130px 140px auto; gap: 10px; align-items: end; margin-bottom: 8px; }
+.snb-dc-f .fld { display: flex; flex-direction: column; gap: 4px; }
+.snb-dc-f .fld span { font-size: 10.5px; color: var(--ink3); }
+.snb-dc-f .fld input { height: 30px; padding: 0 9px; border: 1px solid var(--line); border-radius: 7px; background: var(--card);
+  color: var(--ink); font: inherit; font-size: 12px; min-width: 0; }
+.snb-dc-f .fld input:focus { outline: none; border-color: var(--brand); }
+
+/* ── окно передачи: вид, срок, ответственный ── */
+.pf-crop.snb-ho { width: min(900px, calc(100vw - 24px)); }
+.snb-ho-h { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.snb-ho-h h3 { margin: 0; }
+.snb-ho-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+.snb-ho-modes.n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.snb-ho-modes.n1 { grid-template-columns: minmax(0, 1fr); }
+.snb-ho-m {
+  display: grid; grid-template-columns: 34px minmax(0, 1fr); grid-template-rows: auto auto auto; column-gap: 10px; row-gap: 3px;
+  padding: 11px 12px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--card);
+  text-align: left; font: inherit; color: var(--ink2); cursor: pointer;
+  transition: border-color .15s var(--ease), background .15s var(--ease), box-shadow .15s var(--ease);
+}
+.snb-ho-ico { grid-row: 1 / span 3; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px;
+  background: var(--raise); color: var(--ink3); }
+.snb-ho-ico svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.snb-ho-m b { font-size: 13px; color: var(--ink); }
+.snb-ho-l { font-size: 11px; line-height: 1.35; color: var(--ink2); }
+.snb-ho-s { font-style: normal; font-size: 10.5px; color: var(--ink3); }
+.snb-ho-m:hover { border-color: color-mix(in srgb, var(--brand) 55%, var(--line)); }
+.snb-ho-m.on { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 7%, var(--card));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 14%, transparent); }
+.snb-ho-m.on .snb-ho-ico { background: var(--brand); color: #fff; }
+.snb-ho-m.on .snb-ho-s { color: var(--brand-deep); font-weight: 600; }
+.snb-ho-f { display: grid; grid-template-columns: 180px minmax(0, 1fr) minmax(0, 1fr); gap: 12px; align-items: end; margin-bottom: 12px; }
+.snb-ho-f .fld, .snb-ho-v .fld { display: flex; flex-direction: column; gap: 4px; }
+.snb-ho-f .fld span, .snb-ho-v .fld span { font-size: 10.5px; color: var(--ink3); }
+.snb-ho-f input, .snb-ho-f select, .snb-ho-v input {
+  height: 32px; padding: 0 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--card);
+  color: var(--ink); font: inherit; font-size: 12px; min-width: 0;
+}
+.snb-ho-f input:focus, .snb-ho-f select:focus, .snb-ho-v input:focus { outline: none; border-color: var(--brand); }
+.snb-ho-nodue { display: none; align-items: center; gap: 6px; height: 32px; font-size: 11px; color: var(--ink3); }
+.snb-ho-nodue svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; }
+.ho-nodue .snb-ho-due { display: none; }
+.ho-nodue .snb-ho-nodue { display: inline-flex; }
+.snb-ho-v { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 12px; margin-bottom: 10px; }
+.snb-ho-ck { display: flex; align-items: center; gap: 8px; min-height: 32px; font-size: 12px; color: var(--ink2); cursor: pointer; }
+.snb-ho-ck input { width: 15px; height: 15px; margin: 0; accent-color: var(--brand); flex: none; }
+.snb-ho-ck input:disabled + span { color: var(--ink3); }
+.snb-ho-carry[hidden] { display: none; }
+.snb-duep { width: 320px; }
+.snb-duep .fld { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.snb-duep .fld span { font-size: 10.5px; color: var(--ink3); }
+.snb-duep .pos-in { width: 100%; height: 30px; }
+
+/* ── сверка счёта: позиции проработки слева, счёт справа (20.10.2026) ── */
+.pf-crop.snb-rv { width: min(1300px, calc(100vw - 24px)); }
+.snb-rv-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+.snb-rv-stat { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex: 1; min-width: 0; }
+.snb-rv-sum { font-size: 12px; color: var(--ink2); }
+.snb-rv-sum b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.snb-rv-sum b.warn { color: var(--warn); }
+.snb-rv-stat .seg-b { height: 27px; }
+.snb-rv-stat .seg-b i { margin-left: 5px; font-style: normal; color: var(--ink3); font-size: 10px; }
+.snb-rv-bar .pg-find input { width: 240px; }
+.snb-rv-tbl { min-width: 1120px; }
+.snb-rv-tbl col.rv-pos { width: 25%; }
+.snb-rv-tbl thead tr.snb-rv-g th { height: 26px; font-size: 10px; letter-spacing: .05em; text-transform: uppercase; }
+.snb-rv-tbl thead th.snb-rv-gl { background: color-mix(in srgb, var(--info) 13%, var(--card)); color: var(--ink);
+  border-right: 2px solid color-mix(in srgb, var(--info) 55%, var(--ink3)); }
+.snb-rv-tbl thead th.snb-rv-gr { background: color-mix(in srgb, var(--viol) 10%, var(--card)); color: var(--viol);
+  text-transform: none; letter-spacing: 0; font-size: 11px; }
+.snb-rv-tbl td.t-id, .snb-rv-tbl td.snb-rv-pos, .snb-rv-tbl td.snb-rv-need {
+  background: color-mix(in srgb, var(--info) 5%, var(--card)); }
+.snb-rv-tbl td.snb-rv-need { border-right: 2px solid color-mix(in srgb, var(--info) 55%, var(--ink3)); font-weight: 600;
+  white-space: nowrap; }
+.snb-rv-tbl tr.sec td { background: var(--raise); font-weight: 600; color: var(--ink); height: 28px; font-size: 11px; }
+.snb-rv-tbl td.snb-rv-mid { padding: 0; text-align: center; color: var(--ink4, var(--ink3)); }
+.snb-rv-tbl td.snb-rv-mid svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; vertical-align: middle; }
+.snb-rv-tbl tr.in td.snb-rv-mid { color: var(--ok); }
+.snb-rv-tbl tr.twin td.snb-rv-mid { color: var(--viol); }
+.snb-rv-tbl td.snb-rv-line .snb-rv-nm { color: var(--ink); }
+.snb-rv-tbl td.snb-rv-line em { font-style: normal; color: var(--viol); }
+.snb-rv-tbl td.snb-rv-iq { color: var(--ink2); white-space: nowrap; }
+.snb-rv-tbl tr.more td.snb-rv-pos .snb-sub { color: var(--viol); }
+.snb-rv-same { color: var(--ink3); font-size: 10.5px; font-style: italic; }
+.snb-rv-pickl {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border: 1px dashed var(--warn);
+  border-radius: 8px; background: color-mix(in srgb, var(--warn) 6%, var(--card)); color: var(--warn);
+  font: 500 11px var(--sans); cursor: pointer;
+}
+.snb-rv-pickl i { font-style: normal; color: var(--ink3); font-weight: 400; }
+.snb-rv-pickl svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+.snb-rv-pickl:hover { border-style: solid; background: color-mix(in srgb, var(--warn) 12%, var(--card)); }
+.snb-rv-tbl tr.out td.snb-rv-pos .snb-rv-nm { color: var(--ink2); }
+.snb-rv-tbl tr.snb-rv-oh td { height: 30px; background: color-mix(in srgb, var(--warn) 9%, var(--card)); color: var(--warn);
+  font-weight: 600; font-size: 11px; }
+.snb-rv-tbl tr.snb-rv-oh svg { width: 12px; height: 12px; margin-right: 5px; vertical-align: -2px; fill: none;
+  stroke: currentColor; stroke-width: 1.8; }
+.snb-rv-tbl tr.snb-rv-o td { background: color-mix(in srgb, var(--warn) 3%, var(--card)); }
+.snb-rv-op { color: var(--ink3); font-size: 10.5px; }
+.snb-rv-st.sure { color: var(--ok); }
+.snb-pick-t { margin: 0 2px 3px; font-size: 11.5px; font-weight: 600; color: var(--ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.snb-pick-f { padding-top: 6px; border-top: 1px solid var(--line2); }
+.snb-pick-f .lnk { font-size: 11px; }
+@media (max-width: 760px) {
+  .snb-ho-modes, .snb-ho-modes.n2 { grid-template-columns: minmax(0, 1fr); }
+  .snb-ho-f, .snb-ho-v, .snb-dc-fr { grid-template-columns: minmax(0, 1fr); }
+  .snb-dc-k { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .snb-kinds { width: 100%; }
+  .snb-kind { flex: 1; justify-content: center; padding: 0 8px; }
+}
+
+/* Версия цен — в подписи под названием: шапка влезает в одну строку. */
+.snb-verl { white-space: nowrap; }
+.snb-verl svg { width: 10px; height: 10px; vertical-align: -1px; margin-right: 2px; fill: none; stroke: currentColor; stroke-width: 2; }
+.pg-head.strip.calc-head .pg-h1 small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+
+/* Первая строка шапки — 40 точек в обеих таблицах: под ней прилипает
+   вторая (top: 40px). У рабочей нет двухстрочных шапок поставщиков, и
+   правило расчёта (27 точек) оставляло щель над второй строкой. */
+.tbl.snb-tbl thead tr:first-child th { height: 40px; }
+@media (max-width: 560px) {
+  .snb-kinds { overflow-x: auto; scrollbar-width: none; }
+  .snb-kind { flex: 1 0 auto; padding: 0 9px; gap: 5px; font-size: 11.5px; }
+  .snb-kind svg { display: none; }
+  .snb-lhead .sx-seg { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+}
+
+/* ── проработка, замечания 20.10.2026 вдогонку ─────────────────── */
+/* Шапка уходит вверх при прокрутке: видна полоса поиска и «Без цены». */
+.snb-proc > .pg-head {
+  overflow: hidden; max-height: 260px;
+  transition: max-height .24s var(--ease), padding .24s var(--ease), opacity .16s var(--ease), border-color .24s var(--ease);
+}
+.snb-proc.snb-mini > .pg-head.strip.calc-head {
+  max-height: 0; min-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; border-bottom-color: transparent;
+}
+.snb-mini-b {
+  flex: none; width: 27px; height: 27px; display: grid; place-items: center; padding: 0;
+  border: 1px solid var(--line); border-radius: 7px; background: var(--card); color: var(--ink2); cursor: pointer;
+}
+.snb-mini-b svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.snb-mini-b:hover { border-color: var(--brand); color: var(--brand-deep); }
+/* В свёрнутом виде процент проработки остаётся в полосе. */
+.snb-bar-prog { display: none; flex: none; height: 25px; padding: 0 9px; align-items: center; border-radius: 999px;
+  background: color-mix(in srgb, var(--brand) 12%, var(--card)); color: var(--brand-deep); font-weight: 800; font-size: 12px;
+  font-variant-numeric: tabular-nums; }
+.snb-mini .snb-bar-prog { display: inline-flex; }
+
+/* «Без цены» — ключевое число: оранжевым. */
+.snb-bar .seg-b.snb-rf-none.hot { color: var(--brand-deep); font-weight: 600; }
+.snb-bar .seg-b.snb-rf-none.hot i { margin-left: 6px; padding: 0 7px; border-radius: 999px; background: var(--brand);
+  color: #fff; font-size: 10.5px; font-weight: 700; line-height: 18px; }
+.snb-nop-n { font-style: normal; font-size: 9.5px; font-weight: 700; color: var(--brand); }
+
+/* Процент проработки — крупно, первым в шапке. */
+.pg-head.strip.calc-head .pg-facts > div.snb-prog { flex: 0 0 auto; padding-right: 18px; }
+.pg-head.strip.calc-head .pg-facts .snb-prog dd { display: flex; align-items: center; gap: 9px; overflow: visible; }
+.pg-head.strip.calc-head .pg-facts .snb-prog dd b { font-size: 22px; line-height: 1; font-weight: 800; color: var(--brand-deep);
+  font-variant-numeric: tabular-nums; }
+.snb-prog-bar { width: 96px; height: 7px; border-radius: 4px; background: var(--raise); overflow: hidden; flex: none; }
+.snb-prog-bar i { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--brand), #FFB27F); }
+.snb-lprog > b { font-weight: 800; color: var(--brand-deep); }
+
+/* Ширины тянут за правую границу подписи — граница видна всегда. */
+.snb-tbl thead tr:nth-child(2) .col-grip::after { background: var(--line2); }
+.snb-tbl thead tr:nth-child(2) th { position: sticky; }
+.snb-tbl td.s-name, .snb-tbl thead th.s-name { left: var(--fz1, 72px); }
+
+/* Лучшие цены свёрнуты узкой полосой; щелчок — развернуть. */
+.snb-tbl thead th.snb-bsh, .snb-tbl td.snb-bsc { padding: 0; text-align: center; cursor: pointer;
+  border-left: 1px solid var(--line2); background: color-mix(in srgb, var(--raise) 60%, var(--card)); }
+.snb-tbl thead th.snb-bsh:hover, .snb-tbl td.snb-bsc:hover { background: var(--raise); }
+.snb-tbl td.snb-bsc.has::after { content: ""; display: block; width: 5px; height: 5px; margin: 0 auto; border-radius: 50%;
+  background: color-mix(in srgb, var(--brand) 55%, transparent); }
+.snb-tbl td.snb-bsc.late::after { content: ""; display: block; width: 5px; height: 5px; margin: 0 auto; border-radius: 50%;
+  background: var(--bad); }
+.snb-bfold { display: inline-grid; vertical-align: middle; margin-left: 3px; }
+.snb-tbl thead th.snb-refh2 { padding: 0; border-left: 1px solid var(--line2); background: var(--raise); cursor: pointer; }
+
+/* Копирование: марка и код — щелчком, наименование — значком в углу. */
+.snb-tbl td.snb-cp { cursor: copy; }
+.snb-tbl td.snb-cp:hover { box-shadow: inset 0 0 0 1px var(--line); }
+.snb-tbl td.s-name { padding-right: 30px; }
+.snb-cpy {
+  position: absolute; top: 50%; right: 5px; transform: translateY(-50%); width: 22px; height: 22px;
+  display: grid; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--card); color: var(--ink3); cursor: copy; opacity: 0; transition: opacity .12s var(--ease);
+}
+.snb-cpy svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+.snb-tbl tr:hover .snb-cpy, .snb-cpy:focus-visible { opacity: 1; }
+.snb-cpy:hover { color: var(--brand); border-color: var(--brand); }
+@media (hover: none) { .snb-cpy { opacity: .75; } }
+.snb-tbl td.snb-copied { box-shadow: inset 0 0 0 2px var(--ok) !important; }
+
+/* Выбранный поставщик — три строки: условие оплаты, имя, счёт. */
+.snb-tbl td.snb-w1x { padding-top: 3px; padding-bottom: 3px; line-height: 1.25; white-space: normal; }
+.snb-w1-c { display: block; font-size: 9px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; color: var(--ink3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.snb-w1-c.def { color: var(--info); }
+.snb-w1-n { display: block; font-size: 12px; font-weight: 700; color: var(--ok); cursor: help;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.snb-w1-n svg { width: 11px; height: 11px; margin-right: 3px; vertical-align: -1px; }
+.snb-w1-i { display: block; font-size: 9.5px; color: var(--ink3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.snb-w1-inv { padding: 0; border: 0; background: none; font: inherit; color: var(--viol); cursor: pointer;
+  text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--viol) 40%, transparent); text-underline-offset: 2px; }
+.snb-w1-inv:hover { color: var(--ink); text-decoration-color: currentColor; }
+
+/* Контакты менеджера поставщика — при наведении. */
+.snb-hcard {
+  position: fixed; z-index: 80; min-width: 230px; max-width: 340px; padding: 10px 12px; pointer-events: none;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink);
+  box-shadow: var(--shadow-float); font-size: 11.5px; line-height: 1.4;
+}
+.snb-hcard > b { display: block; margin-bottom: 6px; font-size: 12.5px; }
+.snb-hcard > div { padding: 5px 0; border-top: 1px solid var(--line2); font-weight: 600; }
+.snb-hcard > div span { display: block; font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
+.snb-hcard > div i { display: block; font-style: normal; font-weight: 400; color: var(--ink3); }
+.snb-hcard > div.none, .snb-hcard > div.cond { font-weight: 400; color: var(--ink3); }
+/* Отбор позиций не ужимается — уступают счета справа. */
+.snb-proc .snb-bar .seg { flex: none; }
+.snb-proc:not(.snb-work) .snb-bar .pg-find input { width: 170px; }
+
+/* «Выбрано» дороже договорной цены — красным (правка № 34, 23.10.2026). */
+.snb-tbl td.snb-op.snb-o1.over, .snb-tbl td.snb-op.snb-o1.best.over {
+  color: var(--bad); font-weight: 600; background: color-mix(in srgb, var(--bad) 12%, var(--card)); }
+/* Цена объекта (правка № 28): строка закрыта — оранжевая метка, выбранная
+   цена и поставщик — на оранжевом. */
+.snb-tbl tr.snb-own td.s-name { box-shadow: inset 3px 0 0 var(--brand), 1px 0 0 var(--line2); }
+.snb-tbl tr.snb-own td.snb-op.snb-o1.best, .snb-tbl tr.snb-own td.snb-ow.snb-w1.best,
+.snb-tbl tr.snb-own td.snb-best {
+  background: color-mix(in srgb, var(--brand) 15%, var(--card)); color: var(--brand-deep); }
+.snb-ownl { display: inline-flex; align-items: center; gap: 3px; margin-right: 6px; padding: 0 6px; border-radius: 5px;
+  font-weight: 700; font-size: 9.5px; color: var(--brand-deep); background: color-mix(in srgb, var(--brand) 16%, var(--card)); }
+.snb-ownl svg { width: 10px; height: 10px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+
+/* Замены и согласование в ПТО (правка № 32, 23.10.2026). */
+.snb-ptol { display: inline-block; margin-right: 6px; padding: 0 6px; border-radius: 5px; font-weight: 700; font-size: 9.5px;
+  font-style: normal; background: var(--raise); color: var(--ink2); }
+.snb-ptol.wait { background: var(--info-soft); color: var(--info); }
+.snb-ptol.ok { background: color-mix(in srgb, var(--ok) 14%, var(--card)); color: var(--ok); }
+.snb-ptol.no { background: color-mix(in srgb, var(--bad) 12%, var(--card)); color: var(--bad); }
+.snb-ptob i { font-style: normal; margin-left: 4px; padding: 0 6px; border-radius: 999px; background: var(--brand); color: #fff; font-size: 10px; }
+.snb-pto { width: min(860px, 96vw); max-height: 88vh; display: flex; flex-direction: column; }
+.snb-pto-list { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; min-height: 0; margin: 10px 0; }
+.snb-pto-r { display: grid; grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr) auto; gap: 10px; align-items: center;
+  padding: 8px 10px; border: 1px solid var(--line2); border-radius: 10px; cursor: pointer; }
+.snb-pto-r.st-ok, .snb-pto-r.st-wait { opacity: .7; cursor: default; }
+.snb-pto-a { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.snb-pto-a i { font-style: normal; font-size: 10px; color: var(--ink3); text-transform: uppercase; letter-spacing: .04em; }
+.snb-pto-a b { font-size: 12.5px; font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.snb-pto-a small { font-size: 11px; color: var(--ink3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.snb-pto-arr { color: var(--ink3); }
+.snb-pto-f { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 760px) {
+  .snb-pto-r { grid-template-columns: auto minmax(0, 1fr); }
+  .snb-pto-arr { display: none; }
+  .snb-pto-r .snb-pto-a + .snb-pto-arr + .snb-pto-a, .snb-pto-r em { grid-column: 2; }
+  .snb-pto-f { grid-template-columns: 1fr; }
+}
+
+/* Выбор в окне передачи: какую таблицу ВДЦ (правка № 40, 23.10.2026). */
+.snb-ho-pick { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 12px; font-size: 12px; color: var(--ink2); }
+.snb-ho-pick .seg-b { padding: 0 12px; height: 30px; font-weight: 600; cursor: pointer; }
+.snb-ho-pick .seg-b.on { background: var(--brand-tint); color: var(--brand-deep); }
+.snb-ho-pl { font-style: normal; font-size: 11.5px; color: var(--ink3); }
+
+/* «Д» — давальческий материал (правка № 46). */
+.snb-dav { font-style: normal; font-weight: 700; font-size: 10.5px; color: var(--info); background: var(--info-soft);
+  padding: 0 6px; border-radius: 999px; margin-right: 6px; }
+
+/* Чьи цены в счёте (правка № 47) и доставка в стоимости материала (№ 49). */
+.snb-own-ask { width: min(620px, calc(100vw - 32px)); }
+.snb-own-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0 4px; }
+.snb-own-opt { display: flex; flex-direction: column; gap: 6px; text-align: left; padding: 12px 14px; cursor: pointer;
+  border: 1px solid var(--line2); border-radius: 12px; background: var(--card); color: var(--ink2); font: inherit; }
+.snb-own-opt b { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--ink); }
+.snb-own-opt b svg, .snb-rv-own .seg-b svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+.snb-own-opt span { font-size: 12px; line-height: 1.4; }
+.snb-own-opt.on { border-color: var(--brand); box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 18%, transparent); }
+.snb-own-opt.own.on b { color: var(--brand-deep); }
+@media (max-width: 560px) { .snb-own-opts { grid-template-columns: 1fr; } }
+.snb-rv-own .seg-b { display: inline-flex; align-items: center; gap: 5px; }
+.snb-rv-own .seg-b.on.own { color: var(--brand-deep); }
+.snb-rv-spread { display: inline-flex; align-items: center; gap: 6px; margin-left: 12px; font-size: 12px; color: var(--ink2);
+  cursor: pointer; white-space: nowrap; }
+.snb-rv-spread.on { color: var(--ink); font-weight: 600; }
+.snb-rv-spread b { color: var(--info); font-weight: 700; }
+.snb-rv-own { flex: none; }
+
+/* Фото товара в карточке позиции (правка № 45). */
+.snb-pc-pics { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 12px; }
+.snb-pc-pic { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 172px; padding: 8px;
+  border: 1px solid var(--line2); border-radius: 12px; background: #fff; text-decoration: none; }
+.snb-pc-pic img { width: 154px; height: 154px; object-fit: contain; }
+.snb-pc-pic i { font-style: normal; font-size: 10.5px; color: var(--ink3); text-align: center; }
+.snb-pc-pic:hover { border-color: var(--brand); }
+.snb-pc-none { font-size: 12px; color: var(--ink3); }
+
+/* Какой счёт удалить (правка № 54). */
+.snb-delpick { width: min(460px, calc(100vw - 32px)); }
+.snb-delpick-l { display: grid; gap: 6px; margin: 12px 0 4px; }
+.snb-delpick-l .btn-ghost { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; }
+.snb-delpick-l .btn-ghost i { font-style: normal; font-size: 11px; color: var(--ink3); }

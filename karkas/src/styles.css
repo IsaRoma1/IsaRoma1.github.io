@@ -1,0 +1,3501 @@
+/* Дизайн-токены (раздел 12 брифа): фирменный оранжевый только в рамке,
+   внутри данных — зелёный, янтарный, красный, серый.
+   Тёмная тема переопределяет те же роли — см. [data-theme="dark"] ниже,
+   поэтому любой цвет в разметке должен идти переменной, а не хексом. */
+:root {
+  --brand: #F04E0E;         /* киноварь: мягче прежнего чистого оранжевого */
+  --brand-deep: #D84205;
+  --brand-soft: #FFDDCB;
+  --brand-tint: #FFF3EC;
+  --on-brand: #FFFFFF;
+  /* Градиент бренда — единственная заливка цветом на экране: карточка-герой,
+     кнопки действий, вход. Везде один и тот же, чтобы оранжевый звучал
+     одинаково, а не десятью случайными оттенками. */
+  --grad-brand: linear-gradient(135deg, #FF8A3E -8%, #F04E0E 52%, #D13C02 108%);
+
+  --bg: #F1EFEB;            /* тёплый холст */
+  --card: #FFFFFF;
+  --raise: #F6F4F0;         /* подложки: группы таблеток, шапки таблиц */
+  --line: #DFDCD3;
+  --line2: #EBE8E1;
+
+  --ink: #1D1C19;
+  --ink2: #74726A;
+  --ink3: #A6A49B;
+  --ink4: #C9C7BE;
+
+  --ok: #189963;
+  --ok-soft: #E2F3EA;
+  --warn: #B07A18;
+  --warn-soft: #FBF2DF;
+  --bad: #E5484D;
+  --bad-soft: #FDEAEA;
+  --off: #A6A49B;
+  --note: #2C5875;
+  /* Синий и фиолетовый — статусам объекта: «В работе» и «Обслуживание».
+     Оранжевый и зелёный статусам не достаются: они метки своих
+     компаний, и две одинаковые плашки в строке не читались бы. */
+  --info: #2563EB;
+  --info-soft: #E4ECFB;
+  --viol: #7C3AED;
+  --viol-soft: #EDE7FB;
+
+  /* Награды. Цвета металлов держатся в стороне от шкал: янтарь шкалы
+     (--warn) означает «опоздал», и золотой значок рядом с ним читался бы
+     как ещё один провал. Развели формой — у значков только контур и
+     знак, заливка остаётся языком данных. */
+  --aw-gold: #B98518;
+  --aw-silver: #8A8F96;
+  --aw-bronze: #A96B3C;
+  --aw-clean: #189963;
+  --aw-heavy: #2C5875;
+
+  --band: #F0EEE9;
+  --err-bg: var(--bad-soft);
+  --mc-ok-bg: var(--ok-soft);
+  --mc-over-bg: var(--bad-soft);
+  --mc-wait: #C9C7BE;
+  --mc-nd-a: #E8E5DE;
+  --mc-nd-b: #F7F5F1;
+  --mc-unclear-bg: #E5EBF1;
+
+  --box-bg: #F7F5F1;
+  --box-bg-h: #F0EDE7;
+
+  /* Карточки больше не парят: вместо теней-ореолов — рамка и еле заметное
+     прилегание. Глубину даёт только модалка, ей и оставлен float. */
+  --shadow: 0 1px 2px rgba(29, 28, 25, .04);
+  --shadow-float: 0 2px 4px rgba(29, 28, 25, .05), 0 24px 48px -20px rgba(29, 28, 25, .18);
+  --shadow-glow: 0 14px 30px -12px rgba(240, 78, 14, .55);
+  --glow: none;
+  /* Затемнение под прилипшей полосой: показывает, что список уходит
+     под неё, а не обрывается. */
+  --fade: rgba(0, 0, 0, .07);
+
+  --r: 16px;      /* карточки */
+  --r-sm: 11px;   /* кнопки, поля, мелкие блоки */
+  --ease: cubic-bezier(.22, 1, .36, 1);
+
+  --sans: 'Onest', 'IBM Plex Sans', system-ui, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', Consolas, monospace;
+}
+
+/* Тёплый почти-чёрный фон, приподнятые карточки, оранжевое свечение за
+   ними. Статусные цвета осветлены: исходные на тёмном звучат глухо. */
+[data-theme="dark"] {
+  --brand: #FF6218;
+  --brand-deep: #F04E0E;
+  --brand-soft: #4A2413;
+  --brand-tint: #2A1509;
+  --on-brand: #FFF7F2;
+  --grad-brand: linear-gradient(135deg, #FF7A2E -8%, #EF4D0D 52%, #B83502 108%);
+  --bg: #100E0C;
+  --card: #1B1714;
+  --raise: #241F1A;
+  --line: #332C25;
+  --line2: #262019;
+  --ink: #F6EFE7;
+  --ink2: #C0B4A6;
+  --ink3: #8B8076;
+  --ink4: #6B625A;
+  --ok: #63C167;
+  --ok-soft: #1D2E1D;
+  --warn: #E4AC42;
+  --warn-soft: #2E2513;
+  --bad: #F0705A;
+  --bad-soft: #331A18;
+  --off: #6B625A;
+  --note: #86AECC;
+  --info: #7FA8FF;
+  --info-soft: #1C2740;
+  --viol: #B79CFF;
+  --viol-soft: #2A2140;
+
+  --aw-gold: #E0B341;
+  --aw-silver: #A8AEB6;
+  --aw-bronze: #C88A55;
+  --aw-clean: #63C167;
+  --aw-heavy: #86AECC;
+
+  --band: #221C16;
+  --err-bg: var(--bad-soft);
+  --mc-ok-bg: var(--ok-soft);
+  --mc-over-bg: var(--bad-soft);
+  --mc-wait: #5A524A;
+  --mc-nd-a: #2A241E;
+  --mc-nd-b: #201A15;
+  --mc-unclear-bg: #16232C;
+
+  --box-bg: #211C17;
+  --box-bg-h: #2A241D;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 16px 40px -22px rgba(0, 0, 0, .9);
+  --shadow-float: 0 2px 6px rgba(0, 0, 0, .5), 0 24px 50px -20px rgba(0, 0, 0, .95);
+  --glow:
+    radial-gradient(900px 520px at 18% -12%, rgba(255, 98, 24, .17), transparent 70%),
+    radial-gradient(760px 460px at 88% 2%, rgba(255, 156, 44, .10), transparent 70%);
+  --fade: rgba(0, 0, 0, .38);
+}
+
+* { box-sizing: border-box; }
+
+/* Место под вертикальную полосу прокрутки резервируется всегда. Иначе
+   ширины колонок матрицы считаются до её появления, полоса возникает
+   следом и забирает свои пятнадцать пикселей — таблица оказывается ровно
+   на них шире экрана. Заодно не дёргается вёрстка при смене разделов. */
+html { scrollbar-gutter: stable; }
+/* На витрине страница не прокручивается — резерв под полосу только
+   отъедал бы полтора десятка пикселей от правого края. */
+html:has(body.tv) { scrollbar-gutter: auto; }
+
+/* Единый корпус, а не острова: панель прижата к краю, зазоров нет.
+   Раньше всё лежало отдельными карточками с полями по 14px — «облачками». */
+body {
+  margin: 0;
+  background: var(--glow), var(--bg);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  line-height: 1.45;
+  display: flex;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01" on;
+}
+::selection { background: var(--brand-soft); color: var(--ink); }
+
+/* тонкие полосы прокрутки внутри карточек */
+.spec ::-webkit-scrollbar, .mx-scroll::-webkit-scrollbar { height: 7px; width: 7px; }
+.spec ::-webkit-scrollbar-thumb,
+.mx-scroll::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; }
+.spec ::-webkit-scrollbar-track,
+.mx-scroll::-webkit-scrollbar-track { background: transparent; }
+/* Витрина — отдельная страница без боковой панели. Экран разбит на три
+   яруса: шапка, листаемое содержимое, полоса прогресса. Содержимое
+   прокручивается программно, поэтому overflow скрыт — полос на
+   телевизоре быть не должно. */
+body.tv {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+body.tv .tv-head { flex: none; }
+/* Полей нет: на телевизоре каждая полоса пустоты по краям — это минус
+   строка списка. Отступы несут карточки изнутри. */
+body.tv .content { flex: 1; min-height: 0; overflow: hidden; padding: 0; }
+/* Отсчёт до следующего листа. Полоса во всю ширину экрана: с трёх
+   метров её движение читается лучше любой цифры, а внизу она не спорит
+   с данными за внимание. */
+.tv-bar {
+  flex: none;
+  height: 3.5px;
+  background: var(--line2);
+}
+.tv-bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--grad-brand);
+}
+
+/* Номер страницы у часов со стрелками по бокам: полоса внизу говорит
+   «скоро сменится», номер — «сколько ещё впереди», стрелки дают перейти
+   сразу. Приглушены намеренно: у телевизора мыши обычно нет, и
+   постоянно яркие кнопки были бы шумом. */
+.tv-nav {
+  flex: none;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 999px;
+  background: var(--raise);
+  border: 1px solid var(--line2);
+}
+.tv-nav[hidden] { display: none; }
+.tv-nav button {
+  width: 21.5px; height: 21.5px;
+  display: grid; place-items: center;
+  padding: 0; border: 0; border-radius: 999px;
+  background: transparent; color: var(--ink3);
+  cursor: pointer;
+  transition: background .18s var(--ease), color .18s var(--ease);
+}
+.tv-nav button:hover { background: var(--card); color: var(--brand-deep); }
+.tv-nav button:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+.tv-nav button svg {
+  width: 12.5px; height: 12.5px; fill: none; stroke: currentColor;
+  stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+}
+.tv-page {
+  flex: none;
+  padding: 0 5.5px;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11.5px;
+  color: var(--ink3);
+  white-space: nowrap;
+}
+/* Часы уже не забирают весь остаток строки — его делит подпись. */
+body.tv .live { margin-left: 12.5px; }
+
+.num {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Горизонтальная пилюля темы: бегунок ездит к активной иконке. */
+.theme-pill {
+  position: relative;
+  width: 54px;
+  height: 27px;
+  flex: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--raise);
+  cursor: pointer;
+  padding: 0;
+}
+.tp-knob {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 23.5px;
+  height: 23.5px;
+  border-radius: 999px;
+  background: var(--card);
+  transform: translateX(0);   /* явная точка отсчёта: переход от none не анимируется */
+  transition: transform .22s cubic-bezier(.4, 0, .2, 1), background .2s;
+}
+[data-theme="dark"] .tp-knob { transform: translateX(30px); background: var(--brand); }
+.tp-ic {
+  position: absolute;
+  top: 2px;
+  width: 23.5px;
+  height: 23.5px;
+  display: grid;
+  place-items: center;
+  color: var(--ink3);
+  transition: color .2s;
+}
+.tp-sun { left: 2px; }
+.tp-moon { left: 29px; }
+.tp-ic svg { width: 13.5px; height: 13.5px; fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.theme-pill .tp-sun { color: var(--ink); }
+[data-theme="dark"] .theme-pill .tp-sun { color: var(--ink3); }
+[data-theme="dark"] .theme-pill .tp-moon { color: var(--on-brand); }
+
+/* ── боковая панель ──────────────────────────────────────── */
+/* Панель — часть корпуса: во всю высоту, отделена линией, не парит. */
+/* Ширины и поля подобраны так, чтобы значки стояли на одной вертикали в
+   обоих состояниях: 10 (поле панели) + 10 (поле пункта) + 8 (полвысоты
+   значка) = 28 от края. Свёрнутая панель — 56 = 10 + 36 + 10, центр её
+   пунктов тоже 28. Поэтому при схлопывании значки не сдвигаются ни на
+   пиксель. Менять одно без другого нельзя. */
+.side {
+  width: 187px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  padding: 11px 9px 9px;
+  background: var(--card);
+  border-right: 1px solid var(--line2);
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  /* Именно height, не max-height: у прилипшей панели высота считается по
+     содержимому, распорка .grow получает ноль — и карточка пользователя
+     прилипает к меню вместо низа. */
+  height: 100vh;
+  overflow: hidden auto;
+  transition: width .22s var(--ease);
+}
+.side .brand {
+  display: flex; align-items: center; gap: 7px;
+  padding: 2px 2.5px 11px;
+  min-width: 0;
+}
+/* Кнопка схлопывания: панель ужимается до одних значков. */
+.side-btn {
+  margin-left: auto; flex: none;
+  width: 21.5px; height: 21.5px;
+  display: grid; place-items: center; padding: 0;
+  border: 0; border-radius: 6.5px;
+  background: transparent; color: var(--ink3);
+  cursor: pointer;
+  transition: background .2s var(--ease), color .2s var(--ease), opacity .18s var(--ease);
+}
+.side-btn:hover { background: var(--raise); color: var(--ink); }
+.side-btn svg {
+  width: 13.5px; height: 13.5px; fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* Логотип — треугольник 128×111, шире, чем выше. Задаём только высоту:
+   ширину браузер берёт из пропорций файла, и треугольник остаётся
+   равнобедренным. Скругления нет намеренно — оно срезало ему вершины. */
+.side .brand img { display: block; height: 22.5px; width: auto; flex: none; }
+.side .brand > span { min-width: 0; }
+.side .brand b {
+  display: block; font-size: 12px; font-weight: 600; letter-spacing: -.015em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.side .grow { flex: 1; }
+
+/* ── свёрнутое состояние ──────────────────────────────────────
+   Подписи прячет font-size: 0 — сами значки заданы в пикселях и размера
+   не теряют; подпись остаётся в title.
+
+   Кнопка уезжает под логотип: в узкой панели она стояла бы вторым
+   этажом и съедала высоту. Наводишь на логотип — он гаснет, на его
+   месте проявляется кнопка разворота. Приём из Teko Chat. */
+.side.min { width: 50.5px; }
+.side.min .brand { position: relative; justify-content: center; padding: 2px 0 11px; }
+.side.min .brand > span { display: none; }
+/* Кнопка лежит поверх логотипа и остаётся кликабельной, даже пока
+   невидима. Прятать её из-под курсора нельзя: наведение и нажатие
+   приходят почти одновременно, и клик успевал провалиться сквозь неё.
+   Заодно выходит удобно — в свёрнутой панели по логотипу можно просто
+   щёлкнуть, целиться в проявившуюся кнопку не нужно. */
+.side.min .side-btn {
+  position: absolute;
+  left: 50%; top: 2.5px;
+  transform: translateX(-50%);
+  margin-left: 0;
+  opacity: 0;
+}
+/* Стрелка смотрит наружу: кнопка теперь разворачивает, а не сворачивает. */
+.side.min .side-btn svg { transform: scaleX(-1); }
+.side.min .brand { cursor: pointer; }
+/* Логотип не исчезает, а уходит в расфокус — остаётся понятно, что это
+   он, и кнопка читается поверх. */
+.side.min .brand img {
+  transition: opacity .18s var(--ease), filter .18s var(--ease);
+}
+/* Фокус — только с клавиатуры. С :focus-within кнопка оставалась нажатой
+   после мышиного клика и держала логотип спрятанным до следующего клика
+   мимо: панель сворачивалась и логотип пропадал насовсем. */
+.side.min .brand:hover img,
+.side.min .brand:has(.side-btn:focus-visible) img { opacity: .3; filter: blur(3px); }
+.side.min .brand:hover .side-btn,
+.side.min .brand:has(.side-btn:focus-visible) .side-btn { opacity: 1; }
+
+.side.min .nav a { justify-content: center; gap: 0; padding: 8px 0; font-size: 0; }
+.side.min .nav .lab { display: none; }
+.side.min .who { justify-content: center; padding: 8px 0 2px; }
+.side.min .who-t, .side.min .who .out { display: none; }
+
+.nav { display: flex; flex-direction: column; gap: 1px; }
+.nav a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 9px;
+  border-radius: 7px;
+  color: var(--ink2);
+  font-size: 11.5px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .2s var(--ease), color .2s var(--ease);
+}
+.nav a:hover { background: var(--raise); color: var(--ink); }
+
+/* Активный раздел залит фирменным градиентом целиком. Прежде он был
+   бледной тонировкой с оранжевой палкой у самого края панели: палка
+   висела вне пункта, цеплялась за край и читалась случайной чертой, а
+   не отметкой выбора. Заливка говорит то же самое одним движением и не
+   зависит от того, где проходит граница панели. */
+.nav a.on {
+  background: var(--grad-brand);
+  color: #FFF7F2;
+  font-weight: 500;
+  box-shadow: 0 3px 10px -5px rgba(240, 78, 14, .7);
+}
+.nav a.on:hover { background: var(--grad-brand); color: #FFF7F2; }
+
+.nav svg {
+  width: 14.5px; height: 14.5px; flex: none; fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+}
+/* hidden проигрывает display:flex — возвращаем ему силу. */
+.nav a[hidden], .nav .sep[hidden], .nav .lab[hidden] { display: none; }
+/* Раздел есть, а пункта меню нет: в него входят из того места, где он
+   нужен по делу. Ссылка при этом остаётся в разметке — по ней проверка
+   прав узнаёт, открыт ли раздел этому человеку. */
+.nav a[data-hidenav] { display: none; }
+/* Разделитель без линии: пустоты в десяток пикселей хватает, чтобы
+   отделить администрирование, а лишняя черта дробила короткое меню. */
+.nav .sep { height: 9px; }
+.nav .lab {
+  font-size: 7.5px; color: var(--ink4); letter-spacing: .1em;
+  text-transform: uppercase; padding: 0 9px 4.5px; white-space: nowrap;
+}
+
+/* ── кто вошёл ─────────────────────────────────────────────
+   Все правила заскоплены под .side намеренно: класс .who носит ещё и
+   строка рейтинга в «Остальных сотрудниках», и подложка отсюда красила
+   её серой плашкой во всю ширину. Второй такой случай после .lg —
+   имена в этом файле стоит проверять на занятость. */
+/* Без рамки и подложки: снизу панели и так граница экрана, а плашка в
+   плашке добавляла толщины там, где её и так хватало. Отделяет тонкая
+   линия сверху. */
+.side .who {
+  display: flex; align-items: center; gap: 7px;
+  margin-top: 7px; padding: 8px 5.5px 2px;
+  border-top: 1px solid var(--line2);
+}
+.side .who .av {
+  width: 23.5px; height: 23.5px; flex: none; border-radius: 999px;
+  background: var(--grad-brand); color: #FFF7F2;
+  display: grid; place-items: center; font-size: 9px; font-weight: 600;
+}
+/* Пока сервер не подтвердил вход, имени ещё нет. Показываем скелет, а не
+   пустой оранжевый кругляш с пустотой рядом — это читалось как поломка. */
+.side .who.wait .av { background: var(--line); color: transparent; }
+.side .who.wait .who-t b, .side .who.wait .who-t span {
+  color: transparent; background: var(--line2); border-radius: 4.5px;
+}
+.side .who.wait .who-t b { width: 68.5px; height: 8px; margin-bottom: 4.5px; }
+.side .who.wait .who-t span { width: 45px; height: 7px; }
+.side .who.wait .out { visibility: hidden; }
+.side .who-t { min-width: 0; flex: 1; }
+.side .who-t b { display: block; font-size: 11px; font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.side .who-t span { display: block; font-size: 9.5px; color: var(--ink3); }
+.side .who .out {
+  flex: none; width: 25px; height: 25px; display: grid; place-items: center;
+  padding: 0; border: 0; border-radius: 8px; background: transparent;
+  color: var(--ink3); cursor: pointer; transition: .2s var(--ease);
+}
+.side .who .out:hover { background: var(--err-bg); color: var(--bad); }
+.side .who .out svg { width: 13.5px; height: 13.5px; fill: none; stroke: currentColor;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Роли: свой раскрывающийся список. Системный рисуется движком ОС и
+   выбивается из оформления — поэтому стрелку рисуем сами, а родную
+   убираем через appearance: none. */
+.role-sel {
+  appearance: none; -webkit-appearance: none;
+  font: inherit; font-size: 11px; color: var(--ink);
+  background: var(--raise) no-repeat right 11px center;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A6A49B' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-size: 13px;
+  border: 1px solid transparent; border-radius: 999px;
+  padding: 7px 29px 7px 12.5px; cursor: pointer;
+  transition: .2s var(--ease);
+}
+.role-sel:hover { border-color: var(--line); background-color: var(--card); }
+.role-sel:focus { outline: none; border-color: var(--brand); background-color: var(--card); }
+[data-theme="dark"] .role-sel {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B8076' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+}
+/* ── свой выпадающий список ──────────────────────────────────
+   Нативный select оставлен в разметке ради значения и событий, но не
+   виден: рисуем поверх свою кнопку и свой список. Раскрытый список
+   родного select-а рисует операционная система, и никакими стилями до
+   него не добраться — на фирменной странице открывалось системное окно
+   с синей подсветкой. */
+.sel { position: relative; display: inline-flex; }
+.sel > select {
+  position: absolute; width: 1px; height: 1px;
+  opacity: 0; pointer-events: none;
+}
+.sel-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  font: inherit; font-size: 11px; color: var(--ink);
+  background: var(--raise);
+  border: 1px solid transparent; border-radius: 999px;
+  padding: 7px 11px 7px 12.5px;
+  cursor: pointer;
+  transition: .2s var(--ease);
+}
+.sel-btn:hover { border-color: var(--line); background: var(--card); }
+.sel-btn[aria-expanded="true"] { border-color: var(--brand); background: var(--card); }
+.sel-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+.sel-btn svg {
+  width: 11.5px; height: 11.5px; flex: none;
+  fill: none; stroke: var(--ink3);
+  stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform .2s var(--ease);
+}
+.sel-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+/* Список лежит в body: фильтры живут внутри карточки с overflow: hidden,
+   и на месте его обрезало бы по краю. */
+.sel-list {
+  position: fixed;
+  z-index: 80;
+  max-height: 288px;
+  overflow-y: auto;
+  padding: 4.5px;
+  background: var(--card);
+  border: 1px solid var(--line2);
+  border-radius: 11px;
+  box-shadow: var(--shadow-float);
+}
+.sel-list[hidden] { display: none; }
+.sel-opt {
+  display: block; width: 100%;
+  font: inherit; font-size: 11px; text-align: left;
+  color: var(--ink2); background: transparent;
+  border: 0; border-radius: 7px;
+  padding: 7px 11px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .15s var(--ease), color .15s var(--ease);
+}
+.sel-opt:hover, .sel-opt:focus-visible { background: var(--raise); color: var(--ink); outline: none; }
+.sel-opt.on { background: var(--brand-tint); color: var(--brand-deep); font-weight: 500; }
+
+.role-chip {
+  display: inline-block; font-size: 10.5px; padding: 3.5px 10px;
+  border-radius: 999px; background: var(--raise); color: var(--ink2);
+}
+.role-chip.adm { background: var(--ink); color: var(--card); }
+/* Статус — мягкая плашка с точкой своего цвета, как в референсе. */
+.u-tag {
+  display: inline-block; font-size: 10.5px; font-weight: 500;
+  border-radius: 999px; padding: 3.5px 10px; white-space: nowrap;
+}
+.u-tag::before, .chip-st::before, .st-chip::before {
+  content: "";
+  display: inline-block;
+  width: 4.5px; height: 4.5px;
+  border-radius: 99px;
+  background: currentColor;
+  margin-right: 5.5px;
+  vertical-align: 2px;
+}
+.u-ok { color: var(--ok); background: var(--ok-soft); }
+.u-bad { color: var(--bad); background: var(--bad-soft); }
+tr.u-off td { opacity: .5; }
+
+/* панель инструментов раздела */
+.usr-top { align-items: center; gap: 11px; }
+.usr-search {
+  flex: 1; min-width: 126px; max-width: 288px; margin-left: auto;
+  font: inherit; font-size: 11px; color: var(--ink);
+  background: var(--raise); border: 1px solid transparent;
+  border-radius: 9px; padding: 7px 11px; outline: none; transition: .2s var(--ease);
+}
+.usr-search:focus { border-color: var(--brand); background: var(--card); }
+.btn-brand {
+  border: 0; border-radius: 9px; cursor: pointer;
+  background: var(--grad-brand); color: #FFF7F2;
+  font: inherit; font-size: 11px; font-weight: 600; padding: 8px 13.5px;
+  box-shadow: 0 4px 14px -8px rgba(240, 78, 14, .6);
+  transition: filter .15s, box-shadow .2s var(--ease);
+}
+.btn-brand:hover { filter: brightness(1.06); box-shadow: 0 6px 18px -8px rgba(240, 78, 14, .7); }
+.btn-ghost {
+  border: 1px solid var(--line); border-radius: 9px; cursor: pointer;
+  background: transparent; color: var(--ink2);
+  font: inherit; font-size: 11px; padding: 8px 13.5px;
+}
+.btn-ghost:hover { color: var(--ink); border-color: var(--ink3); }
+
+/* Кнопки действий проявляются при наведении на строку — в покое
+   таблица остаётся спокойной. */
+/* Ячейка остаётся ячейкой. Здесь стоял display:flex, и td переставал
+   быть table-cell: он не растягивался до высоты строки, а его нижняя
+   граница висела на восемь пикселей выше соседних — разделитель под
+   строкой выглядел надломленным. Раскладку в ряд делает .u-st внутри. */
+.u-cell { white-space: nowrap; }
+.acts { display: inline-flex; gap: 2px; opacity: 0; transition: opacity .2s var(--ease); }
+tr:hover .acts, .acts:focus-within { opacity: 1; }
+.act {
+  display: grid; place-items: center; width: 25px; height: 25px;
+  border: 0; background: transparent; cursor: pointer; padding: 0;
+  border-radius: 999px; color: var(--ink3); transition: .2s var(--ease);
+}
+.act:hover { background: var(--line2); color: var(--ink); }
+.act svg {
+  width: 14.5px; height: 14.5px; fill: none; stroke: currentColor;
+  /* Тоньше остальных значков: у ключа есть отверстие в головке, и при
+     линии в 1.7 оно на таком размере затекает. */
+  stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+}
+.av-s {
+  display: inline-grid; place-items: center; width: 23.5px; height: 23.5px;
+  border-radius: 999px; background: var(--raise); color: var(--ink2);
+  font-size: 10px; font-weight: 600; margin-right: 9px; vertical-align: -8px;
+}
+
+/* модалка */
+.modal {
+  position: fixed; inset: 0; z-index: 60;
+  background: rgba(20, 18, 16, .45);
+  display: grid; place-items: center; padding: 18px;
+}
+.modal[hidden] { display: none; }   /* иначе display:grid перебьёт hidden */
+/* Окно не выше экрана: поля прокручиваются внутри, кнопки — всегда внизу
+   на виду. Заказчик 02.10.2026: в «Новом пользователе» список разделов
+   вытолкнул «Создать» за нижний край, и добраться до неё можно было,
+   только уменьшив масштаб браузера до 80 %. */
+.modal-card {
+  width: min(342px, 92vw);
+  max-height: calc(100vh - 36px); max-height: calc(100dvh - 36px);
+  overflow-y: auto; overscroll-behavior: contain;
+  background: var(--card); border-radius: var(--r); box-shadow: var(--shadow);
+  padding: 20px 21.5px; display: flex; flex-direction: column; gap: 11.5px;
+}
+.modal-card > .modal-btns {
+  position: sticky; bottom: -20px; z-index: 1;
+  margin: 4.5px -21.5px -20px; padding: 12px 21.5px 20px;
+  background: var(--card); border-top: 1px solid var(--line2);
+}
+.modal-card h4 { margin: 0 0 3.5px; font-size: 13.5px; font-weight: 600; }
+.modal-card label { font-size: 11px; font-weight: 500; color: var(--ink2); }
+/* Галочку из этого правила исключаем: оформление поля ввода (во всю
+   ширину, с подложкой и отступами) растягивало чекбокс на всю строку
+   и выталкивало подпись за край карточки. */
+.modal-card input:not([type="checkbox"]), .modal-card select {
+  display: block; width: 100%; margin-top: 5.5px;
+  font: inherit; font-size: 12px; color: var(--ink);
+  background: var(--raise); border: 1.5px solid transparent;
+  border-radius: 10px; padding: 9px 11px; outline: none; transition: .2s var(--ease);
+}
+.modal-card input:not([type="checkbox"]):focus, .modal-card select:focus {
+  border-color: var(--brand); background: var(--card);
+}
+.modal-btns { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4.5px; }
+
+/* ── страница входа ──────────────────────────────────────── */
+/* Тёплое пятно света сверху — то же дыхание бренда, что у карточки-героя,
+   только едва слышное: страница входа задаёт тон, не крича. */
+body.login {
+  display: grid; place-items: center; padding: 18px;
+  background:
+    radial-gradient(760px 440px at 50% -12%, rgba(240, 78, 14, .09), transparent 70%),
+    var(--glow), var(--bg);
+  background-attachment: fixed;
+}
+.login-wrap { width: min(360px, 92vw); }
+.login-brand {
+  display: flex; align-items: center; gap: 11px; justify-content: center;
+  margin-bottom: 20px;
+}
+.login-brand img { display: block; height: 39.5px; width: auto; }
+.login-brand b { display: block; font-size: 19px; font-weight: 600; letter-spacing: -.02em; }
+.login-card {
+  background: var(--card); border: 1px solid var(--line2);
+  border-radius: 20px; box-shadow: var(--shadow-float);
+  padding: 23.5px 23.5px 21.5px; display: flex; flex-direction: column; gap: 13.5px;
+}
+.login-card label { font-size: 11px; font-weight: 500; color: var(--ink2); }
+.login-card input {
+  display: block; width: 100%; margin-top: 5.5px;
+  font: inherit; font-size: 12.5px; color: var(--ink);
+  background: var(--raise); border: 1.5px solid transparent;
+  border-radius: 11px; padding: 10px 11.5px; outline: none; transition: .2s var(--ease);
+}
+.login-card input:focus { border-color: var(--brand); background: var(--card); }
+/* Только кнопка отправки. Правило без уточнения красило градиентом
+   любую кнопку внутри карточки — глазок у пароля превращался в
+   оранжевый прямоугольник во всю ширину. */
+.login-card button[type="submit"] {
+  margin-top: 3.5px; border: 0; border-radius: 11px; cursor: pointer;
+  background: var(--grad-brand); color: #FFF7F2;
+  font: inherit; font-size: 13px; font-weight: 600; padding: 11px;
+  box-shadow: 0 6px 18px -10px rgba(240, 78, 14, .65);
+  transition: filter .15s;
+}
+.login-card button[type="submit"]:hover { filter: brightness(1.06); }
+.login-card button[type="submit"]:disabled { opacity: .6; cursor: default; }
+
+/* ── показать пароль ──────────────────────────────────────── */
+/* Обёртку и кнопку собирает src/pweye.js — здесь только вид. Правила
+   общие для входа и для «Безопасности» в личном кабинете: поля там
+   разного размера, поэтому ничего, кроме места под кнопку, не задаём. */
+.pw-field { position: relative; }
+.pw-field input { padding-right: 38px; }
+/* Отступ от подписи на входе держит обёртка, а не поле: глазок
+   позиционируется от неё, и margin на самом input сдвинул бы кнопку. */
+.login-card .pw-field { margin-top: 5.5px; }
+.login-card .pw-field input { margin-top: 0; }
+.pw-eye {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 38px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0; border: 0; background: none; cursor: pointer;
+  color: var(--ink3);
+  transition: color .15s;
+}
+.pw-eye:hover { color: var(--ink2); }
+.pw-eye:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.pw-eye svg {
+  width: 16px; height: 16px; fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+}
+/* Перечёркивание появляется, когда пароль открыт: значок показывает не
+   действие кнопки, а текущее состояние поля. */
+.pw-eye .pw-slash { opacity: 0; transition: opacity .15s; }
+.pw-eye.on { color: var(--brand); }
+.pw-eye.on .pw-slash { opacity: 1; }
+.login-err {
+  font-size: 11px; color: var(--bad); background: var(--err-bg);
+  border-radius: 8px; padding: 8px 11px;
+}
+.login-foot {
+  text-align: center; font-size: 10px; color: var(--ink3); margin-top: 14.5px;
+}
+
+/* ── правая часть и строка раздела ───────────────────────── */
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+/* Содержимое идёт вплотную к панели и к шапке: зазоров нет вовсе.
+   Отступы несут сами карточки изнутри, снаружи их нет — иначе рейтинг
+   снова читался бы островом, парящим посреди серого поля. */
+/* Нижнего отступа нет: полоса серого фона под последней карточкой
+   читалась как недогруженный кусок страницы, а не как её конец. */
+.main > section { padding: 0; }
+/* Линия под последней карточкой тоже лишняя — отделять её не от чего. */
+.main > section > .card:last-child { border-bottom: 0; }
+.main > .offline { margin: 12.5px 21.5px 0; }
+.top {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11.5px 21.5px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line2);
+  /* Верхняя полоса — опора всей лесенки прилипания: под ней встают и
+     дерево договоров, и шапка спеки. Поэтому она же и самая верхняя по
+     слою, иначе строки таблицы проезжали бы поверх неё. Полоса прижата
+     к краю и сплошная — прежние заслонки от зазоров больше не нужны. */
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+.top h1 { margin: 0; font-size: 15.5px; font-weight: 600; letter-spacing: -.015em; }
+.top-sub { font-size: 10.5px; color: var(--ink3); }
+.top-gap { flex: 1; }
+
+/* Шапка витрины — та же логика, но крупнее и без управления. */
+.tv-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14.5px 21.5px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line2);
+}
+.tv-head img { display: block; height: 45px; width: auto; }
+
+.brand-title { flex: none; min-width: 0; }
+.brand-title h1 { margin: 0; font-size: 19px; font-weight: 600; letter-spacing: -.02em; line-height: 1.2; }
+.brand-title span { display: block; font-size: 10px; color: var(--ink3); letter-spacing: .05em; margin-top: 2px; }
+
+/* Часы. Минуты крупно, секунды приглушены — иначе секунды перетягивают
+   на себя внимание, хотя нужны лишь как признак «экран живой». */
+.live {
+  flex: none;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  white-space: nowrap;
+}
+.live .clock {
+  display: flex;
+  align-items: baseline;
+  gap: 2.5px;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+/* ── свежесть источников ──────────────────────────────────────
+   Значок молчит серым, пока всё в порядке: постоянный цветной
+   индикатор в шапке — шум. Желтеет и краснеет только по делу. */
+.fresh {
+  position: relative;
+  flex: none;
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--ink3);
+  cursor: help;
+  outline: none;
+  transition: color .2s var(--ease), background .2s var(--ease);
+}
+.fresh:hover, .fresh:focus-visible { color: var(--ink); background: var(--raise); }
+.fresh.warn { color: var(--warn); }
+.fresh.bad  { color: var(--bad); }
+.fresh-ic {
+  width: 14.5px; height: 14.5px; fill: none; stroke: currentColor;
+  stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.fresh-pop {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: -6px;
+  z-index: 40;
+  min-width: 241px;   /* пол, а не потолок: при nowrap коробка растёт влево */
+  padding: 11px 13.5px 11.5px;
+  background: var(--card);
+  border: 1px solid var(--line2);
+  border-radius: 12.5px;
+  box-shadow: var(--shadow);
+  text-align: left;
+  cursor: default;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity .15s, transform .15s, visibility .15s;
+}
+.fresh:hover .fresh-pop, .fresh:focus-visible .fresh-pop {
+  opacity: 1; visibility: visible; transform: translateY(0);
+}
+
+.fp-title {
+  font-size: 8.5px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink3); margin-bottom: 8px;
+}
+/* Сетка, а не флекс: колонки встают по одной линии в обеих строках и не
+   зависят от длины текста. Плюс nowrap — иначе «3 минуты назад»
+   ломается пополам, когда возраст длиннее обычного. */
+.fp-row {
+  display: grid;
+  grid-template-columns: 6.5px 56px auto 1fr;
+  align-items: center;
+  gap: 0 9px;
+  line-height: 1.5;
+  padding: 3.5px 0;
+  white-space: nowrap;
+}
+.fp-dot { width: 6.5px; height: 6.5px; border-radius: 999px; }
+.fp-dot.ok { background: var(--ok); }
+.fp-dot.warn { background: var(--warn); }
+.fp-dot.bad { background: var(--bad); }
+.fp-name { font-size: 11px; color: var(--ink); }
+.fp-time { font-size: 11px; color: var(--ink); font-weight: 600; }
+.fp-age { font-size: 10px; color: var(--ink3); text-align: right; }
+.fp-note {
+  margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--line2);
+  font-size: 9.5px; color: var(--ink3); line-height: 1.4;
+}
+
+.live .clock { cursor: default; }
+.live .clock b { font-size: 18px; font-weight: 600; letter-spacing: -.02em; }
+.live .clock i { font-size: 11px; font-style: normal; color: var(--ink3); font-weight: 500; }
+
+.icon-btn {
+  flex: none;
+  width: 30.5px;
+  height: 30.5px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: var(--ink2);
+  background: var(--raise);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .2s var(--ease);
+}
+.icon-btn:hover { color: var(--on-brand); background: var(--brand); border-color: var(--brand); }
+.icon-btn .ic { width: 15.5px; height: 15.5px; fill: none; stroke: currentColor;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.icon-btn .ic-collapse { display: none; }
+body.tv .icon-btn .ic-expand { display: none; }
+body.tv .icon-btn .ic-collapse { display: block; }
+
+/* Нет связи — спокойная строка, а не красный щит во всю ширину: числа на
+   экране верны на названное время, человеку достаточно знать это. */
+.offline {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 12.5px;
+  padding: 6.5px 7px 6.5px 13px;
+  border: 1px solid color-mix(in srgb, var(--bad) 28%, transparent);
+  border-radius: 9px;
+  background: var(--bad-soft);
+  color: var(--ink2);
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+.offline[hidden] { display: none; }
+.offline b { color: var(--bad); font-weight: 600; }
+.offline > span { flex: 1; min-width: 0; padding: 3px 0; }
+.off-dot {
+  flex: none;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--bad);
+  animation: off-pulse 1.8s ease-in-out infinite;
+}
+@keyframes off-pulse { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .off-dot { animation: none; } }
+.off-retry {
+  flex: none;
+  border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent);
+  border-radius: 7px;
+  cursor: pointer;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit; font-size: 11px;
+  padding: 5px 11px;
+}
+.off-retry:hover { border-color: var(--bad); }
+.off-retry:disabled { opacity: .5; cursor: default; }
+
+/* Инструменты живут в общей строке шапки и забирают её остаток. */
+.mx-tools {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1 1 288px;
+  min-width: 0;
+  padding: 0;
+}
+/* Поле сжимается первым: строка инструментов прилипает вместе с
+   заголовком, и перенос в два-три ряда раздувал бы шапку на пол-экрана. */
+.tb-search {
+  flex: 1 1 162px;
+  min-width: 119px;
+  max-width: 270px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--raise);
+  border: 1px solid transparent;
+  border-radius: 9px;
+  padding: 7px 11px;
+  transition: .2s var(--ease);
+}
+.tb-search:focus-within { border-color: var(--brand); background: var(--card); }
+.tb-search svg {
+  flex: none; width: 13.5px; height: 13.5px;
+  fill: none; stroke: var(--ink3);
+  stroke-width: 1.8; stroke-linecap: round;
+}
+.tb-search input {
+  flex: 1; min-width: 0;
+  border: 0; outline: 0; background: transparent;
+  font: inherit; font-size: 11px; color: var(--ink);
+  padding: 0;
+}
+.tb-search input::placeholder { color: var(--ink3); }
+.tb-gap { flex: 1; }
+.chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px 18px;
+}
+.chip {
+  position: relative;
+  font: inherit;
+  font-size: 11px;
+  color: var(--ink2);
+  background: transparent;
+  border: 0;
+  padding: 6.5px 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .2s var(--ease);
+}
+.chip::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 1px;
+  height: 2px;
+  border-radius: 2px;
+  background: transparent;
+  transition: background .2s var(--ease);
+}
+.chip:hover { color: var(--ink); }
+.chip.on { color: var(--ink); font-weight: 600; }
+.chip.on::after { background: var(--brand); }
+/* Тумблер «мало данных» внизу таблицы, у своего раздела. Он остаётся
+   таблеткой: это выключатель, а не вкладка. */
+.mx-foot { display: flex; padding: 12.5px 21.5px 5.5px; }
+/* Пока таблица — скелет, тумблер не показываем: включённый, он чёрный,
+   и на выцветшем экране ожидания читался единственным живым пятном. */
+#masters-body.skel-list ~ .mx-foot { display: none; }
+/* Прежняя подпись «показывать „мало данных“» занимала пол-ладони и
+   заливалась чёрным во включённом виде — на спокойной странице это было
+   самое тёмное пятно. Осталось короткое «мало данных» с точкой-лампочкой:
+   горит оранжевым — показываем, погасла — скрыты. Полная фраза в title. */
+.chip-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6.5px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4.5px 11px;
+  font-size: 11px;
+  color: var(--ink3);
+}
+.chip-toggle::after { display: none; }
+.chip-toggle .dot {
+  width: 5.5px; height: 5.5px; flex: none;
+  border-radius: 99px;
+  background: var(--ink4);
+  transition: background .18s var(--ease);
+}
+.chip-toggle:hover { color: var(--ink2); border-color: var(--ink4); background: transparent; }
+.chip-toggle.on { color: var(--ink2); font-weight: 400; background: transparent; border-color: var(--line); }
+.chip-toggle.on .dot { background: var(--brand); }
+
+/* ── содержимое ───────────────────────────────────────────── */
+.content { padding: 16px 18px 39.5px; }
+
+.duo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14.5px;
+  align-items: start;
+}
+@media (max-width: 990px) {
+  .duo { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ── ряд показателей ──────────────────────────────────────── */
+/* Не четыре отдельных облачка, а одна лента: ячейки разделены линиями.
+   Зазор в 1px показывает цвет подложки — это и есть разделители, и они
+   сами встают правильно при любой перестройке сетки на узких экранах. */
+.kpis {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 1px;
+  margin-bottom: 0;
+  background: var(--line2);
+  border: 0;
+  border-bottom: 1px solid var(--line2);
+  border-radius: 0;
+  overflow: hidden;
+}
+/* display:grid перебивает штатное скрытие, поэтому правило явное. */
+.kpis[hidden] { display: none; }
+@media (max-width: 1116px) { .kpis { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 630px)  { .kpis { grid-template-columns: 1fr; } }
+
+/* Компактно по высоте: число и подпись стоят в одну строку, а не
+   этажами — так карточка укладывается примерно в 115px вместо 180. */
+.k {
+  background: var(--card);
+  padding: 14.5px 21.5px;
+  min-width: 0;
+}
+.k-lab { font-size: 9px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--ink3); font-weight: 600; }
+.k-line { display: flex; align-items: baseline; gap: 11px; margin-top: 5.5px; min-width: 0; }
+.k-big { font-size: 30.5px; font-weight: 600; letter-spacing: -.03em; line-height: 1.1; flex: none; }
+.k-sub { font-size: 10.5px; color: var(--ink2); min-width: 0; }
+.k-src { font-size: 9px; color: var(--ink3); margin-top: 6.5px; letter-spacing: .03em; }
+.k-bar { height: 4.5px; border-radius: 99px; background: var(--line2); overflow: hidden; margin-top: 9px; }
+.k-bar i { display: block; height: 100%; border-radius: 99px; }
+.k-bar i.ok { background: var(--ok); }
+.k-bar i.warn { background: var(--warn); }
+.k-bar i.off { background: var(--off); }
+
+/* Карточка-герой: единственное место, где оранжевый заливкой.
+   Градиент плюс блик сверху — как баннер в референсе, остальная лента
+   вокруг остаётся спокойной. */
+.k.hero {
+  position: relative;
+  background: var(--grad-brand);
+  color: var(--on-brand);
+}
+.k.hero::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(340px 150px at 88% -30%, rgba(255, 255, 255, .28), transparent 70%);
+  pointer-events: none;
+}
+.k.hero > * { position: relative; z-index: 1; }
+.k.hero .k-lab { color: var(--on-brand); opacity: .78; }
+.k.hero .k-big { font-size: 38px; }
+.k.hero .k-sub { font-size: 11px; color: var(--on-brand); }
+.k-split { display: flex; height: 6.5px; border-radius: 99px; overflow: hidden;
+  background: rgba(255, 255, 255, .18); margin-top: 9px; }
+.k-split i { display: block; height: 100%; background: var(--on-brand); }
+.k-split i.rest { background: rgba(255, 255, 255, .34); }
+.k-legend { display: flex; gap: 14.5px; margin-top: 6.5px; font-size: 10px; }
+.k-legend .d { width: 6.5px; height: 6.5px; border-radius: 99px; display: inline-block; margin-right: 5.5px; }
+.k-legend .d.on { background: var(--on-brand); }
+.k-legend .d.off { background: rgba(255, 255, 255, .55); }
+.k-legend b { font-family: var(--mono); font-weight: 600; }
+
+/* Карточки — не плитки, а полосы во всю ширину рабочего поля. Друг от
+   друга их отделяет линия снизу, а не воздух вокруг. */
+.card {
+  background: var(--card);
+  border: 0;
+  border-bottom: 1px solid var(--line2);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 18px 21.5px;
+  margin-bottom: 0;
+}
+.card > h2 { margin: 0 0 12.5px; font-size: 13.5px; font-weight: 600; }
+.h-title { flex: none; }
+.h-note { font-size: 10.5px; font-weight: 400; color: var(--ink3); margin-left: 5.5px; }
+
+/* Пустое место в шапке — под будущие элементы. */
+.chrome-gap { flex: 1 1 auto; min-width: 0; }
+
+/* Выбор вида рабочего стола: три кнопки одной группой. Заменил стрелку
+   «раскрыть пункты» — она умела только два состояния и не подсказывала,
+   что вообще бывает. Подписи живут в title и aria-label: значков три,
+   они рядом, и текст рядом с каждым сделал бы из группы простыню. */
+.mode {
+  flex: none;
+  display: inline-flex;
+  gap: 2px;
+  padding: 2.5px;
+  background: var(--raise);
+  border: 1px solid var(--line2);
+  border-radius: 10px;
+}
+.mode button {
+  width: 27px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--ink3);
+  cursor: pointer;
+  transition: background .18s var(--ease), color .18s var(--ease);
+}
+.mode button:hover { color: var(--ink); background: var(--card); }
+.mode button.on {
+  background: var(--card);
+  color: var(--brand-deep);
+  box-shadow: 0 1px 2px rgba(29, 28, 25, .07);
+}
+.mode button svg {
+  width: 14.5px; height: 14.5px; fill: none; stroke: currentColor;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.mode button:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+
+.placeholder {
+  color: var(--ink3);
+  font-size: 11px;
+  padding: 12.5px 0;
+  border-top: 1px dashed var(--line);
+}
+
+/* ── скелет загрузки ─────────────────────────────────────────
+   Первый экран собирается около секунды: сервер сверяет токен, потом
+   тянется obligations.json на два с половиной мегабайта. Слово
+   «загрузка…» на пустой карточке всё это время читалось как пустая
+   таблица, а не как ожидание. Скелет повторяет будущую строку — глаз
+   заранее видит, где встанут имя, процент и полоса.
+
+   Блик бежит по подложке; при выключенной анимации в системе остаётся
+   спокойный серый — смысл держится на форме, а не на движении. */
+@keyframes sweep { to { transform: translateX(100%); } }
+.skel {
+  position: relative;
+  overflow: hidden;
+  background: var(--line2);
+  border-radius: 5.5px;
+}
+.skel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .6), transparent);
+  animation: sweep 1.5s var(--ease) infinite;
+}
+[data-theme="dark"] .skel::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .05), transparent);
+}
+@media (prefers-reduced-motion: reduce) { .skel::after { animation: none; } }
+
+/* Заглушка на месте текста. Буквы настоящие, но прозрачные: коробка
+   строки получает ровно ту высоту, что и будущая надпись, — со всеми
+   своими font-size и line-height. Поэтому подмена данными не сдвигает
+   ничего ни на пиксель, и угадывать высоту числом не приходится. */
+/* vertical-align: top обязателен. По умолчанию inline-block садится на
+   базовую линию, и строка вырастает на место под выносные элементы —
+   заглушка оказывалась на несколько пикселей выше текста, который
+   заменяет, и плитки всё равно подпрыгивали. */
+.skel-t {
+  display: inline-block; vertical-align: top;
+  color: transparent; user-select: none;
+}
+/* На карточке-герое подложка оранжевая, и серый по ней читается как
+   грязь: там заглушка — просто просвет. */
+.k.hero .skel { background: rgba(255, 255, 255, .22); }
+.k.hero .skel::after { animation: none; background: none; }
+
+.skel-list { border-top: 1px solid var(--line2); }
+/* Колонки те же, что у настоящей строки мастера: ранг, кружок, имя,
+   процент, полоса. Поэтому подмена данными не дёргает раскладку. */
+.skel-row {
+  display: grid;
+  grid-template-columns: 20px 27px minmax(0, 1fr) 48.5px 86.5px;
+  align-items: center;
+  gap: 12.5px;
+  padding: 11.5px 9px;
+  border-bottom: 1px solid var(--line2);
+}
+.skel-row .s-rank { height: 8px; }
+.skel-row .s-av { width: 27px; height: 27px; border-radius: 999px; }
+.skel-row .s-name { height: 10px; margin-bottom: 5.5px; }
+.skel-row .s-pos { height: 7px; }
+.skel-row .s-pct { height: 13.5px; }
+.skel-row .s-bar { height: 7px; border-radius: 99px; }
+/* Строки гаснут к низу: список продолжается за краем, а не обрывается
+   ровно на пятой. */
+.skel-row:nth-child(2) { opacity: .82; }
+.skel-row:nth-child(3) { opacity: .64; }
+.skel-row:nth-child(4) { opacity: .46; }
+.skel-row:nth-child(5) { opacity: .28; }
+
+/* Плоский вариант для карточек без таблицы: «Горит сейчас», «Остальные». */
+.skel-lines { border-top: 1px solid var(--line2); padding-top: 12.5px; }
+.skel-lines .skel { height: 10px; margin-bottom: 10px; }
+.skel-lines .skel:nth-child(1) { width: 82%; }
+.skel-lines .skel:nth-child(2) { width: 94%; opacity: .72; }
+.skel-lines .skel:nth-child(3) { width: 68%; opacity: .5; }
+.skel-lines .skel:nth-child(4) { width: 88%; opacity: .3; margin-bottom: 2px; }
+.empty-note { color: var(--ink3); font-size: 11px; padding: 9px 0; }
+
+.error {
+  background: var(--err-bg);
+  border: 1px solid var(--bad);
+  color: var(--bad);
+  border-radius: 5.5px;
+  padding: 11px 14.5px;
+  margin-bottom: 14.5px;
+  font-size: 11.5px;
+}
+
+/* ── полосы ───────────────────────────────────────────────── */
+.bar {
+  display: flex;
+  height: 11.5px;
+  background: var(--line2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.bar i { display: block; height: 100%; }
+.bar .p-ok   { background: var(--ok); }
+.bar .p-late { background: var(--warn); }
+.bar .p-over { background: var(--bad); }
+.bar.cs   { height: 9px; }
+.bar.mini { height: 5.5px; }
+.bar.rate { height: 8px; width: 135px; flex: none; }
+
+.badge {
+  flex: none;
+  font-size: 9px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  border: 1px solid var(--line);
+  border-radius: 2.5px;
+  padding: 1px 4.5px;
+  white-space: nowrap;
+}
+
+/* ── сводная таблица: три панели с аккуратными границами ──── */
+/* Секция мастеров — цельная карточка варианта А: заголовок и таблица
+   в одном блоке. Боковых полей нет, чтобы шапка таблицы и разделители
+   строк шли от края до края; горизонтальные отступы несут сами ячейки.
+   Важно: #masters-body остаётся без полей — от его clientWidth считаются
+   ширины колонок в app.js. */
+#masters { padding: 0; overflow: hidden; }
+/* Поля таблицы. Без них строки упирались в края корпуса: слева ранг
+   вплотную к боковой панели, справа долг вплотную к обрезу. Ширины
+   колонок считаются от clientWidth, то есть уже за вычетом этих полей —
+   расчёт подстраивается сам. */
+#masters-body { padding: 0 21.5px 7px; }
+
+/* Подпись о составе периода. Не тревога и не ошибка, а пояснение —
+   отсюда спокойный тон: полоска слева и приглушённый текст. */
+.period-note {
+  margin: 0 21.5px 11px;
+  padding: 8px 11.5px;
+  border-left: 3px solid var(--brand);
+  border-radius: 0 7px 7px 0;
+  background: var(--brand-tint);
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--ink2);
+}
+.period-note[hidden] { display: none; }
+.period-note b { color: var(--ink); font-weight: 600; }
+
+.mx-scroll { overflow-x: auto; padding-bottom: 2px; }
+/* Свёрнутая таблица тянется по окну, но ниже этого порога колонки начали
+   бы наезжать друг на друга — тогда уж лучше прокрутка. */
+.mx-body:not(.compact) { min-width: 612px; }
+/* Полей нет: ширина у .mx-top задаётся инлайново из app.js, и padding
+   при border-box сжал бы панели, разъехавшись с таблицей ниже. */
+.mx-top { display: flex; align-items: stretch; margin-bottom: 9px; }
+.panel {
+  background: var(--raise);
+  border-radius: var(--r-sm);
+}
+.body-panel { background: transparent; }
+
+/* Шапка таблицы у свёрнутой матрицы (у раскрытой её роль играют
+   угловая панель и панель пунктов). */
+.mx-body thead th {
+  font-size: 10px;
+  letter-spacing: .03em;
+  color: var(--ink2);
+  font-weight: 500;
+  text-align: left;
+  padding: 7px 14.5px;
+  background: var(--raise);
+  border-bottom: 1px solid var(--line2);
+}
+.mx-body thead th:first-child { padding-left: 21.5px; }
+/* Без собственного отступа: 24px слева уже даёт контейнер таблицы, и
+   вместе с ними колонка места превращалась в пустую полосу — цифра
+   стояла в 49px от края карточки, вдвое дальше заголовка над ней. */
+.mx .m-rank { padding-left: 0; }
+
+/* Кружок-инициалы у строк с людьми — приём референса. Один оттенок на
+   всех: различают по буквам, цвет остался бы шумом. */
+.av-i {
+  display: inline-grid; place-items: center;
+  width: 27px; height: 27px; flex: none;
+  border-radius: 999px;
+  background: var(--brand-tint);
+  color: var(--brand-deep);
+  font-size: 10px; font-weight: 600; letter-spacing: .02em;
+}
+
+/* колонки блока мастера */
+.mx .m-rank { text-align: center; vertical-align: middle; }
+.mx .m-rank .rank { font-size: 11px; color: var(--ink3); }
+/* Строки ужаты по высоте: на экран влезает половиной больше людей, а
+   читаемость держится на кегле имени, не на воздухе вокруг него. */
+/* Флекс, а не строчная раскладка. Строчной аватар и имя вели себя как
+   слова в абзаце: не влезло имя — уехало на следующую строку целиком, и
+   у длинных фамилий получалось «аватар сверху, имя под ним», а у
+   коротких — в строку. Флекс держит их рядом всегда, лишнее срезается
+   многоточием. */
+.mx .m-who { padding: 7px 14.5px; vertical-align: middle; }
+.mx .m-who .mwrap {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+.mx .m-who .av-i { width: 25px; height: 25px; flex: none; }
+.mx .m-who .mw { min-width: 0; flex: 1; }
+.mx .m-who b {
+  display: block; font-size: 13px; font-weight: 600; letter-spacing: -.015em;
+  line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mx .m-who .mw span {
+  display: block; font-size: 10.5px; color: var(--ink3); line-height: 1.25;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ── блок мастера в матрице ───────────────────────────────────
+   Мастер с пятью объектами занимает пять строк. При выравнивании по
+   центру его карточка уезжала на середину этой пачки, у соседа с одним
+   объектом стояла на своём месте — левый край выглядел рваным. Теперь
+   все прижаты к верху: карточка всегда рядом с первым объектом мастера,
+   на одной с ним линии, сколько бы объектов ни было.
+
+   Вертикальная линия справа собирает строки одного мастера в один блок:
+   видно, где его объекты кончаются и начинаются чужие. */
+.mx-body.compact .m-rank,
+.mx-body.compact .m-who,
+.mx-body.compact .m-pct { vertical-align: top; padding-top: 9px; }
+.mx-body.compact .m-pct { border-right: 1px solid var(--line2); }
+.mx-body.compact tr.m-first .m-rank,
+.mx-body.compact tr.m-first .m-who,
+.mx-body.compact tr.m-first .m-pct { border-top: 1px solid var(--line); }
+/* Кроме самой первой строки: над ней разделять нечего, а линия шла
+   только под левым блоком и обрывалась на середине таблицы — читалась
+   случайной полоской под шапкой. */
+.mx-body.compact tbody tr:first-child .m-rank,
+.mx-body.compact tbody tr:first-child .m-who,
+.mx-body.compact tbody tr:first-child .m-pct { border-top: none; }
+
+/* Проценты в матрице: колонка узкая, поэтому поля уже, а кегль мельче —
+   «48 из 65» должно уместиться целиком, не вылезая за границу. */
+.mx-body.compact .m-pct { padding-left: 9px; padding-right: 9px; }
+.mx-body.compact .m-pct .r-pct { font-size: 13.5px; margin-right: 0; }
+.mx-body.compact .m-pct .r-count { font-size: 9px; }
+/* В матрице карточка прижата к верху своей пачки строк, поэтому и
+   содержимое выравниваем по верху, а не по центру. */
+.mx-body.compact .m-who .mwrap { align-items: flex-start; }
+.mx .m-pct { padding: 7px 14.5px; vertical-align: middle; white-space: nowrap; }
+.mx .m-pct .r-pct { font-family: var(--mono); font-size: 14.5px; font-weight: 600; margin-right: 9px; }
+.mx .m-pct .bar.mini { display: inline-flex; width: 79px; vertical-align: 1px; }
+/* С раскрытой матрицей полоса лишняя — ширина нужнее колонкам пунктов. */
+.mx-body.compact .m-pct .bar.mini { display: none; }
+.mx-body.compact .m-pct .r-pct { margin-right: 0; }
+.mx .m-pct .r-count { display: block; font-size: 9.5px; color: var(--ink3); margin-top: 2px; }
+.mx .m-src { padding: 7px 14.5px; vertical-align: middle; font-size: 10px; color: var(--ink2); }
+.mx .m-src .s { display: block; white-space: nowrap; line-height: 1.5; }
+.mx .m-src b { font-weight: 500; color: var(--ink); margin: 0 3.5px 0 2.5px; }
+.mx .m-src i { font-style: normal; color: var(--ink3); }
+/* В углу теперь только строка заголовков — прижимаем её к низу, чтобы
+   она встала на одну линию с числами сроков в шапке пунктов. */
+/* Числа и обозначения идут от верха, заголовки колонок прижаты к низу:
+   они обязаны стоять на одной линии с числами сроков в шапке пунктов.
+   Прижатыми к низу были все три яруса разом — они слипались внизу, а
+   сверху зияла пустота в половину блока. */
+.sum-panel {
+  flex: none;
+  margin-right: 9px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+.sum-panel .corner-head { margin-top: auto; padding-top: 9px; }
+.head-panel {
+  flex: none;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+.body-panel { overflow: hidden; }
+.mx-head, .mx-body { table-layout: fixed; }
+
+/* Легенда — одна строка под таблицей. Значок и подпись держатся вместе
+   в .lgd, иначе при переносе подпись отрывается от своего значка.
+
+   Класс именно .lgd, а не .lg: под .lg живёт панель журнала движений в
+   разделе «Объекты», и её padding 16/18 прилетал сюда, раздувая строку
+   легенды втрое. Совпадение имён между несвязанными частями. */
+.mx-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5.5px 16px;
+  /* Боковых полей нет: легенда лежит внутри #masters-body, а он свои уже
+     задал — иначе отступ удваивался и она стояла с уступом от таблицы. */
+  padding: 10px 0 4.5px;
+  font-size: 10px;
+  color: var(--ink2);
+}
+.mx-legend .lgd { display: inline-flex; align-items: center; gap: 5.5px; white-space: nowrap; }
+.mx-legend .lgd .mc { flex: none; }
+
+.mx { border-collapse: collapse; }
+.mx th { font-weight: 400; vertical-align: bottom; }
+
+/* Названия пунктов стоят вертикально, снизу вверх. Так ширина колонки
+   определяется галочкой (26px), а не длиной названия: горизонтальная
+   подпись требовала до 66px на колонку, и двадцать пунктов не влезали
+   в экран. Высота задана жёстко — иначе соседние подписи разной длины
+   встают на разных уровнях и шапка выглядит рваной. */
+.mx .v {
+  font-size: 9.5px;
+  line-height: 1;
+  color: var(--ink2);
+  padding: 7px 0 4.5px;
+  text-align: left;
+  vertical-align: bottom;
+  height: calc(var(--label-h, 119px) + 12.5px);
+}
+/* Перенос разрешён: подпись длиннее потолка ложится второй вертикальной
+   строкой вместо того, чтобы тянуть шапку вниз. line-height плотный —
+   две строки должны уместиться в ширину колонки. */
+.mx .v > span {
+  display: block;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  max-height: var(--label-h, 119px);
+  line-height: 1.15;
+  overflow: hidden;
+  margin: 0 auto;
+}
+.mx .mx-days th {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--ink3);
+  padding: 3.5px 0 6.5px;
+  text-align: center;
+}
+
+/* ── угол матрицы ─────────────────────────────────────────────
+   По высоте угол равен шапке пунктов — около двухсот пикселей, и всё
+   это время он пустовал. Держит три яруса: общие числа сверху,
+   обозначения посередине, заголовки левых колонок внизу. */
+/* Числа занимают всю ширину угла, а не жмутся к левому краю: ячейки
+   равной доли, разделены линиями — та же лента, что над списком, только
+   вчетверо теснее. Узкий угол сам перестраивает их в два ряда. */
+/* Три самых проваленных пункта. Не проценты: те стоят лентой сверху,
+   а здесь — ответ на вопрос «что чинить первым», которого больше нигде
+   нет. Число слева крупно, название следом строкой. */
+.corner-worst {
+  margin: 10px 11px 0;
+  padding: 8px 11px 9px;
+  background: var(--card);
+  border: 1px solid var(--line2);
+  border-radius: 9px;
+}
+.cw-title {
+  font-size: 7.5px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--ink3); font-weight: 600; margin-bottom: 5.5px;
+}
+.cw {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 2px 0; min-width: 0;
+}
+.cw-n {
+  flex: none; min-width: 23.5px;
+  font-size: 13.5px; font-weight: 600; color: var(--bad);
+  text-align: right;
+}
+.cw-name {
+  min-width: 0; font-size: 10.5px; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cw-none { font-size: 11px; color: var(--ok); padding: 2.5px 0; }
+.cw-foot {
+  margin-top: 6.5px; padding-top: 6.5px;
+  border-top: 1px solid var(--line2);
+  font-size: 9px; color: var(--ink3); line-height: 1.35;
+}
+.cw-foot b { color: var(--bad); font-weight: 600; margin-left: 2px; }
+
+/* Обозначения переехали сюда из-под таблицы: там они занимали
+   собственную полосу, здесь ложатся в пустоту. Растянуты по ширине
+   угла, чтобы не сбиваться в комок у левого края. */
+.sum-panel .mx-legend {
+  padding: 8px 11.5px 0;
+  gap: 3.5px 9px;
+  justify-content: space-between;
+}
+
+/* Подписи колонок выровнены по низу — над самыми числами сроков. */
+.corner-head {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  font-size: 10px;
+  letter-spacing: .03em;
+  color: var(--ink2);
+}
+.corner-head > span {
+  flex: none;
+  padding: 0 7px 5.5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.corner-head > span:last-child { flex: 1; min-width: 0; }
+
+/* строки: одинарная линия между объектами, заметная между мастерами */
+.mx tbody td {
+  border-top: 1px solid var(--line2);
+  vertical-align: middle;
+  padding: 4.5px 1px;
+}
+.mx tbody tr.m-first td { border-top: 1px solid var(--line); }
+.mx tbody tr:first-child td { border-top: none; }
+
+.mx .mcell { text-align: center; min-width: 23.5px; }
+.mx .dim { opacity: .38; }
+
+.mx .mx-obj { text-align: left; padding: 6.5px 12.5px 6.5px 14.5px; }
+.mx .mx-obj b { font-size: 11px; font-weight: 600; line-height: 1.25; }
+
+.mc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15.5px;
+  height: 15.5px;
+  border-radius: 3.5px;
+  font-size: 9.5px;
+  font-weight: 600;
+  line-height: 1;
+}
+.mc.ok      { background: var(--mc-ok-bg); color: var(--ok); }
+.mc.over    { background: var(--mc-over-bg); color: var(--bad); }
+.mc.wait    { color: var(--mc-wait); font-size: 11px; }
+.mc.na      { color: var(--ink3); font-weight: 400; }
+.mc.nodata  { background: repeating-linear-gradient(45deg, var(--mc-nd-a) 0 3px, var(--mc-nd-b) 3px 6px); }
+.mc.unclear { background: var(--mc-unclear-bg); color: var(--note); }
+
+/* ширину колонки задаёт colgroup из app.js */
+.mx .mx-debt {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--bad);
+}
+.mx .mx-debt.zero { color: var(--ink3); }
+
+/* карточка мастера слева от его объектов */
+.m-info {
+  padding: 9px 14.5px 9px 9px;
+  border-right: 1px solid var(--line2);
+}
+.mi-top { display: flex; align-items: baseline; gap: 7px; }
+.mi-top .rank { flex: none; width: 13.5px; color: var(--ink3); font-size: 10.5px; }
+.mi-name { flex: 1; min-width: 0; }
+.mi-name b { display: block; font-size: 11.5px; font-weight: 600; line-height: 1.2; }
+.mi-name span { display: block; font-size: 9.5px; color: var(--ink3); }
+.mi-pct { flex: none; text-align: right; }
+.mi-pct .r-pct { display: block; font-size: 15.5px; line-height: 1.1; }
+.mi-pct .r-count { display: block; font-size: 9.5px; color: var(--ink2); }
+.m-info .bar { margin: 7px 0 5.5px 20.5px; }
+.mi-subs { margin-left: 20.5px; font-size: 9px; color: var(--ink3); line-height: 1.65; }
+.mi-subs .s { display: inline-block; white-space: nowrap; margin-right: 11px; }
+.mi-subs b { font-weight: 500; color: var(--ink); margin: 0 3.5px 0 2.5px; }
+.mi-subs i { font-style: normal; color: var(--ink2); }
+.mi-none { font-size: 10px; color: var(--ink3); padding: 9px 14.5px; }
+
+.mx tr.m-low .mi-name b, .mx tr.m-low .mi-pct .r-pct, .mx tr.m-low .mi-subs b { color: var(--ink3); }
+.mx tr.m-low .m-info .bar i { background: var(--off); }
+
+/* разделитель «мало данных» */
+.mx .mx-band td {
+  background: var(--band);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  padding: 6.5px 9px;
+}
+
+.mx tfoot td {
+  font-size: 9px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  padding: 7px 9px 5.5px;
+  border-top: 1px solid var(--line);
+}
+.mx tfoot .fnum {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-align: center;
+  color: var(--bad);
+  text-transform: none;
+  letter-spacing: 0;
+  padding: 7px 1px 3.5px;
+}
+.mx tfoot .fnum.zero { color: var(--ink3); }
+
+/* Воздух перед каждым пунктом: 21 колонка иначе читается сплошной лентой.
+   Ширина этого отступа заложена в app.js (GS) — значения должны совпадать. */
+.mx th.gs, .mx td.gs { padding-left: 5.5px; }
+
+/* ── горит сейчас ─────────────────────────────────────────── */
+.burn-list { border-top: 1px solid var(--line2); }
+.burn-row {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line2);
+  font-size: 11.5px;
+}
+.burn-row .b-who { flex: none; width: 155px; font-weight: 600; }
+.burn-row .b-what { flex: 1; min-width: 0; color: var(--ink2); }
+.burn-row .b-what .b-obj { color: var(--ink3); }
+.burn-row .b-due { flex: none; color: var(--bad); font-size: 11px; }
+.burn-note { margin-top: 11px; font-size: 11px; color: var(--ink3); }
+
+/* ── рейтинг остальных ────────────────────────────────────── */
+.rate-list { border-top: 1px solid var(--line2); }
+.rate-row {
+  display: grid;
+  grid-template-columns: 23.5px minmax(0, 1fr) 86.5px 135px;
+  align-items: center;
+  gap: 12.5px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line2);
+}
+.rate-row .rank { color: var(--ink3); font-size: 11px; }
+.rate-row .who { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.rate-row .who .av-i { width: 25px; height: 25px; font-size: 9.5px; }
+.rate-row .who-x { min-width: 0; }
+.rate-row .who b { display: block; font-size: 12px; font-weight: 600; }
+.rate-row .who .pos { display: block; font-size: 10.5px; color: var(--ink3); }
+.r-total { text-align: right; }
+.r-total .r-pct { display: block; font-size: 17px; line-height: 1.1; }
+.r-total .r-count { display: block; font-size: 10.5px; color: var(--ink2); }
+
+.low-head {
+  padding: 12.5px 0 6.5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  border-bottom: 1px solid var(--line2);
+}
+.rate-row.low .who b, .rate-row.low .r-pct { color: var(--ink3); }
+.rate-row.low .bar i { background: var(--off); }
+
+/* ── ТЕЛЕВИЗОР ────────────────────────────────────────────────
+   Смотрят с 3-5 метров и мельком, поэтому: убрать всё, чем нельзя
+   воспользоваться без мыши, и укрупнить то, что несёт смысл.
+   Возврат в админку — этой же кнопкой либо Esc. */
+/* ── раздел «Объекты» ────────────────────────────────────── */
+/* Дерево договоров и спецификация — две колонки одного полотна, без
+   зазора между ними: разделяет их линия, а не воздух. */
+.two { display: flex; gap: 0; align-items: flex-start; }
+.tree {
+  width: 212.5px; flex: none; padding: 12.5px 9px;
+  border-right: 1px solid var(--line2); border-bottom: 0;
+}
+.tree .t-lab {
+  font-size: 8.5px; color: var(--ink3); letter-spacing: .08em;
+  text-transform: uppercase; padding: 3.5px 9px 7px;
+}
+.tree a {
+  display: flex; align-items: center; gap: 6.5px; padding: 6.5px 9px;
+  border-radius: 8px; font-size: 11.5px; color: var(--ink2); cursor: pointer;
+}
+.tree a:hover { background: var(--raise); color: var(--ink); }
+.tree a.on { background: var(--raise); color: var(--ink); font-weight: 500; }
+.tree .kid { padding-left: 23.5px; font-size: 11px; }
+.tree .car { width: 10px; flex: none; color: var(--ink3); }
+/* Договоры, которых ещё нет в базе, — видно, что объект больше одного файла. */
+.tree a.off { color: var(--ink3); opacity: .5; cursor: default; }
+.tree a.off:hover { background: transparent; }
+
+.spec { flex: 1; min-width: 0; overflow: hidden; }
+.spec-top { display: flex; align-items: flex-end; gap: 16px; padding: 14.5px 20px 12.5px; }
+.spec-top h3 { margin: 0; font-size: 13.5px; font-weight: 600; }
+.spec-top .sums { margin-left: auto; display: flex; gap: 20px; text-align: right; }
+.spec-top .sums > div {
+  font-size: 9px; color: var(--ink3); letter-spacing: .06em; text-transform: uppercase;
+}
+.spec-top .sums b { display: block; font-size: 14.5px; font-weight: 600; color: var(--ink); margin-top: 2px; }
+
+/* Раздельные ячейки вместо сплошной сетки: строки становятся
+   самостоятельными «плитками» со скруглениями — уходит вид
+   разлинованной казённой таблицы. */
+.spec table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 3px;
+  padding: 0 14.5px 5.5px;
+}
+.spec thead th {
+  font-size: 10px; letter-spacing: .03em; color: var(--ink2);
+  font-weight: 500; text-align: left; padding: 8px 12.5px;
+  background: var(--raise);
+}
+.spec thead th:first-child { border-radius: var(--r-sm) 0 0 var(--r-sm); padding-left: 14.5px; }
+.spec thead th:last-child { border-radius: 0 var(--r-sm) var(--r-sm) 0; }
+.spec tbody td { padding: 10px 12.5px; vertical-align: middle; }
+.spec tbody td:first-child { border-radius: var(--r-sm) 0 0 var(--r-sm); }
+.spec tbody td:last-child { border-radius: 0 var(--r-sm) var(--r-sm) 0; }
+
+/* раздел — просто заголовок, без заливки во всю ширину */
+.spec tr.grp td {
+  background: transparent; font-size: 10px; font-weight: 600;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--ink3);
+  padding: 14.5px 12.5px 5.5px;
+}
+
+/* щит — кликабельная плитка */
+.spec tr.box { cursor: pointer; }
+.spec tr.box td {
+  background: var(--box-bg); font-weight: 600; font-size: 11.5px;
+  transition: background .2s var(--ease);
+}
+.spec tr.box:hover td { background: var(--box-bg-h); }
+.spec tr.box.on td { background: var(--brand-tint); }
+.spec tr.box .car {
+  display: inline-grid; place-items: center; width: 16px; height: 16px;
+  margin-right: 8px; border-radius: 5.5px; color: var(--ink3);
+  background: var(--card); font-size: 8px; vertical-align: -3px;
+  transition: transform .2s var(--ease);
+}
+.spec tr.box.on .car { transform: rotate(90deg); }
+.spec tr.box .bx-name {
+  font-weight: 400; color: var(--ink2); margin-left: 9px; font-size: 11px;
+}
+.spec .pos-n {
+  display: inline-block; font-size: 10px; color: var(--ink2);
+  background: var(--card); border-radius: 999px; padding: 2.5px 8px;
+}
+
+/* позиции внутри щита */
+.spec tr.item td { font-size: 11px; background: var(--card); }
+.spec tr.item:hover td { background: var(--raise); }
+.spec td.ind { padding-left: 39.5px; }
+.spec td.q, .spec td.p {
+  text-align: right; font-family: var(--mono);
+  font-variant-numeric: tabular-nums; font-size: 11px; white-space: nowrap;
+}
+.spec .dim { color: var(--ink3); }
+.spec .warn {
+  color: var(--warn); font-weight: 600; margin-left: 6.5px; font-size: 10px;
+  background: var(--warn-soft); border-radius: 999px; padding: 2px 6.5px;
+}
+.spec .ok { color: var(--ok); }
+.spec .place { display: block; font-size: 9.5px; color: var(--ink3); margin-top: 2px; }
+/* ── журнал движений ─────────────────────────────────────── */
+.spec tr.item { cursor: pointer; }
+.spec tr.item.on td { background: var(--brand-tint); }
+.spec td.st { white-space: nowrap; }
+.chip-st {
+  display: inline-block; font-size: 10px; font-weight: 500;
+  border-radius: 999px; padding: 2.5px 9px; white-space: nowrap;
+}
+.chip-st.idle { color: var(--ink3); background: var(--raise); }
+.chip-st.note { color: var(--note); background: #E5EBF1; }
+.chip-st.warn { color: var(--warn); background: var(--warn-soft); }
+.chip-st.ok   { color: var(--ok);   background: var(--ok-soft); }
+.chip-st.bad  { color: var(--bad);  background: var(--bad-soft); cursor: help; }
+.spec .rev {
+  margin-left: 5.5px; font-size: 9px; color: var(--note);
+  background: #E5EBF1; border-radius: 999px; padding: 2px 6.5px; cursor: help;
+}
+
+.spec tr.panel td { background: var(--raise); padding: 0; border-radius: var(--r-sm); }
+.lg { padding: 14.5px 16px 16px; }
+.lg-head { display: flex; align-items: baseline; gap: 11px; margin-bottom: 11px; }
+.lg-head b { font-size: 12px; }
+.lg-head .dim { font-size: 11px; }
+.lg-issue {
+  font-size: 11px; color: var(--bad); background: var(--bad-soft);
+  border-radius: var(--r-sm); padding: 8px 11px; margin-bottom: 11px; line-height: 1.5;
+}
+/* Шесть сумм по видам движений — вся картина по позиции одной строкой. */
+.lg-cells { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 12.5px; }
+.lg-cell {
+  flex: 1 1 99px; background: var(--card); border-radius: var(--r-sm); padding: 8px 11px;
+}
+.lg-cell i { display: block; font-style: normal; font-size: 9px;
+  letter-spacing: .04em; color: var(--ink3); }
+.lg-cell b { display: block; font-size: 13.5px; margin-top: 2.5px; }
+
+.lg-add { display: flex; gap: 7px; margin-bottom: 12.5px; flex-wrap: wrap; }
+.lg-add .role-sel { flex: none; background-color: var(--card); }
+.lg-qty { flex: 0 0 99px; }
+.lg-note { flex: 1; min-width: 126px; }
+.lg-add input {
+  font: inherit; font-size: 11px; color: var(--ink); background: var(--card);
+  border: 1px solid transparent; border-radius: 999px; padding: 7px 12.5px;
+  outline: none; transition: .2s var(--ease);
+}
+.lg-add input:focus { border-color: var(--brand); }
+.lg-add input.bad { border-color: var(--bad); color: var(--bad); }
+
+.lg-list { display: flex; flex-direction: column; gap: 2px; }
+.lg-row {
+  display: flex; align-items: center; gap: 9px; font-size: 11px;
+  background: var(--card); border-radius: 9px; padding: 7px 11px;
+}
+.lg-type { font-weight: 500; width: 93.5px; flex: none; }
+.lg-type.note { color: var(--note); }
+.lg-type.warn { color: var(--warn); }
+.lg-type.ok { color: var(--ok); }
+.lg-row > b { width: 61px; flex: none; }
+.lg-row .dim { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lg-meta { font-size: 10px; color: var(--ink3); white-space: nowrap; }
+.lg-del {
+  border: 0; background: transparent; color: var(--ink3); cursor: pointer;
+  font-size: 13.5px; line-height: 1; padding: 2px 5.5px; border-radius: 6.5px;
+  opacity: 0; transition: .2s var(--ease);
+}
+.lg-row:hover .lg-del { opacity: 1; }
+.lg-del:hover { color: var(--bad); background: var(--bad-soft); }
+.lg-empty { font-size: 11px; color: var(--ink3); padding: 3.5px 0; }
+
+/* ── добавления: то, чего в смете не было ────────────────── */
+/* Кнопка добавления живёт строкой таблицы — там, где вещь появится.
+   Одна кнопка под всеми 284 строками не работала бы и теоретически:
+   под последней строкой уже неоткуда узнать, в какой щит кладём. */
+.spec tr.addrow td { background: transparent; padding: 3.5px 12.5px 9px; }
+.spec tr.addrow td:first-child { padding-left: 39.5px; }
+.add-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px dashed var(--line); background: transparent; border-radius: 999px;
+  padding: 5.5px 12.5px 5.5px 7px; font: inherit; font-size: 11px; color: var(--ink3);
+  cursor: pointer; transition: .2s var(--ease);
+}
+.add-btn .plus {
+  display: grid; place-items: center; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--raise); color: var(--ink2);
+  font-size: 11.5px; line-height: 1;
+}
+.add-btn:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-tint); }
+.add-btn:hover .plus { background: var(--brand); color: #fff; }
+
+/* Добавленное всегда видно, что оно добавленное: смешавшись со сметой,
+   оно сделало бы недостоверным число, которое сверяют с договором. */
+.badge-add {
+  display: inline-block; margin-left: 7px; font-size: 9px; font-weight: 500;
+  color: var(--brand); background: var(--brand-soft);
+  border-radius: 999px; padding: 2px 7px; vertical-align: 1px; cursor: help;
+}
+.spec tr.item.added td { background: var(--brand-tint); }
+.spec tr.item.added:hover td { background: var(--brand-soft); }
+.spec tr.box.added td { background: var(--brand-tint); }
+
+.st-chip {
+  display: inline-block; font-size: 10px; font-weight: 500;
+  border-radius: 999px; padding: 2.5px 9px; white-space: nowrap;
+}
+.st-chip.warn { color: var(--warn); background: var(--warn-soft); }
+.st-chip.ok { color: var(--ok); background: var(--ok-soft); }
+.st-chip.bad { color: var(--bad); background: var(--bad-soft); }
+
+/* «Зачем» — главное поле добавленной позиции: через месяц без него это
+   необъяснимая строка в счёте, и спорить по ней будет нечем. */
+.add-head {
+  display: flex; align-items: center; gap: 12.5px; flex-wrap: wrap;
+  background: var(--card); border-radius: var(--r-sm);
+  padding: 10px 12.5px; margin-bottom: 11px;
+}
+.add-why { flex: 1; min-width: 180px; font-size: 11px; }
+.add-why i {
+  display: block; font-style: normal; font-size: 9px;
+  letter-spacing: .04em; color: var(--ink3); margin-bottom: 2px;
+}
+.add-meta { font-size: 10px; color: var(--ink3); }
+.add-acts { display: flex; gap: 7px; align-items: center; }
+.add-acts .role-sel { background-color: var(--raise); }
+/* Отказ сервера — «в щите ещё 3 позиции», «уже есть движения». Он и
+   есть ответ на вопрос «почему не удаляется», поэтому на виду. */
+.add-err {
+  flex-basis: 100%; font-size: 11px; color: var(--bad);
+  background: var(--bad-soft); border-radius: 9px; padding: 7px 10px;
+}
+/* У щита журнала нет — панели незачем занимать высоту как у позиции. */
+.lg-slim { padding: 9px 11px; }
+.lg-slim .add-head { margin-bottom: 0; }
+
+/* Группа («Кабель с медными жилами, сечением:») — не щит: кода у неё
+   нет, вес шрифта поменьше, чтобы не спорить с настоящими щитами. */
+.spec tr.box.grp-box td { background: var(--raise); }
+.spec tr.box.grp-box:hover td { background: var(--box-bg-h); }
+.bx-group { font-weight: 500; color: var(--ink2); }
+
+/* Пометка сметчицы из колонки «Поз.» исходной таблицы — след того, что
+   строку дописали. Ценная информация, а не мусор. */
+.badge-note {
+  display: inline-block; margin-left: 7px; font-size: 9px;
+  color: var(--note); background: #E5EBF1;
+  border-radius: 999px; padding: 2px 7px; vertical-align: 1px; cursor: help;
+}
+
+.sums .sub {
+  display: block; font-style: normal; font-size: 9px;
+  color: var(--warn); letter-spacing: 0; text-transform: none; margin-top: 2px;
+}
+
+/* ── таблица не должна ездить ────────────────────────────── */
+/* Ширина колонок по умолчанию считается из содержимого: раскрыли щит —
+   содержимое сменилось, и все границы разъехались. Фиксируем раскладку,
+   ширины задаёт colgroup в renderSpec. */
+.spec table { table-layout: fixed; }
+.spec td, .spec th { overflow-wrap: anywhere; }
+
+/* ── прилипающие плашки ──────────────────────────────────── */
+/* В ЭОМ4 284 строки. Без этого, докрутив до середины, уже не видно ни
+   какой договор открыт, ни что означает колонка.
+
+   Всё меряется от --stick — это низ верхней полосы плюс отступ. Считает
+   его app.js: высота полосы зависит от размера часов и длины названия
+   раздела, а угаданное число рано или поздно разъедется. Прилипшие
+   плашки встают друг под другом, а не в самый верх окна. */
+.two > .tree {
+  position: sticky; top: var(--stick, 75.5px); align-self: flex-start;
+  max-height: calc(100vh - var(--stick, 75.5px)); overflow-y: auto;
+}
+/* overflow:hidden сделал бы карточку контейнером прокрутки, и прилипание
+   внутри перестало бы работать вовсе. clip обрезает так же, но
+   контейнером прокрутки не становится. */
+.spec { overflow: clip; }
+.spec-top {
+  position: sticky; top: var(--stick, 75.5px); z-index: 3;
+  background: var(--card);
+}
+/* --head-h проставляет renderSpec: высота шапки договора зависит от
+   содержимого, и заголовки колонок должны прилипать ровно под ней. */
+.spec thead th {
+  position: sticky; z-index: 2;
+  top: calc(var(--stick, 75.5px) + var(--head-h, 81px));
+}
+
+/* Шапка «Мастера и их объекты» вместе с фильтрами участков.
+   overflow:hidden на карточке пришлось сменить на clip по той же
+   причине, что и у спеки: hidden делает её контейнером прокрутки, и
+   прилипание внутри не работает вовсе. Обрезает clip так же.
+
+   Прилипает не заголовок, а вся шапка целиком — иначе строка поиска
+   уезжала вверх и накрывала собой прилипший заголовок. */
+#masters { overflow: clip; }
+/* Одна строка: заголовок, поиск, фильтры, выбор вида. Раньше заголовок
+   стоял отдельным этажом, а инструменты вторым — шапка занимала вдвое
+   больше места и разъезжалась. */
+.masters-head {
+  position: sticky; top: var(--stick, 75.5px); z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12.5px;
+  flex-wrap: wrap;
+  background: var(--card);
+  padding: 11.5px 21.5px;
+  box-shadow: 0 1px 0 var(--line2);
+}
+.masters-head .h-title {
+  margin: 0; flex: none;
+  font-size: 13.5px; font-weight: 600; letter-spacing: -.015em;
+}
+
+/* ── раздел «Витрина» ────────────────────────────────────── */
+/* Витрина — то же полотно: предпросмотр слева, настройки справа,
+   разделены линией, а не зазором. */
+/* Раздел дотягивается до низа окна. Содержимого здесь мало — карточка
+   предпросмотра и три блока справа, — и под ними оставалась полоса
+   серого фона в треть экрана. Она читалась как недогруженный кусок
+   страницы, ровно как это описано у `.main > section`: у остальных
+   разделов список длинный и такой полосы не бывает, а тут бывает
+   всегда. */
+#sec-tv { flex: 1 1 auto; min-height: 0; }
+.tv-wrap { display: flex; gap: 0; align-items: stretch; min-height: 100%; }
+/* Карточка предпросмотра со своими полями: раньше заголовок нёс их
+   инлайном, а снизу оставался двойной воздух от подписи и от секции. */
+.tv-prev {
+  flex: 1; min-width: 0;
+  border-right: 1px solid var(--line2);
+  padding: 12.5px 16px 0;
+  /* Колонкой, чтобы свободная высота досталась рамке, а не скопилась
+     под подписью пустым полем. */
+  display: flex;
+  flex-direction: column;
+}
+.tv-prev > h2 { margin: 0 0 2px; flex: none; }
+.tv-prev > .tv-cap { flex: none; }
+/* Предпросмотр — не рисунок, а сама страница витрины в уменьшенном виде.
+   Значит он не может разойтись с тем, что реально на экране.
+   Рамка — по размеру «экрана» и по центру: растянутая на всю карточку
+   она превращалась в чёрное поле с маленькой картинкой в углу. */
+.frame {
+  position: relative;
+  display: block;
+  width: fit-content;
+  /* auto со всех сторон: в колонке это разводит свободную высоту поровну
+     сверху и снизу, то есть рамка встаёт по центру карточки, а не
+     прижимается к заголовку, оставляя пустоту под собой. */
+  margin: auto;
+  padding: 7px;
+  border-radius: 14.5px;
+  background: linear-gradient(170deg, #33312E, #171614 55%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .09),
+    0 22px 44px -22px rgba(20, 23, 21, .5);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.frame:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .12),
+    0 30px 56px -24px rgba(20, 23, 21, .6);
+}
+/* Размер кадра и масштаб считает fitPreview в app.js по свободной
+   ширине: зашитый множитель .38 держал экран в шестистах пикселях, и
+   половина карточки пустовала на любом мониторе шире ноутбучного.
+   Значения ниже — запасные, до первого замера. */
+.frame iframe {
+  width: 1440px; height: 882px; border: 0; border-radius: 8px;
+  transform: scale(.38); transform-origin: 0 0; display: block;
+  pointer-events: none;   /* экран — целиком кнопка, а не рабочая страница */
+}
+.frame .screen {
+  display: block;
+  width: 547px; height: 335.5px; overflow: hidden; border-radius: 8px;
+  background: var(--bg);
+}
+/* Прозрачная накладка ловит клик поверх iframe и затемняет экран. */
+.scr-hit {
+  position: absolute; inset: 8px; border-radius: 8px;
+  background: rgba(20, 18, 16, 0);
+  transition: background .25s var(--ease);
+}
+.frame:hover .scr-hit { background: rgba(20, 18, 16, .45); }
+.scr-hint {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -46%) scale(.96);
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-radius: 999px;
+  background: var(--brand); color: #fff;
+  font-size: 12px; font-weight: 600; white-space: nowrap;
+  box-shadow: var(--shadow-glow);
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s var(--ease), transform .25s var(--ease);
+}
+.frame:hover .scr-hint { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.scr-hint svg {
+  width: 14.5px; height: 14.5px; fill: none; stroke: currentColor;
+  stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round;
+}
+.frame:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+/* подставка — как у монитора */
+.frame::after {
+  content: "";
+  display: block;
+  width: 119px; height: 6.5px;
+  margin: 11px auto -14px;
+  border-radius: 0 0 8px 8px;
+  background: var(--line);
+}
+.tv-cap {
+  text-align: center; font-size: 10px; color: var(--ink3);
+  padding: 9px 0 11px;
+}
+/* Заливка на всю высоту: блоки внутри кончаются раньше колонки, и без
+   неё под ними просвечивал серый фон. */
+.tv-side { width: 288px; flex: none; display: flex; flex-direction: column;
+  background: var(--card); }
+
+/* Узкое окно: колонки встают друг под друга. Правая была прибита к
+   320px, и на полосе уже её самой карточке предпросмотра оставалось
+   меньше сотни пикселей — «телевизор» вылезал за неё поверх настроек.
+   Порог взят по сумме: 320 на колонку плюс место, где рамка ещё
+   что-то показывает. */
+@media (max-width: 810px) {
+  .tv-wrap { flex-direction: column; }
+  .tv-prev { border-right: 0; }
+  .tv-side { width: auto; border-top: 1px solid var(--line2); }
+}
+.pad { padding: 16px 18px; }
+.field {
+  font-size: 9px; font-weight: 600; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--ink3); margin-bottom: 8px;
+}
+.link { display: flex; gap: 7px; }
+.link input {
+  flex: 1; min-width: 0; font: inherit; font-size: 11px; font-family: var(--mono);
+  padding: 8px 10px; border: 1px solid var(--line); border-radius: 9px;
+  background: var(--raise); color: var(--ink);
+}
+.link button {
+  flex: none; border: 0; background: var(--ink); color: var(--card);
+  border-radius: 9px; padding: 0 12.5px; font: inherit; font-size: 11px; cursor: pointer;
+}
+/* Выбор содержимого витрины. Обычные флажки, а не значки: здесь
+   настраивают редко и вдумчиво, подпись важнее компактности. */
+.tv-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 8px 0;
+  cursor: pointer;
+  border-top: 1px solid var(--line2);
+}
+.tv-opt:first-of-type { border-top: 0; padding-top: 2px; }
+.tv-opt input {
+  flex: none;
+  width: 14.5px; height: 14.5px;
+  margin: 2px 0 0;
+  accent-color: var(--brand);
+  cursor: pointer;
+}
+.tv-opt b { display: block; font-size: 11px; font-weight: 500; color: var(--ink); }
+.tv-opt i {
+  display: block; font-style: normal;
+  font-size: 10px; color: var(--ink3); line-height: 1.4; margin-top: 2px;
+}
+
+.alive { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--ink2); }
+.a-dot { width: 7px; height: 7px; border-radius: 99px; background: var(--ok); flex: none; }
+
+/* ── ВИТРИНА ──────────────────────────────────────────────────
+   Та же страница «Сотрудники», без боковой панели и без управления:
+   строки, кегли и колонки один в один как в платформе.
+
+   Раньше здесь два десятка правил поднимали кегли по отдельности —
+   фамилию до 22px, процент до 28, полосу до 150px. Ширины же колонок
+   считаются в app.js по обычным числам и об этом не знали: полоса
+   вылезала из своей колонки и ложилась поверх подписи «цикл
+   производства». Увеличивать надо страницу целиком, а не буквы
+   поштучно, иначе вёрстка и расчёт расходятся. */
+body.tv .filters,
+body.tv .theme-pill,
+body.tv .mode,
+body.tv .mx-foot,
+body.tv .masters-head .h-title,
+body.tv #masters .h-note { display: none; }
+
+/* Шапка низкая: каждый её пиксель отнят у списка. Название и подпись
+   стоят в строку, а не этажами — так полоса вдвое ниже. */
+body.tv .tv-head { gap: 11px; padding: 6.5px 18px; }
+body.tv .tv-head img { height: 27px; }
+body.tv .brand-title { display: flex; align-items: baseline; gap: 9px; }
+body.tv .brand-title h1 { font-size: 16px; }
+body.tv .brand-title span { font-size: 10px; margin-top: 0; }
+body.tv .live { gap: 11px; margin-left: 12.5px; }
+body.tv .live .clock b { font-size: 21.5px; }
+body.tv .live .clock i { font-size: 11.5px; }
+/* На телевизоре наводить нечем, но цвет значка виден с расстояния —
+   это единственный признак, что данные встали. */
+body.tv .fresh { width: 23.5px; height: 23.5px; }
+body.tv .fresh-ic { width: 15.5px; height: 15.5px; }
+body.tv .fresh-pop { display: none; }
+body.tv .tv-page { padding: 2.5px 9px; font-size: 11px; }
+
+/* Лента показателей: те же числа, но без полос и подписей источников —
+   на витрине важна цифра, а не откуда она взялась. Экономит полсотни
+   пикселей, то есть ещё строку списка. */
+body.tv .k { padding: 8px 18px 9px; }
+body.tv .k-lab { font-size: 8px; }
+body.tv .k-big { font-size: 23.5px; }
+body.tv .k.hero .k-big { font-size: 27px; }
+body.tv .k-sub { font-size: 10px; }
+body.tv .k-bar, body.tv .k-split, body.tv .k-legend, body.tv .k-src { display: none; }
+
+/* Таблица идёт от края до края: боковые поля на телевизоре — это
+   впустую отданная ширина, а колонкам её не хватает. Отступ остаётся
+   только у заголовка, ему нужен воздух, иначе он слипается с лентой
+   сверху и с шапкой таблицы снизу. */
+body.tv .card { padding: 0; }
+body.tv .card > h2 {
+  margin: 0;
+  padding: 11.5px 18px 10px;
+  font-size: 12.5px;
+}
+/* У таблицы мастеров поля несут сами ячейки, поэтому ей их не нужно.
+   Строки «Остальных» — обычные полосы без внутренних отступов, и без
+   поля ранг слева и полоса справа упирались в края экрана. */
+body.tv #masters-body { padding: 0; }
+body.tv #others-body { padding: 0 18px; }
+
+/* Шапка таблицы на витрине пустеет: заголовок, поиск и кнопки скрыты.
+   Убираем её вовсе, чтобы не оставляла полосу пустого места. */
+body.tv .masters-head { display: none; }
+
+/* ── режим ширины: поля и фильтры схлопываются ────────────── */
+body.wide .chrome-inner { padding: 6.5px 11px; }
+body.wide .content { padding: 11px 11px 29px; }
+body.wide .filters { display: none; }
+
+/* ── каскад появления ────────────────────────────────────────
+   Один оркестрованный вход вместо россыпи мелких эффектов: блоки раздела
+   встают друг за другом с шагом в полсотни миллисекунд. Смена раздела
+   прогоняет каскад заново — hidden снимает и возвращает display. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+  }
+  /* Только при входе в раздел (класс entering ставит paintSection на
+     время каскада). Раньше каскад висел на любом ребёнке раздела, и
+     каждая перерисовка модуля — пересчёт прайса, выбор цены в расчёте —
+     заново проявляла и сдвигала всю страницу: интерфейс «дрыгался». */
+  /* --rise-skip — сколько каскада уже прошло, когда блок появился (его
+     ставит app.js, если модуль перерисовал раздел посреди входа): блок
+     подхватывает каскад с того же места, а не проявляется второй раз. */
+  .main > section.entering > * { animation: rise .5s var(--ease) backwards;
+    animation-delay: var(--rise-skip, 0s); }
+  .main > section.entering > *:nth-child(1) { animation-delay: calc(.04s + var(--rise-skip, 0s)); }
+  .main > section.entering > *:nth-child(2) { animation-delay: calc(.1s + var(--rise-skip, 0s)); }
+  .main > section.entering > *:nth-child(3) { animation-delay: calc(.16s + var(--rise-skip, 0s)); }
+  .main > section.entering > *:nth-child(4) { animation-delay: calc(.22s + var(--rise-skip, 0s)); }
+  .login-wrap { animation: rise .55s var(--ease) backwards; }
+}
+
+/* ── узкий экран: шапка разворачивается в несколько строк ─── */
+@media (max-width: 684px) {
+  /* Верхняя полоса на телефоне: одно название раздела. Подпись под ним
+     раскладывалась на четыре строки и раздвигала страницу шире экрана. */
+  /* Только название раздела: часы, тема, свежесть источников и
+     ассистент на телефоне — шум над рабочим экраном (заказчик, 23.09). */
+  .top { gap: 8px; padding: 8px 12.5px; min-height: 44px; }
+  .top h1 { font-size: 15px; }
+  .top-sub, .top .ask-btn, .top .fresh, .top .live, .top .theme-pill { display: none; }
+  .chrome-inner { flex-wrap: wrap; gap: 9px 11px; padding: 9px 12.5px; }
+  .content { padding: 14.5px 12.5px 36px; }
+  .filters { flex-basis: 100%; order: 1; }
+  .stamp { margin-left: auto; text-align: right; }
+
+  .burn-row { flex-wrap: wrap; }
+  .burn-row .b-who { width: auto; }
+  .burn-row .b-due { width: 100%; }
+
+  .rate-row { grid-template-columns: 20px minmax(0, 1fr) auto; row-gap: 3.5px; }
+  .rate-row .bar.rate { grid-column: 2 / -1; width: 100%; }
+}
+
+/* ══ Награды ═══════════════════════════════════════════════════
+   Знак у правого края строки и подсказка «за что» по наведению.
+
+   Форма выбрана в противовес шкалам: полосы успеваемости — сплошная
+   заливка, значки — только контур и знак. Пересечься по цвету они
+   всё равно могут (золото и «опоздал» оба янтарные), и тогда
+   различает форма, а не оттенок. */
+
+/* Значки стоят у правого края строки, отдельной колонкой, а не под
+   именем: рядом с фамилией они спорили с ней за внимание и ломали
+   ровный левый край списка. Справа они выстраиваются в свой столбик,
+   и по нему видно, у кого награды есть, не читая строк. */
+.aw-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5.5px;
+  min-height: 20px;
+}
+/* Пустой контейнер держит колонку только шириной, которую задаёт сетка;
+   высоту он занимать не должен — иначе строки без наград станут выше. */
+.aw-row:empty { display: none; }
+
+.aw {
+  display: inline-flex;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+  cursor: help;
+  user-select: none;
+}
+.aw svg { display: block; width: 100%; height: 100%; fill: currentColor; }
+
+.aw.gold   { color: var(--aw-gold); }
+.aw.silver { color: var(--aw-silver); }
+.aw.bronze { color: var(--aw-bronze); }
+.aw.clean  { color: var(--aw-clean); }
+.aw.heavy  { color: var(--aw-heavy); }
+
+/* Кубку — мягкий ореол. Он один такой: первое место должно выхватываться
+   из списка в тридцать строк, а если подсветить всё, не выделится ничто. */
+.aw.gold { filter: drop-shadow(0 1px 2.5px rgba(185, 133, 24, .5)); }
+[data-theme="dark"] .aw.gold { filter: drop-shadow(0 1px 3px rgba(224, 179, 65, .45)); }
+
+/* «ещё N» — не награда, а счётчик, поэтому и выглядит иначе: не знак,
+   а маленькая плашка. */
+.aw.more {
+  width: auto;
+  min-width: 18px;
+  height: 15.5px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4.5px;
+  border-radius: 8px;
+  background: var(--box-bg);
+  color: var(--ink3);
+  font: 600 9px/1 var(--mono);
+  font-style: normal;
+}
+
+/* Значки прижимаются к правому краю блока человека: .mw растянут на
+   свободное место, и flex сам отводит их вправо. Оба списка — мастера
+   и остальные — рисуются одной разметкой, правило нужно одно. */
+.mx .m-who .mwrap .aw-row { flex: none; padding-left: 7px; }
+
+/* В раскрытой матрице значков нет: колонка мастера там 150px, и два
+   знака съели бы фамилию. Матрица отвечает на другой вопрос — что
+   именно не сделано. */
+.mx-body.compact .aw-row { display: none; }
+
+/* Спрашивают про конкретный знак, он же и отвечает — курсор об этом
+   предупреждает, обводка достаётся тем, кто идёт с клавиатуры. */
+.aw[data-t] { cursor: help; }
+.aw[data-t]:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 3.5px;
+}
+
+/* ── подсказка к награде ──────────────────────────────────────
+   Узкая: три коротких строки — что за награда, за что дана, и где
+   человек относительно первого места. Больше в подсказке держать
+   нельзя, её читают на весу. */
+.aw-tip {
+  position: fixed;
+  z-index: 60;
+  width: 236px;
+  max-width: calc(100vw - 14.5px);
+  padding: 9px 11px 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-float);
+  animation: awpop .14s var(--ease);
+  pointer-events: none;      /* подсказка не должна ловить курсор сама */
+}
+
+@keyframes awpop {
+  from { opacity: 0; transform: translateY(-3px); }
+}
+
+.aw-tip b {
+  display: block;
+  font-size: 11px;
+  line-height: 1.3;
+}
+.aw-tip span {
+  display: block;
+  margin-top: 2.5px;
+  color: var(--ink2);
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+.aw-tip i {
+  display: block;
+  margin-top: 7px;
+  padding-top: 6.5px;
+  border-top: 1px solid var(--line2);
+  color: var(--ink3);
+  font-size: 10px;
+  font-style: normal;
+  line-height: 1.4;
+}
+
+/* На витрине значки крупнее вместе со всем остальным: с трёх метров
+   21 пиксель не разглядеть. Подсказок там нет — некому наводить. */
+body.tv .aw { width: 25px; height: 25px; }
+body.tv .aw.more { width: auto; height: 20px; font-size: 11px; padding: 0 6.5px; }
+body.tv .aw-row { gap: 7px; min-height: 25px; }
+
+/* ══ Раздел «Пользователи» ═════════════════════════════════════
+   Таблица тут делит разметку с «Объектами» (класс .spec), поэтому всё
+   ниже ограничено #sec-usr: спека — про длинные списки позиций, а здесь
+   пять строк, и правила у них разные. */
+
+/* Раздел дотягивается до низа окна. Пять учёток занимали треть экрана,
+   а под ними лежала серая полоса в две трети — та же беда, что была
+   у витрины и профиля. */
+#sec-usr { flex: 1 1 auto; min-height: 0; display: flex; }
+/* [hidden] — это display:none из таблицы браузера, и наш display:flex
+   его перебивает. Без этой строки раздел оставался виден всегда и
+   показывался поверх любого другого. */
+#sec-usr[hidden] { display: none; }
+/* Без внешних полей: их и так несут шапка раздела и ячейки таблицы.
+   Карточка добавляла сверху свои 24px, и серая полоса заголовков
+   колонок не доходила до боковой панели — между ними висел зазор,
+   не значащий ничего. */
+#sec-usr > .spec { display: flex; flex-direction: column; padding: 0; }
+
+/* Шапка раздела ровно по сетке остальных: заголовок слева, инструменты
+   справа, одна линия снизу. */
+#sec-usr .usr-top {
+  align-items: center;
+  gap: 9px;
+  padding: 12.5px 20px;
+  border-bottom: 1px solid var(--line2);
+  /* Инструменты переносятся на вторую строку, а не выдавливают друг
+     друга: поиск в узком окне сжимался до трёх букв. */
+  flex-wrap: wrap;
+}
+#sec-usr .usr-top h3 { display: flex; align-items: baseline; gap: 8px; }
+/* Счётчик рядом с заголовком, а не под ним: строкой ниже он растягивал
+   шапку на две высоты ради двух слов. */
+#sec-usr .usr-top h3 .note { margin: 0 !important; font-size: 11px; color: var(--ink3); }
+
+/* Строки плотнее и без «плиточных» скруглений: пять учёток не список
+   позиций сметы, разлиновка тут читается лучше плиток. */
+/* Слитые границы, а не раздельные. При separate ячейка с одними
+   кнопками оказывалась на 8px ниже соседних, и её нижняя линия
+   висела выше остальных — разделитель под строкой выглядел надломленным.
+   При collapse границы соседних ячеек сливаются в одну и идут ровно. */
+/* Шесть колонок требуют места. В узком окне таблица не сжимается до
+   вертикального текста по букве на строку, а честно уезжает вбок.
+   Прокрутка на обёртке вокруг таблицы: повесить её на карточку нельзя —
+   overflow по одной оси делает auto и вторую, и первая строка уезжала
+   бы под шапку с поиском. */
+#sec-usr > .spec { overflow: visible; }
+#sec-usr .usr-scroll { overflow-x: auto; }
+/* Строка — в одну линию: таблица не должна раздуваться по высоте
+   (пользователь, 02.10.2026). Что кому открыто — в окне «Доступ». */
+#sec-usr #usrRows td { white-space: nowrap; }
+#sec-usr .spec table { border-collapse: collapse; border-spacing: 0; padding: 0;
+  min-width: 960px; }
+
+/* Ширины колонок. Именно width, а не min-width: последний на ячейке
+   таблицы при авто-раскладке не действует — проверено, колонки
+   оставались по 162px и имя с фотографией наезжало на почту.
+   В авто-раскладке width читается как желаемая ширина колонки. */
+#sec-usr .spec thead th:nth-child(1) { width: 25%; }
+#sec-usr .spec thead th:nth-child(2) { width: 23%; }
+#sec-usr .spec thead th:nth-child(3) { width: 13%; }
+#sec-usr .spec thead th:nth-child(4) { width: 12%; }
+#sec-usr .spec thead th:nth-child(5) { width: 10%; }
+#sec-usr .spec thead th:nth-child(6) { width: 17%; }
+
+/* Активность: «в сети» — зелёной точкой, остальное — временем. */
+#sec-usr .u-seen { color: var(--ink2); }
+#sec-usr .u-seen.live { color: var(--ok); font-family: var(--sans); font-weight: 500; }
+#sec-usr .u-seen.live::before {
+  content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 6px;
+  border-radius: 99px; background: currentColor; vertical-align: 1px;
+}
+
+/* Длинная почта переносится, а не распирает колонку. */
+#sec-usr .spec tbody td:nth-child(2) { word-break: break-word; }
+#sec-usr .spec thead th {
+  padding: 8px 12.5px;
+  background: var(--raise);
+  border-radius: 0;
+  white-space: nowrap;
+  /* Не липкая. Общее правило .spec thead th прилипает на
+     `--stick + --head-h`, но --head-h проставляет разбор спеки в
+     «Объектах»; здесь её нет, берётся запасное значение, и полоса
+     заголовков вставала посреди списка. Учёток пять, экран их вмещает —
+     прилипать не от чего. */
+  position: static;
+}
+#sec-usr .spec thead th:first-child { padding-left: 20px; }
+#sec-usr .spec thead th:last-child { padding-right: 20px; }
+#sec-usr .spec tbody td {
+  padding: 6.5px 12.5px;
+  border-radius: 0;
+  border-bottom: 1px solid var(--line2);
+}
+#sec-usr .spec tbody td:first-child { padding-left: 20px; }
+#sec-usr .spec tbody td:last-child { padding-right: 20px; }
+#sec-usr .spec tbody tr:hover td { background: var(--raise); }
+
+/* Имя и лицо одной строкой.
+
+   Флексом, а не выравниванием по базовой линии: у <img> и у <span>
+   базовая линия считается по-разному, и строки с фотографией стояли
+   чуть выше строк с буквой — имена в столбце не держали одну высоту. */
+#sec-usr .u-who { white-space: nowrap; }
+#sec-usr .u-nm { display: flex; align-items: center; gap: 8px; }
+#sec-usr .u-who .av-s { margin: 0; vertical-align: baseline; flex: none; }
+#sec-usr .u-who b { font-size: 12px; font-weight: 600; }
+#sec-usr .u-none { padding: 16px 20px; }
+
+/* Фотография вместо буквы. */
+img.av-s { object-fit: cover; background: var(--raise); }
+
+/* Действия видны всегда. Прежде они проявлялись только по наведению
+   мышью: на планшете и с клавиатуры единственные кнопки раздела просто
+   не существовали, а на мониторе их искали наугад. */
+#sec-usr .acts { opacity: 1; }
+#sec-usr .act { color: var(--ink4); }
+#sec-usr tr:hover .act { color: var(--ink3); }
+#sec-usr .act:hover { color: var(--ink); }
+
+/* Статус и кнопки в одну строку, кнопки прижаты вправо. Флекс на
+   обёртке, а не на самой ячейке: display:flex снял бы с td режим
+   table-cell, и эта колонка выравнивалась бы не так, как соседние. */
+#sec-usr .u-st { display: flex; align-items: center; gap: 7px; }
+#sec-usr .u-st .acts { margin-left: auto; }
+
+/* Нижняя группа меню: «Мой профиль» стоит в подвале, вплотную к блоку
+   с именем. Настройки везде живут внизу, а не среди рабочих разделов,
+   и человек ищет их именно там, где написано его имя. */
+.side .nav-foot {
+  flex: none;
+  padding-top: 5.5px;
+  border-top: 1px solid var(--line2);
+}
+
+/* ── окно «Доступ» ─────────────────────────────────────────────
+   Пользователь, 02.10.2026: «сплошной текст, ничего непонятно» и «можем
+   расширить окно, чтобы не скролить». Окно широкое: слева кто это, роль
+   и шаблон по должности, справа разделы карточками с переключателями.
+   Открытое подсвечено, закрытое серое — что человеку доступно, видно с
+   одного взгляда, не вчитываясь. */
+.um-top { display: flex; align-items: center; gap: 12px; }
+.um-hd { flex: 1; min-width: 0; }
+.modal-card .um-top h4 { margin: 0; }
+.um-sub { margin-top: 2px; color: var(--ink3); font-size: 11px; }
+.um-sub:empty { display: none; }
+.um-av {
+  flex: none; display: grid; place-items: center; width: 38px; height: 38px; overflow: hidden;
+  border-radius: 999px; background: var(--raise); color: var(--ink2); font-size: 14px; font-weight: 600;
+}
+.um-av[hidden] { display: none; }
+.um-av img { width: 100%; height: 100%; object-fit: cover; }
+.um-close {
+  flex: none; align-self: flex-start; display: grid; place-items: center;
+  width: 32px; height: 32px; margin: -5px -8px 0 0; border: 0; border-radius: 10px;
+  background: none; color: var(--ink3); cursor: pointer;
+  transition: background .15s var(--ease), color .15s var(--ease);
+}
+.um-close:hover { background: var(--raise); color: var(--ink); }
+.um-close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+
+.um-body, .um-side { display: flex; flex-direction: column; gap: 11.5px; min-width: 0; }
+.um-roles[hidden], .um-pres[hidden], .um-perms[hidden] { display: none; }
+
+/* Фокус ставим на само окно — чтобы Esc закрывал его сразу; рамка
+   фокуса вокруг всего окна при этом ни к чему. */
+#usrModal .modal-card:focus { outline: none; }
+.modal-card.um-wide { width: min(1180px, 96vw); padding: 22px 26px; gap: 16px; }
+.modal-card.um-wide > .modal-btns { bottom: -22px; margin: 0 -26px -22px; padding: 14px 26px 20px; }
+.um-wide .um-top h4 { font-size: 15.5px; }
+.um-wide .um-body { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 0 24px; align-items: start; }
+.um-wide .um-side { gap: 16px; align-self: stretch; padding-right: 24px; border-right: 1px solid var(--line2); }
+
+.um-lab {
+  margin-bottom: 8px; font-size: 10px; font-weight: 600; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--ink3);
+}
+
+/* Подпись с пояснением — у роли, раздела, вкладки и точечного права. */
+.um-t { flex: 1; min-width: 0; }
+.um-t b { display: block; font-size: 12.5px; font-weight: 600; line-height: 1.3; color: var(--ink); }
+.um-t i {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+  margin-top: 2px; font-size: 10.5px; font-style: normal; font-weight: 400; line-height: 1.35; color: var(--ink3);
+}
+
+/* Роль — три кнопки рядом вместо выпадающего списка, под ними строка о
+   выбранной. */
+.um-seg { display: flex; gap: 2px; padding: 3px; border-radius: 11px; background: var(--raise); }
+.modal-card .um-seg label {
+  position: relative; flex: 1 1 auto; display: grid; place-items: center; height: 30px; padding: 0 8px;
+  border-radius: 8px; color: var(--ink2); font-size: 11.5px; font-weight: 500; white-space: nowrap; cursor: pointer;
+  transition: background .15s var(--ease), color .15s var(--ease), box-shadow .15s var(--ease);
+}
+.modal-card .um-seg label:hover { color: var(--ink); }
+.modal-card .um-seg label.on {
+  background: var(--card); color: var(--ink); font-weight: 600;
+  box-shadow: 0 1px 2px rgba(29, 28, 25, .1), 0 0 0 1px var(--line2);
+}
+.modal-card .um-seg input[type="radio"] {
+  position: absolute; width: 1px; height: 1px; margin: 0; padding: 0; opacity: 0; pointer-events: none;
+}
+.um-seg input:focus-visible + span { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: 6px; }
+.um-role-n { margin-top: 8px; color: var(--ink3); font-size: 10.5px; line-height: 1.4; }
+
+/* Шаблоны по должностям — кнопками под ролью, состав — строкой ниже. */
+.um-pre { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.um-pre-b {
+  height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--card); color: var(--ink2); font: inherit; font-size: 11.5px; cursor: pointer;
+  transition: border-color .15s var(--ease), color .15s var(--ease), background .15s var(--ease);
+}
+.um-pre-b:hover { border-color: var(--brand); color: var(--brand-deep); }
+.um-pre-b.on { background: var(--brand-tint); border-color: var(--brand); color: var(--brand-deep); font-weight: 600; }
+.um-pre-n { min-height: 2.7em; margin-top: 8px; color: var(--ink3); font-size: 10.5px; line-height: 1.35; }
+
+/* Справа — разделы: три колонки (общее; «Тендер» и «Снабжение»;
+   справочники и витрина), под ними «Объекты» со списком объектов во всю
+   ширину (08.10.2026). Всё на одном экране 1366×768 — без прокрутки. */
+.um-perms { min-width: 0; }
+.um-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: start; }
+.um-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.um-card {
+  display: flex; flex-direction: column; min-width: 0;
+  border: 1px solid var(--line2); border-radius: 14px; background: var(--card);
+  transition: border-color .2s var(--ease), background .2s var(--ease);
+}
+.um-card.on { border-color: var(--brand-soft); background: var(--brand-tint); }
+/* Раздел со вкладками и «Объекты» — фоном не заливаются: подсвечены
+   открытые вкладки и отмеченные объекты внутри. */
+.um-card-tabs.on, .um-objs.on { background: var(--card); }
+.modal-card .um-card-h, .modal-card .um-tab-h, .modal-card .um-x {
+  position: relative; display: flex; gap: 10px; color: var(--ink); font-weight: 400; cursor: pointer;
+}
+.modal-card .um-card-h { align-items: center; padding: 8px 10px; }
+.um-perms input[type="checkbox"] {
+  position: absolute; top: 50%; left: 50%; width: 1px; height: 1px; margin: 0; opacity: 0; pointer-events: none;
+}
+.um-ic {
+  flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px;
+  background: var(--raise); color: var(--ink3); transition: background .2s var(--ease), color .2s var(--ease);
+}
+.um-ic svg {
+  width: 17px; height: 17px; fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+}
+.um-card.on > .um-card-h .um-ic { background: var(--card); color: var(--brand); }
+.um-card-tabs.on > .um-card-h .um-ic, .um-objs.on > .um-card-h .um-ic { background: var(--brand-tint); }
+.um-card:not(.on) > .um-card-h .um-t b, .um-tab:not(.on) .um-t b { color: var(--ink2); }
+.um-card.part .um-cnt, .um-card.on .um-cnt { color: var(--brand-deep); }
+/* В колонках пояснение — одной строкой: две строки на раздел не влезли бы. */
+.um-cols .um-t i { -webkit-line-clamp: 1; }
+
+/* Переключатель раздела. Открыта часть вкладок — ручка посередине. */
+.um-sw {
+  flex: none; position: relative; width: 36px; height: 21px; border-radius: 999px;
+  background: var(--ink4); transition: background .2s var(--ease);
+}
+.um-sw::after {
+  content: ""; position: absolute; top: 2.5px; left: 2.5px; width: 16px; height: 16px; border-radius: 50%;
+  background: #FFF; box-shadow: 0 1px 2px rgba(0, 0, 0, .25); transition: transform .2s var(--ease);
+}
+.um-perms input:checked + .um-sw { background: var(--brand); }
+.um-perms input:checked + .um-sw::after { transform: translateX(15px); }
+.um-perms input:indeterminate + .um-sw { background: linear-gradient(90deg, var(--brand) 50%, var(--ink4) 50%); }
+.um-perms input:indeterminate + .um-sw::after { transform: translateX(7.5px); }
+
+/* Галочка вкладки (круглая), точечного права и объекта (квадратная). */
+.um-ck {
+  flex: none; position: relative; width: 18px; height: 18px; border-radius: 6px;
+  border: 1.5px solid var(--ink4); background: var(--card);
+  transition: background .15s var(--ease), border-color .15s var(--ease);
+}
+.um-ck::after {
+  content: ""; position: absolute; left: 4.6px; top: 1.4px; width: 4.5px; height: 8.5px;
+  border: solid var(--on-brand); border-width: 0 2px 2px 0;
+  opacity: 0; transform: rotate(45deg) scale(.4); transition: opacity .15s var(--ease), transform .15s var(--ease);
+}
+.um-ck-r { border-radius: 50%; }
+.um-perms input:checked + .um-ck { background: var(--brand); border-color: var(--brand); }
+.um-perms input:checked + .um-ck::after { opacity: 1; transform: rotate(45deg) scale(1); }
+.um-perms input:focus-visible + .um-sw,
+.um-perms input:focus-visible + .um-ck { outline: 2px solid var(--brand); outline-offset: 2px; }
+.um-perms.all .um-sw, .um-perms.all .um-ck { opacity: .55; }
+.modal-card .um-perms.all label { cursor: default; }
+
+/* Вкладки — строками внутри карточки раздела. */
+.um-tabs { display: flex; flex-direction: column; gap: 4px; padding: 0 8px 8px; }
+.um-tab {
+  display: flex; flex-direction: column; min-width: 0;
+  border: 1px solid var(--line2); border-radius: 11px; background: var(--card);
+  transition: border-color .2s var(--ease), background .2s var(--ease);
+}
+.um-tab.on { border-color: var(--brand-soft); background: var(--brand-tint); }
+/* Выключенное под мышью — рамкой темнее: видно, что его можно включить. */
+.um-perms:not(.all) .um-card:not(.on):not(.um-card-tabs):not(.um-objs):hover,
+.um-perms:not(.all) .um-tab:not(.on):hover { border-color: var(--line); }
+.modal-card .um-tab-h { align-items: center; gap: 9px; padding: 4px 10px 4px 6px; }
+.um-tab .um-ic { width: 24px; height: 24px; border-radius: 7px; }
+.um-tab .um-ic svg { width: 14px; height: 14px; }
+.um-tab.on .um-ic { background: var(--card); color: var(--brand); }
+.um-tab .um-t b { font-size: 12px; }
+.um-tab .um-t i { margin-top: 1px; }
+
+/* Точечные права — под тем, внутри чего действуют, за пунктиром. */
+.um-xs {
+  display: flex; flex-direction: column; gap: 1px;
+  margin: 0 11px 9px; padding-top: 5px; border-top: 1px dashed var(--line);
+}
+.um-tab .um-xs { margin: 0 10px 6px 39px; padding-top: 4px; }
+.modal-card .um-x { align-items: flex-start; gap: 9px; padding: 2px 0; }
+.um-x .um-ck { width: 16px; height: 16px; margin-top: 1px; border-radius: 5px; }
+.um-x .um-ck::after { left: 3.9px; top: 1px; width: 4px; height: 7.5px; }
+.um-x .um-t b { font-size: 11.5px; font-weight: 500; }
+/* Пояснение точечного права — в подсказке: строкой оно не помещалось. */
+.um-x .um-t i { display: none; }
+.modal-card .um-x.off { opacity: .45; cursor: default; }
+
+/* «Объекты» — во всю ширину под колонками: раздел и какие объекты видит. */
+.um-objs { margin-top: 8px; position: relative; }
+/* «Заявки на материалы» — в той же строке справа (22.10.2026): в колонках
+   окно перестало бы влезать в 1366×768. */
+.um-objs.has-req > .um-card-h { padding-right: calc(34% + 10px); }
+.um-objs-req { position: absolute; top: 0; right: 0; width: 34%; border-left: 1px dashed var(--line2); }
+.um-objs-req .um-t i { -webkit-line-clamp: 1; }
+.um-objs-req.on .um-ic { background: var(--brand-tint); color: var(--brand); }
+.um-objs-req:not(.on) .um-t b { color: var(--ink2); }
+@media (max-width: 760px) {
+  .um-objs.has-req > .um-card-h { padding-right: 10px; }
+  .um-objs-req { position: static; width: auto; border-left: 0; border-top: 1px dashed var(--line2); }
+}
+.um-scope { padding: 0 11px 11px; }
+.um-scope-h { display: flex; align-items: center; gap: 12px; min-height: 30px; }
+.um-seg.um-seg-sm { flex: none; padding: 2px; border-radius: 10px; }
+.modal-card .um-seg-sm label { height: 26px; padding: 0 12px; font-size: 11px; }
+.um-perms.all .um-seg-sm { opacity: .55; }
+.um-scope-n { min-width: 0; color: var(--ink3); font-size: 11px; }
+.um-scope-f { flex: none; margin-left: auto; }
+.um-scope-f[hidden] { display: none; }
+.modal-card .um-scope-q {
+  width: 200px; height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--card); color: var(--ink); font: inherit; font-size: 11.5px;
+}
+.um-objlist {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px 10px;
+  /* Две с половиной строки на виду — дальше прокрутка внутри и поиск: окно
+     в 1366×768 не растёт, сколько объектов ни заведут. Свои и отмеченные —
+     сверху, они и видны. */
+  max-height: 78px; margin-top: 7px; overflow-y: auto; scrollbar-width: thin;
+}
+.um-objlist[hidden] { display: none; }
+.modal-card .um-obj {
+  position: relative; display: flex; align-items: center; gap: 8px; min-width: 0;
+  padding: 5px 8px; border-radius: 8px; color: var(--ink2); font-size: 11.5px; font-weight: 400; cursor: pointer;
+  transition: background .15s var(--ease);
+}
+.modal-card .um-obj:hover { background: var(--raise); }
+.modal-card .um-obj.on { background: var(--brand-tint); color: var(--ink); }
+.modal-card .um-obj.own { cursor: default; }
+.um-obj .um-ck { width: 16px; height: 16px; border-radius: 5px; }
+.um-obj .um-ck::after { left: 3.9px; top: 1px; width: 4px; height: 7.5px; }
+.um-obj-n { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.um-obj i {
+  flex: none; padding: 1px 6px; border-radius: 999px; background: var(--raise);
+  color: var(--ink3); font-size: 9.5px; font-style: normal;
+}
+.um-obj i.um-own { background: var(--card); color: var(--brand-deep); font-weight: 600; }
+.um-objs-none { grid-column: 1 / -1; padding: 6px 2px; color: var(--ink3); font-size: 11px; }
+
+/* Итог — слева от кнопок. */
+.um-sum { margin-right: auto; align-self: center; color: var(--ink3); font-size: 11px; }
+.um-sum:empty { display: none; }
+
+@media (max-width: 1160px) {
+  .um-cols, .um-objlist { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .modal-card.um-wide { padding: 18px 16px; }
+  .modal-card.um-wide > .modal-btns { bottom: -18px; margin: 0 -16px -18px; padding: 12px 16px 16px; }
+  .um-wide .um-body { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .um-wide .um-side { padding-right: 0; border-right: 0; }
+  .um-cols, .um-objlist { grid-template-columns: minmax(0, 1fr); }
+  .um-scope-h { flex-wrap: wrap; }
+  .um-scope-f { width: 100%; margin-left: 0; }
+  .modal-card .um-scope-q { width: 100%; }
+}
+
+/* Выбор в модалке — как остальные поля: подпись сверху, плашка под ней
+   во всю ширину. Свой список инлайновый, и без этого подпись и выбор
+   стояли бы в строку впритык. */
+.modal-card label .sel { display: flex; margin-top: 5.5px; }
+.modal-card label .sel-btn {
+  width: 100%;
+  justify-content: space-between;
+  border-radius: 10px;
+  padding: 9px 11px;
+  font-size: 12px;
+}
+/* Длинная подпись — в строку слева, с многоточием, а не переносом по центру. */
+.modal-card label .sel-cur { flex: 1; min-width: 0; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.modal-card label .sel-btn svg { flex: none; }
+
+/* Раздел из адреса известен ещё до скриптов (data-sec ставит строка в
+   <head>): «Сотрудники» из разметки не показываем и на первом кадре. */
+html[data-sec]:not([data-sec="emp"]) #sec-emp { display: none; }
+
+/* ── «Сотрудники»: таблица от края до края (23.09.2026) ─────────
+   Между меню и рейтингом стояло пустое поле: у тела таблицы свои поля
+   по 21.5px, и шапка с линиями строк обрывалась, не дойдя до края.
+   Теперь строки идут во всю ширину, а на одной вертикали с заголовком
+   стоит текст: поле несёт первая ячейка, а не контейнер. Раскрытая
+   матрица пунктов (.compact) живёт по своему расчёту и не тронута. */
+#masters-body:not(:has(.compact)), #others-body { padding-left: 0; padding-right: 0; }
+#others { padding-left: 0; padding-right: 0; }
+#others > h2 { padding: 0 21.5px; }
+@media (min-width: 685px) { .mx-body:not(.compact) col:first-child { width: 51.5px !important; } }
+.mx-body:not(.compact) td.m-rank { padding-left: 21.5px; }
+.mx-body:not(.compact) tbody td:last-child, .mx-body:not(.compact) thead th:last-child { padding-right: 21.5px; }
+.mx-body:not(.compact) .mx-band td { padding-left: 21.5px; }
+#masters-body:not(:has(.compact)) .body-panel { border-radius: 0; }
+
+/* Телефон: имя и процент во всю ширину экрана, без прокрутки вбок.
+   Колонка «По источникам» и полоса успеваемости уходят — их числа
+   видны на компьютере; на телефоне хватает места и процента с «N из M».
+   Ширины колонок задаёт app.js в самой таблице, поэтому перебиваем их
+   здесь с !important. */
+@media (max-width: 684px) {
+  .masters-head { padding: 10px 12.5px; gap: 8px 10px; }
+  .masters-head .filters { order: 3; flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 6px; }
+  .masters-head .filters .tb-search { flex: 0 0 100%; max-width: none; }
+  .masters-head .filters .tb-search input { width: 100%; }
+  .masters-head .filters .tb-gap { display: none; }
+  .masters-head .filters .sel { flex: 1 1 0; min-width: 0; }
+  .masters-head .filters .sel-btn { width: 100%; height: 32px; padding: 0 8px 0 10px; }
+  .masters-head .filters .sel-cur { white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-size: 11px; }
+  .masters-head .mode { margin-left: auto; }
+  #others > h2 { padding: 0 12.5px; }
+  #others > h2 .h-note { display: block; margin: 3px 0 0; }
+
+  .mx-body:not(.compact) { min-width: 0 !important; width: 100% !important; }
+  .mx-body:not(.compact) td.m-rank { padding-left: 12.5px; }
+  .mx-body:not(.compact) thead th:first-child { padding-left: 12.5px; }
+  .mx-body:not(.compact) .mx-band td { padding-left: 12.5px; }
+  .mx-body:not(.compact) .m-who { padding: 7px 6px 7px 8px; }
+  .mx-body:not(.compact) .m-pct { padding: 7px 12.5px 7px 4px; text-align: right; }
+  .mx-body:not(.compact) thead th:last-child { padding-right: 12.5px; text-align: right; }
+  .mx-body:not(.compact) .m-pct .bar.mini { display: none; }
+  .mx-body:not(.compact) .m-pct .r-pct { margin-right: 0; }
+  .mx-body:not(.compact) .aw-row { display: none; }
+}
+
+/* ── высота по видимой части экрана (23.09.2026) ─────────────
+   На iPhone «100vh» — высота экрана без панели Safari, а панель чаще
+   всего видна. Разделы с таблицей на всю высоту выходили длиннее экрана,
+   страница целиком уезжала вверх, и шапка раздела вылезала над верхней
+   полосой. 100dvh — ровно видимая часть; старые браузеры берут 100vh.
+   Пружинящую прокрутку всей страницы на телефоне гасим: листается
+   только список внутри раздела. */
+@supports (height: 100dvh) {
+  body { min-height: 100dvh; }
+  .side { height: 100dvh; }
+  /* .pg и .ref — в page.css: он подключается позже и перебил бы. */
+}
+@media (max-width: 684px) {
+  html, body { overscroll-behavior-y: none; }
+}
+
+/* Рейтинг на телефоне — строки на флексах (phoneRatingHTML в app.js). */
+.mxp { display: flex; flex-direction: column; }
+.mxp-head {
+  display: flex; justify-content: space-between; gap: 10px;
+  padding: 8px 12.5px; background: var(--raise); border-bottom: 1px solid var(--line2);
+  font-size: 10px; font-weight: 500; letter-spacing: .03em; color: var(--ink2);
+}
+.mxp-row {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 12.5px; border-bottom: 1px solid var(--line2);
+}
+.mxp-rank { flex: none; width: 20px; text-align: center; font-size: 11px; color: var(--ink3); }
+.mxp-row .av-i { flex: none; width: 27px; height: 27px; }
+.mxp-who { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.mxp-who b { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+.mxp-who i {
+  font-style: normal; font-size: 10.5px; color: var(--ink3);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.mxp-pct { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+.mxp-pct b { font-family: var(--mono); font-size: 14.5px; font-weight: 600; color: var(--ink); }
+.mxp-pct i { font-style: normal; font-size: 9.5px; color: var(--ink3); }
+.mxp-row.m-low { opacity: .7; }
+.mxp-band {
+  padding: 8px 12.5px; background: var(--raise); border-bottom: 1px solid var(--line2);
+  font-size: 10px; color: var(--ink3);
+}
+@media (max-width: 684px) {
+  #masters-body, #others-body { padding: 0 !important; }
+}
+
+/* Телефон: страница целиком стоит на месте (заказчик, 23.09.2026). Если
+   дотянуть прокрутку до края, Safari тянул вверх всю страницу вместе с
+   меню и верхней полосой. Теперь сам документ не прокручивается вовсе:
+   листается только рабочая область справа от меню, и без пружины. */
+@media (max-width: 684px) {
+  html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+  body { min-height: 0; }
+  .side { height: 100vh; height: 100dvh; }
+  .main {
+    height: 100vh; height: 100dvh;
+    overflow-x: hidden; overflow-y: auto;
+    overscroll-behavior: none; -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Пункт меню, убранный у тех, кому раздел открыт другим путём (data-tuck
+   в index.html, applyAccess в app.js): «Файлы» — из «Объектов». */
+.side a.tucked { display: none !important; }
+
+/* Участок мастера в строке рейтинга (29.09.2026): метка под должностью.
+   Нажимается у администраторов и начальников участков — окно смены. */
+.mx .m-who .mw .m-band {
+  display: inline-block; max-width: 100%; margin-top: 3px; padding: 0 7px;
+  border: 1px solid var(--line2); border-radius: 999px; background: none;
+  color: var(--ink3); font: inherit; font-size: 10.5px; line-height: 16px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;
+}
+.mx .m-who .mw .m-band:disabled { cursor: default; }
+.mx .m-who .mw .m-band.manual { color: var(--brand-deep);
+  border-color: color-mix(in srgb, var(--brand) 40%, var(--line2)); }
+.mx .m-who .mw .m-band.none { border-style: dashed; }
+.mx .m-who .mw .m-band:not(:disabled):hover { border-color: var(--brand); color: var(--brand-deep); }
+.band-card { width: min(440px, 94vw); display: flex; flex-direction: column; gap: 11px; }
+.band-card h3 { margin: 0; }
+.band-why { font-size: 11px; line-height: 1.5; color: var(--ink3); }
+.band-err { padding: 8px 11px; border-radius: 9px; background: var(--bad-soft); color: var(--bad);
+  font-size: 11.5px; }
+.band-err[hidden] { display: none; }
+
+/* ── Отделы и руководители (29.09.2026) ───────────────────────
+   Та же сетка, что у списков людей: колонки стоят на общих вертикалях.
+   Последняя — руководитель: имя, итог и из чего он (свои · отдел). */
+#depts { padding-left: 0; padding-right: 0; }
+#depts > h2 { padding: 0 21.5px; }
+#depts[hidden] { display: none; }
+.dp-table .dp-av { font-size: 9px; letter-spacing: 0; }
+.dp-table td.dp-head { padding: 7px 14.5px; vertical-align: middle; min-width: 0; }
+.dp-hbtn {
+  display: inline-flex; align-items: baseline; gap: 8px; max-width: 100%;
+  padding: 0; border: 0; background: none; color: var(--ink); font: inherit; text-align: left;
+}
+button.dp-hbtn { cursor: pointer; }
+.dp-hbtn b {
+  font-size: 12.5px; font-weight: 600; letter-spacing: -.01em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+button.dp-hbtn:hover b { color: var(--brand-deep); text-decoration: underline dotted; text-underline-offset: 3px; }
+.dp-hpct { font-family: var(--mono); font-size: 13.5px; font-weight: 600; }
+.dp-hsub {
+  display: block; margin-top: 2px; font-size: 10px; color: var(--ink2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dp-hsub b { font-weight: 500; color: var(--ink); margin: 0 2px; }
+.dp-hsub i { font-style: normal; color: var(--ink3); }
+.dp-none { font-size: 10.5px; color: var(--ink3); }
+.dp-none .lnk { padding: 1px 4px; font-size: 10.5px; }
+.mx tbody tr.dp-sub td { border-top: 1px dashed var(--line2); }
+.dp-table tr.dp-sub .m-who { padding-left: 48px; }
+.dp-table tr.dp-sub .m-who b { font-size: 12px; font-weight: 500; }
+.dp-table tr.dp-sub .r-pct { font-size: 12.5px; }
+.dp-table tr.dp-sub .dp-hbtn b { font-size: 11.5px; font-weight: 500; }
+.dp-table tr.dp-sub .dp-hpct { font-size: 12px; }
+.dp-table tr.m-low .m-who b, .dp-table tr.m-low .r-pct { color: var(--ink3); }
+.dp-list .dp-h { display: block; margin-top: 3px; }
+.dp-list .dp-h .dp-hbtn b { font-size: 11.5px; }
+.dp-list .dp-h .dp-hpct { font-size: 12px; }
+.dp-list .dp-hsub { white-space: normal; }
+.mxp-row.dp-sub { padding-left: 34px; background: var(--raise); }
+.mxp-row.dp-sub .mxp-who b { font-size: 12px; font-weight: 500; }
+@media (max-width: 684px) {
+  #depts-body { padding: 0 !important; }
+  #depts > h2 .h-note { display: block; margin: 3px 0 0; }
+}
+
+/* Шапка группы в порядке «По отделам и участкам» (30.09.2026): участок
+   или отдел, сколько людей и общий процент группы. Заметнее полосы «мало
+   данных» — это заголовок, а не пометка. */
+.mx .mx-grp td {
+  background: var(--raise); border-top: 1px solid var(--line);
+  font-size: 11.5px; font-weight: 600; letter-spacing: 0; text-transform: none;
+  color: var(--ink); padding-top: 8px; padding-bottom: 8px;
+}
+.mxp-band.mxp-grp { font-size: 11.5px; font-weight: 600; color: var(--ink); }
+
+/* ══ Эффективность (30.09.2026) ═══════════════════════════════
+   Одна панель на всю страницу, итоги строкой, у списков свои шапки,
+   «вне рейтинга» — строкой в конце списка, отделы — деревом. */
+
+/* Панель прилипает под верхней полосой и действует на всю страницу. */
+.eff-bar {
+  position: sticky; top: var(--stick, 75.5px); z-index: 6;
+  display: flex; align-items: center; gap: 10px 12.5px; flex-wrap: wrap;
+  padding: 10px 21.5px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line2);
+}
+.eff-bar .mx-tools { flex: 1 1 360px; }
+.eff-bar .eff-find { display: contents; }
+#sec-emp[data-tab="depts"] .eff-only-people { display: none; }
+.eff-bar .rt-open { margin-left: auto; }
+/* Подписи фильтров — в одну строку (30.09.2026): на ширине ноутбука
+   списки сжимались, «Сентябрь 2026» ломался пополам, «Все отделы и
+   участки» — в три строки, и полоса вырастала вдвое. Теперь не влезает —
+   фильтры целиком переносятся на вторую строку. */
+.eff-bar .mx-tools { flex-wrap: wrap; row-gap: 8px; }
+.eff-bar .sel-btn { white-space: nowrap; }
+/* Поиск уступает место первым (перенос считается от flex-basis, не
+   от min-width): на 1024 пикселях иначе не хватало пятидесяти
+   пикселей, и «Сначала сильные» уезжал на вторую строку один.
+   Распорку заменяет отступ «auto» у первого списка — у распорки были
+   свои два промежутка. */
+@media (min-width: 685px) {
+  .eff-bar .tb-gap { display: none; }
+  .eff-bar #filters > .sel { margin-left: auto; }
+  .eff-bar .tb-search { flex-basis: 96px; min-width: 96px; }
+}
+/* Планшет и узкий ноутбук (до 1040): вкладки и «Данные» — первой
+   строкой, фильтры — второй во всю ширину. Иначе полоса рвалась на
+   три строки, и «Данные» стояли последней одни. У «Отделов» фильтр
+   один — период, он влезает в первую строку. */
+@media (min-width: 685px) and (max-width: 1040px) {
+  #sec-emp:not([data-tab="depts"]) .eff-bar .mx-tools { order: 3; flex: 1 1 100%; }
+}
+#sec-emp[data-tab="depts"] .eff-bar .mx-tools { flex-basis: auto; }
+
+/* Вкладки — сегментами, как выбор вида в календарях и трекерах. */
+.eff-tabs {
+  flex: none; display: inline-flex; gap: 2px; padding: 2.5px;
+  background: var(--raise); border: 1px solid var(--line2); border-radius: 10px;
+}
+.eff-tabs button {
+  height: 27px; padding: 0 13px; border: 0; border-radius: 7.5px;
+  background: transparent; color: var(--ink2); font: 500 11.5px var(--sans);
+  cursor: pointer; transition: background .15s var(--ease), color .15s var(--ease);
+}
+.eff-tabs button:hover { color: var(--ink); }
+.eff-tabs button[aria-selected="true"] {
+  background: var(--card); color: var(--ink);
+  box-shadow: 0 1px 2px rgba(29, 28, 25, .08);
+}
+.eff-tabs button:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+
+/* Подпись о периоде — полосой во всю ширину между фильтрами и итогами,
+   текст по той же линии, что итоги. Карточкой с полями она висела на
+   сером зазоре, а итоги прилипали к ней снизу (30.09.2026). */
+#sec-emp > .period-note {
+  margin: 0; padding: 9px 21.5px; border: 0; border-radius: 0;
+  border-bottom: 1px solid var(--line2);
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+
+/* «Данных пока мало» — полосой во всю ширину между итогами и списками,
+   как подпись о периоде, но синей: это не тревога, а «подождите». */
+.rate-hint {
+  display: flex; align-items: center; gap: 14px; padding: 11px 21.5px;
+  background: color-mix(in srgb, var(--info) 6%, var(--card));
+  border-bottom: 1px solid var(--line2); box-shadow: inset 3px 0 0 var(--info);
+}
+.rate-hint[hidden] { display: none; }
+.rate-hint .rh-ic {
+  flex: none; display: grid; place-items: center; width: 32px; height: 32px;
+  border-radius: 10px; background: var(--info-soft); color: var(--info);
+}
+.rate-hint .rh-ic svg {
+  width: 17px; height: 17px; fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+}
+.rate-hint .rh-t { flex: 1; min-width: 0; }
+.rate-hint .rh-t b { display: block; font-size: 12px; font-weight: 600; color: var(--ink); }
+.rate-hint .rh-t span { display: block; margin-top: 2px; font-size: 11px; line-height: 1.45; color: var(--ink2); }
+.rate-hint .rh-go {
+  flex: none; height: 30px; padding: 0 13px; border: 1px solid var(--line);
+  border-radius: 9px; background: var(--card); color: var(--ink);
+  font: inherit; font-size: 11px; white-space: nowrap; cursor: pointer;
+  transition: border-color .15s var(--ease), color .15s var(--ease);
+}
+.rate-hint .rh-go:hover { border-color: var(--brand); color: var(--brand-deep); }
+@media (max-width: 684px) {
+  .rate-hint { flex-wrap: wrap; padding: 10px 12.5px; }
+  .rate-hint .rh-go { width: 100%; }
+}
+
+/* Итоги — таблицей во всю ширину: четыре клетки через черту, как
+   фильтры над ними и списки под ними (плитки на сером забраковали —
+   «островками»). Первая клетка шире и чуть подкрашена: шкала,
+   сдвиг к прошлому периоду, состав точками. Цвета — те же, что у полос
+   в строках людей: в срок, с опозданием, просрочено. */
+.eff-stats {
+  display: grid; grid-template-columns: minmax(0, 1.45fr) repeat(3, minmax(0, 1fr));
+  background: var(--card); border-bottom: 1px solid var(--line2);
+}
+.eff-stats .eff-st {
+  display: flex; flex-direction: column; justify-content: center; gap: 5px; min-width: 0;
+  padding: 15px 21.5px 16px;
+  border-left: 1px solid var(--line2);
+}
+.eff-stats .eff-st:first-child { border-left: 0; }
+.eff-stats .eff-st.st-main {
+  flex-direction: row; align-items: center; justify-content: flex-start; gap: 20px;
+  padding-top: 12px; padding-bottom: 12px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--brand-tint) 75%, var(--card)) 0%, var(--card) 85%);
+}
+.st-main-t { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; min-width: 0; }
+.st-l { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; color: var(--ink2); }
+.st-main .st-l { font-size: 12px; font-weight: 600; color: var(--ink); }
+.st-ic { width: 14px; height: 14px; flex: none; fill: none; stroke: var(--ink3); stroke-width: 1.9;
+  stroke-linecap: round; stroke-linejoin: round; }
+.st-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 9px; }
+.st-v { font-size: 24px; font-weight: 650; line-height: 1.05; letter-spacing: -.03em; color: var(--ink); }
+.eff-st.st-warn .st-v { color: var(--bad); }
+.eff-st.st-good .st-v { color: var(--ok); }
+.st-of { font-size: 11px; color: var(--ink3); }
+.st-s { font-size: 10.5px; color: var(--ink3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st-main .st-s { display: flex; flex-direction: column; gap: 3px; font-size: 11px; color: var(--ink2); }
+.st-k { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.st-k i { width: 8px; height: 8px; border-radius: 2.5px; background: var(--line); }
+.st-k i.ok, .st-bar3 i.ok { background: var(--ok); }
+.st-k i.late, .st-bar3 i.late { background: var(--warn); }
+.st-k i.over, .st-bar3 i.over { background: var(--bad); }
+
+/* Сдвиг к прошлому периоду: рост зелёным, падение красным. */
+.st-d {
+  display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 999px;
+  font-size: 10.5px; font-weight: 600; white-space: nowrap;
+  background: var(--box-bg); color: var(--ink2);
+}
+.st-d i { font-style: normal; font-weight: 400; opacity: .8; }
+.st-d.up { background: var(--ok-soft); color: var(--ok); }
+.st-d.down { background: var(--bad-soft); color: var(--bad); }
+
+/* Полоса состава: отрезки с зазором, скруглённые. */
+.st-bar3 {
+  display: flex; gap: 2px; height: 5px; margin: 3px 0 1px; max-width: 240px; overflow: hidden;
+  border-radius: 999px; background: var(--line2);
+}
+.st-bar3 i { display: block; height: 100%; border-radius: 999px; transform-origin: left;
+  animation: st-grow .7s var(--ease) both; }
+
+/* Шкала успеваемости: полукруг, дорожка и дуга с круглыми концами,
+   на конце дуги — бегунок цвета своей зоны, процент внутри дуги. */
+.st-gauge { position: relative; flex: none; width: 136px; height: 80px; }
+.st-gauge svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.st-gauge path { fill: none; stroke-width: 9; stroke-linecap: round; }
+.st-gauge .trk { stroke: color-mix(in srgb, var(--line2) 80%, var(--card)); }
+.st-gauge .val { stroke: url(#stGaugeG); animation: st-arc .9s var(--ease) both; }
+.st-gauge .knob {
+  fill: var(--card); stroke: var(--ink3); stroke-width: 3;
+  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .25));
+  animation: st-fade .3s .75s var(--ease) both;
+}
+.st-gauge.ok .knob { stroke: var(--ok); }
+.st-gauge.late .knob { stroke: var(--warn); }
+.st-gauge.over .knob { stroke: var(--bad); }
+.st-gv {
+  position: absolute; left: 0; right: 0; bottom: 4px; text-align: center;
+  font-size: 27px; font-weight: 650; line-height: 1; letter-spacing: -.03em; color: var(--ink);
+}
+@keyframes st-grow { from { transform: scaleX(0); } }
+@keyframes st-arc { from { stroke-dasharray: 0 100; } }
+@keyframes st-fade { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .st-bar3 i, .st-gauge .val, .st-gauge .knob { animation: none !important; }
+}
+.st-main-t { overflow: hidden; }
+/* Ноутбук: шкала поменьше, первая клетка пошире — иначе легенда
+   заезжала на соседнюю клетку. */
+@media (min-width: 961px) and (max-width: 1240px) {
+  .eff-stats { grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(0, 1fr)); }
+  .eff-stats .eff-st.st-main { gap: 14px; }
+  .st-gauge { width: 112px; height: 66px; }
+  .st-gv { font-size: 22px; bottom: 3px; }
+}
+/* Узкое окно: шкала — первой строкой во всю ширину, три клетки под ней. */
+@media (max-width: 960px) {
+  .eff-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .eff-stats .eff-st.st-main { grid-column: 1 / -1; border-bottom: 1px solid var(--line2); }
+  .eff-stats .eff-st:nth-child(2) { border-left: 0; }
+}
+
+/* Карточки списков: своя шапка — название, сколько людей, пояснение. */
+#sec-emp .eff-card { padding: 0; overflow: clip; }
+.eff-view[hidden] { display: none; }
+.eff-head {
+  display: flex; align-items: baseline; gap: 4px 10px; flex-wrap: wrap;
+  padding: 15px 21.5px 9px;
+}
+.eff-head h2 { margin: 0; font-size: 13.5px; font-weight: 600; letter-spacing: -.01em; }
+.eff-cnt { margin-left: 4px; font-size: 11px; font-weight: 500; color: var(--ink3); }
+.eff-sub { font-size: 10.5px; color: var(--ink3); }
+.eff-head .grow { flex: 1; }
+.eff-empty { padding: 4px 21.5px 16px; }
+#sec-emp #masters-body:not(:has(.compact)), #sec-emp #others-body, #sec-emp #depts-body { padding: 0; }
+
+/* Переключатель «Таблица пунктов» — словами, а не безымянной иконкой. */
+.eff-tgl {
+  align-self: center; display: inline-flex; align-items: center; gap: 6px;
+  height: 28px; padding: 0 11px;
+  border: 1px solid var(--line2); border-radius: 8px; background: transparent;
+  color: var(--ink2); font: 500 11px var(--sans); cursor: pointer;
+}
+.eff-tgl svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round; }
+.eff-tgl:hover { color: var(--ink); border-color: var(--line); }
+.eff-tgl[aria-pressed="true"] { color: var(--brand-deep); border-color: var(--brand); background: var(--brand-tint); }
+.eff-link {
+  align-self: center; padding: 3px 6px; border: 0; background: none; cursor: pointer;
+  color: var(--brand-deep); font: 500 11px var(--sans); border-radius: 6px;
+}
+.eff-link:hover { background: var(--brand-tint); }
+
+/* «Вне рейтинга» — последняя строка списка: сколько и почему, по
+   нажатию — раскрыть. Тихая, но заметная: не кнопка-сирота. */
+.eff-fold-row td { padding: 0 !important; border-top: 1px solid var(--line2); }
+.eff-fold {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 10px 21.5px; border: 0; background: transparent;
+  color: var(--ink3); font: 400 11px var(--sans); text-align: left; cursor: pointer;
+}
+.eff-fold:hover:not(:disabled) { background: var(--raise); }
+.eff-fold:disabled { cursor: default; }
+.eff-fold svg { width: 13px; height: 13px; flex: none; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; transition: transform .15s var(--ease); }
+.eff-fold[aria-expanded="true"] svg { transform: rotate(90deg); }
+.eff-fold b { font-weight: 500; color: var(--ink2); }
+.eff-fold i { margin-left: auto; font-style: normal; color: var(--brand-deep); font-weight: 500; }
+.eff-fold:disabled i { color: var(--ink3); font-weight: 400; }
+div.eff-fold-row { border-top: 1px solid var(--line2); }
+
+/* Участок — в строке должности, словом; кому можно менять — ссылкой. */
+.mx .m-who .mw .m-band {
+  display: inline; max-width: none; margin: 0; padding: 0;
+  border: 0; border-radius: 0; background: none;
+  color: inherit; font: inherit; line-height: inherit; cursor: default;
+}
+.mx .m-who .mw .m-band::before { content: "·"; margin: 0 5px; color: var(--ink3); }
+.mx .m-who .mw .m-band:not(:disabled) {
+  cursor: pointer; color: var(--ink2);
+  text-decoration: underline dotted; text-underline-offset: 2px;
+}
+.mx .m-who .mw .m-band:not(:disabled):hover { color: var(--brand-deep); border: 0; }
+.mx .m-who .mw .m-band.none { border: 0; }
+.eff-dept { font-size: 11px; color: var(--ink2); }
+
+/* Группы в выпадающем списке: «Отделы», «Участки». */
+.sel-grp {
+  padding: 8px 11px 3px; font-size: 9.5px; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ink3);
+}
+
+/* Дерево отделов: строка группы нажимается целиком; вложенные — с
+   отступом и на чуть более тёмном фоне. */
+.dp-table tr[data-row] { cursor: pointer; }
+.dp-table tr[data-row]:hover td { background: var(--raise); }
+.dp-table tr[data-row]:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+/* Уровни дерева — отступом у имени: стрелка группы стоит перед её
+   именем, люди группы — ровно под ним. Колонка мест не сдвигается. */
+.dp-table .tree-l1 { padding-left: 22px; }
+.dp-table .tree-l2 { padding-left: 44px; }
+.dp-table tr.lv1 .m-rank .rank, .dp-table tr.lv2 .m-rank .rank { font-size: 10px; }
+.tree-tg {
+  display: inline-grid; place-items: center; width: 18px; height: 18px; margin-right: 4px;
+  vertical-align: middle; color: var(--ink3);
+}
+.tree-tg svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.2;
+  stroke-linecap: round; stroke-linejoin: round; transition: transform .15s var(--ease); }
+.tree-tg.on svg { transform: rotate(90deg); }
+.dp-table tr.eff-fold-row.lv1 .eff-fold { padding-left: 66.5px; }
+.dp-table tr.eff-fold-row.lv2 .eff-fold { padding-left: 88.5px; }
+.dp-table tr.lv1 td, .dp-table tr.lv2 td { background: color-mix(in srgb, var(--raise) 55%, var(--card)); }
+.dp-table tr.dp-g.lv1 .m-who b { font-size: 12.5px; }
+.dp-table tr.dp-person .m-who b { font-size: 12.5px; font-weight: 500; }
+.dp-table tr.dp-person .av-i { width: 22px; height: 22px; font-size: 9px; }
+.dpt-subrow td {
+  padding: 7px 21.5px 5px 66.5px !important; font-size: 10px; font-weight: 600; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--ink3);
+  background: color-mix(in srgb, var(--raise) 55%, var(--card));
+}
+.dpt-empty { padding: 8px 21.5px 8px 66.5px !important; font-size: 11px; color: var(--ink3); }
+.dp-table .m-src .s { display: inline-block; margin-right: 12px; }
+
+/* Телефон: панель в два ряда, итоги сеткой 2×2, дерево — строками. */
+@media (max-width: 684px) {
+  .eff-bar { padding: 9px 12.5px; gap: 8px; }
+  .eff-tabs { flex: 1 1 auto; }
+  .eff-tabs button { flex: 1; }
+  .eff-bar .mx-tools { order: 3; flex: 1 1 100%; flex-wrap: wrap; gap: 6px; }
+  .eff-bar .tb-search { flex: 0 0 100%; max-width: none; }
+  .eff-bar .tb-gap { display: none; }
+  .eff-bar .sel { flex: 1 1 0; min-width: 0; }
+  .eff-bar .eff-only-people { display: contents; }
+  #sec-emp[data-tab="depts"] .eff-only-people > * { display: none; }
+  .eff-bar .sel-btn { width: 100%; height: 32px; padding: 0 8px 0 10px; }
+  .eff-bar .sel-cur { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .eff-bar .rt-open { margin-left: 0; }
+  #sec-emp > .period-note { padding: 8px 12.5px; }
+  .eff-stats .eff-st { padding: 10px 12.5px 11px; gap: 4px; }
+  .eff-stats .eff-st.st-main { gap: 16px; padding: 10px 12.5px; }
+  .st-gauge { width: 118px; height: 69px; }
+  .st-gv { font-size: 23px; }
+  .st-v { font-size: 19px; }
+  .st-l { font-size: 10.5px; }
+  .st-ic, .st-lx { display: none; }
+  .eff-st:not(.st-main) .st-d { padding: 1px 6px; font-size: 10px; }
+  .eff-st:not(.st-main) .st-d i { display: none; }
+  .eff-head { padding: 12px 12.5px 8px; }
+  .eff-sub { flex: 1 1 100%; }
+  .eff-empty { padding: 4px 12.5px 14px; }
+  .eff-fold { padding: 10px 12.5px; flex-wrap: wrap; }
+  .eff-fold span { order: 3; flex: 1 1 100%; padding-left: 21px; }
+  .dp-list .dpt-g { cursor: pointer; }
+  .dp-list .tree-tg { margin-right: 0; }
+  .dp-list .lv1 { padding-left: 26px; }
+  .dp-list .lv2 { padding-left: 40px; }
+  .dp-list .mxp-row.lv1, .dp-list .mxp-row.lv2, .dp-list div.lv1, .dp-list div.lv2 {
+    background: color-mix(in srgb, var(--raise) 55%, var(--card)); }
+  .dp-list .lv1 .eff-fold, .dp-list .lv2 .eff-fold { padding-left: 0; }
+  .dpt-sub { padding: 7px 12.5px 5px 26px; font-size: 10px; font-weight: 600; letter-spacing: .05em;
+    text-transform: uppercase; color: var(--ink3); }
+  .dpt-empty { padding: 8px 12.5px 8px 40px !important; }
+}
+
+.mx .m-src .eff-none { color: var(--ink3); }
+.dp-table .m-src .s { display: block; margin-right: 0; }
+
+/* ── свои окна вместо браузерных (src/ask.js, 02.10.2026) ──────
+   Подтверждение, сообщение и поле ввода — в стиле платформы: вопрос
+   заголовком, под ним что будет, кнопка называет действие, опасное —
+   красным. Поверх всего, включая просмотр материалов «Обучения». */
+.dlg-wrap {
+  position: fixed; inset: 0; z-index: 140;
+  display: grid; place-items: center; padding: 16px;
+  background: rgba(20, 17, 14, .46);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  animation: dlg-fade .16s var(--ease);
+}
+.dlg-wrap.out { opacity: 0; transition: opacity .14s var(--ease); }
+@keyframes dlg-fade { from { opacity: 0; } }
+@keyframes dlg-pop { from { opacity: 0; transform: translateY(8px) scale(.97); } }
+@keyframes dlg-up { from { transform: translateY(100%); } }
+.dlg-card {
+  width: min(440px, 100%);
+  display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 4px 14px;
+  padding: 22px 22px 18px; border-radius: 18px;
+  background: var(--card); color: var(--ink); border: 1px solid var(--line2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .08), 0 30px 70px -20px rgba(0, 0, 0, .45);
+  animation: dlg-pop .2s var(--ease);
+}
+.dlg-ic {
+  display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%;
+  background: var(--brand-tint); color: var(--brand-deep);
+}
+.dlg-ic svg {
+  width: 21px; height: 21px; fill: none; stroke: currentColor;
+  stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round;
+}
+.dlg-card.t-danger .dlg-ic, .dlg-card.t-bad .dlg-ic { background: var(--bad-soft); color: var(--bad); }
+.dlg-card.t-info .dlg-ic { background: var(--info-soft); color: var(--info); }
+.dlg-b { min-width: 0; padding-top: 1px; }
+.dlg-b h3 {
+  margin: 0; font-size: 15px; font-weight: 650; line-height: 1.4; letter-spacing: -.01em;
+  overflow-wrap: anywhere;
+}
+.dlg-b p {
+  margin: 7px 0 0; color: var(--ink2); font-size: 12.5px; line-height: 1.55;
+  white-space: pre-line; overflow-wrap: anywhere;
+}
+.dlg-b p.html { white-space: normal; }
+.dlg-in {
+  width: 100%; height: 38px; margin-top: 12px; padding: 0 12px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink);
+  font: 400 13px var(--sans); outline: none;
+  transition: border-color .15s var(--ease), box-shadow .15s var(--ease);
+}
+.dlg-in:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.dlg-foot { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+.dlg-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 38px; min-width: 96px; padding: 0 18px; border-radius: 10px;
+  font: 600 12.5px var(--sans); text-align: center; cursor: pointer;
+  transition: filter .15s var(--ease), border-color .15s var(--ease), color .15s var(--ease);
+}
+.dlg-btn.dlg-no { border: 1px solid var(--line); background: var(--card); color: var(--ink2); }
+.dlg-btn.dlg-no:hover { border-color: var(--ink3); color: var(--ink); }
+.dlg-btn.dlg-yes {
+  border: 0; background: var(--grad-brand); color: #FFF7F2;
+  box-shadow: 0 4px 14px -8px rgba(240, 78, 14, .6);
+}
+.dlg-btn.dlg-red { border: 0; background: var(--bad); color: #FFF; }
+.dlg-btn.dlg-yes:hover, .dlg-btn.dlg-red:hover { filter: brightness(1.07); }
+.dlg-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.dlg-btn.dlg-red:focus-visible { outline-color: var(--bad); }
+/* На телефоне — шторкой снизу, кнопки во всю ширину под большой палец. */
+@media (max-width: 684px) {
+  .dlg-wrap { place-items: end stretch; padding: 0; }
+  .dlg-card {
+    width: 100%; border-radius: 20px 20px 0 0; border-width: 1px 0 0;
+    padding: 20px 18px max(18px, env(safe-area-inset-bottom));
+    animation: dlg-up .24s var(--ease);
+  }
+  .dlg-b h3 { font-size: 16px; }
+  .dlg-b p { font-size: 13.5px; }
+  .dlg-in { height: 44px; font-size: 16px; }
+  .dlg-foot .dlg-btn { flex: 1; height: 46px; font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .dlg-wrap, .dlg-card { animation: none; } }
+
+/* Прокрутка в окнах — тонкая и скруглённая, с отступом от скруглённых
+   углов карточки: системная полоса со стрелками была прямоугольной и
+   резала угол окна. */
+.modal-card, .pf-crop, .dlg-card, .sel-list, .ln-picks { scrollbar-width: thin; }
+@supports selector(::-webkit-scrollbar) {
+  .modal-card, .pf-crop, .dlg-card, .sel-list, .ln-picks { scrollbar-width: auto; }
+}
+.modal-card::-webkit-scrollbar, .pf-crop::-webkit-scrollbar, .dlg-card::-webkit-scrollbar,
+.sel-list::-webkit-scrollbar, .ln-picks::-webkit-scrollbar { width: 12px; height: 12px; }
+.modal-card::-webkit-scrollbar-track, .pf-crop::-webkit-scrollbar-track, .dlg-card::-webkit-scrollbar-track,
+.sel-list::-webkit-scrollbar-track, .ln-picks::-webkit-scrollbar-track { background: transparent; margin: 14px 0; }
+.modal-card::-webkit-scrollbar-thumb, .pf-crop::-webkit-scrollbar-thumb, .dlg-card::-webkit-scrollbar-thumb,
+.sel-list::-webkit-scrollbar-thumb, .ln-picks::-webkit-scrollbar-thumb {
+  background: var(--line); border-radius: 999px; border: 4px solid transparent; background-clip: padding-box;
+}
+.modal-card::-webkit-scrollbar-thumb:hover, .pf-crop::-webkit-scrollbar-thumb:hover, .dlg-card::-webkit-scrollbar-thumb:hover,
+.sel-list::-webkit-scrollbar-thumb:hover, .ln-picks::-webkit-scrollbar-thumb:hover { background-color: var(--ink4); }
+.modal-card::-webkit-scrollbar-button, .pf-crop::-webkit-scrollbar-button, .dlg-card::-webkit-scrollbar-button,
+.sel-list::-webkit-scrollbar-button, .ln-picks::-webkit-scrollbar-button { display: none; height: 0; }

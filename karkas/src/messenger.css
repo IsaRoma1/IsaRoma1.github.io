@@ -1,0 +1,459 @@
+/* Переписка сотрудников: отдельные прокрутки списка и истории. */
+.msg-shell [hidden], .msg-overlay [hidden], .msg-nav-badge[hidden] { display: none !important; }
+.msg-shell { height: calc(100dvh - var(--stick, 51px)); min-height: 300px; display: grid;
+  grid-template-columns: 310px minmax(0, 1fr); background: var(--card); color: var(--ink); }
+.msg-shell button, .msg-overlay button { cursor: pointer; }
+.msg-shell .btn, .msg-overlay .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border: 1px solid var(--brand); border-radius: 9px; background: var(--brand); color: var(--on-brand);
+  padding: 10px 14px; font: inherit; font-size: 12px; font-weight: 500; }
+.msg-shell .btn.sm, .msg-overlay .btn.sm { padding: 8px 10px; }
+.msg-shell .btn.ghost, .msg-overlay .btn.ghost { background: transparent; border-color: var(--line); color: var(--ink2); }
+.msg-shell .btn:disabled, .msg-overlay .btn:disabled { opacity: .5; cursor: wait; }
+.msg-shell svg, .msg-overlay svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; flex: none; }
+.msg-sidebar { border-right: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; }
+.msg-list-head { display: flex; align-items: center; justify-content: space-between; padding: 20px 18px 12px; gap: 8px; }
+.msg-list-head h2 { font-size: 20px; margin: 0 0 3px; font-weight: 600; }
+.msg-list-head span { font-size: 11px; color: var(--ink2); }
+.msg-list-head .btn { gap: 4px; white-space: nowrap; }
+.msg-search { padding: 0 16px 14px; }
+.msg-search input, .msg-picker-search, .msg-modal .fld input { width: 100%; box-sizing: border-box; border: 1px solid var(--line);
+  border-radius: 9px; background: var(--raise); color: var(--ink); padding: 10px 12px; font: inherit; font-size: 13px; }
+.msg-list { overflow-y: auto; flex: 1; padding: 0 8px 16px; }
+.msg-chat { width: 100%; border: 0; background: transparent; border-radius: 10px; display: flex; align-items: center;
+  gap: 10px; padding: 12px 10px; color: inherit; font: inherit; text-align: left; margin-bottom: 3px; }
+.msg-chat:hover { background: var(--raise); }
+.msg-chat.selected { background: var(--brand-tint); }
+.msg-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--raise); color: var(--ink2);
+  display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex: none; overflow: hidden; }
+.msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.msg-avatar.group { background: var(--brand-tint); color: var(--brand-deep); border-radius: 13px; }
+.msg-chat-text { min-width: 0; flex: 1; }
+.msg-chat-text b, .msg-chat-text > span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-chat-text b { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+.msg-chat-text > span { color: var(--ink2); font-size: 12px; }
+.msg-chat-meta { display: flex; flex-direction: column; align-items: flex-end; align-self: stretch; gap: 8px; }
+.msg-chat-meta time { color: var(--ink3); font-size: 10px; white-space: nowrap; }
+.msg-count, .msg-nav-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 19px; height: 19px;
+  box-sizing: border-box; padding: 0 5px; border-radius: 20px; background: var(--brand); color: var(--on-brand); font-size: 10px; font-style: normal; }
+.msg-nav-badge { margin-left: auto; }
+.side.min .msg-nav-badge { position: absolute; top: 1px; right: 2px; height: 16px; min-width: 16px; font-size: 9px; }
+.msg-conversation { display: flex; flex-direction: column; min-height: 0; min-width: 0; background: var(--raise); }
+.msg-welcome { margin: auto; padding: 32px; text-align: center; max-width: 420px; }
+.msg-welcome > svg { width: 54px; height: 54px; color: var(--brand); margin-bottom: 18px; }
+.msg-welcome h2 { font-size: 23px; font-weight: 500; margin: 0 0 12px; }
+.msg-welcome p { color: var(--ink2); line-height: 1.6; font-size: 13px; margin-bottom: 22px; }
+.msg-empty-small { padding: 28px 16px; color: var(--ink2); font-size: 13px; text-align: center; line-height: 1.6; }
+.msg-conv-head { display: flex; align-items: center; gap: 11px; padding: 13px 24px; background: var(--card); border-bottom: 1px solid var(--line2); flex: none; }
+.msg-heading { min-width: 0; border: 0; background: none; color: inherit; padding: 0; text-align: left; font: inherit;
+  display: flex; align-items: center; gap: 11px; flex: 0 1 auto; }
+.msg-heading > span:last-child { min-width: 0; }
+.msg-heading b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 600; }
+.msg-heading #msgSub { display: block; font-size: 11px; color: var(--ink2); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg-back { display: none; border: 0; background: none; color: inherit; padding: 6px; }
+.msg-status { padding: 0 24px; font-size: 12px; color: var(--ink2); background: var(--card); }
+.msg-status:not(:empty) { padding-top: 8px; padding-bottom: 8px; }
+.msg-status.bad { color: var(--bad); }
+.msg-feed { overflow-y: auto; overscroll-behavior: contain; min-height: 0; flex: 1; padding: 20px 28px; display: flex;
+  flex-direction: column; align-items: flex-start; gap: 8px; scroll-behavior: auto; }
+.msg-day { align-self: center; padding: 8px 12px; font-size: 11px; color: var(--ink2); }
+.msg-message { flex: none; max-width: min(78%, 640px); padding: 11px 14px 8px; border: 1px solid var(--line2); border-radius: 13px 13px 13px 3px; background: var(--card); }
+.msg-message.own { align-self: flex-end; background: var(--brand-tint); border-color: var(--brand-soft); border-radius: 13px 13px 3px 13px; }
+.msg-author { display: block; color: var(--brand-deep); font-size: 11px; margin-bottom: 6px; font-weight: 500; }
+.msg-text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.6; }
+.msg-message footer { display: flex; justify-content: flex-end; gap: 9px; color: var(--ink2); font-size: 10px; margin-top: 5px; }
+.msg-history { align-self: center; flex: none; border: 1px solid var(--line); background: var(--card); color: var(--ink2); border-radius: 20px;
+  padding: 8px 15px; font: inherit; font-size: 12px; margin: 6px 0; }
+.msg-compose { background: var(--card); border-top: 1px solid var(--line2); padding: 14px 24px 10px; display: flex;
+  flex-wrap: wrap; align-items: flex-end; gap: 9px; position: relative; flex: none; }
+.msg-compose textarea { min-width: 0; flex: 1; min-height: 42px; max-height: 132px; box-sizing: border-box; resize: none; border: 1px solid var(--line);
+  border-radius: 12px; padding: 10px 13px; background: var(--raise); color: var(--ink); font: inherit; font-size: 14px; line-height: 20px; }
+.msg-compose > small { flex-basis: 100%; text-align: right; font-size: 10px; color: var(--ink3); }
+.msg-shell .msg-send { height: 42px; width: 44px; justify-content: center; padding: 0; }
+.msg-smile { border: 0; background: none; color: var(--ink2); font-size: 28px; height: 42px; padding: 0 3px; }
+.msg-emoji { position: absolute; bottom: 100%; left: 18px; padding: 8px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-float); }
+.msg-emoji button { border: 0; background: none; font-size: 23px; padding: 5px; border-radius: 7px; }
+.msg-emoji button:hover { background: var(--raise); }
+.msg-overlay { position: fixed; inset: 0; z-index: 1800; background: rgba(0,0,0,.35); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.msg-modal { width: 480px; max-width: 100%; max-height: calc(100dvh - 32px); overflow: auto; background: var(--card); color: var(--ink);
+  border-radius: 17px; box-shadow: var(--shadow-float); padding: 22px; box-sizing: border-box; }
+.msg-modal > header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; }
+.msg-modal h2 { font-size: 18px; font-weight: 600; margin: 0; overflow-wrap: anywhere; }
+.msg-modal .fld { display: block; margin: 14px 0; }
+.msg-modal .fld > span { display: block; font-size: 12px; color: var(--ink2); margin-bottom: 7px; }
+.msg-picker-mode { display: flex; padding: 3px; background: var(--raise); border-radius: 9px; margin-bottom: 16px; }
+.msg-picker-mode button { flex: 1; border: 0; background: none; font: inherit; font-size: 13px; color: var(--ink2); padding: 9px; border-radius: 7px; }
+.msg-picker-mode button.selected { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+.msg-people { max-height: min(350px, 45dvh); overflow-y: auto; margin: 12px 0; }
+.msg-person { display: flex; align-items: center; gap: 10px; padding: 10px 5px; border-bottom: 1px solid var(--line2); }
+label.msg-person { cursor: pointer; }
+.msg-person input { accent-color: var(--brand); flex: none; }
+.msg-person > span:last-child { min-width: 0; }
+.msg-person b { font-size: 13px; font-weight: 500; display: block; }
+.msg-person small { display: block; color: var(--ink2); font-size: 11px; margin-top: 4px; }
+.msg-modal footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid var(--line2); padding-top: 14px; }
+.msg-selected-count { font-size: 11px; color: var(--ink2); }
+.msg-modal-error { font-size: 12px; color: var(--bad); margin: 12px 0 0; }
+.msg-shell button:focus-visible, .msg-overlay button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+@media (max-width: 960px) { .msg-shell { grid-template-columns: 270px minmax(0,1fr); } .msg-list-head { padding: 16px 12px 12px; } }
+@media (max-width: 684px) {
+  .msg-shell { display: block; }
+  .msg-sidebar, .msg-conversation { height: 100%; }
+  .msg-conversation { display: none; }
+  .msg-shell.has-chat .msg-sidebar { display: none; }
+  .msg-shell.has-chat .msg-conversation { display: flex; }
+  .msg-back { display: block; }
+  .msg-conv-head { padding: 10px 12px; }
+  .msg-conv-head .msg-avatar { width: 34px; height: 34px; }
+  .msg-feed { padding: 12px; }
+  .msg-message { max-width: 88%; }
+  .msg-compose { padding: 10px 10px max(10px, env(safe-area-inset-bottom)); gap: 7px; }
+  .msg-compose > small { display: none; }
+  .msg-compose textarea, .msg-search input, .msg-picker-search, .msg-modal .fld input { font-size: 16px; }
+  .msg-status { padding-left: 14px; padding-right: 14px; }
+  .msg-modal { padding: 18px; }
+}
+
+/* Чат «Nexus» (20.10.2026): закреплён сверху у всех, пакеты обновлений —
+   карточками, вместо поля ответа — пояснение (пишут Nexus и администраторы). */
+.msg-shell svg.msg-nx, .msg-overlay svg.msg-nx { stroke: none; }
+.msg-shell .msg-avatar.nexus { background: none; }
+.msg-shell .msg-avatar.nexus svg { width: 40px; height: 40px; filter: drop-shadow(0 2px 4px rgba(254, 80, 0, .35)); }
+.msg-conv-head .msg-avatar.nexus svg { width: 40px; height: 40px; }
+.msg-chat.pinned { margin-bottom: 8px; background: color-mix(in srgb, var(--brand) 6%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 22%, transparent); }
+.msg-chat.pinned:hover { background: color-mix(in srgb, var(--brand) 10%, transparent); }
+.msg-chat.pinned.selected { background: var(--brand-tint); }
+.msg-pin { display: inline-flex; vertical-align: -2px; margin-left: 6px; color: var(--brand); }
+.msg-shell .msg-pin svg { width: 13px; height: 13px; stroke-width: 2; }
+.msg-feed.nexus { align-items: stretch; }
+.msg-message.msg-upd { max-width: min(100%, 780px); align-self: flex-start; padding: 11px 16px 13px;
+  border-radius: 14px; border-left: 3px solid var(--brand); }
+.msg-upd-h { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; font-size: 11px; color: var(--ink3); }
+.msg-shell .msg-upd-h svg.msg-nx { width: 18px; height: 18px; }
+.msg-upd-h span { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--brand-deep); }
+.msg-upd-h time { margin-left: auto; white-space: nowrap; }
+.msg-upd-x { display: inline-flex; padding: 2px; border: 0; border-radius: 6px; background: none; color: var(--ink3); }
+.msg-upd-x:hover { color: var(--bad); background: var(--raise); }
+.msg-shell .msg-upd-x svg { width: 15px; height: 15px; }
+.msg-upd-t { display: block; margin-bottom: 6px; font-size: 15px; font-weight: 600; line-height: 1.4; color: var(--ink); }
+.msg-upd-b ul { margin: 0; padding-left: 18px; }
+.msg-upd-b li { margin: 3px 0; font-size: 13.5px; line-height: 1.55; color: var(--ink); }
+.msg-upd-b li::marker { color: var(--brand); }
+.msg-upd-b p { margin: 4px 0; font-size: 13.5px; line-height: 1.55; }
+.msg-channel-note { flex: none; display: flex; align-items: center; gap: 11px; padding: 12px 24px; background: var(--card);
+  border-top: 1px solid var(--line2); font-size: 12px; line-height: 1.5; color: var(--ink2); }
+.msg-shell .msg-channel-note svg.msg-nx { width: 28px; height: 28px; }
+.msg-nx-info { display: flex; align-items: flex-start; gap: 12px; }
+.msg-overlay .msg-nx-info svg.msg-nx { width: 44px; height: 44px; }
+.msg-nx-info p { margin: 0 0 14px; font-size: 13px; line-height: 1.6; color: var(--ink2); }
+@media (max-width: 684px) {
+  .msg-channel-note { padding: 10px 12px; }
+  .msg-message.msg-upd { max-width: 100%; }
+}
+
+/* Вложения, карточка чата, чаты правок (21.10.2026). */
+.msg-head-gap { flex: 1; }
+.msg-head-ic { display: inline-flex; color: var(--ink3); }
+.msg-shell .msg-head-ic svg { width: 17px; height: 17px; }
+.msg-head-btn { border: 0; background: none; color: var(--ink2); padding: 6px; border-radius: 8px; display: inline-flex; }
+.msg-head-btn:hover { background: var(--raise); color: var(--ink); }
+.msg-chat-tag { display: inline-flex; vertical-align: -2px; margin-left: 5px; color: var(--ink3); }
+.msg-shell .msg-chat-tag svg { width: 13px; height: 13px; stroke-width: 1.8; }
+.msg-count.muted { background: var(--ink4, var(--ink3)); }
+.msg-chat.muted .msg-chat-text > span { color: var(--ink3); }
+
+/* Поле ввода: скрепка и вложения над текстом. */
+.msg-clip { border: 0; background: none; color: var(--ink2); height: 42px; padding: 0 4px; display: inline-flex; align-items: center; }
+.msg-clip:hover { color: var(--brand); }
+.msg-shell .msg-clip svg { width: 22px; height: 22px; }
+.msg-tray { order: -1; flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 8px; }
+.msg-up { position: relative; display: flex; align-items: center; gap: 9px; width: 236px; max-width: 100%; box-sizing: border-box;
+  padding: 6px 30px 6px 6px; border: 1px solid var(--line); border-radius: 10px; background: var(--raise); overflow: hidden; }
+.msg-up img { width: 40px; height: 40px; object-fit: cover; border-radius: 7px; flex: none; }
+.msg-up.bad { border-color: var(--bad); }
+.msg-up-t { min-width: 0; }
+.msg-up-t b { display: block; font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg-up-t small { display: block; font-size: 10.5px; color: var(--ink2); margin-top: 3px; }
+.msg-up.bad small { color: var(--bad); white-space: normal; }
+.msg-up-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--line2); }
+.msg-up-bar b { display: block; height: 100%; background: var(--brand); transition: width .2s; }
+.msg-up > button { position: absolute; top: 5px; right: 5px; border: 0; background: none; color: var(--ink3); padding: 3px; border-radius: 6px; display: inline-flex; }
+.msg-up > button:hover { color: var(--bad); background: var(--card); }
+.msg-shell .msg-up > button svg { width: 14px; height: 14px; }
+.msg-doc-ic { flex: none; width: 40px; height: 40px; border-radius: 9px; background: var(--brand-tint); color: var(--brand-deep);
+  display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; letter-spacing: .03em; }
+.msg-conversation { position: relative; }
+.msg-conversation.drop::after { content: "Отпустите — файлы прикрепятся к сообщению"; position: absolute; inset: 10px; z-index: 5;
+  display: flex; align-items: center; justify-content: center; border: 2px dashed var(--brand); border-radius: 16px;
+  background: color-mix(in srgb, var(--card) 88%, transparent); color: var(--brand-deep); font-size: 15px; font-weight: 500; pointer-events: none; }
+
+/* Лента: фото, документы, служебные строки, ответы Nexus. */
+.msg-message { position: relative; }
+.msg-message.bare { padding: 5px 5px 6px; }
+.msg-message.bare footer { padding: 0 6px; }
+.msg-pics { display: grid; gap: 4px; margin: 2px 0 6px; border-radius: 10px; overflow: hidden; }
+.msg-pics.n1 { grid-template-columns: 1fr; }
+.msg-pics.n2, .msg-pics.n4 { grid-template-columns: 1fr 1fr; }
+.msg-pics.n3 { grid-template-columns: 1fr 1fr 1fr; }
+.msg-pic { border: 0; padding: 0; background: var(--raise); display: block; overflow: hidden; cursor: zoom-in; }
+.msg-pics:not(.n1) .msg-pic { aspect-ratio: 1; width: 132px; }
+.msg-pics.n1 .msg-pic { max-width: min(340px, 100%); max-height: 380px; min-width: 120px; min-height: 80px; }
+.msg-pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.msg-pics.n1 .msg-pic img { max-height: 380px; object-fit: contain; }
+.msg-doc { display: flex; align-items: center; gap: 4px; margin: 3px 0 6px; max-width: 360px; }
+.msg-doc-main { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; color: inherit; text-decoration: none;
+  padding: 6px 8px 6px 6px; border-radius: 10px; background: color-mix(in srgb, var(--raise) 70%, transparent); border: 1px solid var(--line2); }
+.msg-doc-main:hover { border-color: var(--brand-soft); }
+.msg-doc-t { min-width: 0; }
+.msg-doc-t b { display: block; font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg-doc-t small { display: block; font-size: 11px; color: var(--ink2); margin-top: 3px; }
+.msg-doc-dl { flex: none; display: inline-flex; padding: 7px; border-radius: 8px; color: var(--ink2); }
+.msg-doc-dl:hover { background: var(--raise); color: var(--brand); }
+.msg-shell .msg-doc-dl svg, .msg-overlay .msg-doc-dl svg { width: 18px; height: 18px; }
+.msg-text a { color: var(--brand-deep); text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
+.msg-sys { align-self: center; flex: none; max-width: 80%; text-align: center; font-size: 11.5px; color: var(--ink2);
+  background: var(--card); border: 1px solid var(--line2); border-radius: 20px; padding: 5px 12px; }
+.msg-message.msg-nxm { border-left: 3px solid var(--brand); padding-top: 9px; }
+.msg-nxm-h { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; font-size: 11px; color: var(--ink3); }
+.msg-shell .msg-nxm-h svg.msg-nx { width: 18px; height: 18px; }
+.msg-nxm-h b { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--brand-deep); }
+.msg-nxm-h time { margin-left: auto; }
+.msg-nxm .msg-text { font-size: 13.5px; }
+.msg-nxm-go { margin-top: 7px; border: 1px solid var(--brand-soft); background: var(--brand-tint); color: var(--brand-deep);
+  border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 12px; font-weight: 500; }
+.msg-nxm-go:hover { border-color: var(--brand); }
+.msg-act { position: absolute; top: -10px; right: -8px; display: none; border: 1px solid var(--line); background: var(--card);
+  color: var(--ink2); border-radius: 8px; padding: 4px; box-shadow: var(--shadow); }
+.msg-message:hover .msg-act, .msg-act:focus-visible { display: inline-flex; }
+.msg-act:hover { color: var(--brand); border-color: var(--brand-soft); }
+.msg-shell .msg-act svg { width: 15px; height: 15px; }
+
+/* Просмотр фото во весь экран. */
+.msg-lb { background: rgba(10, 10, 12, .92); padding: 56px 64px 24px; }
+.msg-lb-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 10px 40px rgba(0,0,0,.5); }
+.msg-lb-bar { position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 6px; padding: 10px 14px;
+  color: #eee; font-size: 13px; }
+.msg-lb-bar span { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg-lb-btn { border: 0; background: rgba(255,255,255,.08); color: #fff; border-radius: 9px; padding: 8px; display: inline-flex; cursor: pointer; }
+.msg-lb-btn:hover { background: rgba(255,255,255,.18); }
+.msg-lb svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.msg-lb-nav { position: absolute; top: 50%; transform: translateY(-50%); border: 0; width: 46px; height: 46px; border-radius: 50%;
+  background: rgba(255,255,255,.1); color: #fff; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.msg-lb-nav:hover { background: rgba(255,255,255,.2); }
+.msg-lb-nav.prev { left: 12px; }
+.msg-lb-nav.next { right: 12px; }
+
+/* Карточка чата — как в телеграме: фото и название, кнопки действий,
+   фото/файлы/ссылки, участники. */
+.msg-modal.msg-card { width: 440px; padding: 0; position: relative; }
+.msg-card .msg-modal-body { padding: 0 0 8px; }
+.msg-card .msg-modal-error { margin: 8px 20px 12px; }
+.mc-x { position: absolute; top: 12px; right: 12px; border: 0; background: none; color: var(--ink2); padding: 6px; border-radius: 8px; display: inline-flex; }
+.mc-x:hover, .mc-icon:hover { background: var(--raise); color: var(--ink); }
+.mc-top { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 26px 24px 14px; }
+.msg-avatar.big { width: 92px; height: 92px; font-size: 28px; margin-bottom: 12px; }
+.msg-avatar.group.big { border-radius: 28px; }
+.msg-overlay .msg-avatar.big svg { width: 40px; height: 40px; }
+.msg-overlay .msg-avatar.nexus.big svg { width: 92px; height: 92px; }
+.mc-top h2 { font-size: 19px; font-weight: 600; margin: 0 0 5px; overflow-wrap: anywhere; }
+.mc-top > span:last-child { font-size: 12.5px; color: var(--ink2); }
+.mc-acts { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 8px; padding: 4px 18px 14px; }
+.mc-acts button { border: 0; background: var(--raise); color: var(--ink); border-radius: 12px; padding: 11px 4px 9px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px; font: inherit; font-size: 11.5px; }
+.mc-acts button:hover { background: var(--brand-tint); color: var(--brand-deep); }
+.mc-acts button.off { color: var(--ink3); }
+.mc-menu { margin: -4px 18px 12px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.mc-menu button { width: 100%; border: 0; border-bottom: 1px solid var(--line2); background: var(--card); color: var(--ink);
+  display: flex; align-items: center; gap: 10px; padding: 11px 14px; font: inherit; font-size: 13px; text-align: left; }
+.mc-menu button:last-child { border-bottom: 0; }
+.mc-menu button:hover { background: var(--raise); }
+.mc-menu button.bad { color: var(--bad); }
+.msg-overlay .mc-menu svg { width: 17px; height: 17px; }
+.mc-note { display: flex; gap: 9px; align-items: flex-start; margin: 0 18px 12px; padding: 10px 12px; border-radius: 10px;
+  background: var(--brand-tint); color: var(--brand-deep); font-size: 12px; line-height: 1.5; }
+.msg-overlay .mc-note svg { width: 17px; height: 17px; margin-top: 1px; }
+.mc-row-t { margin: 0 18px 10px; font-size: 13px; }
+.mc-row-t small { display: block; font-size: 11px; color: var(--ink2); margin-bottom: 3px; }
+.mc-list { border-top: 8px solid var(--raise); border-bottom: 8px solid var(--raise); padding: 4px 0; }
+.mc-list button { width: 100%; border: 0; background: none; color: var(--ink); display: flex; align-items: center; gap: 16px;
+  padding: 11px 24px; font: inherit; font-size: 13.5px; text-align: left; }
+.mc-list button:hover:not(:disabled) { background: var(--raise); }
+.mc-list button:disabled { color: var(--ink3); cursor: default; }
+.msg-overlay .mc-list svg { color: var(--ink2); }
+.mc-people-h { display: flex; align-items: center; gap: 14px; padding: 14px 18px 6px 24px; color: var(--ink2); }
+.mc-people-h b { flex: 1; font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--ink); }
+.mc-icon { border: 0; background: none; color: var(--ink2); padding: 6px; border-radius: 8px; display: inline-flex; }
+.mc-people { padding: 0 10px 6px; max-height: 300px; overflow-y: auto; }
+.mc-person { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 10px; }
+.mc-person:hover { background: var(--raise); }
+.mc-person > span:nth-child(2) { flex: 1; min-width: 0; }
+.mc-person b { display: block; font-size: 13.5px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mc-person small { display: block; font-size: 11.5px; color: var(--ink2); margin-top: 3px; }
+.mc-person small.on { color: var(--brand-deep); }
+.mc-person .mc-icon { opacity: 0; }
+.mc-person:hover .mc-icon, .mc-person .mc-icon:focus-visible { opacity: 1; }
+.msg-overlay .mc-person .mc-icon svg { width: 16px; height: 16px; }
+.mc-head { display: flex; align-items: center; gap: 8px; padding: 12px 12px 10px; border-bottom: 1px solid var(--line2); margin-bottom: 10px; }
+.mc-head h2 { flex: 1; font-size: 16px; font-weight: 600; margin: 0; }
+.mc-photo { display: flex; align-items: center; gap: 16px; padding: 4px 20px 6px; }
+.mc-photo .msg-avatar.big { width: 72px; height: 72px; margin: 0; }
+.mc-photo div { display: flex; flex-wrap: wrap; gap: 8px; }
+.msg-card .fld { margin: 12px 20px; }
+.msg-card select { width: 100%; box-sizing: border-box; border: 1px solid var(--line); border-radius: 9px; background: var(--raise);
+  color: var(--ink); padding: 9px 10px; font: inherit; font-size: 13px; }
+.mc-line { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 20px 14px; }
+.mc-box { margin: 6px 20px 14px; padding: 12px 14px 2px; border: 1px solid var(--line); border-radius: 12px; }
+.mc-box .fld { margin: 12px 0; }
+.mc-switch { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.mc-switch input { accent-color: var(--brand); margin-top: 3px; flex: none; }
+.mc-switch b { display: block; font-size: 13.5px; font-weight: 600; }
+.mc-switch small { display: block; font-size: 11.5px; line-height: 1.5; color: var(--ink2); margin-top: 4px; }
+.mc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 0 12px 10px; max-height: 60dvh; overflow-y: auto; }
+.mc-grid button { border: 0; padding: 0; aspect-ratio: 1; background: var(--raise); cursor: zoom-in; overflow: hidden; border-radius: 4px; }
+.mc-grid img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mc-files, .mc-links { padding: 0 16px 10px; max-height: 60dvh; overflow-y: auto; }
+.mc-files .msg-doc { max-width: none; }
+.mc-links a { display: flex; align-items: center; gap: 12px; padding: 9px 6px; border-bottom: 1px solid var(--line2); color: inherit; text-decoration: none; }
+.mc-links a:hover b { color: var(--brand-deep); }
+.mc-links span { min-width: 0; }
+.mc-links b { display: block; font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mc-links small { display: block; font-size: 11px; color: var(--ink2); margin-top: 3px; }
+.msg-overlay .mc-links svg { color: var(--ink3); }
+@media (max-width: 684px) {
+  .msg-pics:not(.n1) .msg-pic { width: 31vw; }
+  .msg-lb { padding: 52px 8px 12px; }
+  .msg-lb-nav { top: auto; bottom: 18px; transform: none; }
+  .msg-up { width: 100%; }
+  .msg-act { display: none !important; }
+  .msg-heading #msgSub { max-width: 52vw; }
+}
+
+/* Раскрытый список раздела правок в карточке чата — над окном. */
+body:has(.msg-overlay) .sel-list { z-index: 1850; }
+
+/* Ответы и реакции (22.10.2026, ТЗ «Вектор»: ответы в чате, голос по
+   идеям эмодзи). Кнопки сообщения — над его правым краем при наведении;
+   на телефоне — по касанию (acts-on). */
+.msg-acts { position: absolute; top: -13px; right: -8px; display: none; gap: 2px; padding: 2px; border: 1px solid var(--line);
+  background: var(--card); border-radius: 9px; box-shadow: var(--shadow); z-index: 2; }
+.msg-acts .msg-act { position: static; display: inline-flex; border: 0; box-shadow: none; padding: 4px; border-radius: 7px; }
+.msg-acts .msg-act:hover { background: var(--raise); }
+.msg-message:hover > .msg-acts, .msg-message.acts-on > .msg-acts, .msg-acts:focus-within { display: inline-flex; }
+.msg-message.msg-nxm > .msg-acts { top: -13px; }
+.msg-quote { display: flex; flex-direction: column; gap: 1px; width: 100%; box-sizing: border-box; text-align: left; margin: 0 0 7px;
+  padding: 5px 9px; border: 0; border-left: 3px solid var(--brand); border-radius: 4px 8px 8px 4px; background: var(--raise);
+  font: inherit; color: var(--ink); cursor: pointer; min-width: 0; }
+.msg-message.own .msg-quote { background: color-mix(in srgb, var(--card) 60%, transparent); }
+.msg-quote b { font-size: 11px; font-weight: 600; color: var(--brand-deep); }
+.msg-quote span { font-size: 12.5px; color: var(--ink2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-quote.gone { cursor: default; font-size: 12px; color: var(--ink3); font-style: italic; }
+.msg-reacts { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.msg-rx { display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 8px; border: 1px solid var(--line2);
+  border-radius: 999px; background: var(--raise); font: inherit; font-size: 14px; line-height: 1; cursor: pointer; }
+.msg-rx b { font-size: 11.5px; font-weight: 600; color: var(--ink2); }
+.msg-rx:hover { border-color: var(--line); }
+.msg-rx.mine { border-color: var(--brand); background: var(--brand-tint); }
+.msg-rx.mine b { color: var(--brand-deep); }
+.msg-rxpick { position: fixed; z-index: 1900; display: flex; gap: 2px; padding: 5px; background: var(--card); border: 1px solid var(--line);
+  border-radius: 999px; box-shadow: var(--shadow-float); }
+.msg-rxpick button { border: 0; background: none; font-size: 21px; line-height: 1; width: 36px; height: 36px; border-radius: 50%;
+  cursor: pointer; transition: transform .12s var(--ease); }
+.msg-rxpick button:hover, .msg-rxpick button:focus-visible { background: var(--raise); transform: scale(1.15); outline: none; }
+.msg-rxpick button.on { background: var(--brand-tint); }
+.msg-replybar { order: -2; flex-basis: 100%; display: flex; align-items: center; gap: 9px; min-width: 0; padding: 2px 2px 4px; color: var(--brand); }
+.msg-replybar[hidden] { display: none; }
+.msg-shell .msg-replybar svg { width: 18px; height: 18px; flex: none; }
+.msg-replybar-t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; text-align: left; border: 0;
+  border-left: 3px solid var(--brand); padding: 2px 9px; background: none; font: inherit; color: var(--ink); cursor: pointer; }
+.msg-replybar-t b { font-size: 11.5px; font-weight: 600; color: var(--brand-deep); }
+.msg-replybar-t span { font-size: 12.5px; color: var(--ink2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-replybar-x { border: 0; background: none; color: var(--ink3); padding: 6px; border-radius: 8px; display: inline-flex; cursor: pointer; }
+.msg-replybar-x:hover { background: var(--raise); color: var(--ink); }
+.msg-nxm-go svg { width: 14px; height: 14px; vertical-align: -2px; margin-right: 5px; }
+@keyframes msg-flash { from { box-shadow: 0 0 0 3px var(--brand); } to { box-shadow: 0 0 0 3px transparent; } }
+.msg-message.flash { animation: msg-flash 1.6s var(--ease); }
+/* Чат совета Вектор — знак совета на подложке бренда. */
+.msg-avatar.group.vector { background: var(--brand); color: #fff; }
+.msg-shell .msg-avatar.vector svg, .msg-overlay .msg-avatar.vector svg { width: 22px; height: 22px; stroke-width: 2; }
+.msg-overlay .msg-avatar.vector.big svg { width: 44px; height: 44px; }
+@media (max-width: 684px) {
+  .msg-message.acts-on > .msg-acts { display: inline-flex !important; }
+  .msg-acts .msg-act { display: inline-flex !important; padding: 7px; }
+}
+/* Чаты по объектам (правка № 5, 22.10.2026): кнопка у поиска группирует
+   список по объекту группового чата; объект — строкой под названием чата
+   и подписью группы. */
+.msg-search { display: flex; gap: 6px; align-items: center; }
+.msg-search input { flex: 1; min-width: 0; }
+.msg-bysite { flex: none; width: 38px; height: 38px; display: inline-grid; place-items: center; padding: 0;
+  border: 1px solid var(--line); border-radius: 9px; background: var(--raise); color: var(--ink2); cursor: pointer; }
+.msg-bysite svg, .msg-chat-site svg, .msg-group-h svg { fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round; }
+.msg-bysite svg { width: 18px; height: 18px; }
+.msg-bysite:hover { border-color: var(--ink4); color: var(--ink); }
+.msg-bysite.on { background: var(--brand-tint); border-color: var(--brand); color: var(--brand-deep); }
+.msg-chat-site { display: flex; align-items: center; gap: 4px; margin: -2px 0 4px; color: var(--ink3); font-size: 11px;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.msg-chat-site svg { width: 12px; height: 12px; flex: none; }
+.msg-group-h { display: flex; align-items: center; gap: 6px; padding: 12px 10px 6px; color: var(--ink3);
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+.msg-group-h span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-group-h.site { color: var(--ink2); }
+.msg-group-h svg { width: 13px; height: 13px; flex: none; }
+.msg-group-h i { font-style: normal; font-weight: 500; color: var(--ink4); margin-left: auto; }
+.mc-hint { margin: -4px 18px 12px; color: var(--ink3); font-size: 11.5px; line-height: 1.5; }
+
+/* Правка № 6 (21.10.2026): меню сообщения, правка с отметкой «изм.»,
+   пересланные, выбор нескольких, строка «/todo», упоминания, задачи. */
+.msg-ctx { position: fixed; z-index: 1950; min-width: 210px; padding: 5px; display: flex; flex-direction: column; gap: 1px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-float); }
+.msg-ctx button { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border: 0; border-radius: 8px; background: none;
+  font: inherit; font-size: 12.5px; color: var(--ink); cursor: pointer; text-align: left; }
+.msg-ctx button:hover, .msg-ctx button:focus-visible { background: var(--raise); outline: none; }
+.msg-ctx button.warn { color: var(--bad); }
+.msg-ctx svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round; }
+.msg-edited { margin-right: 6px; font-size: 10.5px; color: var(--ink3); white-space: nowrap; }
+.msg-fwd { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; font-size: 11px; color: var(--ink3); }
+.msg-fwd b { font-weight: 600; color: var(--ink2); }
+.msg-shell .msg-fwd svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; }
+.msg-feed.selecting .msg-message { cursor: pointer; }
+.msg-feed.selecting .msg-message:hover { outline: 1px dashed var(--line); outline-offset: 2px; }
+.msg-message.sel { outline: 2px solid var(--brand); outline-offset: 2px; }
+.msg-selbar { flex: none; display: flex; align-items: center; gap: 8px; padding: 8px 18px; background: var(--brand-tint);
+  border-bottom: 1px solid var(--line2); font-size: 12.5px; }
+.msg-selbar[hidden] { display: none; }
+.msg-selbar .btn { display: inline-flex; align-items: center; gap: 5px; }
+.msg-shell .msg-selbar svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.msg-selbar .warn { color: var(--bad); }
+.msg-editbar { color: var(--info); }
+.msg-editbar .msg-replybar-t b { color: var(--info); }
+.msg-todo { order: -2; flex-basis: 100%; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 6px 8px;
+  margin-bottom: 4px; border-radius: 10px; background: var(--brand-tint); font-size: 12px; }
+.msg-todo[hidden] { display: none; }
+.msg-shell .msg-todo > svg { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--brand-deep); stroke-width: 1.8; }
+.msg-todo-b { flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 1px; }
+.msg-todo-b b { color: var(--brand-deep); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-todo-b span { color: var(--ink2); }
+.msg-todo label { display: inline-flex; align-items: center; gap: 6px; color: var(--ink2); }
+.msg-todo input { height: 26px; border: 1px solid var(--line); border-radius: 7px; padding: 0 6px; font: inherit; background: var(--card);
+  color: var(--ink); }
+.msg-todo-hint { color: var(--ink3); }
+.msg-todo .bad { color: var(--bad); }
+.msg-mention { order: -3; flex-basis: 100%; display: flex; flex-direction: column; gap: 1px; padding: 4px; margin-bottom: 4px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--card); box-shadow: var(--shadow-float); }
+.msg-mention[hidden] { display: none; }
+.msg-mention button { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border: 0; border-radius: 8px; background: none;
+  font: inherit; font-size: 12.5px; color: var(--ink); cursor: pointer; text-align: left; }
+.msg-mention button.on, .msg-mention button:hover { background: var(--raise); }
+.msg-mention .msg-avatar { width: 24px; height: 24px; font-size: 10px; }
+.msg-task { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.msg-task-acts { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.msg-task-acts .msg-nxm-go { background: var(--card); }
+.msg-task-done { margin-top: 7px; font-size: 11.5px; color: var(--ok); font-weight: 600; }
+.msg-shell .msg-task .msg-nxm-go svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+/* «Найти чат» — сотрудники без чата (правка № 39, 23.10.2026). */
+.msg-newpeer .msg-avatar { display: grid; place-items: center; font-weight: 700; font-size: 12px; color: var(--brand-deep);
+  background: var(--brand-tint); }
+.msg-newpeer .msg-chat-text span { color: var(--brand-deep); }

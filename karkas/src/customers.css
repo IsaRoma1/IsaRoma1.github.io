@@ -1,0 +1,203 @@
+/* ── Справочники → «Заказчики» (13.10.2026) ──────────────────────────
+   Слева — заказчики с тем, что о них записано, и полоской заполненности
+   карточки; справа — карточка: шапка (имя, ИНН, объекты, контакт), четыре
+   вкладки и плитки разделов. Влезает в 1366×768 без прокрутки окна; на
+   телефоне — список или карточка, по очереди. */
+.cus-head .grow { flex: 1; }
+.cus-body { display: flex; min-height: 0; padding: 0 !important; overflow: hidden; }
+
+.cus-list {
+  flex: none; width: 270px; overflow-y: auto; padding: 8px 8px 16px;
+  border-right: 1px solid var(--line2); background: var(--card);
+}
+.cus-li {
+  display: grid; gap: 2px; width: 100%; padding: 8px 10px 9px; border: 0; border-radius: 9px;
+  background: none; font: inherit; text-align: left; color: var(--ink2); cursor: pointer;
+}
+.cus-li + .cus-li { margin-top: 2px; }
+.cus-li:hover { background: var(--raise); }
+.cus-li.on { background: var(--brand-tint); }
+.cus-li-n { font-size: 12px; font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cus-li-m { font-size: 10.5px; color: var(--ink3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cus-li-bar { height: 3px; margin-top: 4px; border-radius: 3px; background: var(--line2); overflow: hidden; }
+.cus-li-bar i { display: block; height: 100%; border-radius: 3px; background: var(--brand); }
+.cus-li-empty { padding: 14px 10px; font-size: 11px; color: var(--ink3); }
+
+.cus-main { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; background: var(--raise); }
+.cus-main > .pg-empty, .cus-main > .pg-note { margin: auto; }
+.cus-card { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+/* ── шапка карточки ── */
+.cus-ch { flex: none; display: flex; align-items: flex-start; gap: 8px; padding: 12px var(--gut) 9px; background: var(--card); }
+.cus-back {
+  display: none; flex: none; place-items: center; width: 28px; height: 28px; margin: 0 2px 0 -6px;
+  border: 0; border-radius: 999px; background: none; color: var(--ink3); cursor: pointer;
+}
+.cus-back:hover { background: var(--brand-tint); color: var(--brand-deep); }
+.cus-back svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.cus-ch-b { flex: 1; min-width: 0; }
+.cus-ch-t { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+.cus-ch-t h3 {
+  margin: 0; min-width: 0; font-size: 17px; font-weight: 600; letter-spacing: -.01em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cus-inn { flex: none; font-size: 11px; color: var(--ink3); font-variant-numeric: tabular-nums; }
+.cus-save { flex: 0 1 auto; margin-left: auto; min-width: 0; font-size: 10.5px; color: var(--ok); text-align: right;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cus-save.bad { color: var(--bad); }
+.cus-ch-m { display: flex; align-items: center; gap: 12px; margin-top: 6px; min-width: 0; }
+.cus-sites { display: flex; gap: 4px; min-width: 0; overflow: hidden; }
+.cus-site {
+  flex: 0 1 auto; min-width: 40px; max-width: 210px; padding: 1px 8px; border: 1px solid var(--line); border-radius: 999px;
+  font-size: 10.5px; line-height: 16px; color: var(--ink2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cus-site.tnd { border-style: dashed; color: var(--ink3); }
+.cus-who { flex: 0 1 auto; max-width: 42%; margin-left: auto; font-size: 10.5px; color: var(--ink3);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cus-none { font-size: 10.5px; color: var(--ink3); }
+
+.cus-tabs { flex: none; display: flex; align-items: center; gap: 20px; padding: 0 var(--gut);
+  border-bottom: 1px solid var(--line2); background: var(--card); }
+.cus-tabs .pg-tab { white-space: nowrap; }
+.cus-fill { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; font-size: 10.5px; color: var(--ink3); white-space: nowrap; }
+.cus-fill i { display: block; width: 64px; height: 4px; border-radius: 4px; background: var(--line2); overflow: hidden; }
+.cus-fill b { display: block; height: 100%; border-radius: 4px; background: var(--brand); }
+
+.cus-pane { flex: 1; min-height: 0; overflow: auto; padding: 14px var(--gut) 18px; }
+
+/* ── плитки ── */
+.cus-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.cus-tile {
+  min-width: 0; display: flex; flex-direction: column; gap: 8px; padding: 11px 14px 13px;
+  border: 1px solid var(--line2); border-radius: 12px; background: var(--card);
+}
+.cus-grid .cus-tile.t3 { grid-column: span 2; align-self: stretch; }
+.cus-grid .cus-tile.t2 { grid-column: span 3; }
+.cus-tile h4 {
+  margin: 0; display: flex; align-items: center; gap: 6px;
+  font: 600 9.5px var(--sans); letter-spacing: .07em; text-transform: uppercase; color: var(--ink3);
+}
+.cus-hint { margin: 0; font-size: 10.5px; line-height: 1.4; color: var(--ink3); }
+.cus-2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.cus-tile .fld > span { margin-bottom: 3px; font-size: 10.5px; }
+.cus-tile .fld input:not([type="checkbox"]) { height: 28px; }
+.cus-tile .fld input[readonly], .cus-tile textarea[readonly] { background: var(--raise); border-color: transparent; }
+.cus-seg { align-self: flex-start; max-width: 100%; }
+.cus-seg .seg-b { height: 28px; }
+.cus-seg .seg-b[disabled] { cursor: default; }
+.cus-seg .seg-b[disabled]:not(.on) { color: var(--ink4); }
+
+.cus-pairs { display: flex; flex-direction: column; gap: 5px; }
+.cus-pair { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) 25px; gap: 6px; align-items: center; }
+.cus-pair:not(:has(.ico)) { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+.cus-pair .ico { margin: 0; }
+.cus-pair input, .cus-sname input, .cus-t textarea, .cus-t input, .cus-tile textarea {
+  width: 100%; min-width: 0; height: 28px; padding: 0 9px; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--card); color: var(--ink); font: 400 11.5px var(--sans); outline: none;
+}
+.cus-pair input:focus, .cus-sname input:focus, .cus-t textarea:focus, .cus-t input:focus, .cus-tile textarea:focus {
+  border-color: var(--brand);
+}
+.cus-pair input[readonly] { background: var(--raise); border-color: transparent; }
+/* Подсказка в пустом поле — бледнее вписанного: иначе пример читается как значение. */
+.cus-card input::placeholder, .cus-card textarea::placeholder { color: var(--ink4); opacity: 1; }
+.cus-add { align-self: flex-start; display: inline-flex; align-items: center; gap: 4px; font-size: 11px; }
+.cus-add svg { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+/* ── как работаем ── */
+.cus-work { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 12px; height: 100%; min-height: 360px; }
+.cus-col { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+.cus-col .cus-tile.grow { flex: 1; }
+.cus-tile textarea { flex: 1; height: auto; min-height: 64px; padding: 8px 10px; line-height: 1.5; resize: none; }
+.cus-instr textarea { min-height: 220px; }
+
+/* ── поставщики заказчика и файлы ── */
+.cus-lead { margin: 0 0 10px; font-size: 11px; color: var(--ink3); }
+.cus-t {
+  width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed;
+  background: var(--card); border: 1px solid var(--line2); border-radius: 12px; overflow: hidden;
+}
+.cus-t th {
+  padding: 8px 8px 7px; background: var(--card); border-bottom: 1px solid var(--line2); text-align: left;
+  font: 600 9.5px var(--sans); letter-spacing: .07em; text-transform: uppercase; color: var(--ink3); white-space: nowrap;
+}
+.cus-t td { padding: 5px 8px; border-bottom: 1px solid var(--line2); vertical-align: top; font-size: 11.5px; color: var(--ink2); }
+.cus-t th:first-child, .cus-t td:first-child { padding-left: 12px; }
+.cus-t tr:last-child td { border-bottom: 0; }
+.cus-t textarea { display: block; padding: 6px 9px; line-height: 1.35; resize: none; overflow: hidden; }
+.cus-t input[readonly], .cus-t textarea[readonly] { background: none; border-color: transparent; }
+.cus-t .ico { margin: 2px 0 0; }
+.cus-sname { display: flex; align-items: center; gap: 6px; }
+.cus-dir { flex: none; display: inline-grid; place-items: center; width: 18px; height: 18px; color: var(--ink4); }
+.cus-dir.on { color: var(--ok); }
+.cus-dir svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; }
+.cus-new td { background: color-mix(in srgb, var(--raise) 55%, var(--card)); }
+.cus-new input { border-style: dashed; }
+.cus-sfiles { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; min-height: 28px; }
+.cus-fchip {
+  display: inline-flex; align-items: center; gap: 4px; max-width: 112px; padding: 2px 8px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--card);
+  font: inherit; font-size: 10.5px; color: var(--ink2); cursor: pointer;
+}
+.cus-fchip:hover { border-color: var(--brand); color: var(--brand-deep); }
+.cus-fchip span, .cus-fname span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cus-fchip svg, .cus-fname svg { flex: none; width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+.cus-upl { margin: 0; cursor: pointer; }
+
+.cus-fbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.cus-fup { cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+.cus-fup svg { width: 12.5px; height: 12.5px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cus-fbar .cus-hint { flex: 1; min-width: 200px; }
+.cus-fname {
+  display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 6px 0 0; border: 0; background: none;
+  font: inherit; font-size: 11.5px; font-weight: 600; color: var(--ink); text-align: left; cursor: pointer;
+}
+.cus-fname:hover { color: var(--brand-deep); }
+.cus-fsize { display: block; margin-left: 18px; font-style: normal; font-size: 10px; color: var(--ink3); }
+.cus-kind {
+  display: inline-block; max-width: 100%; margin-top: 5px; padding: 1px 8px; border-radius: 999px;
+  background: var(--raise); font-size: 10.5px; line-height: 17px; color: var(--ink2);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cus-kind.k-works { background: var(--brand-tint); color: var(--brand-deep); }
+.cus-kind.k-supplier { background: var(--info-soft); color: var(--info); }
+.cus-by { display: block; padding-top: 3px; font-size: 10.5px; color: var(--ink2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cus-by i { display: block; font-style: normal; color: var(--ink3); }
+.cus-files .pg-empty { padding-top: 40px; }
+
+/* Ноутбук: условия — по две плитки в ряд. */
+@media (max-width: 1240px) {
+  .cus-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cus-grid .cus-tile.t3, .cus-grid .cus-tile.t2 { grid-column: auto; }
+  .cus-grid .cus-tile.t3:first-child { grid-column: 1 / -1; }
+}
+
+/* Телефон: список или карточка. */
+@media (max-width: 760px) {
+  .cus-list { width: 100%; border-right: 0; }
+  .cus-main { display: none; }
+  .cus-pg.has-sel .cus-list { display: none; }
+  .cus-pg.has-sel .cus-main { display: flex; }
+  .cus-back { display: inline-grid; }
+  .cus-ch { padding: 10px 14px 8px; }
+  .cus-ch-t { flex-wrap: wrap; row-gap: 2px; }
+  .cus-save { flex-basis: 100%; margin-left: 0; text-align: left; }
+  .cus-ch-m { flex-wrap: wrap; }
+  .cus-who { margin-left: 0; max-width: 100%; }
+  .cus-tabs { gap: 14px; padding: 0 14px; overflow-x: auto; }
+  .cus-fill { display: none; }
+  .cus-pane { padding: 12px 14px 16px; }
+  .cus-grid, .cus-work { grid-template-columns: minmax(0, 1fr); }
+  .cus-grid .cus-tile.t3:first-child { grid-column: auto; }
+  /* Таблицы — карточками строк: в пять колонок на телефоне не вчитаться. */
+  .cus-t, .cus-t tbody, .cus-t tr, .cus-t td { display: block; width: 100%; }
+  .cus-t thead, .cus-t colgroup { display: none; }
+  .cus-t tr { position: relative; padding: 8px 10px; border-bottom: 1px solid var(--line2); }
+  .cus-t tr:last-child { border-bottom: 0; }
+  .cus-t td, .cus-t th:first-child, .cus-t td:first-child { padding: 3px 0; border: 0; }
+  .cus-t td:first-child { padding-right: 34px; }
+  .cus-t td:last-child:not(:first-child) { position: absolute; top: 8px; right: 6px; width: auto; padding: 0; }
+  .cus-new td:first-child { padding-right: 0; }
+  .cus-head .pg-find { flex: 1; }
+  .cus-head .pg-find input { width: 100%; }
+}

@@ -1,0 +1,215 @@
+/* ── Справочники → «Бригады монтажников» (21.10.2026) ────────────────
+   Как «Заказчики»: слева бригады (название, люди, рейтинг), справа —
+   карточка плитками. Влезает в 1366×768; на телефоне — список или
+   карточка по очереди. Окна открытки и «Кому напоминать» — свои. */
+.crw-wrap [hidden], .crw-pg [hidden] { display: none !important; }
+.crw-head { flex-wrap: wrap; row-gap: 8px; }
+.crw-head .grow { flex: 1; }
+.crw-head .role-sel, .crw-head .btn-ghost, .crw-head .btn-brand { flex: none; }
+.crw-head svg, .crw-dlg svg, .crw-card svg, .crw-list svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.crw-head .btn-ghost, .crw-head .btn-brand { display: inline-flex; align-items: center; gap: 6px; }
+.crw-head .btn-ghost svg, .crw-head .btn-brand svg { width: 13px; height: 13px; }
+.crw-notify span { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crw-banner { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.crw-banner > span { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px;
+  background: var(--brand-tint); color: var(--brand-deep); font-size: 11px; font-weight: 500; white-space: nowrap; }
+.crw-banner svg { width: 13px; height: 13px; }
+
+.crw-body { display: flex; min-height: 0; padding: 0 !important; overflow: hidden; }
+.crw-list { flex: none; width: 290px; overflow-y: auto; padding: 8px 8px 16px; border-right: 1px solid var(--line2); background: var(--card); }
+.crw-li { display: grid; gap: 3px; width: 100%; padding: 8px 10px 9px; border: 0; border-radius: 9px;
+  background: none; font: inherit; text-align: left; color: var(--ink2); cursor: pointer; }
+.crw-li + .crw-li { margin-top: 2px; }
+.crw-li:hover { background: var(--raise); }
+.crw-li.on { background: var(--brand-tint); }
+.crw-li-n { font-size: 12px; font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crw-li-m { font-size: 10.5px; color: var(--ink3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crw-li-r { display: flex; align-items: center; gap: 6px; font-size: 10.5px; }
+.crw-li-r b { font-weight: 600; color: var(--ink2); font-variant-numeric: tabular-nums; }
+.crw-li-empty { padding: 14px 10px; font-size: 11px; color: var(--ink3); }
+.crw-soon { display: inline-flex; align-items: center; gap: 3px; margin-left: auto; color: var(--brand-deep); font-weight: 500; white-space: nowrap; }
+.crw-soon svg { width: 12px; height: 12px; }
+
+/* Звёзды: серые под оранжевыми, оранжевые обрезаны по рейтингу. */
+.crw-stars { position: relative; display: inline-block; line-height: 0; white-space: nowrap; flex: none; }
+.crw-stars svg { width: 15px; height: 15px; stroke: none !important; }
+.crw-stars.sm svg { width: 11px; height: 11px; }
+.crw-st-bg svg { fill: var(--line) !important; }
+.crw-st-fg { position: absolute; left: 0; top: 0; overflow: hidden; white-space: nowrap; }
+.crw-st-fg svg { fill: #F5A524 !important; }
+
+.crw-main { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; background: var(--raise); }
+.crw-main > .pg-empty, .crw-main > .pg-note { margin: auto; }
+.crw-card { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.crw-ch { flex: none; display: flex; align-items: flex-start; gap: 8px; padding: 12px var(--gut) 10px; background: var(--card);
+  border-bottom: 1px solid var(--line2); }
+.crw-back { display: none; flex: none; place-items: center; width: 28px; height: 28px; margin: 0 2px 0 -6px;
+  border: 0; border-radius: 999px; background: none; color: var(--ink3); cursor: pointer; }
+.crw-back svg { width: 15px; height: 15px; stroke-width: 2.2; }
+.crw-ch-b { flex: 1; min-width: 0; }
+.crw-ch-t { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.crw-ch-t h3 { margin: 0; min-width: 0; font-size: 17px; font-weight: 600; letter-spacing: -.01em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crw-big { display: inline-flex; align-items: center; gap: 6px; flex: none; }
+.crw-big b { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.crw-big i { font-style: normal; font-size: 11px; color: var(--ink3); }
+.crw-save { flex: 0 1 auto; margin-left: auto; min-width: 0; font-size: 10.5px; color: var(--ok); text-align: right;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crw-save.bad { color: var(--bad); }
+.crw-ch-t .ico { flex: none; }
+.crw-greet { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 9px; }
+.crw-gb { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--card); color: var(--ink2); font: inherit; font-size: 11.5px; cursor: pointer; }
+.crw-gb svg { width: 14px; height: 14px; }
+.crw-gb:hover { border-color: var(--brand); color: var(--brand-deep); }
+.crw-gb.hot { border-color: var(--brand); background: var(--brand); color: var(--on-brand, #fff); font-weight: 600;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent); animation: crw-glow 1.8s ease-in-out infinite; }
+.crw-gb.done { color: var(--ok); }
+.crw-gb.done svg:last-child { width: 12px; height: 12px; }
+@keyframes crw-glow { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--brand) 10%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .crw-gb.hot { animation: none; } }
+.crw-hint { margin: 0; font-size: 10.5px; line-height: 1.45; color: var(--ink3); }
+.crw-hint.bad { color: var(--bad); }
+
+.crw-pane { flex: 1; min-height: 0; overflow: auto; padding: 14px var(--gut) 18px; }
+.crw-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.crw-tile { min-width: 0; display: flex; flex-direction: column; gap: 8px; padding: 11px 14px 13px;
+  border: 1px solid var(--line2); border-radius: 12px; background: var(--card); }
+.crw-tile.wide { grid-column: span 1; }
+.crw-tile h4 { margin: 0; display: flex; align-items: center; gap: 6px;
+  font: 600 9.5px var(--sans); letter-spacing: .07em; text-transform: uppercase; color: var(--ink3); }
+.crw-2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.crw-tile .fld > span { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; font-size: 10.5px; }
+.crw-tile .fld input, .crw-in, .crw-tile textarea { width: 100%; min-width: 0; box-sizing: border-box; height: 28px; padding: 0 9px;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); font: 400 11.5px var(--sans); outline: none; }
+.crw-tile textarea { height: auto; min-height: 76px; padding: 8px 10px; line-height: 1.5; resize: vertical; }
+.crw-tile .fld input:focus, .crw-in:focus, .crw-tile textarea:focus { border-color: var(--brand); }
+.crw-card input::placeholder, .crw-card textarea::placeholder, .crw-dlg input::placeholder { color: var(--ink4, var(--ink3)); opacity: 1; }
+.crw-act { display: inline-flex; color: var(--brand-deep); }
+.crw-act svg { width: 12px; height: 12px; }
+.crw-contact { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+.crw-contact .btn-ghost { height: 28px; }
+
+.crw-rate { display: flex; flex-direction: column; gap: 6px; }
+.crw-rr { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--ink); }
+.crw-rr i { margin-left: 6px; font-style: normal; font-size: 10.5px; color: var(--ink3); }
+.crw-pick { display: inline-flex; gap: 1px; flex: none; }
+.crw-pick button { border: 0; background: none; padding: 2px; cursor: pointer; line-height: 0; }
+.crw-pick svg { width: 19px; height: 19px; fill: var(--line); stroke: none !important; transition: fill .12s; }
+.crw-pick button.on svg { fill: #F5A524; }
+.crw-pick:hover button svg { fill: #F5A524; }
+.crw-pick button:hover ~ button svg { fill: var(--line); }
+
+.crw-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.crw-chip { padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--card);
+  color: var(--ink2); font: inherit; font-size: 11px; cursor: pointer; }
+.crw-chip:hover { border-color: var(--ink3); }
+.crw-chip.on { border-color: var(--brand); background: var(--brand-tint); color: var(--brand-deep); font-weight: 600; }
+
+.crw-sites { display: flex; flex-wrap: wrap; gap: 5px; }
+.crw-site { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; padding: 3px 4px 3px 9px; border: 1px dashed var(--line);
+  border-radius: 999px; font-size: 11px; color: var(--ink2); }
+.crw-site.ours { border-style: solid; background: var(--raise); }
+.crw-site svg { width: 12px; height: 12px; flex: none; color: var(--ink3); }
+.crw-site b { font-weight: 500; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crw-site i { font-style: normal; color: var(--ink3); white-space: nowrap; }
+.crw-site button { display: inline-flex; border: 0; background: none; padding: 2px; border-radius: 999px; color: var(--ink3); cursor: pointer; }
+.crw-site button:hover { color: var(--bad); background: var(--card); }
+.crw-site button svg { width: 11px; height: 11px; }
+.crw-addsite { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 8px; }
+
+/* ── окна: открытка, «Кому напоминать» ── */
+.crw-wrap { position: fixed; inset: 0; z-index: 1900; background: rgba(20, 16, 12, .42); display: flex; align-items: center;
+  justify-content: center; padding: 16px; }
+.crw-dlg { width: min(1120px, 100%); max-height: calc(100dvh - 32px); display: flex; flex-direction: column; background: var(--card);
+  color: var(--ink); border-radius: 16px; box-shadow: var(--shadow-float); overflow: hidden; }
+.crw-dlg.crw-small { width: min(520px, 100%); }
+.crw-small .crw-dh p { white-space: normal; }
+.crw-dh { flex: none; display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line2); }
+.crw-dh > div { flex: 1; min-width: 0; }
+.crw-dh h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.crw-dh p { margin: 3px 0 0; font-size: 11.5px; color: var(--ink2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crw-dh-ic { width: 36px; height: 36px; border-radius: 10px; background: var(--brand-tint); color: var(--brand-deep);
+  display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.crw-dh-ic svg { width: 19px; height: 19px; }
+.crw-x { border: 0; background: none; color: var(--ink2); padding: 6px; border-radius: 8px; display: inline-flex; cursor: pointer; }
+.crw-x:hover { background: var(--raise); color: var(--ink); }
+.crw-x svg { width: 18px; height: 18px; }
+.crw-db { flex: 1; min-height: 0; overflow: auto; padding: 14px 18px; }
+.crw-gbody { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr); gap: 16px; }
+.crw-card-prev { min-width: 0; }
+.crw-card-prev canvas { display: block; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,.18); }
+.crw-gform { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.crw-gform .fld > span { display: block; margin-bottom: 4px; font-size: 10px; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ink3); }
+.crw-gform input, .crw-gform textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--raise); color: var(--ink); padding: 8px 10px; font: inherit; font-size: 12.5px; line-height: 1.5; resize: vertical; }
+.crw-gform input:focus, .crw-gform textarea:focus { outline: none; border-color: var(--brand); background: var(--card); }
+.crw-check { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; cursor: pointer; }
+.crw-check input { accent-color: var(--brand); width: auto; margin: 0; }
+.crw-df { flex: none; display: flex; align-items: center; gap: 8px; padding: 12px 18px; border-top: 1px solid var(--line2); }
+.crw-df > span:first-child { flex: 1; font-size: 11px; color: var(--ink3); }
+.crw-df .btn-brand, .crw-df .btn-ghost { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; font-size: 12px; }
+.crw-df svg { width: 14px; height: 14px; }
+.crw-df button:disabled { opacity: .5; cursor: default; }
+.crw-people { margin-top: 10px; max-height: min(360px, 50dvh); overflow: auto; display: flex; flex-direction: column; }
+.crw-person { display: flex; align-items: center; gap: 9px; padding: 8px 4px; border-bottom: 1px solid var(--line2); font-size: 12.5px; cursor: pointer; }
+.crw-person input { accent-color: var(--brand); margin: 0; }
+
+body:has(.crw-wrap) .sel-list { z-index: 2000; }
+
+@media (min-width: 1560px) {
+  .crw-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 1180px) {
+  .crw-grid { grid-template-columns: minmax(0, 1fr); }
+  .crw-notify span { max-width: 160px; }
+}
+@media (max-width: 860px) {
+  .crw-gbody { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .crw-list { width: auto; flex: 1; border-right: 0; }
+  .crw-main { display: none; }
+  .crw-pg.has-sel .crw-list { display: none; }
+  .crw-pg.has-sel .crw-main { display: flex; }
+  .crw-back { display: grid; }
+  .crw-head .pg-find { flex-basis: 100%; }
+  .crw-addsite { grid-template-columns: minmax(0, 1fr); }
+  .crw-wrap { padding: 0; }
+  .crw-dlg { max-height: 100dvh; height: 100dvh; border-radius: 0; }
+  .crw-df { flex-wrap: wrap; }
+}
+
+/* Монтажники (правка № 11, 21.10.2026): вид — как у бригад, свои — поля
+   карточки сеткой и сроки документов: истёк — красным, скоро — жёлтым. */
+.mnt-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; }
+.crw-tile.mnt-wide { grid-column: 1 / -1; }
+.crw-tile.mnt-wide .mnt-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.mnt-top { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 10px; margin-top: 8px; }
+.mnt-alerts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.mnt-al { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px;
+  font-size: 10.5px; font-weight: 600; white-space: nowrap; }
+.mnt-al svg { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; }
+.mnt-al.over { background: var(--bad-soft); color: var(--bad); }
+.mnt-al.soon { background: var(--warn-soft); color: var(--warn); }
+.mnt-al i { font-style: normal; opacity: .75; }
+.fld.mnt-over input { border-color: var(--bad); }
+.fld.mnt-soon input { border-color: var(--warn); }
+.mnt-due { font-style: normal; font-weight: 600; }
+.fld.mnt-over .mnt-due { color: var(--bad); }
+.fld.mnt-soon .mnt-due { color: var(--warn); }
+.mnt-banner { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--bad); }
+.mnt-banner svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; }
+.crw-site.mnt-li { cursor: pointer; font: inherit; }
+@media (max-width: 760px) {
+  .mnt-grid, .crw-tile.mnt-wide .mnt-grid, .mnt-top { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Уволенные монтажники — свёрнутой группой внизу списка (правка № 50). */
+.mnt-gone-btn { margin: 10px 0 4px; }
+.crw-li.mnt-gone .crw-li-n { color: var(--ink3); }
+.mnt-cnt-gone { font-style: normal; color: var(--ink3); }
+.mnt-al.gone { background: var(--raise); color: var(--ink2); }

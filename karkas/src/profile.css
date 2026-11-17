@@ -1,0 +1,490 @@
+/* Личный кабинет · оформление
+   ────────────────────────────────────────────────────────────────
+   Отдельным файлом, а не строками в styles.css: тот на две с лишним
+   тысячи строк и правится параллельно, любая врезка туда — конфликт.
+   Подключается после него, поэтому переменные уже объявлены.
+
+   Ни одного шестнадцатеричного цвета: всё через var(--…). Правило
+   проекта, и оно же даёт тёмную тему бесплатно. */
+
+/* Раздел идёт во всю ширину и вплотную к шапке и к панели, как и
+   остальные: `.main > section { padding: 0 }`, а отступы несут сами
+   блоки изнутри. Первая версия была набором островов с полями,
+   тенями и ограничением в 780px — посреди серого фона они читались
+   как чужой экран, вклеенный в платформу. */
+.pf { max-width: none; }
+
+/* Раздел дотягивается до низа окна, как и витрина. На коротких вкладках
+   («Оформление» — два блока) под ними иначе оставалась полоса серого
+   фона в треть экрана, которая читается недогруженной страницей. */
+#sec-me { flex: 1 1 auto; min-height: 0; display: flex; }
+/* Обязательно: display:flex перебивает атрибут hidden, и раздел
+   показывался бы поверх любого другого. */
+#sec-me[hidden] { display: none; }
+#sec-me > .pf { flex: 1; display: flex; flex-direction: column; }
+#sec-me .pf-body { flex: 1; background: var(--card); }
+
+/* ── вкладки ──────────────────────────────────────────────── */
+.pf-tabs {
+  display: flex;
+  gap: 3.5px;
+  padding: 0 21.5px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line2);
+}
+.pf-tab {
+  padding: 8px 12.5px 10px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  background: none;
+  color: var(--ink2);
+  font: 600 11.5px var(--sans);
+  cursor: pointer;
+  border-radius: 7px 7px 0 0;
+}
+.pf-tab:hover { color: var(--ink); background: var(--box-bg); }
+.pf-tab.on { color: var(--brand); border-bottom-color: var(--brand); }
+
+/* ── карточки ─────────────────────────────────────────────── */
+/* Один в один с `.card` из styles.css: блоки соприкасаются, разделяет
+   их только линия. Ничего не парит. */
+.pf-card {
+  padding: 18px 21.5px;
+  margin: 0;
+  background: var(--card);
+  border: 0;
+  border-bottom: 1px solid var(--line2);
+  border-radius: 0;
+  box-shadow: none;
+}
+/* Последний блок отделять не от чего. */
+.pf-body > .pf-card:last-child { border-bottom: 0; }
+.pf-ttl {
+  margin-bottom: 12.5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+/* ── поля ─────────────────────────────────────────────────── */
+/* Колонки набираются по ширине окна, а не жёсткой двойкой: на широком
+   мониторе поля растягиваются и занимают место, вместо того чтобы
+   жаться слева, оставляя половину экрана пустой. */
+.pf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(234px, 1fr));
+  gap: 14.5px 18px;
+  align-items: start;
+}
+/* Пароль — в одну колонку и узко: три поля во всю ширину монитора
+   выглядели бы приглашением вписать туда абзац. */
+.pf-grid-1 { grid-template-columns: minmax(0, 306px); }
+
+.fld { display: block; min-width: 0; }
+/* label — у полей пароля: там подпись связана через for, потому что
+   внутрь label нельзя класть кнопку-глазок. Вид у обеих один. */
+.fld > span,
+.fld > label {
+  display: block;
+  margin-bottom: 4.5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink2);
+}
+/* Отбор «любое поле, кроме галочки, переключателя, файла и ползунка», а
+   не перечень типов. Перечень был короче, но оформление получал только
+   input с явным type: в окнах «Контрагент», «Договор», «Проект» поля
+   написаны без него — и показывались как есть, серыми прямоугольниками
+   с острыми углами, нарисованными движком браузера.
+
+   Высота задана числом, а не набегает из отступов: рядом с полем стоит
+   кнопка («Заполнить по ИНН»), и они должны быть одного роста. */
+.fld input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]),
+.fld select,
+.fld textarea {
+  width: 100%;
+  height: 30.5px;
+  padding: 0 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--ink);
+  font: 400 11.5px var(--sans);
+}
+.fld textarea { height: auto; padding: 7px 10px; line-height: 1.45; resize: vertical; }
+
+/* Выпадающий список в форме. Родной select спрятан своей надстройкой
+   (dressSelect в app.js), и видно только кнопку поверх него — значит
+   правила выше до него не доходят, и в ряду полей он один оставался
+   таблеткой на сером фоне. Приводим к тем же 34 пикселям и тому же
+   скруглению, что у поля рядом. */
+.fld .sel { display: block; }
+.fld .sel-btn {
+  width: 100%;
+  height: 30.5px;
+  justify-content: space-between;
+  padding: 0 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  font-size: 11.5px;
+}
+.fld .sel-btn:hover { border-color: var(--ink4); background: var(--card); }
+.fld .sel-btn[aria-expanded="true"] { border-color: var(--brand); }
+/* Место под глазок. Общее правило .pw-field input в styles.css задаёт
+   его само, но правило выше весит больше (класс + атрибут + тег против
+   класса + тега) и возвращает padding целиком — длинный пароль уезжал
+   под кнопку. Повторяем здесь, с весом, который перебивает. */
+.fld .pw-field input[type="password"],
+.fld .pw-field input[type="text"] { padding-right: 38px; }
+.fld input:focus, .fld select:focus, .fld textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+.fld input[readonly] {
+  background: var(--box-bg);
+  color: var(--ink2);
+  cursor: not-allowed;
+}
+.fld-hint {
+  display: block;
+  margin-top: 4.5px;
+  color: var(--ink3);
+  font-size: 10.5px;
+  font-style: normal;
+  line-height: 1.45;
+}
+.fld-hint b { color: var(--ink2); font-weight: 600; }
+
+/* ── аватар ───────────────────────────────────────────────── */
+.pf-avrow { display: flex; align-items: center; gap: 18px; }
+.pf-av {
+  width: var(--s);
+  height: var(--s);
+  flex: 0 0 auto;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--box-bg);
+}
+.pf-av-none {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--grad-brand);
+  color: var(--on-brand);
+  font: 600 calc(var(--s) / 2.6) var(--sans);
+}
+.pf-avttl { font-size: 12px; font-weight: 600; }
+.pf-avside p {
+  margin: 2.5px 0 9px;
+  color: var(--ink3);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.pf-avbtns { display: flex; gap: 7px; }
+
+/* Блок «кто вошёл» стал дверью в профиль — показываем это. */
+.who.clickable { cursor: pointer; border-radius: var(--r-sm); }
+.who.clickable:hover { background: var(--box-bg); }
+.who.clickable:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* Кружок в боковой панели: с фотографией буква не нужна. */
+#whoAv.has-img { background: none; }
+#whoAv img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+/* ── кнопки ───────────────────────────────────────────────── */
+/* Того же роста и того же скругления, что поля рядом. Прежние были выше
+   полей и заметно круглее — на фоне поля кнопка читалась как отдельная
+   деталь из другого набора. */
+.pf .btn, .pf-modal .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30.5px;
+  padding: 0 13.5px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: var(--brand);
+  color: var(--on-brand);
+  font: 600 11px var(--sans);
+  cursor: pointer;
+  transition: background .15s var(--ease), border-color .15s var(--ease);
+}
+.pf .btn:hover, .pf-modal .btn:hover { background: var(--brand-deep); }
+.pf .btn.sm, .pf-modal .btn.sm { height: 27px; padding: 0 11px; font-size: 11px; }
+.pf .btn.ghost, .pf-modal .btn.ghost {
+  background: var(--card);
+  border-color: var(--line);
+  color: var(--ink);
+}
+.pf .btn.ghost:hover, .pf-modal .btn.ghost:hover { background: var(--box-bg-h); }
+/* И в окнах тоже: правило было написано только под .pf, и заблокированная
+   кнопка в модалке выглядела рабочей — человек жал её и не понимал, почему
+   ничего не происходит. */
+.pf .btn:disabled, .pf-modal .btn:disabled { opacity: .5; cursor: default; }
+
+.pf-actions {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 12.5px;
+}
+.pf-dim { color: var(--ink3); font-size: 10.5px; }
+
+/* ── выбор из нескольких ──────────────────────────────────── */
+.pf-picks { display: flex; gap: 9px; flex-wrap: wrap; }
+.pf-pick {
+  flex: 1 1 135px;
+  padding: 10px 11.5px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+}
+.pf-pick input { position: absolute; opacity: 0; pointer-events: none; }
+.pf-pick b { display: block; font-size: 11.5px; font-weight: 600; }
+.pf-pick i {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink3);
+  font-size: 10.5px;
+  font-style: normal;
+}
+.pf-pick:hover { background: var(--box-bg); }
+.pf-pick.on { border-color: var(--brand); background: var(--brand-tint); }
+[data-theme="dark"] .pf-pick.on { background: var(--box-bg-h); }
+
+/* ── сообщения ────────────────────────────────────────────── */
+.pf-note {
+  padding: 10px 21.5px;
+  border-bottom: 1px solid var(--line2);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.pf-note.ok { background: var(--ok-soft); color: var(--ok); }
+.pf-note.bad { background: var(--bad-soft); color: var(--bad); }
+
+.pf-warn {
+  padding: 11.5px 21.5px;
+  background: var(--warn-soft);
+  border-bottom: 1px solid var(--line2);
+  color: var(--warn);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* ── полоса сохранения ────────────────────────────────────────
+   Липкая внизу: форма длиннее экрана, и кнопка, уехавшая за нижний
+   край, равносильна её отсутствию. */
+/* [hidden] — это всего лишь display:none из таблицы браузера, и любое
+   собственное display его перебивает. Полоса из-за этого висела всегда,
+   даже когда сохранять было нечего. Правило нужно каждому элементу
+   раздела, которому мы задаём display и который прячем атрибутом. */
+.pf-save[hidden], .pf-note[hidden] { display: none; }
+
+.pf-save {
+  position: sticky;
+  bottom: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 21.5px;
+  background: var(--card);
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  /* Тень только вверх — обозначить, что полоса лежит поверх списка,
+     не превращая её в парящую плашку. */
+  box-shadow: 0 -6px 14px -10px var(--fade);
+}
+.pf-save span { flex: 1; font-size: 11px; color: var(--ink2); }
+
+/* ── сеансы ───────────────────────────────────────────────── */
+.pf-ses { display: flex; flex-direction: column; }
+.ses {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 0;
+  border-top: 1px solid var(--line2);
+}
+.ses:first-child { border-top: 0; }
+.ses-w { flex: 1; min-width: 0; }
+.ses-w b { display: block; font-size: 11.5px; font-weight: 600; }
+.ses-w i {
+  display: block;
+  margin-top: 1px;
+  color: var(--ink3);
+  font-size: 10px;
+  font-style: normal;
+}
+.ses-now {
+  padding: 2.5px 8px;
+  border-radius: 18px;
+  background: var(--ok-soft);
+  color: var(--ok);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* ── мои показатели ───────────────────────────────────────── */
+.pf-num {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line2);
+}
+.pf-num:first-of-type { border-top: 0; }
+.pf-num-l { flex: 1; font-size: 11.5px; }
+.pf-num-l i {
+  display: block;
+  color: var(--ink3);
+  font-size: 10px;
+  font-style: normal;
+}
+.pf-num > b { font-size: 20px; letter-spacing: -.02em; }
+.pf-num-c { color: var(--ink2); font-size: 11px; min-width: 75.5px; text-align: right; }
+
+.pf-rank {
+  margin-top: 11px;
+  padding-top: 11px;
+  border-top: 1px solid var(--line2);
+  color: var(--ink2);
+  font-size: 11px;
+}
+
+.pf-late { display: flex; flex-direction: column; gap: 7px; max-height: 306px; overflow: auto; }
+.pf-late .lt { padding-left: 10px; border-left: 2px solid var(--bad); }
+.pf-late .lt b { display: block; font-size: 11px; font-weight: 600; }
+.pf-late .lt i {
+  color: var(--ink3);
+  font-size: 10px;
+  font-style: normal;
+}
+
+/* Список наград в профиле. Раньше его оформление лежало в styles.css
+   вместе с карточкой награды по клику; карточку убрали, а список
+   остался — и рисовался маркерами со склеенным текстом. */
+.pf .awc-list { margin: 0; padding: 0; list-style: none; }
+.pf .awc-list li {
+  display: flex;
+  gap: 9px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line2);
+}
+.pf .awc-list li:first-child { border-top: 0; }
+.pf .awc-list li .aw { margin-top: 1px; cursor: default; }
+.pf .awc-list li span { font-size: 11px; line-height: 1.45; color: var(--ink2); }
+.pf .awc-list li span b {
+  display: block;
+  margin-bottom: 1px;
+  color: var(--ink);
+  font-size: 11px;
+}
+
+.fld-hint.bad { color: var(--bad); }
+
+/* Меру набора держим на тексте, а не на самой карточке: .pf-empty — это
+   и есть .pf-card с разделительной линией снизу, и сузив её, мы обрубили
+   бы линию на середине, тогда как у соседних блоков она во всю ширину. */
+.pf-empty { color: var(--ink2); }
+.pf-empty > b, .pf-empty p { max-width: 62ch; }
+/* Только прямой потомок — заголовок сообщения. Общее правило для <b>
+   ловило заодно имя внутри абзаца: оно уходило на свою строку и меняло
+   кегль посреди фразы. */
+.pf-empty > b {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--ink);
+  font-size: 12.5px;
+  letter-spacing: -.01em;
+}
+.pf-empty p { font-size: 11px; line-height: 1.55; }
+.pf-empty p + p { margin-top: 8px; }
+/* Имя в тексте — выделение в строке, не заголовок. */
+.pf-empty p b {
+  display: inline;
+  margin: 0;
+  font-size: inherit;
+  font-weight: 600;
+  color: var(--ink);
+}
+/* Одиночное поле вне сетки: без ограничения его пояснение растягивается
+   на всю ширину окна, тогда как поля в сетке держит колонка. */
+.pf-card > .fld { max-width: 62ch; }
+/* Встроенный в сообщение выбор — отбиваем от текста, но не линией:
+   это продолжение той же мысли, а не отдельный блок. */
+.pf-empty > .fld { margin-top: 16px; }
+
+/* ── модальные окна раздела ───────────────────────────────── */
+.pf-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14.5px;
+  background: rgba(0, 0, 0, .45);
+}
+.pf-crop {
+  width: 288px;
+  max-width: 100%;
+  padding: 18px;
+  background: var(--card);
+  border-radius: var(--r);
+  box-shadow: var(--shadow-float);
+}
+.pf-crop h3 { margin-bottom: 12.5px; font-size: 13.5px; font-weight: 600; }
+.pf-ask { width: 342px; }
+.pf-ask p { margin-bottom: 12.5px; color: var(--ink2); font-size: 11px; line-height: 1.5; }
+
+.crop-view { position: relative; width: 234px; height: 234px; margin: 0 auto; }
+.crop-cv { display: block; border-radius: var(--r-sm); background: var(--box-bg); cursor: grab; touch-action: none; }
+.crop-cv:active { cursor: grabbing; }
+/* Круглая маска поверх холста: показываем ровно то, что станет аватаром. */
+.crop-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-sm);
+  pointer-events: none;
+  box-shadow: inset 0 0 0 999px rgba(0, 0, 0, .38);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 128px, #000 129px);
+  mask: radial-gradient(circle at 50% 50%, transparent 0 128px, #000 129px);
+}
+.crop-zoom {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 12.5px 0 3.5px;
+  color: var(--ink2);
+  font-size: 11px;
+}
+.crop-zoom input { flex: 1; accent-color: var(--brand); }
+.crop-hint { color: var(--ink3); font-size: 10.5px; }
+.pf-modal-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+  margin-top: 14.5px;
+}
+
+@media (max-width: 684px) {
+  .pf-grid { grid-template-columns: minmax(0, 1fr); }
+  .pf-tabs { overflow-x: auto; }
+}
+
+/* Подпись под показателями: откуда взялось, что это именно вы. */
+.pf-auto {
+  margin-top: 9px;
+  padding-top: 9px;
+  border-top: 1px solid var(--line2);
+  color: var(--ink3);
+  font-size: 10.5px;
+  line-height: 1.4;
+}
