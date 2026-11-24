@@ -1,0 +1,83 @@
+/* Reuse the same-origin font assets used by the II41 homepage. */
+@font-face {
+  font-family: Manrope;
+  src: url(/fonts/manrope-cyrillic-400.woff2) format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+400-45F,U+490-491,U+4B0-4B1,U+2116;
+}
+@font-face {
+  font-family: Manrope;
+  src: url(/fonts/manrope-latin-400.woff2) format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+??,U+131,U+152-153,U+2BB-2BC,U+2C6,U+2DA,U+2DC,U+304,U+308,U+329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: Manrope;
+  src: url(/fonts/manrope-cyrillic-600.woff2) format("woff2");
+  font-weight: 600 800;
+  font-display: swap;
+  unicode-range: U+400-45F,U+490-491,U+4B0-4B1,U+2116;
+}
+@font-face {
+  font-family: Manrope;
+  src: url(/fonts/manrope-latin-600.woff2) format("woff2");
+  font-weight: 600 800;
+  font-display: swap;
+  unicode-range: U+??,U+131,U+152-153,U+2BB-2BC,U+2C6,U+2DA,U+2DC,U+304,U+308,U+329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+.static-demo-bar {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--g-solid);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  transform: translateX(-50%);
+  font: 600 12px/1.4 var(--sans);
+}
+.static-demo-bar button {
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--card);
+  cursor: pointer;
+  font: inherit;
+}
+.static-demo-bar button:hover { background: var(--raise); }
+.static-demo-bar [hidden], .static-demo-notice[hidden] { display: none !important; }
+.static-demo-notice {
+  position: fixed;
+  z-index: 50000;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  left: 50%;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 12px 18px;
+  border: 1px solid var(--brand);
+  border-radius: 12px;
+  color: var(--ink);
+  background: var(--g-solid);
+  box-shadow: var(--shadow-float);
+  transform: translateX(-50%);
+  font: 600 13px/1.5 var(--sans);
+  pointer-events: none;
+}
+body:has(> .static-demo-bar) .static-demo-notice { bottom: 76px; }
+@media (max-width: 540px) {
+  .static-demo-bar { gap: 5px; padding: 5px 8px; }
+  .static-demo-bar:has([data-demo-resume]:not([hidden])) b { display: none; }
+}

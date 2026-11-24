@@ -2,19 +2,27 @@
 <html lang="ru">
 <head>
 <meta name="robots" content="noindex,nofollow">
-<script src="src/static-demo.js?v=2"></script>
+<script src="src/static-demo.js?v=20261124-brand"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Успеваемость · Каркас</title>
-<link rel="icon" type="image/png" href="src/favicon.png?v=2026-10-26-01">
-<link rel="apple-touch-icon" href="src/icon-180.png?v=2026-10-26-01">
+<link rel="icon" type="image/png" href="src/favicon.png?v=20261124-brand">
+<link rel="apple-touch-icon" href="src/icon-180.png?v=20261124-brand">
 <link rel="stylesheet" href="src/onest.css?v=2026-08-25-01">
 <link rel="stylesheet" href="src/fonts.css?v=2026-08-25-01">
 <link rel="stylesheet" href="src/styles.css?v=2026-08-28-13">
-<link rel="stylesheet" href="src/glass.css?v=2026-10-26-01">
-<link rel="stylesheet" href="src/demo.css?v=2026-10-26-01">
-<!-- Демо-сборка: витрина — тёмное стекло всегда, переключателя темы здесь нет. -->
-<script>document.documentElement.dataset.skin = "glass"; document.documentElement.dataset.theme = "dark";</script>
+<link rel="stylesheet" href="src/glass.css?v=20261124-brand">
+<link rel="stylesheet" href="src/demo.css?v=20261124-brand">
+<link rel="stylesheet" href="src/demo-shell.css?v=20261124-brand">
+<link rel="stylesheet" href="src/case-tour.css?v=20261124-brand">
+<meta name="theme-color" content="#f1f3fa">
+<script>
+  document.documentElement.dataset.skin = "glass";
+  document.documentElement.dataset.theme = "light";
+  try {
+    if (localStorage.getItem("karkas-theme") === "dark") document.documentElement.dataset.theme = "dark";
+  } catch (_) { /* Keep the public default. */ }
+</script>
 </head>
 <!-- Витрина: отдельная страница без входа и без единого элемента
      управления. Класс tv стоит сразу — app.js по нему понимает, что
@@ -22,7 +30,7 @@
 <body class="tv">
 
 <header class="tv-head">
-  <img src="src/brand-mark.svg?v=2026-10-26-01" alt="" width="64" height="64">
+  <img src="src/brand-mark.svg?v=20261124-brand" alt="" width="64" height="64">
   <div class="brand-title">
     <h1>Успеваемость сотрудников</h1>
     <span>Каркас</span>
@@ -75,6 +83,6 @@
 <div class="tv-bar"><i id="tvBar"></i></div>
 
 <script src="src/awards.js?v=2026-08-28-13"></script>
-<script src="src/app.js?v=2026-08-28-13"></script>
+<script src="src/app.js?v=20261124-brand"></script>
 </body>
 </html>

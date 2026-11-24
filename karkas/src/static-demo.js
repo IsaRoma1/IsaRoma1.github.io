@@ -408,14 +408,6 @@
   window.KARKAS_DEMO = { ready, notify, base: base.href, entrySearch };
 
   function mount() {
-    const style = document.createElement("style");
-    style.textContent = `
-      .static-demo-bar{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:950;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 24px);box-sizing:border-box;padding:10px 14px;border:1px solid rgba(153,180,255,.25);border-radius:14px;background:rgba(17,24,44,.94);color:#e7efff;box-shadow:0 8px 36px #0004;backdrop-filter:blur(18px);font:12px/1.4 system-ui,sans-serif;white-space:nowrap}
-      .static-demo-bar b{font-weight:650;color:#a7c7ff}.static-demo-bar small{font-size:11px;color:#b6c2dc}.static-demo-bar button{border:1px solid #52688788;background:#263b5b55;color:#e7efff;border-radius:8px;padding:6px 10px;font:inherit;cursor:pointer}.static-demo-bar button:hover{background:#344d7388}.static-demo-bar a{color:#d4e3ff;text-decoration:none;font-size:11px}.static-demo-notice{position:fixed;bottom:78px;left:50%;transform:translateX(-50%);z-index:50000;border:1px solid #6685bb88;border-radius:12px;background:#172841;color:#fff;box-shadow:0 6px 24px #0005;max-width:calc(100vw - 32px);width:max-content;padding:13px 18px;font:13px/1.5 system-ui,sans-serif;pointer-events:none}.static-demo-notice[hidden]{display:none!important}
-      body:has(> .static-demo-bar) > .main{padding-bottom:72px!important}.static-demo-bar [hidden]{display:none!important}@media(max-width:500px){.static-demo-bar:has([data-demo-resume]:not([hidden])) b{display:none}}
-      @media(max-width:684px){.static-demo-bar{bottom:8px;padding:8px 10px;gap:8px;font-size:11px}.static-demo-bar small,.static-demo-bar a{display:none}.static-demo-bar button{padding:6px 8px}.static-demo-notice{bottom:65px}}
-    `;
-    document.head.appendChild(style);
     const bar = document.createElement("aside");
     bar.className = "static-demo-bar";
     bar.setAttribute("aria-label", "Демонстрационная версия");

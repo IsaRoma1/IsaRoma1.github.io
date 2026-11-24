@@ -110,7 +110,7 @@
     if (guide.hidden) { unmark(); return; }
     const route = storyRoute();
     const position = inStory ? route.indexOf(id) : -1;
-    $("ktLocation").textContent = (position < 0 ? "Гид" : "Кейс " + (position + 1) + " из " + route.length) + " · " + names.get(id);
+    $("ktLocation").textContent = (position < 0 ? "Гид" : "Гид · " + (position + 1) + " из " + route.length) + " · " + names.get(id);
     $("ktTitle").textContent = data.title;
     $("ktBenefit").textContent = data.benefit;
     $("ktStepTitle").textContent = (index + 1) + "/" + data.steps.length + " · " + step().label;
@@ -206,7 +206,7 @@
     hideNote();
     const isIntro = page === "intro";
     const isMap = page === "map";
-    $("ktDialogKicker").textContent = isMap ? "Путеводитель по платформе" : "Демонстрационный кейс · Северный Монтаж";
+    $("ktDialogKicker").textContent = isMap ? "Гид по разделам" : "Гид по демо · Северный Монтаж";
     $("ktDialogTitle").textContent = isIntro ? "Сколько будет стоить монтаж?" : isMap ? "Что хотите проверить?" : "Из чего складывается цена монтажа";
     $("ktDialogLead").textContent = isIntro
       ? "Заказчик ЖК «Северный парк» прислал план этажа и ждёт цену монтажа. Вместе со сметчиком подготовьте предложение, затем проверьте, что заказал участок и сколько компания потратила на материалы."

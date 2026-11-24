@@ -1752,6 +1752,8 @@ const THEME_KEY = "karkas-theme";
 
 function applyTheme(t) {
   document.documentElement.dataset.theme = t;
+  const chrome = document.querySelector('meta[name="theme-color"]');
+  if (chrome) chrome.content = t === "dark" ? "#191723" : "#f1f3fa";
   const btn = $("#theme-btn");          // на витрине переключателя нет
   if (btn) btn.setAttribute("aria-pressed", t === "dark" ? "true" : "false");
 }
@@ -1761,13 +1763,19 @@ window.applyTheme = applyTheme;
 function wireTheme() {
   let saved = null;
   try { saved = localStorage.getItem(THEME_KEY); } catch (e) { /* приватный режим */ }
-  // Тему, которую уже поставила строка в <head>, не перебиваем: в
-  // демо-сборке она тёмная по умолчанию, а не по настройке системы.
+  // The demo chooses the II41 light palette on the first visit.
   applyTheme(saved || document.documentElement.dataset.theme ||
     (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
 
   const btn = $("#theme-btn");
-  if (!btn) return;
+  if (!btn) {
+    if (isTV()) window.addEventListener("storage", () => {
+      let current;
+      try { current = localStorage.getItem(THEME_KEY); } catch (_) { return; }
+      if (current === "light" || current === "dark") applyTheme(current);
+    });
+    return;
+  }
   btn.addEventListener("click", () => {
     const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
     try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* не критично */ }

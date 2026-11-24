@@ -1,25 +1,33 @@
 /* Case presentation. Keep the guide in the page flow so the real controls stay usable. */
 :root {
-  --kt-panel: #f9faff;
-  --kt-deep: #eaeaff;
-  --kt-ink: #171c36;
-  --kt-copy: #41496a;
-  --kt-accent: #4a45a9;
-  --kt-line: #c4c8e1;
-  --kt-fill: #fff;
-  --kt-focus: #4331bf;
-  --kt-grid: rgb(75 66 148 / 6%);
+  --kt-panel: #e8f5ef;
+  --kt-deep: #d1eade;
+  --kt-ink: #112e27;
+  --kt-copy: #36584e;
+  --kt-accent: #276c54;
+  --kt-line: #92b6a5;
+  --kt-control-line: #668675;
+  --kt-fill: #f7fcf9;
+  --kt-focus: #13664e;
+  --kt-action: #175941;
+  --kt-action-hover: #104333;
+  --kt-on-action: #fff;
+  --kt-halo: #fff;
 }
 :root[data-theme="dark"] {
-  --kt-panel: #191e38;
-  --kt-deep: #252342;
-  --kt-ink: #f4f4ff;
-  --kt-copy: #c8cce5;
-  --kt-accent: #c0b9ff;
-  --kt-line: #464c6a;
-  --kt-fill: #252b46;
-  --kt-focus: #a99bff;
-  --kt-grid: rgb(182 177 238 / 7%);
+  --kt-panel: #173a32;
+  --kt-deep: #20483c;
+  --kt-ink: #f0faf4;
+  --kt-copy: #c5ded1;
+  --kt-accent: #a6e1c5;
+  --kt-line: #527a69;
+  --kt-control-line: #7ca18c;
+  --kt-fill: #102f29;
+  --kt-focus: #85dfb4;
+  --kt-action: #a6e1c5;
+  --kt-action-hover: #c1f0d8;
+  --kt-on-action: #12392e;
+  --kt-halo: #112820;
 }
 .kt-welcome, .kt-guide, .kt-launch {
   box-sizing: border-box;
@@ -36,22 +44,19 @@
   overflow: auto;
   overscroll-behavior: contain;
   border: 1px solid var(--kt-line);
-  border-radius: 24px;
+  border-block-start: 5px solid var(--kt-focus);
+  border-radius: 20px;
   background: var(--kt-panel);
-  box-shadow: 0 24px 100px rgb(5 8 27 / 38%);
+  box-shadow: 0 24px 90px rgb(6 28 24 / 32%);
 }
 .kt-welcome::backdrop {
-  background: rgb(8 11 29 / 68%);
+  background: rgb(12 23 21 / 64%);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
 .kt-intro {
   padding: clamp(22px, 5vw, 44px);
-  background:
-    linear-gradient(180deg, transparent 0, var(--kt-panel) 57%),
-    linear-gradient(90deg, var(--kt-grid) 1px, transparent 1px) top left / 28px 28px,
-    linear-gradient(var(--kt-grid) 1px, transparent 1px) top left / 28px 28px,
-    linear-gradient(120deg, var(--kt-panel), var(--kt-deep));
+  background: var(--kt-panel);
 }
 .kt-brand {
   display: flex;
@@ -64,11 +69,26 @@
 }
 .kt-brand img { display: block; width: 36px; height: 36px; object-fit: contain; }
 .kt-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   margin: 0;
   color: var(--kt-accent);
-  font: 700 11px/1.4 var(--mono, monospace);
+  font: 720 11px/1.4 var(--sans, system-ui, sans-serif);
   letter-spacing: .065em;
   text-transform: uppercase;
+}
+/* A compass identifies guide controls even when the user cannot distinguish their colour. */
+.kt-kicker::before, .static-demo-bar [data-demo-home]::before {
+  content: "";
+  display: inline-block;
+  flex: none;
+  width: 15px;
+  height: 15px;
+  box-sizing: border-box;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  background: linear-gradient(128deg, transparent 35%, currentColor 36% 64%, transparent 65%) center / 7px 9px no-repeat;
 }
 .kt-intro h1 {
   max-width: 19em;
@@ -88,18 +108,20 @@
 }
 .kt-journey {
   display: grid;
-  gap: 0;
   margin: 22px 0;
-  padding: 0;
+  padding: 3px clamp(12px, 2.5vw, 18px);
   list-style: none;
   counter-reset: kt-stop;
+  border: 1px solid var(--kt-line);
+  border-radius: 14px;
+  background: var(--kt-fill);
 }
 .kt-journey li {
   display: grid;
   grid-template-columns: 30px minmax(0, 1fr);
   column-gap: 12px;
-  position: relative;
-  padding: 10px 0;
+  align-content: center;
+  padding: 12px 0;
   counter-increment: kt-stop;
 }
 .kt-journey li::before {
@@ -110,21 +132,12 @@
   grid-row: 1 / span 2;
   width: 28px;
   height: 28px;
-  background: var(--kt-fill);
+  background: var(--kt-deep);
   color: var(--kt-accent);
-  border: 1px solid var(--kt-line);
-  border-radius: 9px;
+  border-radius: 50%;
   font: 650 11px/1 var(--mono, monospace);
 }
-.kt-journey li + li::after {
-  content: "";
-  position: absolute;
-  left: 14px;
-  bottom: calc(100% - 10px);
-  height: 20px;
-  width: 1px;
-  background: var(--kt-line);
-}
+.kt-journey li + li { border-top: 1px solid var(--kt-line); }
 .kt-journey li b { font-size: 15px; line-height: 1.35; }
 .kt-journey li span { grid-column: 2; color: var(--kt-copy); font-size: 13px; line-height: 1.5; }
 .kt-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
@@ -138,16 +151,16 @@
   padding: 7px 13px;
   color: var(--kt-ink);
   background: var(--kt-fill);
-  border: 1px solid var(--kt-line);
+  border: 1px solid var(--kt-control-line);
   border-radius: 10px;
   cursor: pointer;
   font: 640 13px/1.3 var(--sans, system-ui, sans-serif);
   text-align: center;
 }
 .kt-primary {
-  background: #5745cd;
-  color: white;
-  border-color: #6754d7;
+  background: var(--kt-action);
+  color: var(--kt-on-action);
+  border-color: var(--kt-action);
 }
 .kt-welcome .kt-actions button { min-height: 42px; }
 .kt-launch { color: var(--kt-accent); }
@@ -167,23 +180,36 @@
   color: var(--kt-ink);
   font-family: var(--sans, system-ui, sans-serif);
 }
-.top > .static-demo-bar b { color: var(--kt-copy); font-size: 11px; }
+.top > .static-demo-bar b { color: var(--ink2); font-size: 11px; }
 .top > .static-demo-bar button {
   min-height: 30px;
   padding: 5px 9px;
-  color: var(--kt-ink);
-  border: 1px solid var(--kt-line);
-  background: var(--kt-fill);
+  color: var(--ink2);
+  border: 1px solid var(--line);
+  background: var(--card);
   font: 600 12px/1.35 var(--sans, system-ui, sans-serif);
 }
-.top > .static-demo-bar [data-demo-home] { color: #fff; border-color: #6754d7; background: #5745cd; }
-.top > .static-demo-bar button:hover { color: var(--kt-ink); border-color: var(--kt-accent); background: var(--kt-deep); }
-.top > .static-demo-bar [data-demo-home]:hover { color: #fff; background: #4634b6; }
+.top > .static-demo-bar button:hover { color: var(--ink); border-color: var(--ink2); background: var(--raise); }
+.static-demo-bar [data-demo-home] { display: inline-flex; align-items: center; gap: 6px; }
+.static-demo-bar [data-demo-home], .top > .static-demo-bar [data-demo-home] {
+  color: var(--kt-on-action);
+  border: 1px solid var(--kt-action);
+  background: var(--kt-action);
+}
+.static-demo-bar [data-demo-home]:hover, .top > .static-demo-bar [data-demo-home]:hover {
+  color: var(--kt-on-action); border-color: var(--kt-action-hover); background: var(--kt-action-hover);
+}
+.top > .static-demo-bar [data-demo-resume] {
+  color: var(--kt-accent); border-color: var(--kt-control-line); background: var(--kt-panel);
+}
+.top > .static-demo-bar [data-demo-resume]:hover {
+  color: var(--kt-ink); border-color: var(--kt-accent); background: var(--kt-deep);
+}
 .top > .static-demo-bar button:focus-visible { outline: 3px solid var(--kt-focus); outline-offset: 2px; }
 /* The compact object card normally removes its header. Keep its tour controls reachable. */
 html[data-sec="sit"] .main:has(> #sec-sit .pg:is(.card-min, .card-auto)) > header.top:has(> .static-demo-bar) { display: flex; }
-.kt-primary:hover { background: #4634b6; }
-.kt-secondary:hover, .kt-close:hover, .kt-launch:hover { border-color: var(--kt-accent); }
+.kt-primary:hover { background: var(--kt-action-hover); border-color: var(--kt-action-hover); }
+.kt-secondary:hover, .kt-close:hover { border-color: var(--kt-accent); background: var(--kt-deep); }
 :is(.kt-primary, .kt-secondary, .kt-close, .kt-launch):focus-visible {
   outline: 3px solid var(--kt-focus);
   outline-offset: 2px;
@@ -199,10 +225,10 @@ html[data-sec="sit"] .main:has(> #sec-sit .pg:is(.card-min, .card-auto)) > heade
   scroll-margin-block-start: calc(var(--stick, 54px) + 6px);
   margin: 8px 0;
   padding: 14px clamp(14px, 2vw, 23px);
-  background: linear-gradient(110deg, var(--kt-deep), var(--kt-panel) 65%);
+  background: var(--kt-panel);
   border: 1px solid var(--kt-line);
-  border-inline-start: 3px solid var(--kt-focus);
-  border-radius: 15px;
+  border-inline-start: 5px solid var(--kt-focus);
+  border-radius: 14px;
 }
 .main > .kt-guide[hidden], .kt-launch[hidden], .kt-guide [hidden], .kt-welcome [hidden] { display: none; }
 .kt-head { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -252,7 +278,7 @@ html[data-sec="sit"] .main:has(> #sec-sit .pg:is(.card-min, .card-auto)) > heade
   outline-offset: 2px;
 }
 .kt-locate:hover { color: var(--kt-ink); }
-.kt-tab-tip { align-self: center; font-size: 12px; }
+.kt-tab-tip { align-self: center; padding-inline-start: 9px; border-inline-start: 2px solid var(--kt-line); font-size: 12px; }
 .kt-guide .kt-actions { grid-column: 2; justify-content: flex-start; }
 .kt-map-list {
   display: grid;
@@ -277,7 +303,7 @@ html[data-sec="sit"] .main:has(> #sec-sit .pg:is(.card-min, .card-auto)) > heade
   box-sizing: border-box;
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid var(--kt-line);
+  border: 1px solid var(--kt-control-line);
   border-radius: 9px;
   background: var(--kt-fill);
   color: var(--kt-ink);
@@ -289,6 +315,7 @@ html[data-sec="sit"] .main:has(> #sec-sit .pg:is(.card-min, .card-auto)) > heade
 .kt-map-list button:hover, .kt-map-list button[aria-current="step"] {
   border-color: var(--kt-accent);
   color: var(--kt-accent);
+  background: var(--kt-deep);
 }
 .kt-tab-note {
   position: fixed;
@@ -304,14 +331,15 @@ html[data-sec="sit"] .main:has(> #sec-sit .pg:is(.card-min, .card-auto)) > heade
   border-radius: 12px;
   background: var(--kt-panel);
   color: var(--kt-copy);
-  box-shadow: 0 6px 22px rgb(5 8 27 / 20%);
+  box-shadow: 0 6px 22px rgb(6 28 24 / 20%);
   font: 550 13px/1.45 var(--sans, system-ui, sans-serif);
   pointer-events: none;
 }
 .kt-tab-note[hidden], .kt-tab-note:empty { display: none; }
 .kt-highlight {
-  outline: 3px solid var(--kt-focus) !important;
-  outline-offset: 2px;
+  outline: 3px dashed var(--kt-focus) !important;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--kt-halo) !important;
   scroll-margin-block: 7rem 3rem;
 }
 @media (max-width: 1199px) {
@@ -355,4 +383,9 @@ html[data-sec="sit"] .main:has(> #sec-sit .pg:is(.card-min, .card-auto)) > heade
 }
 @media (prefers-reduced-motion: reduce) {
   .kt-welcome, .kt-guide, .kt-highlight { animation: none !important; transition: none !important; }
+}
+@media (forced-colors: active) {
+  .kt-welcome, .main > .kt-guide, .kt-tab-note { border-color: CanvasText; }
+  .kt-kicker::before, .static-demo-bar [data-demo-home]::before { border: 3px double ButtonText; }
+  .kt-highlight { outline-color: Highlight !important; }
 }

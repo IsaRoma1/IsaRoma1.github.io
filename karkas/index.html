@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta name="robots" content="noindex,nofollow">
-<script src="src/static-demo.js?v=2"></script>
+<script src="src/static-demo.js?v=20261124-brand"></script>
 <meta charset="utf-8">
 <!-- maximum-scale=1: iPhone увеличивает страницу при нажатии на поле со
      шрифтом мельче 16px и не возвращает обратно. Поля у нас мельче —
@@ -25,13 +25,11 @@
 <script>
   (function () {
     var root = document.documentElement;
-    /* Демо-сборка: стеклянный слой (src/glass.css). Тёмное стекло — вид
-       по умолчанию, светлое — по кнопке темы. */
     root.dataset.skin = "glass";
-    root.dataset.theme = "dark";
+    root.dataset.theme = "light";
     try {
       var t = localStorage.getItem("karkas-theme");
-      if (t) root.dataset.theme = t;
+      if (t === "dark" || t === "light") root.dataset.theme = t;
     } catch (e) { /* приватный режим — тема по умолчанию */ }
     try {
       var s = new URLSearchParams(location.search).get("s");
@@ -39,13 +37,13 @@
     } catch (e) { /* старый браузер — раздел поставит app.js */ }
   })();
 </script>
-<link rel="icon" type="image/svg+xml" href="src/brand-mark.svg?v=2026-10-26-01">
-<link rel="apple-touch-icon" href="src/icon-180.png?v=2026-10-26-01">
+<link rel="icon" type="image/svg+xml" href="src/brand-mark.svg?v=20261124-brand">
+<link rel="apple-touch-icon" href="src/icon-180.png?v=20261124-brand">
 <!-- Приложение на телефоне (23.09.2026): «На экран Домой» в Safari и
      «Установить приложение» в Chrome открывают платформу без адресной
      строки, со своим значком. -->
-<link rel="manifest" href="src/manifest.json?v=2026-10-26-01">
-<meta name="theme-color" content="#060814">
+<link rel="manifest" href="src/manifest.json?v=20261124-brand">
+<meta name="theme-color" content="#f1f3fa">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Каркас">
@@ -79,12 +77,13 @@
 <link rel="stylesheet" href="src/req.css?v=2026-10-23-02">
 <!-- Стеклянный слой — последним: он перебивает токены и раскладку всех
      файлов выше, но только при data-skin="glass" на <html>. -->
-<link rel="stylesheet" href="src/demo-ai.css?v=2026-10-27-01">
-<link rel="stylesheet" href="src/glass.css?v=2026-10-26-01">
+<link rel="stylesheet" href="src/demo-ai.css?v=20261124-brand">
+<link rel="stylesheet" href="src/glass.css?v=20261124-brand">
 <!-- Демо-сборка: обезличивание — свой знак вместо логотипа, без персонажей
      заказчика. -->
-<link rel="stylesheet" href="src/demo.css?v=2026-10-26-01">
-<link rel="stylesheet" href="src/case-tour.css?v=1">
+<link rel="stylesheet" href="src/demo.css?v=20261124-brand">
+<link rel="stylesheet" href="src/demo-shell.css?v=20261124-brand">
+<link rel="stylesheet" href="src/case-tour.css?v=20261124-brand">
 </head>
 <body>
 
@@ -93,7 +92,7 @@
      смысл: на экран в столовой не может попасть лишнее. -->
 <aside class="side">
   <div class="brand">
-    <img src="src/brand-mark.svg?v=2026-10-26-01" alt="" width="64" height="64">
+    <img src="src/brand-mark.svg?v=20261124-brand" alt="" width="64" height="64">
     <span><b>Каркас</b></span>
     <button type="button" class="side-btn" id="side-btn" title="Свернуть меню" aria-expanded="true">
       <svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M9.5 4.5v15"/></svg>
@@ -704,11 +703,11 @@
 <script src="src/tasks.js?v=2026-10-23-01"></script>
 <script src="src/wg.js?v=2026-10-22-51"></script>
 <script src="src/req.js?v=2026-10-23-02"></script>
-<script src="src/demo-ai.js?v=2026-11-24-01"></script>
-<script src="src/app.js?v=2026-10-26-03"></script>
+<script src="src/demo-ai.js?v=20261124-brand"></script>
+<script src="src/app.js?v=20261124-brand"></script>
 <dialog class="kt-welcome" id="ktWelcome" aria-labelledby="ktDialogTitle">
   <div class="kt-intro">
-    <div class="kt-brand"><img src="src/brand-mark.svg" alt="" width="36" height="36">Каркас</div>
+    <div class="kt-brand"><img src="src/brand-mark.svg?v=20261124-brand" alt="" width="36" height="36">Каркас</div>
     <p class="kt-kicker" id="ktDialogKicker"></p>
     <h1 id="ktDialogTitle" tabindex="-1"></h1>
     <p class="kt-lead" id="ktDialogLead"></p>
@@ -720,6 +719,6 @@
 <script src="src/tour-commercial.js?v=1"></script>
 <script src="src/tour-team.js?v=1"></script>
 <script src="src/tour-office.js?v=1"></script>
-<script src="src/case-tour.js?v=1"></script>
+<script src="src/case-tour.js?v=20261124-brand"></script>
 </body>
 </html>

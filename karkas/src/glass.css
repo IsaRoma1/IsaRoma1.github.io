@@ -1,54 +1,32 @@
-/* ══ Стекло (демо-сборка, 26.10.2026) ═══════════════════════════
-   Отдельный слой поверх обычных стилей. Включается атрибутом
-   data-skin="glass" на <html> и без него не меняет ни одного правила —
-   поэтому файл можно подключать всегда, а обычные светлая и тёмная
-   темы остаются как были.
-
-   Почти весь интерфейс красится токенами (--card, --raise, --line,
-   --ink…), поэтому основное здесь — другие значения токенов:
-   полупрозрачные поверхности на тёмном холсте с цветными пятнами.
-   Сверх токенов — раскладка «островами» (меню и шапка парят с
-   зазором, карточки отделены воздухом) и заслонки там, где фон
-   карточки служил непрозрачной подложкой.
-
-   Размытие (backdrop-filter) стоит только там, где под стеклом
-   проезжает содержимое: шапка, модальные окна, всплывающие списки.
-   На самих карточках его нет намеренно: размытие делает элемент
-   опорой для position: fixed, и всплывающие окна внутри карточки
-   (выбор из списка, подсказки) встали бы не там, куда их ставит код.
-   Шапке размытие дано псевдоэлементом — у него нет детей. */
-
-/* ── токены: светлое стекло ───────────────────────────────── */
+/* Working surfaces use the II41 palette. Keep status colors independent of brand accents. */
 :root[data-skin="glass"] {
-  --g-gap: 12px;            /* воздух между островами */
-  --g-r: 20px;              /* скругление островов */
-  --g-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .6 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  color-scheme: light;
+  --sans: 'Manrope', 'Onest', system-ui, sans-serif;
+  --g-gap: 12px;
+  --g-r: 16px;
+  --r: 16px;
 
-  --brand: #6D5CF6;
-  --brand-deep: #5341DE;
-  --brand-soft: rgba(109, 92, 246, .18);
-  --brand-tint: rgba(109, 92, 246, .09);
-  --on-brand: #FFFFFF;
-  --grad-brand: linear-gradient(135deg, #9A74FF -6%, #6D5CF6 48%, #3E8CFF 112%);
+  --bg: #f1f3fa;
+  --card: #fff;
+  --raise: #eeebf8;
+  --band: #f7f7fb;
+  --line: #dedeea;
+  --line2: #e8e7f0;
+  --ink: #3d385f;
+  --ink2: #625f76;
+  --ink3: #6b677e;
+  --ink4: #6d687f;
+  --box-bg: #f7f6fb;
+  --box-bg-h: #eeeaf9;
 
-  --bg: #ECEEF8;
-  --glow:
-    radial-gradient(1100px 720px at 4% -12%, rgba(139, 112, 255, .34), transparent 62%),
-    radial-gradient(900px 640px at 102% -4%, rgba(80, 160, 255, .30), transparent 60%),
-    radial-gradient(1000px 720px at 92% 108%, rgba(52, 211, 160, .22), transparent 62%),
-    radial-gradient(760px 560px at 14% 112%, rgba(255, 128, 200, .18), transparent 60%);
-  --card: rgba(255, 255, 255, .58);
-  --raise: rgba(34, 40, 90, .045);
-  --line: rgba(34, 40, 90, .13);
-  --line2: rgba(34, 40, 90, .08);
-  --band: rgba(34, 40, 90, .03);
-  --box-bg: rgba(255, 255, 255, .5);
-  --box-bg-h: rgba(255, 255, 255, .75);
-
-  --ink: #14172F;
-  --ink2: #4B5070;
-  --ink3: #7D829F;
-  --ink4: #AAAEC6;
+  --brand: #7055cb;
+  --brand-deep: #5840a9;
+  --brand-soft: #e6dff9;
+  --brand-tint: #f2eefb;
+  --on-brand: #fff;
+  --g-action: #7055cb;
+  --g-action-hover: #5b42b9;
+  --grad-brand: var(--g-action);
 
   --ok: #0EA472;
   --ok-soft: rgba(14, 164, 114, .12);
@@ -68,58 +46,45 @@
   --mc-nd-b: rgba(34, 40, 90, .03);
   --mc-unclear-bg: rgba(59, 123, 246, .10);
 
-  --shadow: 0 1px 2px rgba(30, 30, 80, .05);
-  --shadow-float: 0 0 0 1px rgba(255, 255, 255, .6), 0 30px 60px -24px rgba(40, 40, 100, .35);
-  --shadow-glow: 0 14px 30px -12px rgba(109, 92, 246, .55);
-  --fade: rgba(40, 40, 100, .10);
-  --r: 18px;
+  --glow: none;
+  --shadow: 0 2px 5px #40385f0b, 0 12px 26px -12px #5a4b8536;
+  --shadow-float: 0 16px 40px -12px #4a40654a;
+  --shadow-glow: 0 4px 10px #7a60cc25;
+  --fade: #4b435d14;
 
-  /* Свои токены стекла. */
-  --g-panel: linear-gradient(165deg, rgba(255, 255, 255, .78), rgba(255, 255, 255, .5) 70%);
-  --g-edge: rgba(255, 255, 255, .8);
-  --g-hi: inset 0 1px 0 rgba(255, 255, 255, .9);
-  --g-shadow: 0 1px 2px rgba(30, 30, 80, .05), 0 22px 44px -28px rgba(40, 40, 100, .45);
-  --g-bar: rgba(255, 255, 255, .62);
-  --g-pop: rgba(255, 255, 255, .84);
-  --g-sheet: linear-gradient(165deg, rgba(252, 252, 255, .97), rgba(240, 242, 252, .97));
-  --g-solid: #F5F6FC;       /* непрозрачная замена --card для липких клеток */
-  --g-solid2: #ECEEF8;      /* … и для липких шапок таблиц (вместо --raise) */
-  --g-ink-inv: #FFFFFF;     /* текст на подложке цвета текста (выбранный чип) */
-  --g-blur: blur(22px) saturate(170%);
-  --g-scrim: rgba(30, 32, 70, .28);
-  --g-page: var(--g-noise), var(--glow), var(--bg);
+  --g-shadow: var(--shadow);
+  --g-panel: var(--card);
+  --g-edge: var(--line);
+  --g-bar: var(--card);
+  --g-pop: var(--card);
+  --g-sheet: var(--card);
+  --g-solid: var(--card);
+  --g-solid2: var(--raise);
+  --g-ink-inv: #fff;
+  --g-scrim: #312a494d;
+  --g-page: var(--bg);
 }
 
-/* ── токены: тёмное стекло (основной вид демо) ────────────── */
 :root[data-skin="glass"][data-theme="dark"] {
-  color-scheme: dark;       /* календари и списки браузера — тоже тёмные */
+  color-scheme: dark;
+  --bg: #191723;
+  --card: #242131;
+  --raise: #312c42;
+  --band: #292534;
+  --line: #453e56;
+  --line2: #373144;
+  --ink: #f3f1fa;
+  --ink2: #d0cada;
+  --ink3: #b2aac3;
+  --ink4: #a39ab6;
+  --box-bg: #2c283b;
+  --box-bg-h: #393248;
 
-  --brand: #8B7CF8;
-  --brand-deep: #B4A9FF;    /* текст цвета бренда на тёмном — светлее */
-  --brand-soft: rgba(139, 124, 248, .26);
-  --brand-tint: rgba(139, 124, 248, .13);
-  --on-brand: #FFFFFF;
-  --grad-brand: linear-gradient(135deg, #A07DFF -6%, #6E5CF6 48%, #3D8BFF 112%);
-
-  --bg: #060814;
-  --glow:
-    radial-gradient(1100px 760px at 4% -12%, rgba(124, 92, 255, .55), transparent 62%),
-    radial-gradient(900px 640px at 102% -4%, rgba(56, 132, 255, .34), transparent 60%),
-    radial-gradient(760px 520px at 60% 42%, rgba(99, 102, 241, .16), transparent 66%),
-    radial-gradient(1000px 720px at 92% 108%, rgba(20, 200, 160, .26), transparent 62%),
-    radial-gradient(760px 560px at 14% 112%, rgba(220, 70, 200, .22), transparent 60%);
-  --card: rgba(255, 255, 255, .045);
-  --raise: rgba(255, 255, 255, .07);
-  --line: rgba(255, 255, 255, .12);
-  --line2: rgba(255, 255, 255, .075);
-  --band: rgba(255, 255, 255, .03);
-  --box-bg: rgba(255, 255, 255, .05);
-  --box-bg-h: rgba(255, 255, 255, .085);
-
-  --ink: #F2F4FF;
-  --ink2: rgba(225, 230, 255, .72);
-  --ink3: rgba(225, 230, 255, .50);
-  --ink4: rgba(225, 230, 255, .30);
+  --brand: #b9a6ff;
+  --brand-deep: #d4c6ff;
+  --brand-soft: #453462;
+  --brand-tint: #362c49;
+  --on-brand: #211935;
 
   --ok: #3DDC97;
   --ok-soft: rgba(61, 220, 151, .14);
@@ -139,28 +104,16 @@
   --mc-nd-b: rgba(255, 255, 255, .03);
   --mc-unclear-bg: rgba(94, 168, 255, .12);
 
-  --shadow: 0 18px 40px -24px rgba(0, 0, 0, .8);
-  --shadow-float: 0 0 0 1px rgba(255, 255, 255, .07), 0 30px 70px -24px rgba(0, 0, 0, .85);
-  --shadow-glow: 0 14px 34px -12px rgba(110, 92, 246, .7);
-  --fade: rgba(3, 5, 12, .5);
-
-  --g-panel: linear-gradient(165deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .03) 70%);
-  --g-edge: rgba(255, 255, 255, .10);
-  --g-hi: inset 0 1px 0 rgba(255, 255, 255, .07);
-  --g-shadow: 0 24px 48px -28px rgba(0, 0, 0, .9);
-  --g-bar: rgba(14, 17, 34, .55);
-  --g-pop: rgba(19, 22, 42, .9);
-  --g-sheet: linear-gradient(165deg, rgba(27, 29, 54, .97), rgba(14, 16, 33, .97));
-  --g-solid: #16182C;
-  --g-solid2: #1C1E33;
-  --g-ink-inv: #10122A;
-  --g-scrim: rgba(3, 5, 12, .55);
+  --shadow: 0 2px 5px #100c191f, 0 12px 24px -13px #0d0a164f;
+  --shadow-float: 0 16px 40px -12px #0e0a1d99;
+  --shadow-glow: 0 4px 12px #120d2340;
+  --fade: #15101f59;
+  --g-ink-inv: #211d2c;
+  --g-scrim: #100d1bb3;
 }
 
-/* ── холст ─────────────────────────────────────────────────── */
 [data-skin="glass"] body {
   background: var(--g-page);
-  background-attachment: fixed;
 }
 [data-skin="glass"] ::selection { background: var(--brand-soft); }
 [data-skin="glass"] ::-webkit-scrollbar-thumb { background: var(--line) !important; }
@@ -179,9 +132,9 @@
     margin-top: var(--g-gap);
     height: calc(100vh - 2 * var(--g-gap));
     border: 1px solid var(--g-edge);
-    border-radius: 22px;
+    border-radius: var(--g-r);
     background: var(--g-panel);
-    box-shadow: var(--g-hi), var(--g-shadow);
+    box-shadow: var(--shadow);
   }
   /* Шапка липнет к самому верху, а зазор над стеклом — её же верхнее
      поле. Так --stick (высоту шапки меряет app.js) сам включает зазор, и
@@ -198,10 +151,9 @@
   [data-skin="glass"] .top::before {
     content: ""; position: absolute; z-index: -1;
     inset: var(--g-gap) 0 0;
-    border: 1px solid var(--g-edge); border-radius: 18px;
+    border: 1px solid var(--g-edge); border-radius: var(--g-r);
     background: var(--g-bar);
-    -webkit-backdrop-filter: var(--g-blur); backdrop-filter: var(--g-blur);
-    box-shadow: var(--g-hi), var(--g-shadow);
+    box-shadow: var(--shadow);
   }
   [data-skin="glass"] .top::after {
     content: ""; position: absolute; z-index: -2;
@@ -238,7 +190,6 @@
   [data-skin="glass"] .top::before {
     content: ""; position: absolute; z-index: -1; inset: 0;
     background: var(--g-bar);
-    -webkit-backdrop-filter: var(--g-blur); backdrop-filter: var(--g-blur);
     border-bottom: 1px solid var(--g-edge);
   }
   [data-skin="glass"] .pg,
@@ -248,15 +199,13 @@
   :root[data-skin="glass"] { --g-r: 16px; --g-gap: 8px; }
 }
 
-/* Карточки — острова со скруглением и воздухом, а не полосы через
-   черту. Стеклянная заливка — градиент с бликом в левом верхнем углу. */
 [data-skin="glass"] .card,
 [data-skin="glass"] .pg,
 [data-skin="glass"] .ref {
   border: 1px solid var(--g-edge);
   border-radius: var(--g-r);
   background: var(--g-panel);
-  box-shadow: var(--g-hi), var(--g-shadow);
+  box-shadow: var(--shadow);
 }
 [data-skin="glass"] .card { margin-bottom: var(--g-gap); }
 [data-skin="glass"] .main > section > .card:last-child { border-bottom: 1px solid var(--g-edge); }
@@ -270,22 +219,17 @@
   border: 1px solid var(--g-edge);
   border-radius: var(--g-r);
   background: var(--g-panel);
-  box-shadow: var(--g-hi), var(--g-shadow);
+  box-shadow: var(--shadow);
 }
 [data-skin="glass"] :is(.pf-tabs, .pf-body, .pf-card) { background: transparent; }
-[data-skin="glass"] .msg-conversation { background: rgba(255, 255, 255, .025); }
+[data-skin="glass"] .msg-conversation { background: var(--band); }
 /* Углы: колонки и шапки внутри острова квадратные и вылезали бы за
    скругление. clip, а не hidden: hidden сделал бы остров прокручиваемым
    контейнером, и всё липкое внутри перестало бы липнуть к окну. */
 [data-skin="glass"] :is(.pg, .ref, .card, .msg-shell, .pf) { overflow: clip; }
 
-/* Подложки цвета холста внутри панелей — прозрачные: сплошной --bg на
-   стекле читался чёрной дырой посреди острова. */
 [data-skin="glass"] :is(.mr-body, .wg-body, .frame .screen) { background: transparent; }
 
-/* Текст «цвета карточки» на подложке цвета текста — выбранные чипы,
-   тёмные подсказки, кружки шагов. Карточка стала полупрозрачной, и
-   такой текст исчезал совсем. */
 [data-skin="glass"] :is(.ln-chip2.on, .ln-ph-x, .ln-toast, .lx-chip.on, .g-tip, .rt-tip,
     .mr-chips button.on, .mr-chain li > i, .mr-stp-h > i, .mr-toast, .role-chip.adm, .link button) {
   color: var(--g-ink-inv);
@@ -297,19 +241,14 @@
 [data-skin="glass"] .nav { gap: 2px; }
 [data-skin="glass"] .nav a { border-radius: 11px; }
 [data-skin="glass"] .nav a:hover { background: var(--raise); }
-/* Выбранный раздел — светящаяся капля бренда: градиент с внутренним
-   контуром и мягким ореолом вместо плоской заливки. */
 [data-skin="glass"] .nav a.on,
 [data-skin="glass"] .nav a.on:hover {
-  background: linear-gradient(100deg, rgba(139, 124, 248, .95), rgba(78, 128, 255, .78));
-  color: #FFFFFF;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 10px 24px -12px rgba(110, 92, 246, .95);
+  background: var(--brand-tint);
+  color: var(--brand-deep);
+  box-shadow: inset 3px 0 0 var(--brand);
+  font-weight: 700;
 }
-[data-skin="glass"][data-theme="dark"] .nav a.on,
-[data-skin="glass"][data-theme="dark"] .nav a.on:hover {
-  background: linear-gradient(100deg, rgba(139, 124, 248, .42), rgba(78, 128, 255, .16));
-  box-shadow: inset 0 0 0 1px rgba(170, 160, 255, .28), 0 10px 26px -14px rgba(120, 100, 255, .9);
-}
+[data-skin="glass"] .nav a.on svg { color: currentColor; }
 [data-skin="glass"] .side .who { border-top-color: var(--line2); }
 
 /* ── шапка: кнопки и часы — стеклянные капсулы ────────────── */
@@ -318,14 +257,38 @@
   background: var(--raise);
 }
 [data-skin="glass"] .top h1 { letter-spacing: -.02em; }
+[data-skin="glass"] .icon-btn:hover {
+  color: var(--brand-deep);
+  border-color: var(--brand);
+  background: var(--brand-tint);
+}
 
 /* ── кнопки, поля, переключатели ──────────────────────────── */
 [data-skin="glass"] .btn-brand {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), 0 8px 22px -10px rgba(110, 92, 246, .85);
+  background: var(--g-action);
+  color: #fff;
+  box-shadow: var(--shadow-glow);
 }
 [data-skin="glass"] .btn-brand:hover {
-  filter: brightness(1.08);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 10px 26px -10px rgba(110, 92, 246, 1);
+  background: var(--g-action-hover);
+  filter: none;
+}
+
+/* Solid brand buttons keep white text in both themes. Smaller lavender badges
+   use the matching foreground of their theme. */
+[data-skin="glass"] :is(.k.hero, .pf-av-none) { --on-brand: #fff; }
+[data-skin="glass"] .k.hero .k-lab { opacity: 1; }
+[data-skin="glass"] :is(.nav a.on .nav-badge, .ln-hero-cta) {
+  background: #fff;
+  color: var(--g-action-hover);
+}
+[data-skin="glass"] .snb-prog-bar i { background: var(--brand); }
+[data-skin="glass"][data-theme="dark"] :is(.add-btn:hover .plus, .scr-hint,
+    .tbl tr.go:hover .t-go, .org-acc-tag, .pg .sit-m-f i, .lx-th-here,
+    .top h1 .sec-ico, .wg-appeal-ic, .wg-pp.on i, .msg-avatar.group.vector,
+    .snb-ho-m.on .snb-ho-ico, .snb-bar .seg-b.snb-rf-none.hot i, .snb-ptob i,
+    .ln-cc-play) {
+  color: var(--on-brand);
 }
 [data-skin="glass"] :is(.btn-ghost, .sel-btn, .tb-search) {
   border-color: var(--line2);
@@ -337,7 +300,6 @@
 [data-skin="glass"] :is(.tb-search:focus-within, .sel-btn[aria-expanded="true"]) {
   box-shadow: 0 0 0 3px var(--brand-soft);
 }
-/* Сегменты: выбранный — приподнятая капля, а не белая плашка. */
 [data-skin="glass"] :is(.eff-tabs, .mode) {
   background: var(--raise);
   border-color: var(--line2);
@@ -345,20 +307,17 @@
 }
 [data-skin="glass"] .eff-tabs button[aria-selected="true"],
 [data-skin="glass"] .mode button.on {
-  background: var(--box-bg-h);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 4px 12px -6px rgba(0, 0, 0, .5);
-  color: var(--ink);
+  background: var(--card);
+  box-shadow: 0 1px 4px #36304f19;
+  color: var(--brand-deep);
 }
 
 /* ── всплывающее: списки, меню, подсказки ─────────────────── */
-/* Сами они fixed или absolute и вложенных fixed не держат — им
-   размытие можно давать прямо. */
 [data-skin="glass"] :is(.sel-list, .pk-list, .fresh-pop, .aw-tip, .sup-menu,
     .snb-pop, .snb-pick, .snb-hcard, .snb-cpy, .mat-pop, .mat-help-pop, .vdc-pop,
     .iss-pop, .msg-ctx, .msg-rxpick, .msg-emoji, .msg-acts, .stf-peek, .tsk-pp,
     .wg-pop, .vx-tip, .fin-cols-pop, .lx-ctxpop, .rg-rres) {
   background: var(--g-pop);
-  -webkit-backdrop-filter: var(--g-blur); backdrop-filter: var(--g-blur);
   border-color: var(--g-edge);
   box-shadow: var(--shadow-float);
 }
@@ -371,16 +330,13 @@
 [data-skin="glass"] :is(.modal, .dlg-wrap, .pf-modal, .crw-wrap, .faq-wrap, .iss-wrap, .msg-overlay,
     .mr-wrap, .tsk-drawer-wrap, .wg-wrap, .as) {
   background: var(--g-scrim);
-  -webkit-backdrop-filter: blur(10px) saturate(130%); backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
 }
-/* Карточка окна почти непрозрачная: под ней размытая страница, а не
-   холст, и с прозрачностью карточки строки таблицы читались бы сквозь
-   поля формы. */
 [data-skin="glass"] :is(.modal-card, .dlg-card, .pf-modal > *, .crw-dlg, .iss-dlg, .msg-modal,
     .mr-dlg, .wg-dlg) {
   background: var(--g-pop);
   border: 1px solid var(--g-edge);
-  box-shadow: var(--g-hi), var(--shadow-float);
+  box-shadow: var(--shadow-float);
 }
 [data-skin="glass"] :is(.faq, .as-panel, .tsk-drawer) {
   background: var(--g-sheet);
@@ -428,8 +384,6 @@
 /* ══ Эффективность ═════════════════════════════════════════ */
 /* Полоса фильтров — своим островом. Липнет под шапкой с тем же
    зазором; полоска над ней закрыта куском холста, как у шапки. */
-/* Стекло полосы — псевдоэлементом: в ней списки «Период», «Отделы»,
-   а их выпадашки fixed (см. шапку файла). */
 [data-skin="glass"] .eff-bar {
   margin-bottom: var(--g-gap);
   background: transparent; border-bottom: 0;
@@ -438,8 +392,7 @@
   content: ""; position: absolute; z-index: -1; inset: 0;
   border: 1px solid var(--g-edge); border-radius: 16px;
   background: var(--g-bar);
-  -webkit-backdrop-filter: var(--g-blur); backdrop-filter: var(--g-blur);
-  box-shadow: var(--g-hi), var(--g-shadow);
+  box-shadow: var(--shadow);
 }
 @media (min-width: 685px) {
   [data-skin="glass"] .eff-bar { top: calc(var(--stick, 62px) + var(--g-gap)); }
@@ -454,8 +407,6 @@
   margin-bottom: var(--g-gap);
   border: 1px solid var(--g-edge); border-radius: 16px;
 }
-/* Итоги — четыре стеклянные плитки через воздух. Первая — с цветным
-   свечением бренда за шкалой. */
 [data-skin="glass"] .eff-stats {
   gap: var(--g-gap);
   margin-bottom: var(--g-gap);
@@ -465,59 +416,33 @@
 [data-skin="glass"] .eff-stats .eff-st:first-child {
   border: 1px solid var(--g-edge); border-radius: var(--g-r);
   background: var(--g-panel);
-  box-shadow: var(--g-hi), var(--g-shadow);
+  box-shadow: var(--shadow);
 }
 [data-skin="glass"] .eff-stats .eff-st.st-main {
-  background:
-    radial-gradient(420px 220px at 12% 50%, rgba(139, 124, 248, .30), transparent 70%),
-    radial-gradient(380px 200px at 95% 0%, rgba(61, 140, 255, .18), transparent 70%),
-    var(--g-panel);
+  background: var(--brand-tint);
+  border-color: var(--brand-soft);
 }
 [data-skin="glass"] .st-v { letter-spacing: -.035em; }
 
 /* ══ Вход ═══════════════════════════════════════════════════ */
 [data-skin="glass"] body.login {
   background: var(--g-page);
-  background-attachment: fixed;
-}
-/* За карточкой — два светящихся шара. Ради них стекло и видно: карточка
-   размывает их края, и получается матовое стекло, а не просто тёмный
-   прямоугольник. */
-[data-skin="glass"] .login-wrap { position: relative; }
-[data-skin="glass"] .login-wrap::before,
-[data-skin="glass"] .login-wrap::after {
-  content: ""; position: absolute; z-index: -1; border-radius: 50%; pointer-events: none;
-}
-[data-skin="glass"] .login-wrap::before {
-  width: 230px; height: 230px; left: -105px; top: 150px;
-  background: radial-gradient(circle at 34% 30%, #C3AEFF, #7A63F8 52%, #3A27B5 100%);
-  box-shadow: 0 0 90px rgba(124, 92, 255, .55);
-}
-[data-skin="glass"] .login-wrap::after {
-  width: 170px; height: 170px; right: -80px; top: 215px;
-  background: radial-gradient(circle at 34% 30%, #9DF7D8, #22C59A 52%, #0B6F5D 100%);
-  box-shadow: 0 0 80px rgba(34, 197, 154, .45);
 }
 [data-skin="glass"] .login-card {
-  background: rgba(255, 255, 255, .06);
-  border: 1px solid rgba(255, 255, 255, .14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), var(--shadow-float);
-  -webkit-backdrop-filter: blur(26px) saturate(170%); backdrop-filter: blur(26px) saturate(170%);
-}
-[data-skin="glass"]:not([data-theme="dark"]) .login-card {
-  background: rgba(255, 255, 255, .45);
-  border-color: rgba(255, 255, 255, .8);
+  background: var(--card);
+  border: 1px solid var(--g-edge);
+  box-shadow: var(--shadow-float);
 }
 [data-skin="glass"] .login-card input { border: 1px solid var(--line2); }
 /* Подсказка в поле: браузерный серый на тёмном стекле почти не виден. */
 [data-skin="glass"] :is(input, textarea)::placeholder { color: var(--ink3); opacity: 1; }
-[data-skin="glass"][data-theme="dark"] .login-card input::placeholder { color: rgba(235, 238, 255, .62); }
 [data-skin="glass"] .login-card input:focus {
   border-color: var(--brand); background: var(--box-bg-h);
   box-shadow: 0 0 0 3px var(--brand-soft);
 }
 [data-skin="glass"] .login-card button[type="submit"] {
-  color: #FFFFFF;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 10px 26px -10px rgba(110, 92, 246, .9);
+  background: var(--g-action);
+  color: #fff;
+  box-shadow: var(--shadow-glow);
 }
 [data-skin="glass"] .login-brand { flex-direction: column; gap: 12px; text-align: center; margin-bottom: 26px; }

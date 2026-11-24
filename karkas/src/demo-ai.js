@@ -421,7 +421,18 @@ const DEMO_AI = (() => {
       else if (t.dataset.tpl) { TKP.tpl = t.dataset.tpl; tkpRender(); }
       else if (t.id === "tkPrint" || t.id === "tkWord") {
         const html = `<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Учебное ТКП-${TKP.no}</title>
-          <style>body{font:12pt Arial,sans-serif;color:#202334;margin:1.5cm}h2{font-size:18pt}h3{font-size:13pt}table{border-collapse:collapse;width:100%;font-size:10pt}th,td{padding:5pt;border:1px solid #bbb}th,tfoot{background:#eee}.n,.tk-meta,.tk-to{text-align:right}.tk-logo small{display:block}.tk-sign{margin-top:18pt}.tk-sign span{margin-right:12pt}tr{break-inside:avoid}</style>
+          <style>
+            body { margin:1.5cm; color:#3D385F; background:#fff; font:12pt Arial,sans-serif }
+            h2 { font-size:18pt } h3 { font-size:13pt }
+            table { border-collapse:collapse; width:100%; font-size:10pt }
+            th, td { padding:5pt; border:1px solid #DEDEEA }
+            th { background:#F1F3FA } tfoot td { background:#EEEBF8; font-weight:bold }
+            .tk-head { padding-bottom:8pt; border-bottom:2pt solid #7055CB }
+            .tk-logo small, .tk-meta, .tk-to small, .tk-valid { color:#625F76 }
+            .tk-src { color:#3D385F; padding:4pt 7pt; border-left:3pt solid #7055CB; background:#EEEBF8 }
+            .n, .tk-meta, .tk-to { text-align:right } .tk-logo small { display:block }
+            .tk-sign { margin-top:18pt } .tk-sign span { margin-right:12pt } tr { break-inside:avoid }
+          </style>
           </head><body>${$d("#tkDoc").outerHTML}</body></html>`;
         if (t.id === "tkWord") download(`Учебное_ТКП-${TKP.no}.doc`, html, "application/msword");
         else {
