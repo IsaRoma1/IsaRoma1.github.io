@@ -29,8 +29,6 @@ const DEMO_AI = (() => {
 
   const SAMPLES = [
     { id: "eom", file: "ЭОМ_План_2этажа_Лист5.pdf", title: "Электроосвещение и розеточная сеть, 2 этаж", sheet: "ЭОМ, лист 5", pages: 1 },
-    { id: "ss", file: "СС_Слаботочные_системы_Лист3.dwg", title: "Слаботочные системы, 2 этаж", sheet: "СС, лист 3", pages: 1 },
-    { id: "ov", file: "ОВ_Вентиляция_План_Лист2.pdf", title: "Вентиляция, план 2 этажа", sheet: "ОВ, лист 2", pages: 1 },
   ];
 
   /* Что «нашли» на листе: тип элемента → цвет метки, позиция спецификации. */
@@ -77,23 +75,38 @@ const DEMO_AI = (() => {
   }
   const ITEMS = placeItems();
 
-  /* Кабель — по трассам: длина в метрах от длины линий на листе (масштаб 1:100). */
+  /* Подготовленная ведомость кабельных трасс учебного листа. */
   const CABLES = [
-    { name: "Кабель ВВГнг(А)-LS 3×1,5", grp: "Кабель", unit: "м", qty: 412, price: 78 },
-    { name: "Кабель ВВГнг(А)-LS 3×2,5", grp: "Кабель", unit: "м", qty: 356, price: 118 },
-    { name: "Кабель ВВГнг(А)-LS 5×10", grp: "Кабель", unit: "м", qty: 48, price: 690 },
-    { name: "Труба гофрированная ПВХ 20 мм", grp: "Кабель", unit: "м", qty: 640, price: 21 },
-    { name: "Лоток перфорированный 100×50", grp: "Кабель", unit: "м", qty: 86, price: 540 },
+    { name: "Кабель ВВГнг(А)-LS 3×1,5", grp: "Кабель", unit: "м", qty: 412, price: 78, rate: 35 },
+    { name: "Кабель ВВГнг(А)-LS 3×2,5", grp: "Кабель", unit: "м", qty: 356, price: 118, rate: 35 },
+    { name: "Кабель ВВГнг(А)-LS 5×10", grp: "Кабель", unit: "м", qty: 48, price: 690, rate: 120 },
+    { name: "Труба гофрированная ПВХ 20 мм", grp: "Кабель", unit: "м", qty: 640, price: 21, rate: 0 },
+    { name: "Лоток перфорированный 100×50", grp: "Кабель", unit: "м", qty: 86, price: 540, rate: 310 },
   ];
 
-  const DRW = { stage: "idle", sample: SAMPLES[0], shown: {}, tab: "spec" };
+  const DRW = { stage: "idle", sample: SAMPLES[0], uploadedName: "", shown: {}, tab: "spec" };
+
+  // Учебные расценки соответствуют работам из справочника демо.
+  const fixtureRates = { lamp: 450, lampE: 450, sock: 160, sockD: 160, sw: 160, box: 4200 };
 
   function specRows() {
     const cnt = {};
     ITEMS.forEach((i) => { cnt[i.k] = (cnt[i.k] || 0) + 1; });
-    const rows = Object.keys(KINDS).map((k) => ({ ...KINDS[k], qty: cnt[k] || 0, k }));
-    return rows.concat(CABLES);
+    const rows = Object.keys(KINDS).map((k) => ({
+      ...KINDS[k], qty: cnt[k] || 0, k, work: k === "box" ? "shk" : "eom", rate: fixtureRates[k]
+    }));
+    return rows.concat(CABLES.map((r) => ({ ...r, work: "eom" })));
   }
+
+  function roomRows() {
+    return ROOMS.map((r) => {
+      const inRoom = ITEMS.filter((i) => i.x > r.x && i.x < r.x + r.w && i.y > r.y && i.y < r.y + r.h);
+      const count = (k) => inRoom.filter((i) => i.k.startsWith(k)).length;
+      return [r.n, r.t, r.a, count("lamp"), count("sock"), count("sw")];
+    });
+  }
+
+  const roomHeaders = ["№", "Помещение", "Площадь, м²", "Светильники", "Розетки", "Выключатели"];
 
   function drwPlan() {
     const on = DRW.stage === "done" || DRW.stage === "scan";
@@ -138,7 +151,7 @@ const DEMO_AI = (() => {
         <div class="da-h">Чертежи</div>
         <label class="da-drop" id="drwDrop">
           <input type="file" accept=".pdf,.dwg,.dxf,.png,.jpg" hidden id="drwFile">
-          <b>Перетащите чертёж сюда</b><span>PDF, DWG, DXF, скан — или выберите пример ниже</span>
+          <b>Перетащите чертёж сюда</b><span>PDF, DWG, DXF или изображение. Демо покажет разбор учебного листа ЭОМ.</span>
         </label>
         <div class="da-list">${SAMPLES.map((x) => `
           <button type="button" class="da-file${x.id === s.id ? " on" : ""}" data-smp="${x.id}">
@@ -151,7 +164,7 @@ const DEMO_AI = (() => {
         <div class="dp-wrap dim">${drwPlan()}</div>
         <button type="button" class="btn-brand" id="drwRun">Распознать чертёж</button></div>`;
     } else if (DRW.stage === "scan") {
-      body = `<div class="da-card"><div class="da-h">Обработка: ${esc(s.file)}</div>
+      body = `<div class="da-card"><div class="da-h">Разбор учебного листа · ${esc(s.sheet)}</div>
         <div class="dp-wrap">${drwPlan()}</div>${drwStages(DRW.step)}</div>`;
     } else {
       const legend = Object.keys(KINDS).map((k) => {
@@ -162,20 +175,17 @@ const DEMO_AI = (() => {
       rows.forEach((r) => { (grp[r.grp] = grp[r.grp] || []).push(r); });
       const spec = Object.keys(grp).map((g) => `<tr class="da-g"><td colspan="5">${esc(g)}</td></tr>` + grp[g].map((r) => `
         <tr><td>${esc(r.name)}</td><td>${esc(r.unit)}</td><td class="n">${num(r.qty)}</td><td class="n">${money(r.price)}</td><td class="n">${money(r.qty * r.price)}</td></tr>`).join("")).join("");
-      const vol = ROOMS.map((r) => {
-        const inR = ITEMS.filter((i) => i.x > r.x && i.x < r.x + r.w && i.y > r.y && i.y < r.y + r.h);
-        const c = (k) => inR.filter((i) => i.k.startsWith(k)).length;
-        return `<tr><td>${r.n}</td><td>${esc(r.t)}</td><td class="n">${num(r.a)}</td><td class="n">${c("lamp")}</td><td class="n">${c("sock")}</td><td class="n">${c("sw")}</td></tr>`;
-      }).join("");
+      const vol = roomRows().map(([room, name, area, lamps, sockets, switches]) =>
+        `<tr><td>${room}</td><td>${esc(name)}</td><td class="n">${num(area)}</td><td class="n">${lamps}</td><td class="n">${sockets}</td><td class="n">${switches}</td></tr>`).join("");
       body = `
         <div class="da-kpi">
           <div><b>${pcs}</b><span>элементов найдено</span></div>
           <div><b>${ROOMS.length}</b><span>помещений · ${num(ROOMS.reduce((a, r) => a + r.a, 0))} м²</span></div>
           <div><b>${num(CABLES.slice(0, 3).reduce((a, c) => a + c.qty, 0))} м</b><span>кабеля по трассам</span></div>
-          <div><b>98,4%</b><span>уверенность распознавания</span></div>
+          <div><b>${rows.length}</b><span>позиций в спецификации</span></div>
           <div><b>${money(total)}</b><span>материалы по прайсу</span></div>
         </div>
-        <div class="da-card"><div class="da-h">${esc(s.title)} <small>${esc(s.sheet)} · обработан за 14 с</small></div>
+        <div class="da-card"><div class="da-h">${esc(s.title)} <small>Учебный лист · ${esc(s.sheet)}</small></div>
           <div class="dl-legend">${legend}</div>
           <div class="dp-wrap">${drwPlan()}</div></div>
         <div class="da-card">
@@ -183,7 +193,7 @@ const DEMO_AI = (() => {
             <button type="button" class="chip${DRW.tab === "spec" ? " on" : ""}" data-tab="spec">Спецификация</button>
             <button type="button" class="chip${DRW.tab === "vol" ? " on" : ""}" data-tab="vol">Объёмы по помещениям</button>
             <span class="grow"></span>
-            <button type="button" class="btn-ghost" id="drwCsv">Выгрузить в Excel</button>
+            <button type="button" class="btn-ghost" id="drwCsv">Скачать CSV</button>
             <button type="button" class="btn-brand" id="drwTkp">Сформировать ТКП →</button>
           </div>
           ${DRW.tab === "spec"
@@ -193,7 +203,7 @@ const DEMO_AI = (() => {
         </div>`;
     }
     sec.innerHTML = `<div class="da-wrap">
-      <div class="da-note">Демонстрация: чертёж разбирается на элементы, по ним собираются спецификация и объёмы, цены — из прайса материалов.</div>
+      <div class="da-note">${DRW.uploadedName ? `Вы выбрали файл «${esc(DRW.uploadedName)}». Ниже показан подготовленный разбор учебного листа ЭОМ.` : "На учебном листе ЭОМ проверьте разметку, сверьте материалы и перенесите их в коммерческое предложение."}</div>
       <div class="da-grid">${left}<div class="da-main">${body}</div></div></div>`;
   }
 
@@ -209,19 +219,34 @@ const DEMO_AI = (() => {
     sec.addEventListener("click", (e) => {
       const t = e.target.closest("button");
       if (!t || DRW.stage === "scan") return;
-      if (t.dataset.smp) { DRW.sample = SAMPLES.find((x) => x.id === t.dataset.smp); DRW.stage = "idle"; drwRender(); }
+      if (t.dataset.smp) { DRW.sample = SAMPLES.find((x) => x.id === t.dataset.smp); DRW.uploadedName = ""; DRW.stage = "idle"; drwRender(); }
       else if (t.id === "drwRun") drwRun();
       else if (t.dataset.k) { DRW.shown[t.dataset.k] = DRW.shown[t.dataset.k] === false; drwRender(); }
       else if (t.dataset.tab) { DRW.tab = t.dataset.tab; drwRender(); }
       else if (t.id === "drwCsv") {
-        const csv = ["Наименование;Ед.;Кол-во;Цена;Сумма"].concat(specRows().map((r) =>
-          [r.name, r.unit, r.qty, r.price, r.qty * r.price].join(";"))).join("\n");
-        download("Спецификация_" + DRW.sample.id + ".csv", csv, "text/csv");
-      } else if (t.id === "drwTkp") { TKP.fromDrw = true; TKP.stage = "form"; go("tkp"); }
+        const rooms = DRW.tab === "vol";
+        const header = rooms ? roomHeaders : ["Наименование", "Ед.", "Кол-во", "Цена, ₽", "Сумма, ₽"];
+        const rows = rooms ? roomRows() : specRows().map((r) => [r.name, r.unit, r.qty, r.price, r.qty * r.price]);
+        const csv = [header, ...rows].map((row) => row.map((v) => {
+          const value = typeof v === "number" ? String(v).replace(".", ",") : String(v);
+          return '"' + value.replace(/"/g, '""') + '"';
+        }).join(";")).join("\r\n");
+        download("Учебный_ЭОМ_лист5_" + (rooms ? "помещения" : "спецификация") + ".csv", csv, "text/csv;charset=utf-8");
+      } else if (t.id === "drwTkp") {
+        if (!TKP.drawing) TKP.standalone = { works: { ...TKP.works }, obj: TKP.obj, cus: TKP.cus };
+        TKP.drawing = { sheet: DRW.sample.sheet, rows: specRows() };
+        TKP.works = { eom: true, shk: true };
+        TKP.obj = 0;
+        TKP.cus = 0;
+        TKP.stage = "form";
+        go("tkp");
+      }
     });
     const pick = (f) => {
-      if (!f) return;
-      DRW.sample = { id: "own", file: f.name, title: f.name.replace(/\.[^.]+$/, ""), sheet: "загружен вручную" };
+      if (!f || DRW.stage === "scan") return;
+      DRW.uploadedName = f.name;
+      DRW.sample = SAMPLES[0];
+      DRW.tab = "spec";
       drwRun();
     };
     sec.addEventListener("change", (e) => { if (e.target.id === "drwFile") pick(e.target.files[0]); });
@@ -237,11 +262,12 @@ const DEMO_AI = (() => {
   /* ══ Шаблонное ТКП ═════════════════════════════════════════ */
 
   const CUSTOMERS = [
+    { n: "ООО «СЗ Зелёная долина»", c: "Руслан Гарипов" },
     { n: "ООО «Девелопмент-Плюс»", c: "Смирнов А.В., руководитель проекта" },
     { n: "АО «Городские Инвестиции»", c: "Кравец И.Н., главный инженер" },
     { n: "ООО «ТехноПарк Восток»", c: "Ушаков Р.С., директор по строительству" },
   ];
-  const OBJECTS = ["БЦ «Северная звезда», 2 этаж, 377 м²", "ЖК «Озёрный», корпус 3, МОП", "Логистический комплекс, АБК"];
+  const OBJECTS = ["ЖК «Северный парк», дом 3", "БЦ «Северная звезда», 2 этаж, 377 м²", "ЖК «Озёрный», корпус 3, МОП", "Логистический комплекс, АБК"];
   const TEMPLATES = [
     { id: "full", n: "ТКП под ключ (материалы + работы)" },
     { id: "work", n: "ТКП на монтажные работы" },
@@ -255,16 +281,20 @@ const DEMO_AI = (() => {
     { id: "id", n: "Исполнительная документация", mat: 0, wrk: 64000, days: 5 },
   ];
 
-  const TKP = { stage: "form", cus: 0, obj: 0, tpl: "full", works: { eom: true, shk: true, pnr: true, id: true }, vat: true, margin: 12, adv: 30, fromDrw: false, no: 148 };
+  const TKP = { stage: "form", cus: 0, obj: 0, tpl: "full", works: { eom: true, shk: true, pnr: true, id: true }, vat: true, margin: 12, adv: 30, drawing: null, standalone: null, no: 148 };
 
   function tkpCalc() {
     const ws = WORKS.filter((w) => TKP.works[w.id]);
     const k = 1 + TKP.margin / 100;
-    const rows = ws.map((w) => ({
-      ...w,
-      mat: TKP.tpl === "work" ? 0 : Math.round(w.mat * k / 100) * 100,
-      wrk: Math.round(w.wrk * k / 100) * 100,
-    }));
+    const rows = ws.map((w) => {
+      const items = TKP.drawing ? TKP.drawing.rows.filter((r) => r.work === w.id) : [];
+      const mat = items.length ? items.reduce((sum, r) => sum + r.qty * r.price, 0) : w.mat;
+      const wrk = items.length ? items.reduce((sum, r) => sum + r.qty * r.rate, 0) : w.wrk;
+      // Базовые пакеты из шаблона округляются до сотен, ведомость по листу — до рубля.
+      const roundTo = items.length ? 1 : 100;
+      const quote = (v) => Math.round(v * k / roundTo) * roundTo;
+      return { ...w, mat: TKP.tpl === "work" ? 0 : quote(mat), wrk: quote(wrk), items };
+    });
     const sum = rows.reduce((a, r) => a + r.mat + r.wrk, 0);
     const days = rows.reduce((a, r) => Math.max(a, r.days), 0) + Math.round(rows.reduce((a, r) => a + r.days, 0) * .35);
     return { rows, sum, vat: TKP.vat ? sum * 20 / 120 : 0, days };
@@ -278,9 +308,14 @@ const DEMO_AI = (() => {
     const tr = rows.map((r, i) => `<tr><td>${i + 1}</td><td>${esc(r.n)}</td>
       ${TKP.tpl === "work" ? "" : `<td class="n">${r.mat ? money(r.mat) : "—"}</td>`}
       <td class="n">${money(r.wrk)}</td><td class="n">${money(r.mat + r.wrk)}</td></tr>`).join("");
+    const drawn = rows.flatMap((r) => r.items);
+    const basis = drawn.length ? `<h3>Ведомость учебного листа · ${esc(TKP.drawing.sheet)}</h3>
+      <p>По этим позициям рассчитаны электромонтаж и щиты. В таблице приведены ставки до наценки. Наценка предложения — ${num(TKP.margin)}%.</p>
+      <table class="tk-t"><thead><tr><th>Позиция листа</th><th>Количество</th>${TKP.tpl === "work" ? "" : "<th>Материал, ₽/ед.</th>"}<th>Монтаж, ₽/ед.</th></tr></thead>
+      <tbody>${drawn.map((r) => `<tr><td>${esc(r.name)}</td><td class="n">${num(r.qty)} ${esc(r.unit)}</td>${TKP.tpl === "work" ? "" : `<td class="n">${num(r.price)}</td>`}<td class="n">${r.rate ? num(r.rate) : "В составе прокладки"}</td></tr>`).join("")}</tbody></table>` : "";
     return `<div class="tk-doc" id="tkDoc">
       <div class="tk-head">
-        <div class="tk-logo"><img src="src/brand-mark.svg" alt=""><span><b>ООО «Северный Монтаж»</b><small>ИНН 0000000000 · info@sever-montazh.demo · +7 (000) 000-00-00</small></span></div>
+        <div class="tk-logo"><span><b>ООО «Северный Монтаж»</b><small>Учебный образец · демонстрационные данные и цены</small></span></div>
         <div class="tk-meta">Исх. № ТКП-${TKP.no}/26<br>от ${today}</div>
       </div>
       <div class="tk-to">${esc(c.n)}<br><small>${esc(c.c)}</small></div>
@@ -288,20 +323,18 @@ const DEMO_AI = (() => {
       <p class="tk-sub">на выполнение работ по объекту: <b>${esc(OBJECTS[TKP.obj])}</b></p>
       <p>Благодарим за приглашение к участию. ООО «Северный Монтаж» предлагает выполнить комплекс работ
       ${TKP.tpl === "work" ? "из материалов Заказчика" : "под ключ — с поставкой материалов и оборудования"} на следующих условиях.</p>
-      ${TKP.fromDrw ? `<p class="tk-src">Объёмы определены по рабочей документации: ЭОМ, лист 5 — ${ITEMS.length} элементов, ${num(CABLES.slice(0, 3).reduce((a, x) => a + x.qty, 0))} м кабеля.</p>` : ""}
       <h3>1. Стоимость работ</h3>
       <table class="tk-t"><thead><tr><th>№</th><th>Состав работ</th>${TKP.tpl === "work" ? "" : '<th class="n">Материалы</th>'}<th class="n">Работы</th><th class="n">Итого</th></tr></thead>
         <tbody>${tr || `<tr><td colspan="5" class="tk-none">Отметьте виды работ слева</td></tr>`}</tbody>
         <tfoot><tr><td colspan="${TKP.tpl === "work" ? 3 : 4}">Итого${TKP.vat ? ", в т.ч. НДС 20% — " + money(vat) : " (НДС не облагается)"}</td><td class="n">${money(sum)}</td></tr></tfoot></table>
+      ${basis}
       ${short ? "" : `
       <h3>2. Сроки</h3>
       <p>Срок выполнения — <b>${days} рабочих дней</b> с даты получения аванса и допуска на объект. График — по согласованию с Заказчиком.</p>
       <h3>3. Условия оплаты</h3>
       <p>Аванс ${TKP.adv}% — в течение 5 банковских дней после подписания договора; далее — ежемесячно по актам КС-2/КС-3 за вычетом аванса пропорционально.</p>
       <h3>4. Гарантии</h3>
-      <p>Гарантия на выполненные работы — 24 месяца, на оборудование — по гарантии производителя. Исполнительная документация — в составе сдачи.</p>
-      <h3>5. Опыт</h3>
-      <p>Более 120 завершённых объектов: бизнес-центры, жилые комплексы, складская и промышленная недвижимость. Собственное щитовое производство.</p>`}
+      <p>Гарантия на выполненные работы — 24 месяца, на оборудование — по гарантии производителя.</p>`}
       <p class="tk-valid">Предложение действительно 30 календарных дней.</p>
       <div class="tk-sign"><span>Генеральный директор</span><span class="tk-line"></span><span>Д.А. Орлов</span></div>
     </div>`;
@@ -311,7 +344,7 @@ const DEMO_AI = (() => {
     const sec = $d("#sec-tkp");
     if (!sec) return;
     const opt = (arr, cur, lab) => arr.map((x, i) => `<option value="${i}"${i === cur ? " selected" : ""}>${esc(lab(x))}</option>`).join("");
-    const { sum } = tkpCalc();
+    const { sum, rows } = tkpCalc();
     const form = `<div class="da-card tk-form">
       <div class="da-h">Параметры</div>
       <label>Шаблон<select data-f="tpl">${TEMPLATES.map((t) => `<option value="${t.id}"${t.id === TKP.tpl ? " selected" : ""}>${esc(t.n)}</option>`).join("")}</select></label>
@@ -324,9 +357,11 @@ const DEMO_AI = (() => {
         <label>Аванс, %<input type="number" min="0" max="100" data-f="adv" value="${TKP.adv}"></label>
       </div>
       <label class="tk-chk"><input type="checkbox" data-f="vat"${TKP.vat ? " checked" : ""}> Цены с НДС 20%</label>
-      ${TKP.fromDrw ? '<div class="tk-from">Объёмы подтянуты из «Обработки чертежей»</div>' : ""}
+      ${TKP.drawing ? `<div class="tk-from">Электромонтаж и щиты рассчитаны по ведомости учебного листа «${esc(TKP.drawing.sheet)}». Для остальных работ действуют цены шаблона.
+        <button type="button" class="btn-ghost sm" id="tkUnlink">Вернуться к расчёту по шаблону</button></div>` : ""}
       <div class="tk-total"><span>Сумма предложения</span><b>${money(sum)}</b></div>
-      <button type="button" class="btn-brand" id="tkGen">${TKP.stage === "doc" ? "Обновить ТКП" : "Сформировать ТКП"}</button>
+      <button type="button" class="btn-brand" id="tkGen"${rows.length && TKP.stage !== "gen" ? "" : " disabled"}>${TKP.stage === "doc" ? "Обновить ТКП" : "Сформировать ТКП"}</button>
+      ${rows.length ? "" : "<small>Выберите хотя бы один вид работ.</small>"}
     </div>`;
     let right;
     if (TKP.stage === "gen") {
@@ -336,14 +371,16 @@ const DEMO_AI = (() => {
       right = `<div class="tk-bar"><span>Готово: ТКП-${TKP.no}/26 · ${esc(TEMPLATES.find((t) => t.id === TKP.tpl).n)}</span><span class="grow"></span>
         <button type="button" class="btn-ghost" id="tkPrint">Печать / PDF</button>
         <button type="button" class="btn-ghost" id="tkWord">Скачать .doc</button>
-        <button type="button" class="btn-brand" id="tkSend">Отправить заказчику</button></div>${tkpDoc()}`;
+        <button type="button" class="btn-brand" id="tkSend" aria-expanded="false" aria-controls="tkMail">Посмотреть письмо заказчику</button></div>
+        <div class="da-card" id="tkMail" hidden><b>Черновик письма для ${esc(CUSTOMERS[TKP.cus].n)}</b>
+          <p>Направляем предложение по объекту «${esc(OBJECTS[TKP.obj])}». Стоимость по выбранному составу работ — ${money(sum)}. Готовы обсудить объёмы и сроки.</p></div>${tkpDoc()}`;
     } else {
       right = `<div class="da-card da-empty tk-hint"><b>Заполните параметры и нажмите «Сформировать ТКП»</b>
         <span>Реквизиты компании, подпись, условия оплаты и гарантии подставятся из шаблона; стоимость — из расчёта.</span>
         <div class="tk-tpls">${TEMPLATES.map((t) => `<button type="button" class="tk-tpl${t.id === TKP.tpl ? " on" : ""}" data-tpl="${t.id}"><i></i><i></i><i></i><b>${esc(t.n)}</b></button>`).join("")}</div></div>`;
     }
     sec.innerHTML = `<div class="da-wrap">
-      <div class="da-note">Демонстрация: ТКП собирается из шаблона компании — реквизиты, состав работ, стоимость, сроки и условия — за несколько секунд.</div>
+      <div class="da-note">Пример «Северного Монтажа». Выберите состав работ и условия, чтобы получить документ с учебными ценами.</div>
       <div class="da-grid tk-grid">${form}<div class="da-main">${right}</div></div></div>`;
   }
 
@@ -362,24 +399,41 @@ const DEMO_AI = (() => {
       if (t.dataset.w) TKP.works[t.dataset.w] = t.checked;
       else if (t.dataset.f === "vat") TKP.vat = t.checked;
       else if (t.dataset.f === "tpl") TKP.tpl = t.value;
+      else if (t.dataset.f === "margin" || t.dataset.f === "adv") TKP[t.dataset.f] = Math.min(Number(t.getAttribute("max")), Math.max(0, Number(t.value) || 0));
       else if (t.dataset.f) TKP[t.dataset.f] = Math.max(0, +t.value || 0);
       else return;
+      if (!Object.values(TKP.works).some(Boolean)) TKP.stage = "form";
       tkpRender();
     });
     sec.addEventListener("click", (e) => {
       const t = e.target.closest("button");
       if (!t) return;
       if (t.id === "tkGen") { if (TKP.stage === "doc") TKP.no++; tkpGen(); }
+      else if (t.id === "tkUnlink" && TKP.standalone) {
+        TKP.works = TKP.standalone.works;
+        TKP.obj = TKP.standalone.obj;
+        TKP.cus = TKP.standalone.cus;
+        TKP.drawing = null;
+        TKP.standalone = null;
+        TKP.stage = "form";
+        tkpRender();
+      }
       else if (t.dataset.tpl) { TKP.tpl = t.dataset.tpl; tkpRender(); }
       else if (t.id === "tkPrint" || t.id === "tkWord") {
-        const css = [...document.styleSheets].map((s) => s.href).filter((h) => h && /demo-ai/.test(h));
-        const html = `<!doctype html><html><head><meta charset="utf-8"><title>ТКП-${TKP.no}</title>${css.map((h) => `<link rel="stylesheet" href="${h}">`).join("")}
-          <style>body{background:#fff;margin:0;padding:24px}.tk-doc{box-shadow:none;margin:0 auto}</style></head><body>${$d("#tkDoc").outerHTML}</body></html>`;
-        if (t.id === "tkWord") download(`ТКП-${TKP.no}.doc`, html, "application/msword");
-        else { const w = window.open("", "_blank"); w.document.write(html); w.document.close(); setTimeout(() => w.print(), 400); }
+        const html = `<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Учебное ТКП-${TKP.no}</title>
+          <style>body{font:12pt Arial,sans-serif;color:#202334;margin:1.5cm}h2{font-size:18pt}h3{font-size:13pt}table{border-collapse:collapse;width:100%;font-size:10pt}th,td{padding:5pt;border:1px solid #bbb}th,tfoot{background:#eee}.n,.tk-meta,.tk-to{text-align:right}.tk-logo small{display:block}.tk-sign{margin-top:18pt}.tk-sign span{margin-right:12pt}tr{break-inside:avoid}</style>
+          </head><body>${$d("#tkDoc").outerHTML}</body></html>`;
+        if (t.id === "tkWord") download(`Учебное_ТКП-${TKP.no}.doc`, html, "application/msword");
+        else {
+          const w = window.open("", "_blank");
+          if (w) { w.document.write(html); w.document.close(); setTimeout(() => w.print(), 200); }
+          else t.textContent = "Разрешите окно печати";
+        }
       } else if (t.id === "tkSend") {
-        t.textContent = "Отправлено ✓";
-        t.disabled = true;
+        const preview = $d("#tkMail");
+        preview.hidden = !preview.hidden;
+        t.setAttribute("aria-expanded", String(!preview.hidden));
+        t.textContent = preview.hidden ? "Посмотреть письмо заказчику" : "Скрыть письмо";
       }
     });
   }

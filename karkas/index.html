@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta name="robots" content="noindex,nofollow">
-<script src="src/static-demo.js?v=1"></script>
+<script src="src/static-demo.js?v=2"></script>
 <meta charset="utf-8">
 <!-- maximum-scale=1: iPhone увеличивает страницу при нажатии на поле со
      шрифтом мельче 16px и не возвращает обратно. Поля у нас мельче —
@@ -84,6 +84,7 @@
 <!-- Демо-сборка: обезличивание — свой знак вместо логотипа, без персонажей
      заказчика. -->
 <link rel="stylesheet" href="src/demo.css?v=2026-10-26-01">
+<link rel="stylesheet" href="src/case-tour.css?v=1">
 </head>
 <body>
 
@@ -256,6 +257,21 @@
   </header>
 
   <div id="offline" class="offline" hidden></div>
+  <section class="kt-guide" id="ktGuide" aria-labelledby="ktTitle" hidden>
+    <header class="kt-head"><span class="kt-kicker" id="ktLocation"></span>
+      <button type="button" class="kt-close" data-kt="collapse" aria-label="Свернуть подсказку раздела">Свернуть</button>
+    </header>
+    <h2 id="ktTitle"></h2>
+    <p class="kt-benefit" id="ktBenefit"></p>
+    <div class="kt-step"><b id="ktStepTitle"></b><p id="ktStepText"></p>
+      <button type="button" class="kt-locate" data-kt="locate" hidden>Показать на экране ↓</button>
+    </div>
+    <p class="kt-tab-tip" id="ktTip" role="status" hidden></p>
+    <div class="kt-actions">
+      <button type="button" class="kt-secondary" data-kt="back">Назад</button>
+      <button type="button" class="kt-primary" data-kt="next"></button>
+    </div>
+  </section>
 
   <!-- ── Эффективность ─────────────────────────────────── -->
   <!-- Переделано 30.09.2026 (заказчик: «с кнопкой „мало данных“ всё
@@ -688,7 +704,22 @@
 <script src="src/tasks.js?v=2026-10-23-01"></script>
 <script src="src/wg.js?v=2026-10-22-51"></script>
 <script src="src/req.js?v=2026-10-23-02"></script>
-<script src="src/demo-ai.js?v=2026-10-27-01"></script>
+<script src="src/demo-ai.js?v=2026-11-24-01"></script>
 <script src="src/app.js?v=2026-10-26-03"></script>
+<dialog class="kt-welcome" id="ktWelcome" aria-labelledby="ktDialogTitle">
+  <div class="kt-intro">
+    <div class="kt-brand"><img src="src/brand-mark.svg" alt="" width="36" height="36">Каркас</div>
+    <p class="kt-kicker" id="ktDialogKicker"></p>
+    <h1 id="ktDialogTitle" tabindex="-1"></h1>
+    <p class="kt-lead" id="ktDialogLead"></p>
+    <div id="ktDialogBody"></div>
+    <div class="kt-actions" id="ktDialogActions"></div>
+  </div>
+</dialog>
+<div class="kt-tab-note" role="status" hidden></div>
+<script src="src/tour-commercial.js?v=1"></script>
+<script src="src/tour-team.js?v=1"></script>
+<script src="src/tour-office.js?v=1"></script>
+<script src="src/case-tour.js?v=1"></script>
 </body>
 </html>

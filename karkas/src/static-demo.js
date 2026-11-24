@@ -3,6 +3,7 @@
   "use strict";
   const script = document.currentScript;
   const base = new URL("../", script ? script.src : location.href);
+  const entrySearch = location.search;
   const nativeFetch = window.fetch.bind(window);
   const clone = value => value === undefined ? undefined : JSON.parse(JSON.stringify(value));
   const prefix = "karkas-static-demo:v1:";
@@ -105,6 +106,106 @@
     }
     if (candidates.length) return clone(fixtures[candidates[0]]);
     return undefined;
+  }
+  // The snapshot stores registrations alongside each object's letters. Rebuild
+  // the journal from those records so switching journals preserves their scope.
+  let registrations;
+  function registryRecords() {
+    if (registrations) return registrations;
+    const records = new Map();
+    for (const row of fixtures["/api/corr"]?.rows || []) {
+      records.set(row.id, { ...row, sites: [...row.sites], cards: [], log: [] });
+    }
+    for (const data of Object.values(fixtures)) {
+      if (!data?.reg || !data.letter || !data.site) continue;
+      const { reg, site, letter } = data;
+      const row = records.get(reg.id) || { ...reg, sites: [...reg.sites], cards: [], log: [] };
+      if (!row.sites.some(s => s.id === site.id)) row.sites.push({ id: site.id, name: site.name });
+      row.cards.push({ id: letter.id, site_id: site.id, site_name: site.name, status: letter.status,
+        items: (data.items || []).filter(item => ["file", "note"].includes(item.kind)).length });
+      records.set(reg.id, row);
+    }
+    registrations = records;
+    return records;
+  }
+  function lettersByOrg(org) {
+    const list = fixtures["/api/letters/sites"];
+    if (!org) return list;
+    const feed = list.feed.filter(l => l.org_id === org);
+    const rows = list.rows.filter(s => s.org_id === org || feed.some(l => l.site_id === s.id));
+    const open = feed.filter(l => l.status === "open");
+    const recent = list.feed.filter(l => l.closed_at).sort((a, b) => b.closed_at.localeCompare(a.closed_at))
+      .slice(0, list.stats.closed30);
+    return { ...list, org, rows, feed, stats: { open: open.length, need: open.filter(l => l.direction === "in").length,
+      wait: open.filter(l => l.direction === "out").length, over14: open.filter(l => l.days >= 14).length,
+      closed30: recent.filter(l => l.org_id === org).length } };
+  }
+  function searchLetters(query) {
+    const q = (query.get("q") || "").trim(), rows = [];
+    const words = q.toLowerCase().split(/\s+/);
+    if (q.length >= 2) for (const card of Object.values(fixtures)) {
+      const l = card?.letter;
+      if (!l || !card.site || (query.get("site") && l.site_id !== query.get("site"))
+          || (query.get("org") && l.org_id !== query.get("org"))) continue;
+      const title = [l.subject, "№" + l.number, l.sent_at, l.sent_at.split("-").reverse().join(".")].join(" ").toLowerCase();
+      const notes = (card.items || []).filter(x => ["note", "file", "status"].includes(x.kind))
+        .map(x => ({ kind: x.kind, text: [x.text, x.file?.name].filter(Boolean).join(" ") }));
+      const hay = [title, ...notes.map(n => n.text)].join(" ").toLowerCase();
+      if (!words.every(w => hay.includes(w))) continue;
+      const hit = words.every(w => title.includes(w)) ? null : notes.find(n => words.some(w => n.text.toLowerCase().includes(w)));
+      rows.push({ ...l, hit, site: card.site, parent: card.parent });
+    }
+    rows.sort((a, b) => Number(Boolean(a.hit)) - Number(Boolean(b.hit)) || Number(b.status === "open") - Number(a.status === "open")
+      || b.sent_at.localeCompare(a.sent_at));
+    return { q, rows, more: false };
+  }
+  function registryList(query) {
+    const journal = fixtures["/api/corr"];
+    if (!journal) return undefined;
+    const kind = query.get("kind") || journal.kind;
+    const org = query.get("org") || journal.org, year = query.get("year") || journal.year;
+    const site = query.get("site"), topic = query.get("topic") || "";
+    const words = (query.get("q") || "").toLowerCase().split(/\s+/).filter(Boolean);
+    let filters = {};
+    try { filters = JSON.parse(query.get("filters") || "{}") || {}; } catch (_) { /* ignore invalid filters */ }
+    const fields = Object.keys(journal.filter_options);
+    const counts = Object.fromEntries(Object.keys(journal.counts).map(k => [k, 0]));
+    const options = Object.fromEntries(fields.map(k => [k, new Map()]));
+    const rows = [];
+    let unlinked = 0, untagged = 0;
+    for (const row of registryRecords().values()) {
+      if (!row.reg_date.startsWith(year + "-") || (org !== "all" && row.org_id !== org)) continue;
+      counts[row.kind]++;
+      if (row.kind !== kind) continue;
+      if (!row.sites.length) unlinked++;
+      if (!row.topics.length) untagged++;
+      const values = {};
+      for (const field of fields) {
+        const entries = field === "sites" ? row.sites.map(s => [s.id, s.name])
+          : field === "topic" ? row.topics.map(t => [t, journal.topics.find(x => x.id === t)?.name || t])
+          : [[row[field] || "", field === "reg_date" ? row.reg_date.split("-").reverse().join(".")
+            : row[field + "_name"] || row[field]]];
+        if (!entries.length) entries.push(["", ""]);
+        values[field] = entries.map(([value]) => value);
+        for (const [value, label] of entries) options[field].set(value, label || "(Не указано)");
+      }
+      if (site && (site === "-" ? row.sites.length : !row.sites.some(s => s.id === site))) continue;
+      if (topic && (topic === "none" ? row.topics.length : !row.topics.includes(topic))) continue;
+      if (!Object.entries(filters).every(([field, filter]) => {
+        if (Array.isArray(filter)) return filter.some(v => values[field]?.includes(v));
+        if (field === "reg_date") return (!filter.from || row.reg_date >= filter.from) && (!filter.to || row.reg_date <= filter.to);
+        return String(row[field] || "").toLowerCase().includes(String(filter.text || "").toLowerCase());
+      })) continue;
+      const hay = [row.number, "№" + row.number, row.reg_date.split("-").reverse().join("."), row.reg_date,
+        row.party, row.subject, row.author_name, row.reg_by, row.handed_to, row.note, row.topic_name,
+        row.reg_channel_name, row.via_name, row.via_note, ...row.sites.map(s => s.name),
+        ...row.files.map(f => f.name)].join(" ").toLowerCase();
+      if (words.every(w => hay.includes(w))) rows.push(row);
+    }
+    rows.sort((a, b) => b.number.localeCompare(a.number, "ru", { numeric: true }) || b.reg_date.localeCompare(a.reg_date));
+    const filter_options = Object.fromEntries(fields.map(k => [k, [...options[k]].map(([value, label]) =>
+      ({ value, label })).sort((a, b) => a.label.localeCompare(b.label, "ru"))]));
+    return { ...journal, kind, year, org, topic, filters, filter_options, counts, unlinked, untagged, rows };
   }
   function persona() {
     const user = findFixture("/api/me") || {
@@ -215,6 +316,11 @@
   }
 
   function fallback(path) {
+    const issuePath = /^\/api\/issues\/(\d+)$/.exec(path);
+    if (issuePath) {
+      const issue = rowsOf(findFixture("/api/issues")).find(row => row.no === Number(issuePath[1]));
+      if (issue) return { issue };
+    }
     if (/\/badge$/.test(path)) return { n: 0, unread: 0 };
     if (/\/health$/.test(path)) return { ok: true, demo: true };
     if (/\/perms$/.test(path)) return {};
@@ -251,6 +357,13 @@
     }
     if (/\/(read|seen)$/.test(path) && method !== "GET") return json({ ok: true });
     if (method === "GET" || method === "HEAD") {
+      if (path === "/api/letters/sites" && fixtures[path]) return json(lettersByOrg(url.searchParams.get("org")));
+      if (path === "/api/letters/search") return json(searchLetters(url.searchParams));
+      if (path === "/api/corr" && fixtures[path]) return json(registryList(url.searchParams));
+      if (path.startsWith("/api/corr/")) {
+        const entry = registryRecords().get(path.slice("/api/corr/".length));
+        if (entry) return json(entry);
+      }
       const value = findFixture(path, url.search);
       if (value !== undefined) return json(value);
       const empty = fallback(path);
@@ -292,31 +405,36 @@
     clearTimeout(noticeTimer);
     noticeTimer = setTimeout(() => { notice.hidden = true; }, 5000);
   }
-  window.KARKAS_DEMO = { ready, notify, base: base.href };
+  window.KARKAS_DEMO = { ready, notify, base: base.href, entrySearch };
 
   function mount() {
     const style = document.createElement("style");
     style.textContent = `
       .static-demo-bar{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:950;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 24px);box-sizing:border-box;padding:10px 14px;border:1px solid rgba(153,180,255,.25);border-radius:14px;background:rgba(17,24,44,.94);color:#e7efff;box-shadow:0 8px 36px #0004;backdrop-filter:blur(18px);font:12px/1.4 system-ui,sans-serif;white-space:nowrap}
       .static-demo-bar b{font-weight:650;color:#a7c7ff}.static-demo-bar small{font-size:11px;color:#b6c2dc}.static-demo-bar button{border:1px solid #52688788;background:#263b5b55;color:#e7efff;border-radius:8px;padding:6px 10px;font:inherit;cursor:pointer}.static-demo-bar button:hover{background:#344d7388}.static-demo-bar a{color:#d4e3ff;text-decoration:none;font-size:11px}.static-demo-notice{position:fixed;bottom:78px;left:50%;transform:translateX(-50%);z-index:50000;border:1px solid #6685bb88;border-radius:12px;background:#172841;color:#fff;box-shadow:0 6px 24px #0005;max-width:calc(100vw - 32px);width:max-content;padding:13px 18px;font:13px/1.5 system-ui,sans-serif;pointer-events:none}.static-demo-notice[hidden]{display:none!important}
-      .main{padding-bottom:72px!important}
+      body:has(> .static-demo-bar) > .main{padding-bottom:72px!important}.static-demo-bar [hidden]{display:none!important}@media(max-width:500px){.static-demo-bar:has([data-demo-resume]:not([hidden])) b{display:none}}
       @media(max-width:684px){.static-demo-bar{bottom:8px;padding:8px 10px;gap:8px;font-size:11px}.static-demo-bar small,.static-demo-bar a{display:none}.static-demo-bar button{padding:6px 8px}.static-demo-notice{bottom:65px}}
     `;
     document.head.appendChild(style);
     const bar = document.createElement("aside");
     bar.className = "static-demo-bar";
     bar.setAttribute("aria-label", "Демонстрационная версия");
-    bar.innerHTML = '<b>Демоверсия</b><small>Вымышленная компания · без регистрации</small><button type="button" data-demo-home>Обзор</button><button type="button" data-demo-reset title="Удалить только ваши изменения в этой демоверсии">Сбросить</button>';
+    bar.innerHTML = '<b>Демоверсия</b><button type="button" data-demo-resume hidden>К подсказке ↑</button><button type="button" class="kt-launch" data-demo-home>Гид по разделам</button><button type="button" data-demo-reset title="Удалить только ваши изменения в этой демоверсии">Сбросить</button>';
+    bar.querySelector("[data-demo-resume]").addEventListener("click", () => window.KarkasTour?.current());
     bar.querySelector("[data-demo-home]").addEventListener("click", () => {
+      if (window.KarkasTour) { window.KarkasTour.open(); return; }
       window.__adsLeaving = true;
-      location.href = new URL("index.html?s=sit", base).href;
+      location.href = new URL("index.html?s=tv&tour=map", base).href;
     });
     bar.querySelector("[data-demo-reset]").addEventListener("click", () => {
       store.clear();
       window.__adsLeaving = true;
       location.reload();
     });
-    document.body.appendChild(bar);
+    if (window.self === window.top) {
+      const header = document.querySelector(".main > header.top");
+      (header || document.body).appendChild(bar);
+    }
     document.addEventListener("click", event => {
       const anchor = event.target.closest("a[href]");
       if (!anchor) return;
